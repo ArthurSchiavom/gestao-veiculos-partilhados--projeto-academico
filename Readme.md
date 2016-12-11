@@ -17,3 +17,10 @@ In this file, DO NOT EDIT the following elements:
 * artifactID
 * version
 * properties
+
+#Eclipse files
+
+The following files are solely used by Eclipse IDE:
+
+* .classpath
+* .project
