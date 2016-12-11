@@ -24,3 +24,9 @@ The following files are solely used by Eclipse IDE:
 
 * .classpath
 * .project
+
+#IntelliJ Idea IDE files
+
+The following folder is solely used by Intellij Idea IDE :
+
+* .idea
