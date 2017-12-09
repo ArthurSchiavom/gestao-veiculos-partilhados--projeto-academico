@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 
-    In this file, DO NOT EDIT the following elements: 
-    groupID, 
-    artifactID, 
-    version, 
+    <!--
+    In this file, DO NOT EDIT the following elements:
+    groupID,
+    artifactID,
+    version,
     properties
     -->
-    <groupId>lapr3-2016</groupId>
-    <artifactId>lapr3-2016</artifactId>
+    <groupId>lapr3-2017</groupId>
+    <artifactId>lapr3-2017</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -23,6 +23,7 @@
     </properties>
 
     <dependencies>
+        <!-- Students can only add new dependencies to this section -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
