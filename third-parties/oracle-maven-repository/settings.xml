@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    User-specific configuration for maven. Includes things that should not 
+    be distributed with the pom.xml file, such as developer identity, along with 
+    local settings, like proxy information. The default location for the
+    settings file is ~/.m2/settings.xml 
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>maven.oracle.com</id>
+	    <username>fopugupu@crymail2.com</username>
+            <password>{V0CHfTdLwqoHOy22XQnDIalEmL3p3icPpeL7Z75844s=}</password>
+<!--
+            <username>lol_oracle@sharklasers.com</username>
+            <password>n0penopenOpe</password>
+-->
+
+            <configuration>
+                <basicAuthScope>
+                    <host>ANY</host>
+                    <port>ANY</port>
+                    <realm>OAM 11g</realm>
+                </basicAuthScope>
+                <httpConfiguration>
+                    <all>
+                        <params>
+                            <property>
+                                <name>http.protocol.allow-circular-redirects</name>
+                                <value>%b,true</value>
+                            </property>
+                        </params>
+                    </all>
+                </httpConfiguration>
+            </configuration>
+        </server>
+    </servers>
+</settings>

@@ -8,11 +8,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="lapr3-2016" />
         <module name="lapr3-2017" />
+        <module name="lapr3-2018-template" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
       <module name="lapr3-2016" target="1.8" />
       <module name="lapr3-2017" target="1.8" />
+      <module name="lapr3-2018-template" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="lapr3-2018-template" options="-Werror -Xlint:all" />
+    </option>
   </component>
 </project>
