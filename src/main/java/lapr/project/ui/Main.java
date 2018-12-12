@@ -37,16 +37,16 @@ class Main {
     public static void main(String[] args) throws IOException, SQLException {
         CalculatorExample calculatorExample = new CalculatorExample();
         int value = calculatorExample.sum(3, 5);
-        LOGGER.log(Level.INFO, String.valueOf(value));
+
+        if (LOGGER.isLoggable(Level.INFO))
+            LOGGER.log(Level.INFO, String.valueOf(value));
 
         //load database properties
 
-        Properties properties =
-                new Properties(System.getProperties());
-        InputStream input = null;
-
         try {
-            input = new FileInputStream("target/classes/application.properties");
+            Properties properties =
+                    new Properties(System.getProperties());
+            InputStream input = new FileInputStream("target/classes/application.properties");
             properties.load(input);
             input.close();
             System.setProperties(properties);
@@ -62,12 +62,11 @@ class Main {
 
         System.out.println("\nVerificar se existe Sailor 100...");
         try {
-            Sailor sailor = Sailor.getSailor(100);
-
+            Sailor.getSailor(100);
+            System.out.println("Nunca deve aparecer esta mensagem");
         } catch (IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
         }
-
         System.out.println("\nAdicionar Sailor ...");
 
 
