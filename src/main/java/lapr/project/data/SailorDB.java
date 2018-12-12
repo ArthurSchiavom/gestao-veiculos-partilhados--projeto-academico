@@ -20,9 +20,6 @@ public class SailorDB extends DataHandler {
      */
     public Sailor getSailor(long id) {
 
-        DataHandler dataHandler = new DataHandler();
-        Sailor sailor;
-
         /* Objeto "callStmt" para invocar a função "getSailor" armazenada na BD.
          *
          * FUNCTION getSailor(id NUMBER) RETURN pkgSailors.ref_cursor

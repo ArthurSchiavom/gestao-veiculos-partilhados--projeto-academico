@@ -88,9 +88,13 @@ public class DataHandler {
     /**
      * Estabelece a ligação à BD.
      */
-    protected void openConnection() throws SQLException {
-        connection = DriverManager.getConnection(
-                jdbcUrl, username, password);
+    protected void openConnection() {
+        try {
+            connection = DriverManager.getConnection(
+                    jdbcUrl, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -122,19 +126,14 @@ public class DataHandler {
             callStmt = null;
         }
 
-        try {
-            if (getConnection() != null) {
-                try {
-                    getConnection().close();
-                } catch (SQLException ex) {
-                    message.append(ex.getMessage());
-                    message.append("\n");
-                }
-                connection = null;
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                message.append(ex.getMessage());
+                message.append("\n");
             }
-        } catch (SQLException e) {
-            message.append(e.getMessage());
-            message.append("\n");
+            connection = null;
         }
         return message.toString();
     }
