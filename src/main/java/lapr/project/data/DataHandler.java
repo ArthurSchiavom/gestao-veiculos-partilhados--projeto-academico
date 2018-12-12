@@ -139,7 +139,7 @@ public class DataHandler {
     }
 
 
-    protected Connection getConnection() throws SQLException {
+    protected Connection getConnection() {
         if (connection == null)
             openConnection();
         return connection;
