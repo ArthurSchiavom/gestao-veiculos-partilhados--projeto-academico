@@ -82,6 +82,19 @@ You can combine different maven goals in the same command. For example, to local
 
 `$ mvn clean test jacoco:report org.pitest:pitest-maven:mutationCoverage`
 
+### How to perform a faster pit mutation analysis ###
+Do not clean build => remove "clean"
+
+Reuse the previous report => add "-Dsonar.pitest.mode=reuseReport"
+
+Use more threads to perform the analysis. The number is dependent on each computer CPU => add "-Dthreads=4"
+
+Temporarily remove timestamps from reports.
+
+Example:
+
+`mvn test jacoco:report org.pitest:pitest-maven:mutationCoverage -DhistoryInputFile=target/fasterPitMutationTesting-history.txt -DhistoryOutputFile=target/fasterPitMutationTesting-history.txt -Dsonar.pitest.mode=reuseReport -Dthreads=4 -DtimestampedReports=false`
+
 # Oracle repository
 
 If you get the following error:
@@ -106,3 +119,5 @@ Follow these steps:
 https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides
 
 You do not need to set a proxy.
+
+You can use existing dummy Oracle credentials available at http://bugmenot.com.
