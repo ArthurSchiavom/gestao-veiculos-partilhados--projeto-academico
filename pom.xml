@@ -19,8 +19,15 @@
     </properties>
 
     <dependencies>
-        <!-- Students can only add new dependencies to this section -->
+        <dependency>
+            <groupId>lapr3</groupId>
+            <artifactId>ride-sharing-assessment-interfaces</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/third-parties/ride-sharing-assessment-interfaces-1.0.jar</systemPath>
+        </dependency>
 
+        <!-- Students can only add new dependencies to this section -->
         <dependency>
             <groupId>com.oracle.jdbc</groupId>
             <artifactId>ojdbc7</artifactId>
@@ -110,7 +117,6 @@
                             <value>org.sonar.java.jacoco.JUnitListener</value>
                         </property>
                     </properties>
-
                 </configuration>
             </plugin>
 
