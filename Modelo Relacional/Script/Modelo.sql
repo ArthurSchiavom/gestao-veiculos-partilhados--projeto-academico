@@ -24,8 +24,8 @@ CREATE TABLE vehicles (
   CONSTRAINT ck_vehicles_available 
     CHECK (available = 0 OR available = 1));
 CREATE TABLE vehicle_types (
-  name varchar2(50) NOT NULL, 
-  PRIMARY KEY (name));
+  vehicle_type_name varchar2(50) NOT NULL, 
+  PRIMARY KEY (vehicle_type_name));
 CREATE TABLE bicycles (
   vehicle_id        number(8) NOT NULL, 
   "size"            number(2) NOT NULL, 
@@ -134,7 +134,7 @@ CREATE TABLE users (
   user_type_name varchar2(50) NOT NULL, 
   password       varchar2(20) NOT NULL, 
   PRIMARY KEY (user_email));
-ALTER TABLE vehicles ADD CONSTRAINT FKvehicles221805 FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (name);
+ALTER TABLE vehicles ADD CONSTRAINT FKvehicles489819 FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
 ALTER TABLE bicycles ADD CONSTRAINT FKbicycles673707 FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE electric_scooters ADD CONSTRAINT FKelectric_s751542 FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE electric_scooters ADD CONSTRAINT FKelectric_s398869 FOREIGN KEY (eletric_scooter_type_name) REFERENCES eletric_scooter_types (eletric_scooter_type_name);
@@ -142,7 +142,7 @@ ALTER TABLE park_vehicle ADD CONSTRAINT FKpark_vehic722748 FOREIGN KEY (park_id)
 ALTER TABLE park_vehicle ADD CONSTRAINT FKpark_vehic824993 FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE invoices ADD CONSTRAINT FKinvoices584211 FOREIGN KEY (user_email) REFERENCES clients (user_email);
 ALTER TABLE park_capacity ADD CONSTRAINT FKpark_capac299055 FOREIGN KEY (park_id) REFERENCES parks (park_id);
-ALTER TABLE park_capacity ADD CONSTRAINT FKpark_capac300630 FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (name);
+ALTER TABLE park_capacity ADD CONSTRAINT FKpark_capac402946 FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
 ALTER TABLE trip ADD CONSTRAINT FKtrip526617 FOREIGN KEY (user_email) REFERENCES clients (user_email);
 ALTER TABLE trip ADD CONSTRAINT FKtrip281057 FOREIGN KEY (start_park_id) REFERENCES parks (park_id);
 ALTER TABLE trip ADD CONSTRAINT FKtrip123174 FOREIGN KEY (end_park_id) REFERENCES parks (park_id);
