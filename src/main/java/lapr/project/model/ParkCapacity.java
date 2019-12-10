@@ -13,6 +13,11 @@ public class ParkCapacity {
     private int capacity;
     private int amount_occupied;
     
+    /**
+     * park capacity created
+     * @param capacity
+     * @param amount_occupied 
+     */
     public ParkCapacity(int capacity,int amount_occupied){
         this.capacity = capacity;
         this.amount_occupied = amount_occupied;

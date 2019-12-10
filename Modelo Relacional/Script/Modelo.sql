@@ -12,13 +12,12 @@ DROP TABLE park_capacity CASCADE CONSTRAINTS;
 DROP TABLE user_type CASCADE CONSTRAINTS;
 DROP TABLE trip CASCADE CONSTRAINTS;
 DROP TABLE receipts CASCADE CONSTRAINTS;
-DROP TABLE users CASCADE CONSTRAINTS;
+DROP TABLE registered_users CASCADE CONSTRAINTS;
 
 -- Tabela Vehicles
 CREATE TABLE vehicles (
-  vehicle_id        number(8) GENERATED AS IDENTITY, 
-  vehicle_type_name varchar2(50) constraint nn_vehicles_vehicle_type_name NOT NULL
-                                 constraint pk_vehicles_vehicle_type_name PRIMARY KEY, 
+  vehicle_id        number(8) GENERATED AS IDENTITY CONSTRAINT pk_vehicles_vehicle_id PRIMARY KEY, 
+  vehicle_type_name varchar2(50) constraint nn_vehicles_vehicle_type_name NOT NULL,
   available         number(1)    constraint nn_vehicles_available NOT NULL
                                  CONSTRAINT ck_vehicles_available CHECK (available = 0 OR available = 1),
   latitude          number(9, 6) constraint nn_vehicles_latitude NOT NULL
@@ -30,9 +29,8 @@ CREATE TABLE vehicles (
 );
 
 -- Tabela Vehicle_Types
-
 CREATE TABLE vehicle_types (
-  name varchar2(50) constraint pk_vehicle_types_name PRIMARY KEY
+  vehicle_type_name varchar2(50) constraint pk_vehicle_types_name PRIMARY KEY
   );
 
 -- Tabela Bicycles 
@@ -119,30 +117,30 @@ CREATE TABLE invoices (
   payment_start_date date, 
   amount             number(9, 2) CONSTRAINT nn_invoices_amount NOT NULL, 
   amount_left_to_pay number(9, 2) DEFAULT null, 
-  usage_cost         number(9, 2) DEFAULT 0 NOT NULL, 
-  penalisation_cost  number(9, 2) DEFAULT 0 NOT NULL, 
-  CONSTRAINT pk_invoices_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date), 
+  usage_cost         number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_usage_cost NOT NULL, 
+  penalisation_cost  number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_penalisation_cost NOT NULL, 
+  CONSTRAINT pk_invoices_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date) 
 );
 
 -- Tabela park_capacity
 CREATE TABLE park_capacity (
   park_id           number(6), 
   vehicle_type_name varchar2(50), 
-  park_capacity     number(10) nn_park_capacity_park_capacity NOT NULL, 
-  amount_occupied   number(10) DEFAULT 0 nn_park_capacity_amount_occupied NOT NULL, 
+  park_capacity     number(10) CONSTRAINT nn_park_capacity_park_capacity NOT NULL, 
+  amount_occupied   number(10) DEFAULT 0 CONSTRAINT nn_park_capacity_amount_occupied NOT NULL, 
   CONSTRAINT pk_park_capacity_park_id_vehicle_type_name PRIMARY KEY (park_id, vehicle_type_name)
 );
 
 -- Tabela user_type
 CREATE TABLE user_type (
-  name varchar2(50) CONSTRAINT pk_user_type_name PRIMARY KEY 
+  user_type_name varchar2(50) CONSTRAINT pk_user_type_name PRIMARY KEY 
 );
 
 -- Tabela trip
 CREATE TABLE trip (
   start_time    timestamp(0) DEFAULT systimestamp, 
   user_email    varchar2(50), 
-  vehicles_id   number(8) nn_trip_vehicles_id NOT NULL, 
+  vehicles_id   number(8) CONSTRAINT nn_trip_vehicles_id NOT NULL, 
   start_park_id number(6), 
   end_park_id   number(6), 
   end_time      timestamp(0), 
@@ -154,9 +152,9 @@ CREATE TABLE trip (
 CREATE TABLE receipts (
   user_email       varchar2(50), 
   payment_start_date date, 
-  points_used      number(10) nn_receipts_points_used NOT NULL, 
-  amount_paid_cash number(9, 2) nn_receipts_points_used NOT NULL, 
-  CONSTRAINT pk_receipts_user_email, payment_start_date PRIMARY KEY (user_email, payment_start_date)
+  points_used      number(10) CONSTRAINT nn_receipts_points_used NOT NULL, 
+  amount_paid_cash number(9, 2) CONSTRAINT nn_receipts_amount_paid_cash NOT NULL, 
+  CONSTRAINT pk_receipts_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date)
 );
 
 
@@ -167,7 +165,7 @@ CREATE TABLE registered_users (
   user_password  varchar2(20) CONSTRAINT nn_registered_users_user_password NOT NULL 
 );
   
-ALTER TABLE vehicles ADD CONSTRAINT fk_vehicles_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (name);
+ALTER TABLE vehicles ADD CONSTRAINT fk_vehicles_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
 ALTER TABLE bicycles ADD CONSTRAINT fk_bicycles_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_electric_scooter_type_name FOREIGN KEY (electric_scooter_type_name) REFERENCES electric_scooter_types (electric_scooter_type_name);
@@ -182,4 +180,4 @@ ALTER TABLE trip ADD CONSTRAINT fk_trip_end_park_id FOREIGN KEY (end_park_id) RE
 ALTER TABLE receipts ADD CONSTRAINT fk_receipts_user_email_payment_start_date FOREIGN KEY (user_email, payment_start_date) REFERENCES invoices (user_email, payment_start_date);
 ALTER TABLE trip ADD CONSTRAINT fk_trip_vehicles FOREIGN KEY (vehicles_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE clients ADD CONSTRAINT fk_clients_user_email FOREIGN KEY (user_email) REFERENCES registered_users (user_email);
-ALTER TABLE registered_users ADD CONSTRAINT fk_registered_users_user_type_name FOREIGN KEY (user_type_name) REFERENCES user_type (name);
+ALTER TABLE registered_users ADD CONSTRAINT fk_registered_users_user_type_name FOREIGN KEY (user_type_name) REFERENCES user_type (user_type_name);
