@@ -1,5 +1,7 @@
 package lapr.project.model.Users;
 
+import java.util.Objects;
+
 /**
  * Represents a client of the application, which is an user
  */
@@ -70,5 +72,28 @@ public class Client extends User {
 
     public String getCreditCardExpiration() {
         return creditCardExpiration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Client)) return false;
+        if (!super.equals(o)) return false;
+        Client client = (Client) o;
+        return getPoints() == client.getPoints() && getEmail().equalsIgnoreCase(client.getEmail()) &&
+                getPassword().equals(client.getPassword()) &&
+                getType() == client.getType() &&
+                getCreditCardSecret() == client.getCreditCardSecret() &&
+                getAge() == client.getAge() &&
+                Float.compare(client.getHeight(), getHeight()) == 0 &&
+                Float.compare(client.getWeight(), getWeight()) == 0 &&
+                getGender() == client.getGender() &&
+                getCreditCardNumber().equals(client.getCreditCardNumber()) &&
+                getCreditCardExpiration().equals(client.getCreditCardExpiration());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getPoints(), getCreditCardSecret(), getAge(), getHeight(), getWeight(), getGender(), getCreditCardNumber(), getCreditCardExpiration());
     }
 }

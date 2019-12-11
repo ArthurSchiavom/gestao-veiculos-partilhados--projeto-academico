@@ -1,5 +1,7 @@
 package lapr.project.model.Vehicles;
 
+import java.util.Objects;
+
 /**
  * Represents vehicle
  */
@@ -47,5 +49,10 @@ public abstract class Vehicle {
 
     public char getAvailable() {
         return available;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getLatitude(), getLongitude(), getAltitude(), getAvailable(), getType());
     }
 }

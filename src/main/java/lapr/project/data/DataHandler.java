@@ -77,7 +77,7 @@ public class DataHandler {
 
         openConnection();
 
-        ScriptRunner runner = new ScriptRunner(getConnection(), false, false);
+        ScriptRunner runner = new ScriptRunner(getConnection(), true, false);
 
         runner.runScript(new BufferedReader(new FileReader(fileName)));
 
@@ -139,7 +139,7 @@ public class DataHandler {
     }
 
 
-    protected Connection getConnection() {
+    public Connection getConnection() {
         if (connection == null)
             openConnection();
         return connection;
