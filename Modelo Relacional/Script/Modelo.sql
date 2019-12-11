@@ -44,7 +44,6 @@ CREATE TABLE bicycles (
 CREATE TABLE electric_scooters (
   vehicle_id                number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
   electric_scooter_type_name varchar2(50) constraint nn_electric_scooters_electric_scooter_type_name NOT NULL, 
-  type_id                   number(3)    constraint nn_electric_scooters_type_id NOT NULL, 
   battery_level             number(3) constraint nn_electric_scooters_battery_level NOT NULL
                                       constraint ck_electric_scooters_battery_level CHECK (battery_level >= 0 AND battery_level <= 100)
   );
@@ -98,7 +97,7 @@ CREATE TABLE park_vehicle (
 -- Tabela pending_registrations 
 CREATE TABLE pending_registrations (
   email                  varchar2(50) CONSTRAINT pk_pending_registrations_email PRIMARY KEY, 
-  paid                   number(6, 2) DEFAULT 0 CONSTRAINT nn_pending_registrations_paid NOT NULL
+  paid                   number(1) DEFAULT 0 CONSTRAINT nn_pending_registrations_paid NOT NULL
                                                  CONSTRAINT ck_pending_registration_paid CHECK (paid = 0 OR paid = 1),
   amount_left_to_pay     number(6, 2) DEFAULT 10 CONSTRAINT nn_pending_registrations_amount_left_to_pay NOT NULL, 
   credit_card_number     CHAR(16) CONSTRAINT nn_pending_registrations_credit_card_number NOT NULL, 
@@ -151,10 +150,12 @@ CREATE TABLE trip (
 -- Tabela receipts
 CREATE TABLE receipts (
   user_email       varchar2(50), 
-  payment_start_date date, 
+  payment_start_date date,
+  payment_end_date date CONSTRAINT nn_receipts_payment_end_date NOT NULL,
   points_used      number(10) CONSTRAINT nn_receipts_points_used NOT NULL, 
   amount_paid_cash number(9, 2) CONSTRAINT nn_receipts_amount_paid_cash NOT NULL, 
-  CONSTRAINT pk_receipts_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date)
+  CONSTRAINT pk_receipts_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date),
+  CONSTRAINT ck_receipts_start_end_payment_date CHECK(payment_start_date < payment_end_date)
 );
 
 
