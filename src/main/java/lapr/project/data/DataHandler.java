@@ -208,8 +208,8 @@ public class DataHandler {
         executeSQLOperation(operation);
     }
 
-    public Timestamp getString(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<Timestamp> operation = () -> {return resultSet.getTimestamp(columnPosition);};
+    public String getString(ResultSet resultSet, int columnPosition) throws SQLException {
+        SQLOperation<String> operation = () -> {return resultSet.getString(columnPosition);};
         return executeSQLOperation(operation);
     }
 
