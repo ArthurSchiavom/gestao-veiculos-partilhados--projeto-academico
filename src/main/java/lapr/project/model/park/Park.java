@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model;
+package lapr.project.model.park;
+
+import lapr.project.model.Coordinates;
 
 import java.util.Objects;
 
@@ -49,34 +51,5 @@ public class Park {
     public ParkCapacity getScooterUrbanCapacity() {
         return scooterUrbanCapacity;
     }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Park other = (Park) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.cord, other.cord)) {
-            return false;
-        }
-        if (!Objects.equals(this.bikeCapacity, other.bikeCapacity)) {
-            return false;
-        }
-        if (!Objects.equals(this.scooterOffroadCapacity, other.scooterOffroadCapacity)) {
-            return false;
-        }
-        if (!Objects.equals(this.scooterUrbanCapacity, other.scooterUrbanCapacity)) {
-            return false;
-        }
-        return true;
-    }
+
 }

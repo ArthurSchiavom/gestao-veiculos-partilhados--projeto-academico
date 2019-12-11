@@ -5,10 +5,10 @@
  */
 package lapr.project.model;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import lapr.project.model.park.ParkCapacity;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

@@ -41,6 +41,11 @@ public class Facade implements Serviceable {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public int getNumberOfBicyclesAtPark(String s, String s1) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Distance is returns in metres, rounded to the unit e.g. (281,58 rounds
      * to 282);
