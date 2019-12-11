@@ -1,48 +1,124 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr.project.model;
 
+import java.util.Objects;
+
 /**
+ * A coordinates class holds information about coordinates lat and lon in
+ * decimal degrees
  *
- * @author kevin
+ * @author Pedro Ivo
  */
 public class Coordinates {
-    private double latitude;
-    private double longitude;
+
+    private double lat;
+    private double lon;
     private double altitude;
-    
-    public Coordinates(double latitude,double longitude,double altitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
+
+    /**
+     * Creates a set of coordinates
+     *
+     * @param lat the lat parameter
+     * @param lon the lon parameter
+     * @param altitude the altitude of the coordinates, in meters, 0 is sea level
+     */
+    public Coordinates(double lat, double lon, double altitude) {
+        while (lon > 180) {
+            lon -= 360;
+        }
+        while (lon < -180) {
+            lon += 360;
+        }
+        while (lat > 180) {
+            lat -= 90;
+        }
+        while (lat < -180) {
+            lat += 90;
+        }
+        if (lat > 90) {
+            lat = lat - 90;
+            lat = 90 - lat;
+        }
+        if (lat < -90) {
+            lat = lat + 90;
+            lat = -90 - lat;
+        }
+        this.lat = lat;
+        this.lon = lon;
         this.altitude = altitude;
     }
 
+    /**
+     * Returns the lat
+     *
+     * @return the lat
+     */
+    public double getLatitude() {
+        return lat;
+    }
+
+    /**
+     * Returns the lon
+     *
+     * @return the lon
+     */
+    public double getLongitude() {
+        return lon;
+    }
+
+    /**
+     * Returns the altitude
+     *
+     * @return the altitude
+     */
     public double getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
+    /**
+     * Calculates distance to other coords
+     *
+     * @param other secondary coords to calculate distance
+     * @return the distance between the two coordinates
+     */
+    public double distance(Coordinates other) {
+        if ((lat == other.getLatitude()) && (lon == other.getLongitude()) && (altitude == other.getAltitude())) {
+            return 0;
+        } else {
+            final int R = 6371; // Radius of the earth
+            double latDistance = Math.toRadians(other.getLatitude() - lat);
+            double lonDistance = Math.toRadians(other.getLongitude() - lon);
+            double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                    + Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(other.getLatitude()))
+                    * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            double distance = R * c;
+            double altitudeDistance = Math.abs(altitude-other.getAltitude());
+            distance += altitudeDistance;
+            return distance;
+        }
     }
 
-    public double getLatitude() {
-        return latitude;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinates that = (Coordinates) o;
+        return Double.compare(that.lat, lat) == 0 &&
+                Double.compare(that.lon, lon) == 0 &&
+                Double.compare(that.altitude, altitude) == 0;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    @Override
+    public int hashCode() {
+        return Objects.hash(lat, lon, altitude);
     }
 
-    public double getLongitude() {
-        return longitude;
+    @Override
+    public String toString() {
+        return "Coordinates{"
+                + "latitude=" + lat
+                + ", longitude=" + lon
+                + ", altitude=" + altitude
+                + '}';
     }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-    
-    
 }
