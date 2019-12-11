@@ -17,30 +17,28 @@ public class Coordinates {
     /**
      * Creates a set of coordinates
      *
-     * @param lat the lat parameter
-     * @param lon the lon parameter
+     * @param lat      the lat parameter
+     * @param lon      the lon parameter
      * @param altitude the altitude of the coordinates, in meters, 0 is sea level
      */
     public Coordinates(double lat, double lon, double altitude) {
-        while (lon > 180) {
-            lon -= 360;
+        if (lon > 180) {
+            lon = (lon % 180) - 180;
         }
-        while (lon < -180) {
-            lon += 360;
+        if (lon <= -180) {
+            lon = 180 + (lon % 180);
         }
-        while (lat > 180) {
-            lat -= 90;
+        if (lat <= -180) {
+            lat = 180 + (lat % 180);
         }
-        while (lat < -180) {
-            lat += 90;
-        }
-        if (lat > 90) {
-            lat = lat - 90;
-            lat = 90 - lat;
+        if (lat >= 180) {
+            lat = -(lat % 180);
         }
         if (lat < -90) {
-            lat = lat + 90;
-            lat = -90 - lat;
+            lat = -(90 + (lat % 90));
+        }
+        if (lat > 90) {
+            lat = 90 - (lat % 90);
         }
         this.lat = lat;
         this.lon = lon;
@@ -92,7 +90,7 @@ public class Coordinates {
                     * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             double distance = R * c;
-            double altitudeDistance = Math.abs(altitude-other.getAltitude());
+            double altitudeDistance = Math.abs(altitude - other.getAltitude());
             distance += altitudeDistance;
             return distance;
         }

@@ -1,6 +1,7 @@
 package lapr.project.model;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  *
@@ -18,6 +19,10 @@ public class Receipt {
      * @param amountPaidCash the amount paid in cash
      */
     public Receipt(Calendar paymentDate, int pointsUsed, double amountPaidCash) {
+        //TODO: Add checks and tests for points used
+        if(amountPaidCash < 0) {
+            throw new IllegalArgumentException("Can't pay negative amount of money");
+        }
         this.paymentDate = paymentDate;
         this.pointsUsed = pointsUsed;
         this.amountPaidCash = amountPaidCash;
@@ -50,4 +55,16 @@ public class Receipt {
         return paymentDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Receipt receipt = (Receipt) o;
+        return paymentDate.equals(receipt.paymentDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(paymentDate);
+    }
 }

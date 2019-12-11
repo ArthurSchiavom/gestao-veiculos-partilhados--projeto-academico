@@ -7,6 +7,7 @@ package lapr.project.model;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -23,7 +24,7 @@ public class Invoice {
     private Set<Receipt> receipts;
 
     /**
-     * Instantiates an invoice
+     * Instantiates an invoice without receipts
      *
      * @param clientId the id of the client
      * @param paymentStartDate the start date for the payment
@@ -32,6 +33,9 @@ public class Invoice {
      * properly, etc)
      */
     public Invoice(int clientId, Calendar paymentStartDate, double usageCost, double penalizationCost) {
+        if(clientId<0) {
+            throw new IllegalArgumentException("clientId can't be less than 0");
+        }
         this.clientId = clientId;
         this.paymentStartDate = paymentStartDate;
         this.penalizationCost = penalizationCost;
@@ -91,7 +95,7 @@ public class Invoice {
      * @return the total cost of the invoice
      */
     public double getTotalAmount() {
-        return (usageCost + amountLeftToPay);
+        return (usageCost + penalizationCost);
     }
 
     /**
@@ -100,21 +104,23 @@ public class Invoice {
      * @return a copy of all the receipts associated with this invoice
      */
     public Set<Receipt> getReceipts() {
+        if(receipts.isEmpty()) {
+            return null;
+        }
         return new HashSet<>(receipts);
     }
 
-    /**
-     * Loads the receipts
-     *
-     * @param receipts the set of receipts
-     * @return true if it was successful
-     *         false if the given set is empty or if the current invoice already has receipts
-     */
-    public boolean loadReceipts(Set<Receipt> receipts) {
-        if (receipts.isEmpty() || !this.receipts.isEmpty()) {
-            return false;
-        }
-        this.receipts = new HashSet<>(receipts);
-        return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Invoice invoice = (Invoice) o;
+        return clientId == invoice.clientId &&
+                paymentStartDate.equals(invoice.paymentStartDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientId, paymentStartDate);
     }
 }
