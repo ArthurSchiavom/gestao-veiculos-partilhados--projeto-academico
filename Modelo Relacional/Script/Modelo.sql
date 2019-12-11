@@ -101,11 +101,11 @@ CREATE TABLE pending_registrations (
   paid                   number(6, 2) DEFAULT 0 CONSTRAINT nn_pending_registrations_paid NOT NULL
                                                  CONSTRAINT ck_pending_registration_paid CHECK (paid = 0 OR paid = 1),
   amount_left_to_pay     number(6, 2) DEFAULT 10 CONSTRAINT nn_pending_registrations_amount_left_to_pay NOT NULL, 
-  credit_card_number     number(16) CONSTRAINT nn_pending_registrations_credit_card_number NOT NULL, 
+  credit_card_number     CHAR(16) CONSTRAINT nn_pending_registrations_credit_card_number NOT NULL, 
   credit_card_expiration date CONSTRAINT nn_pending_registrations_credit_card_expiration NOT NULL, 
   credit_card_secret     number(3) CONSTRAINT nn_pending_registrations_credit_card_secret NOT NULL, 
   height                 number(4, 2) CONSTRAINT nn_pending_registrations_height NOT NULL, 
-  weight                 number(4, 2) CONSTRAINT nn_pending_registrations_weight NOT NULL, 
+  weight                 number(5, 2) CONSTRAINT nn_pending_registrations_weight NOT NULL, 
   gender                 char(1) CONSTRAINT nn_pending_registrations_gender NOT NULL
                                  CONSTRAINT ck_pending_registrations_gender CHECK(REGEXP_LIKE(gender, 'M|F', 'i')),
   age                    number(3) CONSTRAINT nn_pending_registrations_age NOT NULL 
