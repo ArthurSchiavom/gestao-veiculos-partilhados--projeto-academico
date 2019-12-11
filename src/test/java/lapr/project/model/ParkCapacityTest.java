@@ -5,10 +5,12 @@
  */
 package lapr.project.model;
 
-import lapr.project.model.park.ParkCapacity;
+import lapr.project.model.Vehicles.VehicleType;
+import lapr.project.model.Park.Capacity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  *
@@ -19,18 +21,36 @@ public class ParkCapacityTest {
     @Test
     public void testGetCapacity() {
         System.out.println("getCapacity");
-        ParkCapacity instance = new ParkCapacity(1,20);
-        int expResult = 1;
-        int result = instance.getCapacity();
+        Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
+        int expResult = 30;
+        int result = instance.getMaxCapacity();
         assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetAmount_occupied() {
+    public void testGetAmountOccupied() {
         System.out.println("getAmount_occupied");
-        ParkCapacity instance = new ParkCapacity(1,20);
+        Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         int expResult = 20;
-        int result = instance.getAmount_occupied();
+        int result = instance.getAmountOccupied();
         assertEquals(expResult, result);
+    }
+    
+     @Test
+    public void getVehicleType() {
+        System.out.println("getVehicleType");
+        Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
+        VehicleType expResult = VehicleType.ELECTRIC_SCOOTER;
+        VehicleType result = instance.getVehicleType();
+        assertEquals(expResult, result);
+    }
+    
+     @Test
+    public void getVehicleType_01() {
+        System.out.println("getVehicleType_01");
+        Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
+        VehicleType expResult = VehicleType.BICYCLE;
+        VehicleType result = instance.getVehicleType();
+        assertNotEquals(expResult, result);
     }
 }

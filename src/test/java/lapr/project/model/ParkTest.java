@@ -5,8 +5,11 @@
  */
 package lapr.project.model;
 
-import lapr.project.model.park.Park;
-import lapr.project.model.park.ParkCapacity;
+import java.util.HashSet;
+import java.util.Set;
+import lapr.project.model.Vehicles.VehicleType;
+import lapr.project.model.Park.Park;
+import lapr.project.model.Park.Capacity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,8 +23,13 @@ public class ParkTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        Coordinates coord = new Coordinates(0,0,0);
-        Park instance = new Park("parque", coord);
+        Coordinates cord = new Coordinates(0, 0, 0);
+        
+        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
+        Set<Capacity> cp = new HashSet<Capacity>();
+        cp.add(cap);
+        
+        Park instance = new Park("parque", cord,cp,123);
         String expResult = "parque";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -31,40 +39,39 @@ public class ParkTest {
     @Test
     public void testGetCord() {
         System.out.println("getCord");
+        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
         Coordinates cord = new Coordinates(0, 0, 0);
-        Park instance = new Park("parque", cord);
+         Set<Capacity> cp = new HashSet<Capacity>();
+        cp.add(cap);
+        Park instance = new Park("parque", cord,cp,123);
         Coordinates expResult = cord;
-        Coordinates result = instance.getCord();
+        Coordinates result = instance.getCoords();
         assertEquals(expResult, result);
     }
     
     @Test
-    public void testGetBikeCapacity() {
-        System.out.println("getBikeCapacity");
+    public void getAmountOccupiedByType(){
+        System.out.println("getAmountOccupiedByType");
+        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
         Coordinates cord = new Coordinates(0, 0, 0);
-        Park instance = new Park("parque", cord);
-        ParkCapacity expResult = new ParkCapacity(10, 0);
-        ParkCapacity result = instance.getBikeCapacity();
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void getScooterOffroadCapacity() {
-        System.out.println("getScooterOffroadCapacity");
-        Coordinates cord = new Coordinates(0, 0, 0);
-        Park instance = new Park("parque", cord);
-        ParkCapacity expResult = new ParkCapacity(10, 0);
-        ParkCapacity result = instance.getScooterOffroadCapacity();
+         Set<Capacity> cp = new HashSet<Capacity>();
+        cp.add(cap);
+        Park instance = new Park("parque", cord,cp,123);
+        int expResult = 20;
+        int result = instance.getAmountOccupiedByType(VehicleType.BICYCLE);
         assertEquals(expResult, result);
     }
     
     @Test
-    public void getScooterUrbanCapacity() {
-        System.out.println("getScooterUrbanCapacity");
+    public void getMaxAmountByType(){
+        System.out.println("getAmountOccupiedByType");
+        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
         Coordinates cord = new Coordinates(0, 0, 0);
-        Park instance = new Park("parque", cord);
-        ParkCapacity expResult = new ParkCapacity(10, 0);
-        ParkCapacity result = instance.getScooterUrbanCapacity();
+         Set<Capacity> cp = new HashSet<Capacity>();
+        cp.add(cap);
+        Park instance = new Park("parque", cord,cp,123);
+        int expResult = 30;
+        int result = instance.getMaxAmountByType(VehicleType.BICYCLE);
         assertEquals(expResult, result);
     }
 }
