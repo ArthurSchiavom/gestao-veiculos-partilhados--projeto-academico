@@ -24,7 +24,11 @@ CREATE TABLE vehicles (
                                  constraint ck_vehicles_latitude CHECK (latitude between -90 and 90), 
   longitude         number(9, 6) constraint nn_vehicles_longitude NOT NULL
                                  constraint ck_vehicles_longitude CHECK (longitude between -180 and 180), 
+  weight			number(3)    constraint nn_vehicles_weight NOT NULL
+								 constraint ck_vehicles_weight CHECK (weight > 0),
   altitude          number(6, 2) constraint nn_vehicles_altitude NOT NULL,
+  aerodynamic_coefficient number(4, 2) constraint nn_vehicles_aerodynamic_coefficient NOT NULL,
+  frontal_area number(4,2) constraint nn_vehicles_frontal_area NOT NULL,
   constraint uk_vehicles_longitude_latitude_altitude unique(latitude,longitude,altitude)
 );
 
@@ -45,8 +49,8 @@ CREATE TABLE bicycles (
 CREATE TABLE electric_scooters (
   vehicle_id                number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
   electric_scooter_type_name varchar2(50) constraint nn_electric_scooters_electric_scooter_type_name NOT NULL, 
-  battery_level             number(3) constraint nn_electric_scooters_battery_level NOT NULL
-                                      constraint ck_electric_scooters_battery_level CHECK (battery_level >= 0 AND battery_level <= 100)
+  max_battery_capacity             number(3,2) constraint nn_electric_scooters_battery_level NOT NULL,
+  actual_battery_capacity number(3) constraint nn_electric_scooters_actual_battery_capacity NOT NULL
   );
 
 -- Tabela Electric_Scooter_Types  
