@@ -49,8 +49,10 @@ CREATE TABLE bicycles (
 CREATE TABLE electric_scooters (
   vehicle_id                number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
   electric_scooter_type_name varchar2(50) constraint nn_electric_scooters_electric_scooter_type_name NOT NULL, 
+  description varchar2(150) constraint nn_electric_scooters_description NOT NULL,
   max_battery_capacity             number(3,2) constraint nn_electric_scooters_battery_level NOT NULL,
   actual_battery_capacity number(3) constraint nn_electric_scooters_actual_battery_capacity NOT NULL
+									constraint ck_electric_scooters_actual_battery_capacity CHECK (actual_battery_capacity >= 0 and actual_battery_capacity <= 100)
   );
 
 -- Tabela Electric_Scooter_Types  
