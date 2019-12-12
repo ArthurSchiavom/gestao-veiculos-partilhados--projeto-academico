@@ -1,53 +1,50 @@
 package lapr.project.model.Users;
 
-import java.util.Objects;
-
 /**
  * Represents a client of the application, which is an user
  */
 public class Client extends User {
 
-    private final int points, creditCardSecret, age;
-    private final float height, weight;
+    private final int points, age, height;
+    private final float weight;
     private final char gender; // M or F, to simplify
-    private final String creditCardNumber, creditCardExpiration; // expiration is in the format DD-MM-YYYY
+    private final CreditCard cc;
 
     /**
-     *Constructor for new clients (so the points are 0)
+     * Instantiates a client object
+     *
+     * @param email    the client email
+     * @param password the client password
+     * @param age      the age of the
+     * @param height   the height (in cms) of the client
+     * @param weight   the weight (in kgs) of the client
+     * @param gender   the physical gender of the client
      */
-    public Client(String email, String password, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration) {
+    public Client(String email, String password, int age, int height, float weight, char gender, CreditCard creditCard) {
         super(email, password, UserType.CLIENT);
-        this.creditCardSecret = creditCardSecret;
         this.age = age;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
-        this.creditCardNumber = creditCardNumber;
-        this.creditCardExpiration = creditCardExpiration;
         this.points = 0;
+        this.cc = creditCard;
     }
 
     /**
-     *Constructor for already existent Clients
+     * Constructor for already existent Clients
      */
-    public Client(String email, String password, int points, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration) {
+    public Client(String email, String password, int points, int age, int height, float weight, char gender, CreditCard creditCard) {
         super(email, password, UserType.CLIENT);
         this.points = points;
-        this.creditCardSecret = creditCardSecret;
         this.age = age;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
-        this.creditCardNumber = creditCardNumber;
-        this.creditCardExpiration = creditCardExpiration;
+        this.cc = creditCard;
     }
 
     public int getPoints() {
         return points;
-    }
-
-    public int getCreditCardSecret() {
-        return creditCardSecret;
     }
 
     public int getAge() {
@@ -64,36 +61,5 @@ public class Client extends User {
 
     public char getGender() {
         return gender;
-    }
-
-    public String getCreditCardNumber() {
-        return creditCardNumber;
-    }
-
-    public String getCreditCardExpiration() {
-        return creditCardExpiration;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Client)) return false;
-        if (!super.equals(o)) return false;
-        Client client = (Client) o;
-        return getPoints() == client.getPoints() && getEmail().equalsIgnoreCase(client.getEmail()) &&
-                getPassword().equals(client.getPassword()) &&
-                getType() == client.getType() &&
-                getCreditCardSecret() == client.getCreditCardSecret() &&
-                getAge() == client.getAge() &&
-                Float.compare(client.getHeight(), getHeight()) == 0 &&
-                Float.compare(client.getWeight(), getWeight()) == 0 &&
-                getGender() == client.getGender() &&
-                getCreditCardNumber().equals(client.getCreditCardNumber()) &&
-                getCreditCardExpiration().equals(client.getCreditCardExpiration());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getPoints(), getCreditCardSecret(), getAge(), getHeight(), getWeight(), getGender(), getCreditCardNumber(), getCreditCardExpiration());
     }
 }

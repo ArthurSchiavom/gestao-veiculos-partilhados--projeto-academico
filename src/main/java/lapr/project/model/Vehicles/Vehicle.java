@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Represents vehicle
  */
-public abstract class Vehicle {
+public class Vehicle {
 
     private final int id;
     private final String name;
