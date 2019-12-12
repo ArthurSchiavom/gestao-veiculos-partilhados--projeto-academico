@@ -1,15 +1,16 @@
 
-package PL;
+package lapr.project.tree;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  *
@@ -27,7 +28,7 @@ public class BSTTest {
     public BSTTest() {
     }
     
-    @Before
+    @BeforeEach
     public void setUp(){
         instance = new BST();
         for(int i :arr)
@@ -39,16 +40,16 @@ public class BSTTest {
     @Test
     public void testSize() {
         System.out.println("size");
-        assertEquals("size should be = 10",instance.size(), arr.length);
+        assertEquals(instance.size(), arr.length);
         
         BST<String> sInstance = new BST();
-        assertEquals("size should be = 0",sInstance.size(), 0);
+        assertEquals(sInstance.size(), 0);
         sInstance.insert("A");
-        assertEquals("size should be = 1",sInstance.size(), 1);
+        assertEquals(sInstance.size(), 1);
         sInstance.insert("B");
-        assertEquals("size should be = 2",sInstance.size(), 2);
+        assertEquals(sInstance.size(), 2);
         sInstance.insert("A");
-        assertEquals("size should be = 2",sInstance.size(), 2);
+        assertEquals(sInstance.size(), 2);
     }
    
     /**
@@ -61,11 +62,11 @@ public class BSTTest {
         BST<Integer> instance = new BST();
         for (int i=0; i<9; i++){            //new elements
             instance.insert(arr[i]);
-            assertEquals("size should be = "+(i+1),instance.size(), i+1);
+            assertEquals(instance.size(), i+1);
         }
         for(int i=9; i<arr.length; i++){    //duplicated elements => same size
             instance.insert(arr[i]);
-            assertEquals("size should be = 9",instance.size(), 9);
+            assertEquals(instance.size(), 9);
         }
     }
     /**
@@ -78,15 +79,15 @@ public class BSTTest {
         int qtd=arr.length;
         instance.remove(999);
 
-        assertEquals("size should be = "+qtd, instance.size(), qtd);
+        assertEquals(instance.size(), qtd);
         for (int i=0; i<arr.length; i++){
             instance.remove(arr[i]);
             qtd--;
-            assertEquals("size should be = "+qtd, qtd,instance.size());
+            assertEquals(qtd,instance.size());
         }
         
         instance.remove(999);
-        assertEquals("size should be = 0", 0,instance.size());
+        assertEquals(0,instance.size());
     }
 /**
      * Test of isEmpty method, of class BST.
@@ -95,15 +96,15 @@ public class BSTTest {
     public void testIsEmpty() {
         System.out.println("isempty");
         
-        assertFalse("the BST should be NOT empty", instance.isEmpty());        
+        assertFalse(instance.isEmpty());
         instance = new BST();
-        assertTrue("the BST should be empty",instance.isEmpty());        
+        assertTrue(instance.isEmpty());
 
         instance.insert(11);
-        assertFalse("the BST should be NOT empty", instance.isEmpty());
+        assertFalse(instance.isEmpty());
         
         instance.remove(11);
-        assertTrue("the BST should be empty", instance.isEmpty());
+        assertTrue(instance.isEmpty());
     }
 /**
      * Test of height method, of class BST.
@@ -113,13 +114,13 @@ public class BSTTest {
         System.out.println("height");
 
         instance = new BST();
-        assertEquals("height should be = -1", instance.height(), -1);
+        assertEquals(instance.height(), -1);
         for(int idx=0; idx<arr.length; idx++){
             instance.insert(arr[idx]);
-            assertEquals("height should be = "+height[idx], instance.height(), height[idx]);            
+            assertEquals(instance.height(), height[idx]);
         }
         instance = new BST();
-        assertEquals("height should be = -1", instance.height(), -1);
+        assertEquals(instance.height(), -1);
     }
     /**
      * Test of smallestelement method, of class TREE.
@@ -160,7 +161,7 @@ public class BSTTest {
     public void testInOrder() {
         System.out.println("inOrder");
         List<Integer> lExpected = Arrays.asList(inorderT);
-        assertEquals("inOrder should be "+lExpected.toString(), lExpected, instance.inOrder());
+        assertEquals(lExpected, instance.inOrder());
     }
 /**
      * Test of preOrder method, of class BST.
@@ -169,7 +170,7 @@ public class BSTTest {
     public void testpreOrder() {
         System.out.println("preOrder");
         List<Integer> lExpected = Arrays.asList(preorderT);
-        assertEquals("preOrder should be "+lExpected.toString(), lExpected, instance.preOrder());
+        assertEquals(lExpected, instance.preOrder());
     }
 /**
      * Test of posOrder method, of class BST.
@@ -178,6 +179,6 @@ public class BSTTest {
     public void testposOrder() {
         System.out.println("posOrder");
         List<Integer> lExpected = Arrays.asList(posorderT);
-        assertEquals("posOrder should be "+lExpected.toString(), lExpected, instance.posOrder());
+        assertEquals(lExpected, instance.posOrder());
     }    
 }

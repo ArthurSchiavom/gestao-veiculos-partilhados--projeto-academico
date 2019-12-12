@@ -1,4 +1,4 @@
-package ESINF.tree;
+package lapr.project.tree;
 
 /**
  * Representa um valor de uma 2D-Tree.

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ESINF.tree;
+package lapr.project.tree;
 
 import java.util.List;
 import java.util.Map;
