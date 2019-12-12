@@ -6,14 +6,6 @@
 package lapr.project.model;
 
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-import lapr.project.model.Park.Capacity;
-import lapr.project.model.Park.Park;
-import lapr.project.model.Users.Client;
-import lapr.project.model.Vehicles.Bicycle;
-import lapr.project.model.Vehicles.Vehicle;
-import lapr.project.model.Vehicles.VehicleType;
 import org.junit.Before;
 
 import org.junit.jupiter.api.Test;
