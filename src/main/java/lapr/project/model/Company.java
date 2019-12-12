@@ -1,5 +1,7 @@
 package lapr.project.model;
 
+import lapr.project.data.DataHandler;
+
 import java.sql.Connection;
 
 /**
@@ -7,21 +9,21 @@ import java.sql.Connection;
  */
 public class Company {
     private static Company instance = null;
-    private Connection connection;
+    private DataHandler dataHandler;
     /**
      * Represents a Singleton of the class Company
      */
-    private Company(Connection connection) {
-        this.connection = connection;
+    private Company(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
     }
 
     /**
      * Represents a Singleton of the class Company
      * @return the company
      */
-    public static Company createCompany(Connection connection){
+    public static Company createCompany(DataHandler dataHandler){
         if(instance != null){
-            instance = new Company(connection);
+            instance = new Company(dataHandler);
         }
         return instance;
     }
@@ -30,7 +32,7 @@ public class Company {
         return instance;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public DataHandler getDataHandler() {
+        return dataHandler;
     }
 }
