@@ -31,6 +31,7 @@ CREATE TABLE vehicles (
 -- Tabela Vehicle_Types
 CREATE TABLE vehicle_types (
   vehicle_type_name varchar2(50) constraint pk_vehicle_types_name PRIMARY KEY
+                                 constraint ck_vehicle_types_vehicle_type_name CHECK (REGEXP_LIKE(vehicle_type_name, 'BICYCLE|ELECTRIC SCOOTER', 'i'))
   );
 
 -- Tabela Bicycles 
@@ -132,7 +133,8 @@ CREATE TABLE park_capacity (
 
 -- Tabela user_type
 CREATE TABLE user_type (
-  user_type_name varchar2(50) CONSTRAINT pk_user_type_name PRIMARY KEY 
+  user_type_name varchar2(50) CONSTRAINT pk_user_type_name PRIMARY KEY
+                              constraint ck_user_type_user_type_name CHECK (REGEXP_LIKE(user_type_name, 'ADMINISTRATOR|CLIENT', 'i'))
 );
 
 -- Tabela trip
