@@ -60,13 +60,13 @@ CREATE TABLE electric_scooter_types (
 -- Tabela Clients
 CREATE TABLE clients (
   user_email             varchar2(50) constraint pk_clients_user_email PRIMARY KEY, 
-  points                 number(10)   DEFAULT 0 
+  points                 number(6)   DEFAULT 0 
                                       constraint nn_clients_points NOT NULL, 
   credit_card_number     char(16)     constraint nn_clients_credit_card_number NOT NULL,
   credit_card_expiration date         constraint nn_clients_credit_card_expiration NOT NULL, 
   credit_card_secret     number(3)    constraint nn_clients_credit_card_secret NOT NULL
                                       constraint ck_clients_credit_card_secret CHECK (REGEXP_LIKE(credit_card_secret, '\d{3}$')), 
-  height_m               number(4, 2) constraint nn_clients_height_m NOT NULL, 
+  height_m               number(3, 2) constraint nn_clients_height_m NOT NULL, 
   weight_kg              number(5, 2) constraint nn_clients_weight_kg NOT NULL, 
   gender                 char(1)      constraint nn_clients_gender NOT NULL
                                       constraint ck_clients_gender CHECK (REGEXP_LIKE(gender, 'M|F', 'i')), 
@@ -126,8 +126,8 @@ CREATE TABLE invoices (
 CREATE TABLE park_capacity (
   park_id           number(6), 
   vehicle_type_name varchar2(50), 
-  park_capacity     number(10) CONSTRAINT nn_park_capacity_park_capacity NOT NULL, 
-  amount_occupied   number(10) DEFAULT 0 CONSTRAINT nn_park_capacity_amount_occupied NOT NULL, 
+  park_capacity     number(5) CONSTRAINT nn_park_capacity_park_capacity NOT NULL, 
+  amount_occupied   number(5) DEFAULT 0 CONSTRAINT nn_park_capacity_amount_occupied NOT NULL, 
   CONSTRAINT pk_park_capacity_park_id_vehicle_type_name PRIMARY KEY (park_id, vehicle_type_name)
 );
 
@@ -154,7 +154,7 @@ CREATE TABLE receipts (
   user_email       varchar2(50), 
   payment_start_date date,
   payment_end_date date CONSTRAINT nn_receipts_payment_end_date NOT NULL,
-  points_used      number(10) CONSTRAINT nn_receipts_points_used NOT NULL, 
+  points_used      number(6) CONSTRAINT nn_receipts_points_used NOT NULL, 
   amount_paid_cash number(9, 2) CONSTRAINT nn_receipts_amount_paid_cash NOT NULL, 
   CONSTRAINT pk_receipts_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date),
   CONSTRAINT ck_receipts_start_end_payment_date CHECK(payment_start_date < payment_end_date)
