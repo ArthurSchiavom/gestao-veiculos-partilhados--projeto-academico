@@ -88,6 +88,30 @@ public class TripTest {
         assertEquals(expResult, result);
     }
 
+       /**
+     * Test of getEndTime method, of class Trip.
+     */
+    @Test
+    public void testGetEndTime2() {
+        Calendar startTime = Calendar.getInstance();
+        startTime.clear();
+        startTime.set(2019, 10, 9, 12, 10);
+
+    
+
+        int clientId = 1;
+        int startParkId = 1;
+        int endParkId = 2;
+        int vehicleId = 1;
+        Trip instance = new Trip(startTime, clientId, startParkId, vehicleId);
+
+
+    
+        Calendar result = instance.getEndTime();
+        assertNull(result);
+     
+    }
+
     /**
      * Test of getClient method, of class Trip.
      */
@@ -169,18 +193,14 @@ public class TripTest {
         startTime.clear();
         startTime.set(2019, 10, 9, 12, 10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-          int clientId = 1;
+        int clientId = 1;
         int startParkId = 1;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, vehicleId);
+        Trip instance = new Trip(startTime, clientId, startParkId, vehicleId);
 
         int expResult = 0;
 
-        int result = instance.getEndParkId();
+        Integer result = instance.getEndParkId();
         assertEquals(expResult, result);
     }
     /**
@@ -197,7 +217,7 @@ public class TripTest {
         endTime.set(2019, 10, 9, 12, 10);
 
         
-          int clientId = 1;
+        int clientId = 1;
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
@@ -207,5 +227,7 @@ public class TripTest {
 
         int result = 1;
         assertEquals(expResult, result);
-    }  
+    }
+    
+    
 }
