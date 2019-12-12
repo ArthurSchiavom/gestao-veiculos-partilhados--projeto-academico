@@ -47,7 +47,6 @@ public class Trip {
      * Constructor that instantiates a trip without the end park and the end time defined
      *
      * @param startTime - the start time of the trip
-     * @param endTime - the end time of the trip
      * @param client - the client that is making the trip
      * @param startPark - the starting point (park) for the trip
      * @param vehicle - the vehicle being used
@@ -130,5 +129,4 @@ public class Trip {
     public int getVehicleId() {
         return this.vehicleId;
     }
-
 }

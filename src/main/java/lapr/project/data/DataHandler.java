@@ -81,7 +81,9 @@ public class DataHandler {
 
         openConnection();
 
-        ScriptRunner runner = new ScriptRunner(getConnection(), true, false);
+        if (connection == null)
+            openConnection();
+        ScriptRunner runner = new ScriptRunner(connection, true, false);
 
         runner.runScript(new BufferedReader(new FileReader(fileName)));
 
@@ -92,7 +94,7 @@ public class DataHandler {
     /**
      * Estabelece a ligação à BD.
      */
-    protected void openConnection() {
+    public void openConnection() {
         try {
             connection = DriverManager.getConnection(
                     jdbcUrl, username, password);
@@ -106,7 +108,7 @@ public class DataHandler {
      * retorna uma mensagem de erro se alguma dessas operações não for bem
      * sucedida. Caso contrário retorna uma "string" vazia.
      */
-    protected String closeAll() {
+    public String closeAll() {
 
         StringBuilder message = new StringBuilder();
 
@@ -135,18 +137,10 @@ public class DataHandler {
                 connection.close();
             } catch (SQLException ex) {
                 message.append(ex.getMessage());
-                message.append("\n");
             }
             connection = null;
         }
         return message.toString();
-    }
-
-
-    public Connection getConnection() {
-        if (connection == null)
-            openConnection();
-        return connection;
     }
 
     public <T> T executeSQLOperation(SQLOperation<T> operation) throws SQLException {
@@ -155,15 +149,15 @@ public class DataHandler {
             try {
                 return operation.executeOperation();
             } catch (SQLException e) {
-                if (nAttempt < 3) {
+                if (e.getErrorCode() == 17008 && nAttempt < 3) {
                     try {
-                        nAttempt++;
                         Thread.sleep(RECONNECTION_INTERVAL_MILLIS);
                     } catch (InterruptedException ex) {}
                     openConnection();
                 }
                 else
                     throw e;
+                nAttempt++;
             }
         }
     }
@@ -231,5 +225,15 @@ public class DataHandler {
     public Timestamp getTimestamp(ResultSet resultSet, int columnPosition) throws SQLException {
         SQLOperation<Timestamp> operation = () -> {return resultSet.getTimestamp(columnPosition);};
         return executeSQLOperation(operation);
+    }
+
+    public void close(ResultSet obj) throws SQLException {
+        SQLOperation<Boolean> operation = () -> {obj.close(); return true;};
+        executeSQLOperation(operation);
+    }
+
+    public void close(PreparedStatement obj) throws SQLException {
+        SQLOperation<Boolean> operation = () -> {obj.close(); return true;};
+        executeSQLOperation(operation);
     }
 }

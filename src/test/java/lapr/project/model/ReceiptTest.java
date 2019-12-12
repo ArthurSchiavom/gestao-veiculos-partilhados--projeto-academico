@@ -2,16 +2,18 @@ package lapr.project.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Calendar;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReceiptTest {
 
-    private Calendar cal;
+    private LocalDate cal;
 
     @BeforeEach
     private void before() {
-        cal = Calendar.getInstance();
+        cal = LocalDate.now();
     }
 
     @Test
@@ -41,7 +43,7 @@ class ReceiptTest {
     @Test
     void testGetPaymentDate() {
         Receipt receipt = new Receipt(cal, 0,5);
-        Calendar expResult = cal;
+        LocalDate expResult = cal;
         assertEquals(expResult, receipt.getPaymentDate());
     }
 
@@ -53,8 +55,7 @@ class ReceiptTest {
         Receipt receipt2 = new Receipt(cal, 0, 5);
         assertEquals(receipt1, receipt2);
 
-        Calendar cal1 = Calendar.getInstance();
-        cal1.set(2019, Calendar.JANUARY,0);
+        LocalDate cal1 = LocalDate.of(2019, 1, 1);
         receipt1 = new Receipt(cal1, 0, 5);
         assertNotEquals(receipt1, receipt2);
 
@@ -72,8 +73,7 @@ class ReceiptTest {
         int expResult = receipt2.hashCode();
         assertEquals(expResult, receipt1.hashCode());
 
-        Calendar cal1 = cal;
-        cal1.set(2019,Calendar.JANUARY,0);
+        LocalDate cal1 = LocalDate.of(2019,1,1);
         receipt1 = new Receipt(cal1, 5,5);
         assertNotEquals(expResult, receipt1.hashCode());
     }

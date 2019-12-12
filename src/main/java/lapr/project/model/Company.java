@@ -22,7 +22,7 @@ public class Company {
      * @return the company
      */
     public static Company createCompany(DataHandler dataHandler){
-        if(instance != null){
+        if(instance == null){
             instance = new Company(dataHandler);
         }
         return instance;

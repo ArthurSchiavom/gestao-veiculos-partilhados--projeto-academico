@@ -5,5 +5,13 @@ package lapr.project.model.Vehicles;
  */
 public enum VehicleType {
     BICYCLE,
-    ELECTRIC_SCOOTER
+    ELECTRIC_SCOOTER;
+
+    public static VehicleType parseVehicleType(String str) {
+        for (VehicleType value : VehicleType.values()) {
+            if (value.toString().equalsIgnoreCase(str))
+                return value;
+        }
+        return null;
+    }
 }
