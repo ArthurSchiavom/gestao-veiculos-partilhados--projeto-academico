@@ -1,4 +1,4 @@
-package ESINF.tree;
+package lapr.project.tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;

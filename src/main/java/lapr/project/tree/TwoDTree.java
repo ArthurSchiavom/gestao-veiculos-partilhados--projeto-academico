@@ -1,4 +1,4 @@
-package ESINF.tree;
+package lapr.project.tree;
 
 /**
  * Árvore 2D
