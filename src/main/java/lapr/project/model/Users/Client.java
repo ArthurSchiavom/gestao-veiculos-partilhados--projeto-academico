@@ -62,5 +62,4 @@ public class Client extends User {
     public char getGender() {
         return gender;
     }
-
 }

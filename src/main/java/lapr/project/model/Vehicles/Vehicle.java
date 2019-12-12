@@ -5,15 +5,15 @@ import java.util.Objects;
 /**
  * Represents vehicle
  */
-public abstract class Vehicle {
+public class Vehicle {
 
     private final int id;
     private final String name;
     private final double latitude, longitude, altitude;
-    private final char available;
+    private final boolean available;
     private final VehicleType type;
 
-    public Vehicle(int id, String name, double latitude, double longitude, double altitude, char available, VehicleType type) {
+    public Vehicle(int id, String name, double latitude, double longitude, double altitude, boolean available, VehicleType type) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -47,12 +47,20 @@ public abstract class Vehicle {
         return altitude;
     }
 
-    public char getAvailable() {
+    public boolean isAvailable() {
         return available;
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return id == vehicle.id;
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getLatitude(), getLongitude(), getAltitude(), getAvailable(), getType());
+        return Objects.hashCode(id);
     }
 }

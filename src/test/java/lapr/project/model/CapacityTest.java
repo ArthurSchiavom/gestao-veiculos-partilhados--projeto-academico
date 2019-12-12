@@ -11,12 +11,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
  * @author kevin
  */
-public class ParkCapacityTest {
+public class CapacityTest {
 
     @Test
     public void testGetCapacity() {
@@ -24,6 +25,7 @@ public class ParkCapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         int expResult = 30;
         int result = instance.getMaxCapacity();
+        assertNotNull(result);
         assertEquals(expResult, result);
     }
 
@@ -33,6 +35,7 @@ public class ParkCapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         int expResult = 20;
         int result = instance.getAmountOccupied();
+        assertNotNull(result);
         assertEquals(expResult, result);
     }
     
@@ -42,6 +45,7 @@ public class ParkCapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         VehicleType expResult = VehicleType.ELECTRIC_SCOOTER;
         VehicleType result = instance.getVehicleType();
+        assertNotNull(result);
         assertEquals(expResult, result);
     }
     
@@ -51,6 +55,7 @@ public class ParkCapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         VehicleType expResult = VehicleType.BICYCLE;
         VehicleType result = instance.getVehicleType();
+        assertNotNull(result);
         assertNotEquals(expResult, result);
     }
 }

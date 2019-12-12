@@ -21,6 +21,7 @@ public class Bootstrap {
 
     public void boot(){
         DataHandler dataHandler = new DataHandler(JDBCURL, USERNAME,password);
-        Company comp = Company.createCompany(dataHandler.getConnection());
+        dataHandler.openConnection();
+        Company.createCompany(dataHandler);
     }
 }

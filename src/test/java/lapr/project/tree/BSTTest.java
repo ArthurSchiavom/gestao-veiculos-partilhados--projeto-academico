@@ -21,6 +21,7 @@ class BSTTest {
     private BST<Integer> instance;
 
     @BeforeEach
+<<<<<<< HEAD
     void setUp() {
         instance = new BST<>();
         for (int i : arr)
@@ -28,13 +29,25 @@ class BSTTest {
     }
 
     /**
+=======
+    public void setUp(){
+        instance = new BST<>();
+        for(int i :arr)
+            instance.insert(i);        
+    }    
+/**
+>>>>>>> 70232f5f6cf240aa8f7cd8ba250f00f8f5308077
      * Test of size method, of class BST.
      */
     @Test
     void testSize() {
         System.out.println("size");
         assertEquals(instance.size(), arr.length);
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 70232f5f6cf240aa8f7cd8ba250f00f8f5308077
         BST<String> sInstance = new BST<>();
         assertEquals(sInstance.size(), 0);
         sInstance.insert("A");
@@ -51,9 +64,15 @@ class BSTTest {
     @Test
     void testInsert() {
         System.out.println("insert");
+<<<<<<< HEAD
         int[] arr = {20, 15, 10, 13, 8, 17, 40, 50, 30, 20, 15, 10};
         BST<Integer> instance = new BST<>();
         for (int i = 0; i < 9; i++) {            //new elements
+=======
+        int arr[] = {20,15,10,13,8,17,40,50,30,20,15,10};
+        BST<Integer> instance = new BST<>();
+        for (int i=0; i<9; i++){            //new elements
+>>>>>>> 70232f5f6cf240aa8f7cd8ba250f00f8f5308077
             instance.insert(arr[i]);
             assertEquals(instance.size(), i + 1);
         }
@@ -138,6 +157,7 @@ class BSTTest {
     @Test
     void testProcessBstByLevel() {
         System.out.println("processbstbylevel");
+<<<<<<< HEAD
         Map<Integer, List<Integer>> expResult = new HashMap<>();
         expResult.put(0, Collections.singletonList(20));
         expResult.put(1, Arrays.asList(15, 40));
@@ -148,6 +168,18 @@ class BSTTest {
         Map<Integer, List<Integer>> result = instance.nodesByLevel();
 
         for (Map.Entry<Integer, List<Integer>> e : result.entrySet())
+=======
+        Map<Integer,List<Integer>> expResult = new HashMap<>();
+        expResult.put(0, Arrays.asList(new Integer[]{20}));
+        expResult.put(1, Arrays.asList(new Integer[]{15,40}));
+        expResult.put(2, Arrays.asList(new Integer[]{10,17,30,50}));
+        expResult.put(3, Arrays.asList(new Integer[]{8,13}));
+        expResult.put(4, Arrays.asList(new Integer[]{7}));
+        
+        Map<Integer,List<Integer>> result = instance.nodesByLevel();
+        
+        for(Map.Entry<Integer,List<Integer>> e : result.entrySet())
+>>>>>>> 70232f5f6cf240aa8f7cd8ba250f00f8f5308077
             assertEquals(expResult.get(e.getKey()), e.getValue());
     }
 
