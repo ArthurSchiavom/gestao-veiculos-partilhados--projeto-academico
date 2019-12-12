@@ -5,7 +5,7 @@
  */
 package lapr.project.model;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,24 +22,17 @@ public class TripTest {
     public void testGetStartTime() {
         System.out.println("getStartTime");
 
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, endParkId, vehicleId);
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
-        Calendar expResult = Calendar.getInstance();
-        expResult.clear();
-        expResult.set(2019, 10, 9, 12, 10);
-        Calendar result = instance.getStartTime();
+        LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime result = instance.getStartTime();
         assertEquals(expResult, result);
     }
 
@@ -48,25 +41,18 @@ public class TripTest {
      */
     @Test
     public void testGetEndTime() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, endParkId, vehicleId);
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
 
-        Calendar expResult = Calendar.getInstance();
-        expResult.clear();
-        expResult.set(2019, 10, 9, 12, 10);
-        Calendar result = instance.getEndTime();
+        LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime result = instance.getEndTime();
         assertEquals(expResult, result);
     }
 
@@ -75,19 +61,16 @@ public class TripTest {
      */
     @Test
     public void testGetEndTime2() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
 
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, clientId, startParkId, vehicleId);
+        Trip instance = new Trip(startTime, clientEmail, startParkId, vehicleId);
 
 
-        Calendar result = instance.getEndTime();
+        LocalDateTime result = instance.getEndTime();
         assertNull(result);
 
     }
@@ -97,23 +80,18 @@ public class TripTest {
      */
     @Test
     public void testGetClientId() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, endParkId, vehicleId);
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
-        int expResult = 1;
+        String expResult = "email@email.com";
 
-        int result = instance.getClientId();
+        String result = instance.getClientEmail();
         assertEquals(expResult, result);
     }
 
@@ -122,19 +100,14 @@ public class TripTest {
      */
     @Test
     public void testGetStartParkId() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, endParkId, vehicleId);
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         int expResult = 1;
 
@@ -147,19 +120,14 @@ public class TripTest {
      */
     @Test
     public void testGetEndParkId() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, endParkId, vehicleId);
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         int expResult = 2;
 
@@ -169,14 +137,12 @@ public class TripTest {
 
     @Test
     public void testGetEndParkId2() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
 
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, clientId, startParkId, vehicleId);
+        Trip instance = new Trip(startTime, clientEmail, startParkId, vehicleId);
 
         int expResult = 0;
 
@@ -189,24 +155,18 @@ public class TripTest {
      */
     @Test
     public void testGetVehicleId() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.clear();
-        startTime.set(2019, 10, 9, 12, 10);
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Calendar endTime = Calendar.getInstance();
-        endTime.clear();
-        endTime.set(2019, 10, 9, 12, 10);
-
-
-        int clientId = 1;
+        String clientEmail = "email@email.com";
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
-        Trip instance = new Trip(startTime, endTime, clientId, startParkId, endParkId, vehicleId);
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         int expResult = 1;
 
-        int result = 1;
+        int result = instance.getVehicleId();
         assertEquals(expResult, result);
     }
 }

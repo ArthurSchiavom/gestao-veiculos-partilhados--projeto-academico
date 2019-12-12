@@ -36,7 +36,7 @@ public class ClientTest {
         System.out.println("getCreditCardSecret");
         Client instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
                 new CreditCard("12341234123412", "12/20", 321));
-        int expResult = 1234;
+        int expResult = 321;
         int result = instance.getCreditCard().getCcv();
         assertEquals(expResult, result);
     }
@@ -54,7 +54,7 @@ public class ClientTest {
     @Test
     void testGetHeight() {
         System.out.println("getHeight");
-        float expResult = 1.80F;
+        float expResult = 180;
         float result = instance.getHeight();
         assertEquals(expResult, result, 0.0);
     }
@@ -78,7 +78,7 @@ public class ClientTest {
     @Test
     void testGetCreditCardNumber() {
         System.out.println("getCreditCardNumber");
-        String expResult = "123456";
+        String expResult = "12341234123412";
         String result = instance.getCreditCard().getCcNumber();
         assertEquals(expResult, result);
     }
