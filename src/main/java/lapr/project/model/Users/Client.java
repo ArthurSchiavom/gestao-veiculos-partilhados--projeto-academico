@@ -55,6 +55,10 @@ public class Client extends User {
         return height;
     }
 
+    public CreditCard getCc() {
+        return cc;
+    }
+    
     public float getWeight() {
         return weight;
     }
