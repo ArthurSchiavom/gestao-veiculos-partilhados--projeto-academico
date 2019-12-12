@@ -6,7 +6,6 @@ import lapr.project.model.Coordinates;
 import lapr.project.model.Users.Client;
 import lapr.project.model.Users.UserType;
 import lapr.project.model.Users.User;
-
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,13 +21,18 @@ public class UsersRegister {
         this.dataHandler = dataHandler;
     }
 
+    /**
+     * Fetches a client object from the oraqle sql table
+     * @param email email of the client
+     * @return client object
+     */
     public Client fetchClient(String email){
-        PreparedStatement statement = null;
+        PreparedStatement stm = null;
         Client client;
         try {
-            statement = dataHandler.prepareStatement("SELECT * FROM clients where user_email=?");
-            dataHandler.setString(statement, 1, email);
-            ResultSet resultSet = dataHandler.executeQuery(statement);
+            stm = dataHandler.prepareStatement("SELECT * FROM clients where user_email=?");
+            dataHandler.setString(stm, 1, email);
+            ResultSet resultSet = dataHandler.executeQuery(stm);
             if(resultSet == null){
                 return null;
             }
@@ -42,14 +46,17 @@ public class UsersRegister {
             int age = dataHandler.getInt(resultSet, 10);
 
             // get password of client
-            statement = dataHandler.prepareStatement("SELECT user_password FROM registered_users where user_email=?");
-            dataHandler.setString(statement, 1, email);
-            resultSet = dataHandler.executeQuery(statement);
+            stm = dataHandler.prepareStatement("SELECT user_password FROM registered_users where user_email=?");
+            dataHandler.setString(stm, 1, email);
+            resultSet = dataHandler.executeQuery(stm);
             if(resultSet == null){
+                resultSet.close();
+                stm.close();
                 return null;
             }
             String password = dataHandler.getString(resultSet, 1);
-
+            resultSet.close();
+            stm.close();
             return new Client( email, password,  points,  creditCardSecret,  age,  height,  weight,  gender,  creditCardNumber, creditCardExpiration);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,6 +101,7 @@ public class UsersRegister {
             dataHandler.setString(stm,9,String.valueOf(gender)); // uses setString even tho its a char
             dataHandler.setInt(stm,10,age);
             dataHandler.executeUpdate(stm);
+            stm.close(); // closes statement
       } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
