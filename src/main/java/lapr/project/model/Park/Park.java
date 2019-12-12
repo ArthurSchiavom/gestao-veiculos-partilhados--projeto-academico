@@ -59,4 +59,8 @@ public class Park {
         }
         return -2;
     }
+    
+    public int getParkId() {
+        return this.id;
+    }
 }
