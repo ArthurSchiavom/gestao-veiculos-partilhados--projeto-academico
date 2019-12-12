@@ -18,10 +18,10 @@ import lapr.project.model.Park.Park;
 public class Trip {
 
     private Calendar startTime;
-    private Calendar endTime;
+    private Calendar endTime = null;
     private int clientId;
     private int startParkId;
-    private int endParkId;
+    private int endParkId = 0;
     private int vehicleId;
 
     /**
@@ -43,8 +43,8 @@ public class Trip {
         this.vehicleId = vehicle;
     }
 
-    /**
-     * Constructor that instantiates a trip without the end park defined
+     /**
+     * Constructor that instantiates a trip without the end park and the end time defined
      *
      * @param startTime - the start time of the trip
      * @param endTime - the end time of the trip
@@ -52,14 +52,31 @@ public class Trip {
      * @param startPark - the starting point (park) for the trip
      * @param vehicle - the vehicle being used
      */
-    public Trip(Calendar startTime, Calendar endTime, int client, int startPark, int vehicle) {
+    public Trip(Calendar startTime, int client, int startPark, int vehicle) {
         this.startTime = startTime;
-        this.endTime = endTime;
         this.clientId = client;
         this.startParkId = startPark;
         this.vehicleId = vehicle;
     }
 
+        /**
+     * Constructor that instantiates a trip without the end time defined
+     *
+     * @param startTime - the start time of the trip
+     * @param client - the client that is making the trip
+     * @param startPark - the starting point (park) for the trip
+     * @param endPark - the ending point (park) for the trip
+     * @param vehicle - the vehicle being used
+     */
+    public Trip(Calendar startTime, int client, int startPark, int endPark, int vehicle) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.clientId = client;
+        this.startParkId = startPark;
+        this.endParkId = endPark;
+        this.vehicleId = vehicle;
+    }
+    
     /**
      * Returns the start time of the current trip.
      *
