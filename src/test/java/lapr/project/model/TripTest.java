@@ -6,39 +6,30 @@
 package lapr.project.model;
 
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-import lapr.project.model.Park.Capacity;
-import lapr.project.model.Park.Park;
-import lapr.project.model.Users.Client;
-import lapr.project.model.Vehicles.Bicycle;
-import lapr.project.model.Vehicles.Vehicle;
-import lapr.project.model.Vehicles.VehicleType;
-import org.junit.Before;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
- *
  * @author Jose
  */
 public class TripTest {
-    
+
     public TripTest() {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
-    
-
 
     /**
      * Test of getStartTime method, of class Trip.
      */
     @Test
     public void testGetStartTime() {
-   System.out.println("getStartTime");
+        System.out.println("getStartTime");
 
         Calendar startTime = Calendar.getInstance();
         startTime.clear();
@@ -88,7 +79,7 @@ public class TripTest {
         assertEquals(expResult, result);
     }
 
-       /**
+    /**
      * Test of getEndTime method, of class Trip.
      */
     @Test
@@ -97,7 +88,6 @@ public class TripTest {
         startTime.clear();
         startTime.set(2019, 10, 9, 12, 10);
 
-    
 
         int clientId = 1;
         int startParkId = 1;
@@ -106,10 +96,9 @@ public class TripTest {
         Trip instance = new Trip(startTime, clientId, startParkId, vehicleId);
 
 
-    
         Calendar result = instance.getEndTime();
         assertNull(result);
-     
+
     }
 
     /**
@@ -125,7 +114,7 @@ public class TripTest {
         endTime.clear();
         endTime.set(2019, 10, 9, 12, 10);
 
-          int clientId = 1;
+        int clientId = 1;
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
@@ -150,7 +139,7 @@ public class TripTest {
         endTime.clear();
         endTime.set(2019, 10, 9, 12, 10);
 
-         int clientId = 1;
+        int clientId = 1;
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
@@ -175,7 +164,7 @@ public class TripTest {
         endTime.clear();
         endTime.set(2019, 10, 9, 12, 10);
 
-          int clientId = 1;
+        int clientId = 1;
         int startParkId = 1;
         int endParkId = 2;
         int vehicleId = 1;
@@ -187,7 +176,7 @@ public class TripTest {
         assertEquals(expResult, result);
     }
 
-     @Test
+    @Test
     public void testGetEndParkId2() {
         Calendar startTime = Calendar.getInstance();
         startTime.clear();
@@ -203,12 +192,13 @@ public class TripTest {
         Integer result = instance.getEndParkId();
         assertEquals(expResult, result);
     }
+
     /**
      * Test of getVehicle method, of class Trip.
      */
     @Test
     public void testGetVehicleId() {
-          Calendar startTime = Calendar.getInstance();
+        Calendar startTime = Calendar.getInstance();
         startTime.clear();
         startTime.set(2019, 10, 9, 12, 10);
 
@@ -216,7 +206,7 @@ public class TripTest {
         endTime.clear();
         endTime.set(2019, 10, 9, 12, 10);
 
-        
+
         int clientId = 1;
         int startParkId = 1;
         int endParkId = 2;
@@ -228,6 +218,4 @@ public class TripTest {
         int result = 1;
         assertEquals(expResult, result);
     }
-    
-    
 }

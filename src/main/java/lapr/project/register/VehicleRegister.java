@@ -7,9 +7,4 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class VehicleRegister {
-    public Vehicle fetchVehicle(int vehicleId) {
-
-
-        return vehicle;
-    }
 }

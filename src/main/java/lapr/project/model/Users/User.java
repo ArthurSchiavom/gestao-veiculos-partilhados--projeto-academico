@@ -7,15 +7,15 @@ import java.util.Objects;
  */
 public abstract class User {
     private final String email, password;
-    private final ClientType type;
+    private final UserType type;
 
-    public User(String email, String password, ClientType type) {
+    public User(String email, String password, UserType type) {
         this.email = email;
         this.password = password;
         this.type = type;
     }
 
-    public ClientType getType() {
+    public UserType getType() {
         return type;
     }
     public String getEmail(){

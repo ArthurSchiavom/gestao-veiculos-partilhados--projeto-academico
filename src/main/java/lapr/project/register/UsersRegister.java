@@ -1,15 +1,10 @@
 package lapr.project.register;
 
 import lapr.project.data.DataHandler;
-import lapr.project.model.Company;
-import lapr.project.model.Users.ClientType;
-import lapr.project.model.Users.User;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Handles the Users and its subclasses
