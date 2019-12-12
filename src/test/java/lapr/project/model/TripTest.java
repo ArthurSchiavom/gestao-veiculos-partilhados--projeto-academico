@@ -6,24 +6,15 @@
 package lapr.project.model;
 
 import java.util.Calendar;
-import org.junit.Before;
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 /**
  *
- * @author Jose
  */
 public class TripTest {
     
     public TripTest() {
     }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-    
-
 
     /**
      * Test of getStartTime method, of class Trip.

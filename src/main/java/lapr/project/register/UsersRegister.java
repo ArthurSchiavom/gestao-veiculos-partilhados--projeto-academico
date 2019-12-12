@@ -2,7 +2,9 @@ package lapr.project.register;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;
-import lapr.project.model.Users.ClientType;
+import lapr.project.model.Coordinates;
+import lapr.project.model.Users.Client;
+import lapr.project.model.Users.UserType;
 import lapr.project.model.Users.User;
 
 import java.sql.*;
@@ -20,10 +22,45 @@ public class UsersRegister {
         this.dataHandler = dataHandler;
     }
 
+    public Client fetchClient(String email){
+        PreparedStatement statement = null;
+        Client client;
+        try {
+            statement = dataHandler.prepareStatement("SELECT * FROM clients where user_email=?");
+            dataHandler.setString(statement, 1, email);
+            ResultSet resultSet = dataHandler.executeQuery(statement);
+            if(resultSet == null){
+                return null;
+            }
+            int points = dataHandler.getInt(resultSet, 2);
+            String creditCardNumber = dataHandler.getString(resultSet, 3);
+            String creditCardExpiration = dataHandler.getString(resultSet, 4);
+            int creditCardSecret = dataHandler.getInt(resultSet, 5);
+            float height = (float) dataHandler.getDouble(resultSet, 6);
+            float weight = (float) dataHandler.getDouble(resultSet, 7);
+            char gender = dataHandler.getString(resultSet, 8).charAt(0);
+            int age = dataHandler.getInt(resultSet, 10);
+
+            // get password of client
+            statement = dataHandler.prepareStatement("SELECT user_password FROM registered_users where user_email=?");
+            dataHandler.setString(statement, 1, email);
+            resultSet = dataHandler.executeQuery(statement);
+            if(resultSet == null){
+                return null;
+            }
+            String password = dataHandler.getString(resultSet, 1);
+
+            return new Client( email, password,  points,  creditCardSecret,  age,  height,  weight,  gender,  creditCardNumber, creditCardExpiration);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /**
      * Inserts a client user into the sql database
      * @param email email of the user
-     * @param password password of the user
+     * @param paid amount paid from the total amount
+     * @param amountLeftToPay total amount left to pay
      * @param creditCardSecret  3 last digits of the credit card
      * @param age age of the client
      * @param height height of the client
@@ -32,7 +69,7 @@ public class UsersRegister {
      * @param creditCardNumber credit card number of the client
      * @param creditCardExpiration credit card expiration date of the client
      */
-    public void insertClient(String email, String password, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration){
+    public boolean insertClient(String email, int paid, int amountLeftToPay, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration){
         //create statement to be executed later
         PreparedStatement stm = null;
         String userTypeName = "Client";
@@ -41,28 +78,26 @@ public class UsersRegister {
             date = (Date) new SimpleDateFormat("dd-MM-yyyy").parse(creditCardExpiration);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            return; // exit method
+            return false; // exit method
         }
         try {
-            //insert registered_user
-            stm = dataHandler.prepareStatement("Insert into registered_users(user_email,user_type_name,user_password) values (?,?,?); ");
+            //pending registrations
+            stm = dataHandler.prepareStatement("Insert into pending_registrations(email,paid,amount_left_to_pay,credit_card_number,credit_card_expiration,credit_card_secret,height,weight,gender,age) values (?,?,?,?, ?, ?,?,?,?,?);");
             dataHandler.setString(stm, 1, email);
-            dataHandler.setString(stm,2, userTypeName); // have to verify if I can do this or have to select the userTypeName from TABLE 'user_type'
-            dataHandler.setString(stm, 3, password);
+            dataHandler.setInt(stm,2,paid);
+            dataHandler.setInt(stm,3, amountLeftToPay);
+            dataHandler.setString(stm,4,creditCardNumber);
+            dataHandler.setDate(stm,5,date); // creditCardExpiration (Date)
+            dataHandler.setInt(stm,6,creditCardSecret);
+            dataHandler.setDouble(stm,7,height);
+            dataHandler.setDouble(stm,8, weight);
+            dataHandler.setString(stm,9,String.valueOf(gender)); // uses setString even tho its a char
+            dataHandler.setInt(stm,10,age);
             dataHandler.executeUpdate(stm);
-
-            //insert Client
-            stm = dataHandler.prepareStatement("INSERT INTO clients VALUES(?,0,?,?, ?,?,?,?,'0',?);");
-            dataHandler.setString(stm, 1, email);
-            dataHandler.setString(stm,2,creditCardNumber);
-            dataHandler.setDate(stm,3,date); // creditCardExpiration (Date)
-            dataHandler.setInt(stm,4,creditCardSecret);
-            dataHandler.setDouble(stm,5,height);
-            dataHandler.setDouble(stm,6,weight);
-            dataHandler.setString(stm,7,String.valueOf(gender)); // uses setString even tho its a char
-            dataHandler.setInt(stm,8,age);
-        } catch (SQLException e) {
+      } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
+        return true;
     }
 }

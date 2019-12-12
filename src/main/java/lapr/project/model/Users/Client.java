@@ -16,7 +16,7 @@ public class Client extends User {
      *Constructor for new clients (so the points are 0)
      */
     public Client(String email, String password, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration) {
-        super(email, password, ClientType.CLIENT);
+        super(email, password, UserType.CLIENT);
         this.creditCardSecret = creditCardSecret;
         this.age = age;
         this.height = height;
@@ -31,7 +31,7 @@ public class Client extends User {
      *Constructor for already existent Clients
      */
     public Client(String email, String password, int points, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration) {
-        super(email, password, ClientType.CLIENT);
+        super(email, password, UserType.CLIENT);
         this.points = points;
         this.creditCardSecret = creditCardSecret;
         this.age = age;
