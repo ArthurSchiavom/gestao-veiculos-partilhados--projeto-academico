@@ -32,7 +32,7 @@ public class ParkTest {
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Fabuloso e grandioso",220F,160F);
         float expResult = 220F;
         float result = instance.getParkInputVoltage();
         assertNotNull(result);
@@ -48,7 +48,7 @@ public class ParkTest {
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Lindo e amoroso",220F,160F);
         float expResult = 160F;
         float result = instance.getParkInputCurrent();
         assertNotNull(result);
@@ -65,7 +65,7 @@ public class ParkTest {
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Lindo e charmoso",220F,160F);
         String expResult = "parque";
         String result = instance.getName();
         assertNotNull(result);
@@ -82,7 +82,7 @@ public class ParkTest {
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Lindo e grandioso",220F,160F);
         int expResult = 123;
         int result = instance.getParkId();
         assertNotNull(result);
@@ -97,7 +97,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Simpatico e grande",220F,160F);
         Coordinates expResult = cord;
         Coordinates result = instance.getCoords();
         assertNotNull(result);
@@ -111,7 +111,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Grande e pequeno",220F,160F);
         int expResult = 20;
         int result = instance.getAmountOccupiedByType(VehicleType.BICYCLE);
         assertNotNull(result);
@@ -125,7 +125,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Enorme e pequeno",220F,160F);
         int expResult = -1;
         int result = instance.getAmountOccupiedByType(VehicleType.ELECTRIC_SCOOTER);
         assertNotNull(result);
@@ -139,7 +139,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Lotado",220F,160F);
         int expResult = 30;
         int result = instance.getMaxAmountByType(VehicleType.BICYCLE);
         assertNotNull(result);
@@ -153,7 +153,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        Park instance = new Park("parque", cord,cp,123,"Simples",220F,160F);
         int expResult = -2;
         int result = instance.getMaxAmountByType(VehicleType.ELECTRIC_SCOOTER);
         assertNotNull(result);

@@ -9,6 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import lapr.project.model.Coordinates;
+import lapr.project.model.Park.Park;
+import lapr.project.register.ParkRegister;
+import lapr.project.register.UsersRegister;
 
 class Main {
 
@@ -32,7 +36,9 @@ class Main {
     public static void main(String[] args) {
         new Bootstrap().boot();
         DataHandler dh = Company.getInstance().getDataHandler();
+        ParkRegister pR= Company.getInstance().getParkRegister();
         try {
+            pR.addPark("Caralho", new Coordinates(35.234, 29.3, 5), "Grande e sexual", 2, 3);
             PreparedStatement ps = dh.prepareStatement("select * from vehicles");
             ResultSet rs = dh.executeQuery(ps);
             dh.close(rs);

@@ -35,19 +35,28 @@ public class ParkRegister {
      *
      * @param name Park name
      * @param cord Park coordinates
+     * @param park_descripton Description of the park
+     * @param park_input_voltage Park input voltage
+     * @param park_input_corrent Park input corrent
      * @return true if added with success the park, false otherwise
      */
-    public boolean addPark(String name, Coordinates cord) {
+    public boolean addPark(String name, Coordinates cord, String park_description, float park_input_voltage, float park_input_corrent) {
         try {
             double latitude = cord.getLatitude();
             double longitude = cord.getLongitude();
-            double altitude = cord.getAltitude();
-            PreparedStatement statement = dataHandler.prepareStatement("INSERT INTO PARKS(park_name, latitude, longitude, altitude) " + "VALUES(?,?,?,?)");
-            dataHandler.setString(statement, 1, name);
-            dataHandler.setDouble(statement, 2, latitude);
-            dataHandler.setDouble(statement, 3, longitude);
-            dataHandler.setDouble(statement, 4, altitude);
-            dataHandler.executeQuery(statement);
+            PreparedStatement statement = dataHandler.prepareStatement("INSERT INTO PARKS(latitude, longitude, park_name,park_description,park_input_voltage,park_input_current) " + "VALUES(?,?,?,?,?,?)");
+            System.out.println("aqui");
+            dataHandler.setDouble(statement, 1, latitude);
+            dataHandler.setDouble(statement, 2, longitude);
+            dataHandler.setString(statement, 3, name);
+            dataHandler.setString(statement, 4, park_description);
+            dataHandler.setFloat(statement, 5, park_input_voltage);
+            dataHandler.setFloat(statement, 6, park_input_corrent);
+            int nrLines = dataHandler.executeUpdate(statement);
+            if (nrLines == 0) {
+                return false;
+            }
+            dataHandler.close(statement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -62,11 +71,15 @@ public class ParkRegister {
      * @return return true if successfully removed and false otherwise
      */
     public boolean removeParkById(int id) {
-        //falta validar
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("DELETE FROM parks WHERE park_id=?");
+            PreparedStatement statement = dataHandler.prepareStatement("DELETE FROM parks WHERE park_id=?;");
             dataHandler.setInt(statement, 1, id);
-            dataHandler.executeQuery(statement);
+            ResultSet resultSet = dataHandler.executeQuery(statement);
+            if (resultSet == null) {
+                return false;
+            }
+            dataHandler.close(resultSet);
+            dataHandler.close(statement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -81,51 +94,90 @@ public class ParkRegister {
      * @return Returns a list of parks with the same name (or just one)
      */
     public List<Park> fetchParkByName(String name) {
+        int parkId;
+        double latitude;
+        double longitude;
+        String park_description;
+        float park_input_voltage;
+        float park_input_corrent;
+        int altitude;
         String parkName = name.toLowerCase().trim();
         List<Park> parksSameNameOrNot = new ArrayList<>();
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_name)=?");
+            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_name)=?;");
             dataHandler.setString(statement, 1, name);
             ResultSet result = dataHandler.executeQuery(statement);
-            while (result.next()) {
-                //dados retirados da tabela 
-                int parkId = dataHandler.getInt(result, 1);
-                parkName = dataHandler.getString(result, 2);
-                double latitude = dataHandler.getDouble(result, 3);
-                double longitude = dataHandler.getDouble(result, 4);
-                double altitude = dataHandler.getDouble(result, 5);
-                Set<Capacity> listOfCapacitys = getListOfCapacitys(parkId);
-                String description = dataHandler.getString(result, 6);
-                double park_input_voltage = dataHandler.getDouble(result, 7);
-                double park_input_corrent = dataHandler.getDouble(result, 8);
-                parksSameNameOrNot.add(new Park(parkName, new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId, description, (float) park_input_voltage, (float) park_input_corrent));
+            if (result == null) {
+                return null;
             }
+            while (result.next()) {
+                parkId = dataHandler.getInt(result, 1);
+                latitude = dataHandler.getDouble(result, 2);
+                longitude = dataHandler.getDouble(result, 3);
+                parkName = dataHandler.getString(result, 4);
+                park_description = dataHandler.getString(result, 5);
+                park_input_voltage = dataHandler.getFloat(result, 7);
+                park_input_corrent = dataHandler.getFloat(result, 8);
+                altitude = getAltitude(latitude, longitude);
+                Set<Capacity> listOfCapacitys = getListOfCapacitys(parkId);
+                parksSameNameOrNot.add(new Park(parkName, new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId, park_description, park_input_voltage, park_input_corrent));
+            }
+            dataHandler.close(result);
+            dataHandler.close(statement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
         }
         return parksSameNameOrNot;
     }
+
     /**
      * Fetch a parkk by id
      *
      * @param id Park id
      * @return return a Park
      */
-    
     public Park fetchParkById(int id) {
         String name;
         Coordinates cord;
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where park_id=?");
+            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where park_id=?;");
             dataHandler.setInt(statement, 1, id);
             ResultSet resultSet = dataHandler.executeQuery(statement);
+            if (resultSet == null ) {
+                return null;
+            }
             name = dataHandler.getString(resultSet, 1);
-            cord = new Coordinates(dataHandler.getDouble(resultSet, 2), dataHandler.getDouble(resultSet, 3), dataHandler.getDouble(resultSet, 4));
+            cord = new Coordinates(dataHandler.getDouble(resultSet, 2), dataHandler.getDouble(resultSet, 3), dataHandler.getInt(resultSet, 4));
             String description = dataHandler.getString(resultSet, 5);
-            double park_input_voltage = dataHandler.getDouble(resultSet, 6);
-            double park_input_corrent = dataHandler.getDouble(resultSet, 7);
-            return new Park(name, cord, getListOfCapacitys(id), id, description, (float) park_input_voltage, (float) park_input_corrent);
+            float park_input_voltage = dataHandler.getFloat(resultSet, 6);
+            float park_input_corrent = dataHandler.getFloat(resultSet, 7);
+            return new Park(name, cord, getListOfCapacitys(id), id, description, park_input_voltage, park_input_corrent);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Return the altitude from a points_of_interest
+     *
+     * @param latitude latitude
+     * @param longitude longitude
+     * @return
+     */
+    private Integer getAltitude(double latitude, double longitude) {
+        try {
+            PreparedStatement statementForAltitude = dataHandler.prepareStatement("Select altitude from points_of_interest where latitude=? and longitude=?;");
+            dataHandler.setDouble(statementForAltitude, 1, latitude);
+            dataHandler.setDouble(statementForAltitude, 2, longitude);
+            ResultSet resultAltitude = dataHandler.executeQuery(statementForAltitude);
+            if (resultAltitude == null) {
+                return null;
+            }
+            dataHandler.close(resultAltitude);
+            dataHandler.close(statementForAltitude);
+            return dataHandler.getInt(resultAltitude, 1);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -144,6 +196,9 @@ public class ParkRegister {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from park_capacity where park_id=?");
             dataHandler.setDouble(statement, 1, parkId);
             ResultSet resultForCapacity = dataHandler.executeQuery(statement);
+            if (resultForCapacity == null) {
+                return null;
+            }
             while (resultForCapacity.next()) {
                 String vehicle_type_name = dataHandler.getString(resultForCapacity, 1);
                 int park_capacity = dataHandler.getInt(resultForCapacity, 2);
@@ -155,40 +210,50 @@ public class ParkRegister {
                 }
                 capacity.add(new Capacity(park_capacity, amount_occupied, vehicleType));
             }
+            dataHandler.close(resultForCapacity);
+            dataHandler.close(statement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
         }
         return capacity;
     }
-    
-    
+
     /**
      * Update a park from database
+     *
      * @param name of the park
      * @param coordinates of the park
      * @param vehicleCapacities of the park
-     * @param id  the park id
+     * @param id the park id
      * @param description of the park
      * @param parkInputVoltage the voltage of the park
      * @param parkInputCurrent the current corrent of the park
      * @return return true if successfully removed and false otherwise
      */
-    public boolean UpdatePark(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent){
-        //falta validar
-       try{ 
-           double latitude = cord.getLatitude();
-           double longintude = cord.getLongitude();
-           double altitude = cord.getAltitude();
-           
-        PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id = id ,park_name = name,latitude = ,longitude=longitude,altitude_m = altitude,description = description,park_input_voltage = parkInputVoltage,park_input_current = parkInputCurrent  FROM park WHERE park_id=?");
-        dataHandler.setInt(statement, 1, id);
-        
-        dataHandler.executeUpdate(statement);
-       }catch(SQLException e){
-           System.out.println(e.getMessage());
-           return false;
-       } 
-       return true;
+    public boolean UpdatePark(String name, Coordinates cord, Set<Capacity> vehicleCapacities, int id, String description, float parkInputVoltage, float parkInputCurrent) {
+        try {
+            double latitude = cord.getLatitude();
+            double longintude = cord.getLongitude();
+
+            PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id =? ,latitude=? ,longitude= ?,park_name= ?,park_description =?,park_input_voltage= ?,park_input_current =?  FROM park WHERE park_id=?");
+            dataHandler.setInt(statement, 1, id);
+            dataHandler.setDouble(statement, 2, latitude);
+            dataHandler.setDouble(statement, 3, longintude);
+            dataHandler.setString(statement, 4, name);
+            dataHandler.setString(statement, 5, description);
+            dataHandler.setFloat(statement, 6, parkInputVoltage);
+            dataHandler.setFloat(statement, 7, parkInputCurrent);
+            dataHandler.setInt(statement, 8, id);
+            int nLinhas=dataHandler.executeUpdate(statement);
+            if (nLinhas==0){
+                return false;
+            }
+            dataHandler.close(statement);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 }
