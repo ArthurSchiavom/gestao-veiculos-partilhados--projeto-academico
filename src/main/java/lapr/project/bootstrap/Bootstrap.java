@@ -1,4 +1,4 @@
-package lapr.project.Bootstrap;
+package lapr.project.bootstrap;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;

@@ -3,16 +3,14 @@ package lapr.project.ui;
 import lapr.project.bootstrap.Bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;
+import lapr.project.model.Coordinates;
+import lapr.project.model.register.ParkRegister;
 import lapr.project.shutdown.Shutdown;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-import lapr.project.model.Coordinates;
-import lapr.project.model.Park.Park;
-import lapr.project.register.ParkRegister;
-import lapr.project.register.UsersRegister;
 
 class Main {
 
