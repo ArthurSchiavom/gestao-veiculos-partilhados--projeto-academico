@@ -5,7 +5,7 @@
  */
 package lapr.project.model;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -17,7 +17,7 @@ import java.util.Set;
 public class Invoice {
 
     private int clientId;
-    private Calendar paymentStartDate;
+    private LocalDate paymentStartDate;
     private double amountLeftToPay;
     private double usageCost;
     private double penalizationCost;
@@ -32,7 +32,7 @@ public class Invoice {
      * @param penalizationCost the penalization cost (incase it's not locked
      * properly, etc)
      */
-    public Invoice(int clientId, Calendar paymentStartDate, double usageCost, double penalizationCost) {
+    public Invoice(int clientId, LocalDate paymentStartDate, double usageCost, double penalizationCost) {
         if(clientId<0) {
             throw new IllegalArgumentException("clientId can't be less than 0");
         }
@@ -58,7 +58,7 @@ public class Invoice {
      *
      * @return the payment start date
      */
-    public Calendar getPaymentStartDate() {
+    public LocalDate getPaymentStartDate() {
         return paymentStartDate;
     }
 

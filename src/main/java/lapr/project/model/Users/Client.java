@@ -15,7 +15,7 @@ public class Client extends User {
      *
      * @param email    the client email
      * @param password the client password
-     * @param age      the age of the
+     * @param age      the age of the client in years
      * @param height   the height (in cms) of the client
      * @param weight   the weight (in kgs) of the client
      * @param gender   the physical gender of the client
@@ -61,5 +61,9 @@ public class Client extends User {
 
     public char getGender() {
         return gender;
+    }
+
+    public CreditCard getCreditCard() {
+        return cc;
     }
 }

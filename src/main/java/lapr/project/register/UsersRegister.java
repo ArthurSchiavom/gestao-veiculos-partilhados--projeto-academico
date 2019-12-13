@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
  * Handles the Users and its subclasses
  */
 public class UsersRegister {
-    DataHandler dataHandler;
+    private DataHandler dataHandler;
 
     public UsersRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
@@ -30,7 +30,7 @@ public class UsersRegister {
             }
             int points = dataHandler.getInt(resultSet, 2);
             String creditCardNumber = dataHandler.getString(resultSet, 3);
-            String creditCardExpiration = dataHandler.getString(resultSet, 4);
+            Date creditCardExpiration = dataHandler.getDate(resultSet, 4);
             int creditCardSecret = dataHandler.getInt(resultSet, 5);
             int height = dataHandler.getInt(resultSet, 6);
             float weight = (float) dataHandler.getDouble(resultSet, 7);
@@ -46,7 +46,7 @@ public class UsersRegister {
             }
             String password = dataHandler.getString(resultSet, 1);
 
-            return new Client(email, password, points, age, height, weight, gender, new CreditCard(creditCardNumber, creditCardExpiration, creditCardSecret));
+            return new Client(email, password, points, age, height, weight, gender, new CreditCard(creditCardNumber, creditCardExpiration.toLocalDate(), creditCardSecret));
         } catch (SQLException e) {
             e.printStackTrace();
         }

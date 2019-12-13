@@ -1,9 +1,11 @@
 package lapr.project.model.Users;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class CreditCard {
-    private String ccNumber, ccExpiration;
+    private String ccNumber;
+    private LocalDate ccExpiration;
     private int ccv;
 
     /**
@@ -11,12 +13,12 @@ public class CreditCard {
      *
      * @param ccNumber the number on the credit card
      * @param ccExpiration the expiration date of the credit card, must follow the "MM/YY" format"
-     * @param ccv the security digits
+     * @param ccVerification the security verification
      */
-    public CreditCard(String ccNumber, String ccExpiration, int ccv) {
-        this.ccv = ccv;
+    public CreditCard(String ccNumber, LocalDate ccExpiration, int ccVerification) {
+        this.ccv = ccVerification;
         this.ccNumber = ccNumber;
-        this.ccExpiration = ccExpiration;
+        this.ccExpiration = LocalDate.of(ccExpiration.getYear(), ccExpiration.getMonth(), 31);
     }
 
     /**
@@ -39,7 +41,7 @@ public class CreditCard {
      * Returns the credit card expiration date in the format "MM/YY"
      * @return the credit card expiration date in the format "MM/YY"
      */
-    public String getCcExpiration() {
+    public LocalDate getCcExpiration() {
         return ccExpiration;
     }
 

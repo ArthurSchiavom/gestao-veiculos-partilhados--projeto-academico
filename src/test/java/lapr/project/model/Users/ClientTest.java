@@ -7,6 +7,9 @@ package lapr.project.model.Users;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -20,7 +23,7 @@ public class ClientTest {
     @BeforeEach
     void beforeEach() {
         instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
-                new CreditCard("12341234123412", "12/20", 321));
+                new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
     }
 
     @Test
@@ -35,7 +38,7 @@ public class ClientTest {
     void testGetCreditCardSecret() {
         System.out.println("getCreditCardSecret");
         Client instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
-                new CreditCard("12341234123412", "12/20", 321));
+                new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
         int expResult = 321;
         int result = instance.getCreditCard().getCcv();
         assertEquals(expResult, result);
@@ -45,7 +48,7 @@ public class ClientTest {
     void testGetAge() {
         System.out.println("getAge");
         Client instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
-                new CreditCard("12341234123412", "12/20", 321));
+                new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
         int expResult = 22;
         int result = instance.getAge();
         assertEquals(expResult, result);
@@ -86,8 +89,8 @@ public class ClientTest {
     @Test
     void testGetCreditCardExpiration() {
         System.out.println("getCreditCardExpiration");
-        String expResult = "12/20";
-        String result = instance.getCreditCard().getCcExpiration();
+        LocalDate expResult = LocalDate.of(2020,12,31);
+        LocalDate result = instance.getCreditCard().getCcExpiration();
         assertEquals(expResult, result);
     }
 }
