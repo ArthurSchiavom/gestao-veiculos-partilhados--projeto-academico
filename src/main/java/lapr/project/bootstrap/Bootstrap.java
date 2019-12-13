@@ -3,6 +3,8 @@ package lapr.project.bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;
 
+import java.sql.SQLException;
+
 public class Bootstrap {
     /**
      * O URL da BD.
@@ -20,8 +22,14 @@ public class Bootstrap {
     private final String password = "melhorgrupoole";
 
     public void boot(){
-        DataHandler dataHandler = new DataHandler(JDBCURL, USERNAME,password);
-        dataHandler.openConnection();
+        DataHandler dataHandler = null;
+        try {
+            dataHandler = new DataHandler(JDBCURL, USERNAME,password);
+        } catch (SQLException e) {
+            System.out.println("Failed to connect to the database");
+            return;
+        }
         Company.createCompany(dataHandler);
+        // Launch UI
     }
 }

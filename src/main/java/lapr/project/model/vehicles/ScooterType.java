@@ -1,4 +1,4 @@
-package lapr.project.model.Vehicles;
+package lapr.project.model.vehicles;
 
 /**
  * Represents the types of existent scooters

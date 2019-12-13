@@ -3,8 +3,6 @@ package lapr.project.ui;
 import lapr.project.bootstrap.Bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;
-import lapr.project.model.Coordinates;
-import lapr.project.model.register.ParkRegister;
 import lapr.project.shutdown.Shutdown;
 
 import java.sql.PreparedStatement;
@@ -34,13 +32,20 @@ class Main {
     public static void main(String[] args) {
         new Bootstrap().boot();
         DataHandler dh = Company.getInstance().getDataHandler();
-        ParkRegister pR= Company.getInstance().getParkRegister();
         try {
-            pR.addPark("Caralho", new Coordinates(35.234, 29.3, 5), "Grande e sexual", 2, 3);
-            PreparedStatement ps = dh.prepareStatement("select * from vehicles");
+            PreparedStatement ps = dh.prepareStatement("select * from vehicles where not vehicle_id = ?");
+            ps.setInt(1, 99); // funciona sem net
             ResultSet rs = dh.executeQuery(ps);
-            dh.close(rs);
-            dh.close(ps);
+            System.out.println("desligar");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            rs.next(); // funciona sem net
+            rs.getInt(1); // funciona sem net
+            rs.close(); // funciona sem net
+            ps.close(); // funciona sem net
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("\n\n\nError code: " + e.getErrorCode());

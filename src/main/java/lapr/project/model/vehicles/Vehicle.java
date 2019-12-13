@@ -1,4 +1,4 @@
-package lapr.project.model.Vehicles;
+package lapr.project.model.vehicles;
 
 import java.util.Objects;
 
@@ -8,31 +8,26 @@ import java.util.Objects;
 public class Vehicle {
 
     private final int id;
-    private final String name;
-    private final double latitude, longitude, altitude;
+    private final double latitude, longitude;
+    private final float aerodynamic_coefficient, frontal_area;
+    private final int altitude, weight;
     private final boolean available;
     private final VehicleType type;
 
-    public Vehicle(int id, String name, double latitude, double longitude, double altitude, boolean available, VehicleType type) {
+    public Vehicle(int id, double latitude, double longitude, int altitude, float aerodynamic_coefficient, float frontal_area, int weight, boolean available, VehicleType type) {
         this.id = id;
-        this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.aerodynamic_coefficient = aerodynamic_coefficient;
+        this.frontal_area = frontal_area;
         this.altitude = altitude;
+        this.weight = weight;
         this.available = available;
         this.type = type;
     }
 
     public int getId() {
         return id;
-    }
-
-    public VehicleType getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public double getLatitude() {
@@ -43,12 +38,28 @@ public class Vehicle {
         return longitude;
     }
 
-    public double getAltitude() {
+    public float getAerodynamic_coefficient() {
+        return aerodynamic_coefficient;
+    }
+
+    public float getFrontal_area() {
+        return frontal_area;
+    }
+
+    public int getAltitude() {
         return altitude;
+    }
+
+    public int getWeight() {
+        return weight;
     }
 
     public boolean isAvailable() {
         return available;
+    }
+
+    public VehicleType getType() {
+        return type;
     }
 
     @Override

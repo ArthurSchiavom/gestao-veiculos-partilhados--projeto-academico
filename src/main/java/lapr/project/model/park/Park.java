@@ -6,8 +6,9 @@
 package lapr.project.model.park;
 
 import lapr.project.model.Coordinates;
+import lapr.project.model.vehicles.VehicleType;
+
 import java.util.Set;
-import lapr.project.model.Vehicles.VehicleType;
 
 
 public class Park {
@@ -25,7 +26,7 @@ public class Park {
      * @param vehicleCapacities capacity of the park
      * @param parkInputVoltage  the corrent of the park
      * @param parkInputCurrent  the atual corrent of the park
-     * @param parkId id of the park
+     * @param id id of the park
      */
     public Park(Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent) {
         this.cord = cord;

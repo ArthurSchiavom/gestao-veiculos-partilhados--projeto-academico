@@ -8,7 +8,7 @@ package lapr.project.model.park;
 import java.util.HashSet;
 import java.util.Set;
 import lapr.project.model.Coordinates;
-import lapr.project.model.Vehicles.VehicleType;
+import lapr.project.model.vehicles.VehicleType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +23,7 @@ public class ParkTest {
         System.out.println("getParkInputVoltage");
         Coordinates cord = new Coordinates(0, 0, 0);
 
-        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
+        Capacity cap = new Capacity(30,20, VehicleType.BICYCLE);
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         Park instance = new Park(cord,cp,123,"parque",220F,160F);

@@ -5,7 +5,7 @@
  */
 package lapr.project.model.park;
 
-import lapr.project.model.Vehicles.VehicleType;
+import lapr.project.model.vehicles.VehicleType;
 
 
 public class Capacity {

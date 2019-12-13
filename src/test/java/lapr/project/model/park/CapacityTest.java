@@ -5,10 +5,11 @@
  */
 package lapr.project.model.park;
 
-import lapr.project.model.Vehicles.VehicleType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import lapr.project.model.vehicles.VehicleType;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -19,7 +20,7 @@ public class CapacityTest {
     @Test
     public void testGetCapacity() {
         System.out.println("getCapacity");
-        Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
+        Capacity instance = new Capacity(30,20, VehicleType.ELECTRIC_SCOOTER);
         int expResult = 30;
         int result = instance.getMaxCapacity();
         assertNotNull(result);

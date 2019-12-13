@@ -52,10 +52,10 @@ class TripRegisterTest {
     void testFetchTrip() {
         try {
             Mockito.when(dataHandler.executeQuery(any(PreparedStatement.class))).thenReturn(resultSet);
-            Mockito.when(dataHandler.getInt(resultSet, 3)).thenReturn(0);
-            Mockito.when(dataHandler.getInt(resultSet, 4)).thenReturn(0);
-            Mockito.when(dataHandler.getInt(resultSet, 5)).thenReturn(0);
-            Mockito.when(dataHandler.getTimestamp(resultSet, 6)).thenReturn(
+            Mockito.when(resultSet.getInt( 3)).thenReturn(0);
+            Mockito.when(resultSet.getInt( 4)).thenReturn(0);
+            Mockito.when(resultSet.getInt( 5)).thenReturn(0);
+            Mockito.when(resultSet.getTimestamp( 6)).thenReturn(
                     Timestamp.valueOf(endCalendar));
             Mockito.when(!resultSet.next()).thenReturn(true);
 

@@ -16,7 +16,7 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.park.Capacity;
 import lapr.project.model.park.Park;
-import lapr.project.model.Vehicles.VehicleType;
+import lapr.project.model.vehicles.VehicleType;
 
 /**
  * This class regist and manipulates the data of all parks in data base
@@ -33,9 +33,8 @@ public class ParkRegister {
      *
      * Adds a park to the database
      *
-     * @param name Park name
      * @param cord Park coordinates
-     * @param park_descripton Description of the park
+     * @param park_description Description of the park
      * @param park_input_voltage Park input voltage
      * @param park_input_corrent Park input corrent
      * @return true if added with success the park, false otherwise
@@ -45,16 +44,16 @@ public class ParkRegister {
             double latitude = cord.getLatitude();
             double longitude = cord.getLongitude();
             PreparedStatement statement = dataHandler.prepareStatement("INSERT INTO PARKS(latitude, longitude,park_description,park_input_voltage,park_input_current) " + "VALUES(?,?,?,?,?)");
-            dataHandler.setDouble(statement, 1, latitude);
-            dataHandler.setDouble(statement, 2, longitude);
-            dataHandler.setString(statement, 3, park_description);
-            dataHandler.setFloat(statement, 4, park_input_voltage);
-            dataHandler.setFloat(statement, 5, park_input_corrent);
+            statement.setDouble( 1, latitude);
+            statement.setDouble( 2, longitude);
+            statement.setString( 3, park_description);
+            statement.setFloat( 4, park_input_voltage);
+            statement.setFloat( 5, park_input_corrent);
             int nrLines = dataHandler.executeUpdate(statement);
             if (nrLines == 0) {
                 return false;
             }
-            dataHandler.close(statement);
+            statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -71,13 +70,13 @@ public class ParkRegister {
     public boolean removeParkById(int id) {
         try {
             PreparedStatement statement = dataHandler.prepareStatement("DELETE FROM parks WHERE park_id=?;");
-            dataHandler.setInt(statement, 1, id);
+            statement.setInt( 1, id);
             ResultSet resultSet = dataHandler.executeQuery(statement);
             if (resultSet == null) {
                 return false;
             }
-            dataHandler.close(resultSet);
-            dataHandler.close(statement);
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -103,24 +102,24 @@ public class ParkRegister {
         List<Park> parksSameNameOrNot = new ArrayList<>();
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_name)=?;");
-            dataHandler.setString(statement, 1, parkDescription);
+            statement.setString( 1, parkDescription);
             ResultSet result = dataHandler.executeQuery(statement);
             if (result == null) {
                 return null;
             }
             while (result.next()) {
-                parkId = dataHandler.getInt(result, 1);
-                latitude = dataHandler.getDouble(result, 2);
-                longitude = dataHandler.getDouble(result, 3);
-                park_description = dataHandler.getString(result, 4);
-                park_input_voltage = dataHandler.getFloat(result, 5);
-                park_input_corrent = dataHandler.getFloat(result, 6);
+                parkId = result.getInt( 1);
+                latitude = result.getDouble( 2);
+                longitude = result.getDouble( 3);
+                park_description = result.getString( 4);
+                park_input_voltage = result.getFloat( 5);
+                park_input_corrent = result.getFloat( 6);
                 altitude = getAltitude(latitude, longitude);
                 Set<Capacity> listOfCapacitys = getListOfCapacitys(parkId);
                 parksSameNameOrNot.add(new Park(new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId, park_description, park_input_voltage, park_input_corrent));
             }
-            dataHandler.close(result);
-            dataHandler.close(statement);
+            result.close();
+            statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -141,17 +140,17 @@ public class ParkRegister {
         double longitude;
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where park_id=?;");
-            dataHandler.setInt(statement, 1, id);
+            statement.setInt( 1, id);
             ResultSet resultSet = dataHandler.executeQuery(statement);
             if (resultSet == null ) {
                 return null;
             }
-            latitude=dataHandler.getDouble(resultSet, 1);
-            longitude=dataHandler.getDouble(resultSet, 2);
+            latitude=resultSet.getDouble( 1);
+            longitude=resultSet.getDouble( 2);
             cord = new Coordinates(latitude,longitude, getAltitude(latitude, longitude));
-            String description = dataHandler.getString(resultSet, 3);
-            float park_input_voltage = dataHandler.getFloat(resultSet, 4);
-            float park_input_corrent = dataHandler.getFloat(resultSet, 5);
+            String description = resultSet.getString( 3);
+            float park_input_voltage = resultSet.getFloat( 4);
+            float park_input_corrent = resultSet.getFloat( 5);
             return new Park(cord, getListOfCapacitys(id), id, description, park_input_voltage, park_input_corrent);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -169,15 +168,15 @@ public class ParkRegister {
     private Integer getAltitude(double latitude, double longitude) {
         try {
             PreparedStatement statementForAltitude = dataHandler.prepareStatement("Select altitude from points_of_interest where latitude=? and longitude=?;");
-            dataHandler.setDouble(statementForAltitude, 1, latitude);
-            dataHandler.setDouble(statementForAltitude, 2, longitude);
+            statementForAltitude.setDouble( 1, latitude);
+            statementForAltitude.setDouble( 2, longitude);
             ResultSet resultAltitude = dataHandler.executeQuery(statementForAltitude);
             if (resultAltitude == null) {
                 return null;
             }
-            dataHandler.close(resultAltitude);
-            dataHandler.close(statementForAltitude);
-            return dataHandler.getInt(resultAltitude, 1);
+            resultAltitude.close();
+            statementForAltitude.close();
+            return resultAltitude.getInt( 1);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -194,15 +193,15 @@ public class ParkRegister {
         Set<Capacity> capacity = new HashSet<>();
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from park_capacity where park_id=?");
-            dataHandler.setDouble(statement, 1, parkId);
+            statement.setDouble( 1, parkId);
             ResultSet resultForCapacity = dataHandler.executeQuery(statement);
             if (resultForCapacity == null) {
                 return null;
             }
             while (resultForCapacity.next()) {
-                String vehicle_type_name = dataHandler.getString(resultForCapacity, 1);
-                int park_capacity = dataHandler.getInt(resultForCapacity, 2);
-                int amount_occupied = dataHandler.getInt(resultForCapacity, 3);
+                String vehicle_type_name = resultForCapacity.getString( 1);
+                int park_capacity = resultForCapacity.getInt( 2);
+                int amount_occupied = resultForCapacity.getInt( 3);
                 
                 //Aqui caso se adiciona outros tipos ..... faz se else if
                 if (vehicle_type_name.trim().equalsIgnoreCase(VehicleType.BICYCLE.toString())) {
@@ -212,8 +211,8 @@ public class ParkRegister {
                 }
                 capacity.add(new Capacity(park_capacity, amount_occupied, vehicleType));
             }
-            dataHandler.close(resultForCapacity);
-            dataHandler.close(statement);
+            resultForCapacity.close();
+            statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -225,7 +224,7 @@ public class ParkRegister {
      * Update a park from database
      *
      * @param name of the park
-     * @param coordinates of the park
+     * @param cord of the park
      * @param vehicleCapacities of the park
      * @param id the park id
      * @param description of the park
@@ -239,18 +238,18 @@ public class ParkRegister {
             double longintude = cord.getLongitude();
 
             PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id =? ,latitude=? ,longitude= ?,park_description =?,park_input_voltage= ?,park_input_current =?  FROM park WHERE park_id=?;");
-            dataHandler.setInt(statement, 1, id);
-            dataHandler.setDouble(statement, 2, latitude);
-            dataHandler.setDouble(statement, 3, longintude);
-            dataHandler.setString(statement, 4, description);
-            dataHandler.setFloat(statement, 5, parkInputVoltage);
-            dataHandler.setFloat(statement, 6, parkInputCurrent);
-            dataHandler.setInt(statement, 7, id);
+            statement.setInt( 1, id);
+            statement.setDouble( 2, latitude);
+            statement.setDouble( 3, longintude);
+            statement.setString( 4, description);
+            statement.setFloat( 5, parkInputVoltage);
+            statement.setFloat( 6, parkInputCurrent);
+            statement.setInt( 7, id);
             int nLinhas=dataHandler.executeUpdate(statement);
             if (nLinhas==0){
                 return false;
             }
-            dataHandler.close(statement);
+            statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;

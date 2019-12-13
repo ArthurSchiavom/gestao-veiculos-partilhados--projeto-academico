@@ -1,11 +1,15 @@
 package lapr.project.data;
 
 
+import lapr.project.model.Company;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Exemplo de classe cujas instâncias manipulam dados de BD Oracle.
@@ -61,13 +65,14 @@ public class DataHandler {
      * @param username o nome do utilizador.
      * @param password a password do utilizador.
      */
-    public DataHandler(String jdbcUrl, String username, String password) {
+    public DataHandler(String jdbcUrl, String username, String password) throws SQLException {
         this.jdbcUrl = jdbcUrl;
         this.username = username;
         this.password = password;
         connection = null;
         callStmt = null;
         rSet = null;
+        openConnection();
     }
 
     /**
@@ -92,16 +97,12 @@ public class DataHandler {
     }
 
     /**
-     * Estabelece a ligação à BD.
+     * Estabelece a ligação à BD. <b>Não são efetuadas quaisquer verificações sobre o estado da conexão atual.</b>
      */
-    public void openConnection() {
-        try {
-            connection = DriverManager.getConnection(
-                    jdbcUrl, username, password);
-            connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void openConnection() throws SQLException {
+        connection = DriverManager.getConnection(
+                jdbcUrl, username, password);
+        connection.setAutoCommit(true);
     }
 
     /**
@@ -110,7 +111,6 @@ public class DataHandler {
      * sucedida. Caso contrário retorna uma "string" vazia.
      */
     public String closeAll() {
-
         StringBuilder message = new StringBuilder();
 
         if (rSet != null) {
@@ -144,7 +144,24 @@ public class DataHandler {
         return message.toString();
     }
 
-    public <T> T executeSQLOperation(SQLOperation<T> operation) throws SQLException {
+    private static boolean attemptingToReconnect = false;
+    private static synchronized void continuousReconnectAttempt() {
+        if (attemptingToReconnect)
+            return;
+
+        attemptingToReconnect = true;
+        new Thread(() -> {
+            boolean connected = false;
+            while (!connected) {
+                connected = true;
+                try { Company.getInstance().getDataHandler().openConnection(); } catch (Exception e) { connected = false;}
+                try { sleep(2000); } catch (InterruptedException e) {}
+            }
+            attemptingToReconnect = false;
+        }).start();
+    }
+
+    public <T> T executeRecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
         int nAttempt = 1;
         while (true) {
             try {
@@ -152,99 +169,41 @@ public class DataHandler {
             } catch (SQLException e) {
                 if (e.getErrorCode() == 17008 && nAttempt < 3) {
                     try {
-                        Thread.sleep(RECONNECTION_INTERVAL_MILLIS);
+                        sleep(RECONNECTION_INTERVAL_MILLIS);
                     } catch (InterruptedException ex) {}
                     openConnection();
                 }
-                else
+                else {
+                    continuousReconnectAttempt();
                     throw e;
+                }
                 nAttempt++;
             }
         }
     }
 
+    public <T> T executeUnrecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
+        try {
+            return operation.executeOperation();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 17008)
+                continuousReconnectAttempt();
+            throw e;
+        }
+    }
+
     public PreparedStatement prepareStatement(String query) throws SQLException {
         SQLOperation<PreparedStatement> operation = () -> {return connection.prepareStatement(query);};
-        return executeSQLOperation(operation);
+        return executeRecoverableSQLOperation(operation);
     }
 
     public ResultSet executeQuery(PreparedStatement preparedStatement) throws SQLException {
         SQLOperation<ResultSet> operation = () -> {return preparedStatement.executeQuery();};
-        return executeSQLOperation(operation);
+        return executeUnrecoverableSQLOperation(operation);
     }
 
     public Integer executeUpdate(PreparedStatement preparedStatement) throws SQLException {
         SQLOperation<Integer> operation = () -> {return preparedStatement.executeUpdate();};
-        return executeSQLOperation(operation);
-    }
-
-    public void setInt(PreparedStatement preparedStatement, int position, int value) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {preparedStatement.setInt(position, value); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public void setDouble(PreparedStatement preparedStatement, int position, double value) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {preparedStatement.setDouble(position, value); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public void setFloat(PreparedStatement preparedStatement, int position, float value) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {preparedStatement.setFloat(position, value); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public void setString(PreparedStatement preparedStatement, int position, String value) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {preparedStatement.setString(position, value); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public void setTimestamp(PreparedStatement preparedStatement, int position, Timestamp value) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {preparedStatement.setTimestamp(position, value); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public void setDate(PreparedStatement preparedStatement, int position, Date value) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {preparedStatement.setDate(position, value); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public String getString(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<String> operation = () -> {return resultSet.getString(columnPosition);};
-        return executeSQLOperation(operation);
-    }
-
-    public int getInt(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<Integer> operation = () -> {return resultSet.getInt(columnPosition);};
-        return executeSQLOperation(operation);
-    }
-
-    public double getDouble(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<Double> operation = () -> {return resultSet.getDouble(columnPosition);};
-        return executeSQLOperation(operation);
-    }
-
-    public float getFloat(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<Float> operation = () -> {return resultSet.getFloat(columnPosition);};
-        return executeSQLOperation(operation);
-    }
-
-    public Date getDate(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<Date> operation = () -> {return resultSet.getDate(columnPosition);};
-        return executeSQLOperation(operation);
-    }
-
-    public Timestamp getTimestamp(ResultSet resultSet, int columnPosition) throws SQLException {
-        SQLOperation<Timestamp> operation = () -> {return resultSet.getTimestamp(columnPosition);};
-        return executeSQLOperation(operation);
-    }
-
-    public void close(ResultSet obj) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {obj.close(); return true;};
-        executeSQLOperation(operation);
-    }
-
-    public void close(PreparedStatement obj) throws SQLException {
-        SQLOperation<Boolean> operation = () -> {obj.close(); return true;};
-        executeSQLOperation(operation);
+        return executeUnrecoverableSQLOperation(operation);
     }
 }
