@@ -1,6 +1,9 @@
 package lapr.project.model;
 
 import lapr.project.data.DataHandler;
+import lapr.project.model.register.ParkRegister;
+import lapr.project.model.register.TripRegister;
+import lapr.project.model.register.UsersRegister;
 //import lapr.project.model.register.ParkRegister;
 //import lapr.project.model.register.TripRegister;
 //import lapr.project.model.register.UsersRegister;
@@ -11,10 +14,10 @@ import lapr.project.data.DataHandler;
 public class Company {
     private static Company instance = null;
     private DataHandler dataHandler;
-//
-//    private ParkRegister parkRegister;
-//    private UsersRegister usersRegister;
-//    private TripRegister tripRegister;
+
+    private ParkRegister parkRegister;
+    private UsersRegister usersRegister;
+    private TripRegister tripRegister;
 
     /**
      * Represents a Singleton of the class Company
@@ -23,9 +26,9 @@ public class Company {
         instance = this;
         this.dataHandler = dataHandler;
 
-//        this.parkRegister =new ParkRegister(dataHandler);
-//        this.usersRegister = new UsersRegister(dataHandler);
-//        this.tripRegister = new TripRegister(dataHandler);
+        this.parkRegister =new ParkRegister(dataHandler);
+        this.usersRegister = new UsersRegister(dataHandler);
+        this.tripRegister = new TripRegister(dataHandler);
     }
 
     /**
@@ -46,16 +49,16 @@ public class Company {
     public DataHandler getDataHandler() {
         return dataHandler;
     }
-//
-//    public ParkRegister getParkRegister() {
-//        return parkRegister;
-//    }
-//
-//    public UsersRegister getUsersRegister() {
-//        return usersRegister;
-//    }
-//
-//    public TripRegister getTripRegister() {
-//        return tripRegister;
-//    }
+
+    public ParkRegister getParkRegister() {
+        return parkRegister;
+    }
+
+    public UsersRegister getUsersRegister() {
+        return usersRegister;
+    }
+
+    public TripRegister getTripRegister() {
+        return tripRegister;
+    }
 }
