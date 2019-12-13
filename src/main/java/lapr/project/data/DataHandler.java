@@ -98,6 +98,7 @@ public class DataHandler {
         try {
             connection = DriverManager.getConnection(
                     jdbcUrl, username, password);
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -76,4 +76,17 @@ public class Client extends User {
     public float getCyclingAverageSpeed() {
         return cyclingAverageSpeed;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "points=" + points +
+                ", age=" + age +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", gender=" + gender +
+                ", cyclingAverageSpeed=" + cyclingAverageSpeed +
+                ", cc=" + cc.toString() +
+                '}';
+    }
 }

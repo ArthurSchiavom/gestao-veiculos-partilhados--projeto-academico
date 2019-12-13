@@ -57,4 +57,13 @@ public class CreditCard {
     public int hashCode() {
         return Objects.hash(ccNumber);
     }
+
+    @Override
+    public String toString() {
+        return "CreditCard{" +
+                "ccNumber='" + ccNumber + '\'' +
+                ", ccExpiration=" + ccExpiration +
+                ", ccv=" + ccv +
+                '}';
+    }
 }
