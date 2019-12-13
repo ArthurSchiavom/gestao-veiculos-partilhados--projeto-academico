@@ -7,11 +7,12 @@ package lapr.project.register;
 
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import java.util.List;
+
+import lapr.project.Bootstrap.Bootstrap;
 import lapr.project.model.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Park.Park;
 import static org.junit.jupiter.api.Assertions.*;
-import lapr.project.bootstrap.Bootstrap;
 import lapr.project.shutdown.Shutdown;
 
 /**
