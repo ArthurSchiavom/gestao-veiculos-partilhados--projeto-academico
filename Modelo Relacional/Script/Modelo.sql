@@ -177,7 +177,8 @@ CREATE TABLE receipts (
 CREATE TABLE registered_users (
   user_email     varchar2(50) CONSTRAINT pk_registered_users_user_email PRIMARY KEY, 
   user_type_name varchar2(50), 
-  user_password  varchar2(20) CONSTRAINT nn_registered_users_user_password NOT NULL 
+  user_password  varchar2(20) CONSTRAINT nn_registered_users_user_password NOT NULL,
+  user_name      varchar2(50) CONSTRAINT nn_registered_users_user_name NOT NULL
 );
   
 ALTER TABLE vehicles ADD CONSTRAINT fk_vehicles_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
