@@ -161,4 +161,34 @@ public class ParkRegister {
         }
         return capacity;
     }
+    
+    
+    /**
+     * Update a park from database
+     * @param name of the park
+     * @param coordinates of the park
+     * @param vehicleCapacities of the park
+     * @param id  the park id
+     * @param description of the park
+     * @param parkInputVoltage the voltage of the park
+     * @param parkInputCurrent the current corrent of the park
+     * @return return true if successfully removed and false otherwise
+     */
+    public boolean UpdatePark(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent){
+        //falta validar
+       try{ 
+           double latitude = cord.getLatitude();
+           double longintude = cord.getLongitude();
+           double altitude = cord.getAltitude();
+           
+        PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id = id ,park_name = name,latitude = ,longitude=longitude,altitude_m = altitude,description = description,park_input_voltage = parkInputVoltage,park_input_current = parkInputCurrent  FROM park WHERE park_id=?");
+        dataHandler.setInt(statement, 1, id);
+        
+        dataHandler.executeUpdate(statement);
+       }catch(SQLException e){
+           System.out.println(e.getMessage());
+           return false;
+       } 
+       return true;
+    }
 }
