@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model;
+package lapr.project.model.Parks;
 
 import java.util.HashSet;
 import java.util.Set;
+import lapr.project.model.Coordinates;
 import lapr.project.model.Vehicles.VehicleType;
 import lapr.project.model.Park.Park;
 import lapr.project.model.Park.Capacity;
@@ -20,6 +21,40 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author kevin
  */
 public class ParkTest {
+    
+    
+    @Test
+    public void testGetParkInputVoltage() {
+        System.out.println("getParkInputVoltage");
+        Coordinates cord = new Coordinates(0, 0, 0);
+        
+        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
+        Set<Capacity> cp = new HashSet<Capacity>();
+        cp.add(cap);
+        
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        float expResult = 220F;
+        float result = instance.getParkInputVoltage();
+        assertNotNull(result);
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testGetParkInputCurrent() {
+        System.out.println("getParkInputCurrent");
+        Coordinates cord = new Coordinates(0, 0, 0);
+        
+        Capacity cap = new Capacity(30,20,VehicleType.BICYCLE);
+        Set<Capacity> cp = new HashSet<Capacity>();
+        cp.add(cap);
+        
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
+        float expResult = 160F;
+        float result = instance.getParkInputCurrent();
+        assertNotNull(result);
+        assertEquals(expResult, result);
+    }
+    
 
     @Test
     public void testGetName() {
@@ -30,7 +65,7 @@ public class ParkTest {
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         String expResult = "parque";
         String result = instance.getName();
         assertNotNull(result);
@@ -47,7 +82,7 @@ public class ParkTest {
         Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
         
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         int expResult = 123;
         int result = instance.getParkId();
         assertNotNull(result);
@@ -62,7 +97,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         Coordinates expResult = cord;
         Coordinates result = instance.getCoords();
         assertNotNull(result);
@@ -76,7 +111,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         int expResult = 20;
         int result = instance.getAmountOccupiedByType(VehicleType.BICYCLE);
         assertNotNull(result);
@@ -90,7 +125,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         int expResult = -1;
         int result = instance.getAmountOccupiedByType(VehicleType.ELECTRIC_SCOOTER);
         assertNotNull(result);
@@ -104,7 +139,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         int expResult = 30;
         int result = instance.getMaxAmountByType(VehicleType.BICYCLE);
         assertNotNull(result);
@@ -118,7 +153,7 @@ public class ParkTest {
         Coordinates cord = new Coordinates(0, 0, 0);
          Set<Capacity> cp = new HashSet<Capacity>();
         cp.add(cap);
-        Park instance = new Park("parque", cord,cp,123);
+        Park instance = new Park("parque", cord,cp,123,220F,160F);
         int expResult = -2;
         int result = instance.getMaxAmountByType(VehicleType.ELECTRIC_SCOOTER);
         assertNotNull(result);
