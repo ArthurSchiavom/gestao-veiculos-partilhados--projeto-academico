@@ -87,7 +87,6 @@ CREATE TABLE clients (
   cycling_average_speed  number(4,2)  constraint nn_cycling_average_speed NOT NULL
   );
 
-
 -- Tabela Parks    
 CREATE TABLE parks (
   park_id   number(6) GENERATED AS IDENTITY
@@ -95,7 +94,6 @@ CREATE TABLE parks (
   park_name      varchar2(100) constraint nn_parks_park_name NOT NULL, 
   latitude  number(9, 6) constraint nn_parks_latitude NOT NULL,
   longitude number(9, 6) constraint nn_parks_longitude NOT NULL,
-  altitude  number(6, 2) constraint nn_parks_altitude NOT NULL,
   park_description varchar2(150) constraint nn_parks_park_description NOT NULL,
   park_input_voltage number(5,1) constraint parks_park_input_voltage NOT NULL,
   park_input_current number(4,1) constraint parks_park_input_current NOT NULL,
@@ -187,7 +185,7 @@ CREATE TABLE registered_users (
   user_name      varchar2(50) CONSTRAINT nn_registered_users_user_name NOT NULL,
   Constraint ck_registered_users_user_email CHECK (REGEXP_LIKE(user_email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$'))
 );
-  
+
 -- Tabela paths
 CREATE TABLE paths (
   latitudeA              number(9, 6), 
