@@ -12,7 +12,7 @@ public class Coordinates {
 
     private double lat;
     private double lon;
-    private double altitude;
+    private int altitude;
 
     /**
      * Creates a set of coordinates
@@ -21,7 +21,7 @@ public class Coordinates {
      * @param lon      the lon parameter
      * @param altitude the altitude of the coordinates, in meters, 0 is sea level
      */
-    public Coordinates(double lat, double lon, double altitude) {
+    public Coordinates(double lat, double lon, int altitude) {
         if (lon > 180) {
             lon = (lon % 180) - 180;
         }
@@ -68,7 +68,7 @@ public class Coordinates {
      *
      * @return the altitude
      */
-    public double getAltitude() {
+    public int getAltitude() {
         return altitude;
     }
 
@@ -90,7 +90,7 @@ public class Coordinates {
                     * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             double distance = R * c;
-            double altitudeDistance = Math.abs(altitude - other.getAltitude());
+            int altitudeDistance = Math.abs(altitude - other.getAltitude());
             distance += altitudeDistance;
             return distance;
         }
@@ -103,7 +103,7 @@ public class Coordinates {
         Coordinates that = (Coordinates) o;
         return Double.compare(that.lat, lat) == 0 &&
                 Double.compare(that.lon, lon) == 0 &&
-                Double.compare(that.altitude, altitude) == 0;
+                Integer.compare(that.altitude, altitude) == 0;
     }
 
     @Override

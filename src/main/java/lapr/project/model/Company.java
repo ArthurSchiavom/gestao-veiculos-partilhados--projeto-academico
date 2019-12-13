@@ -1,10 +1,9 @@
 package lapr.project.model;
 
 import lapr.project.data.DataHandler;
-import lapr.project.register.TripRegister;
-import lapr.project.register.UsersRegister;
-
-import java.sql.Connection;
+import lapr.project.model.register.ParkRegister;
+import lapr.project.model.register.TripRegister;
+import lapr.project.model.register.UsersRegister;
 
 /**
  * Represents a company
@@ -12,7 +11,8 @@ import java.sql.Connection;
 public class Company {
     private static Company instance = null;
     private DataHandler dataHandler;
-
+    
+    private ParkRegister parkRegister;
     private UsersRegister usersRegister;
     private TripRegister tripRegister;
 
@@ -23,6 +23,7 @@ public class Company {
         instance = this;
         this.dataHandler = dataHandler;
         
+        this.parkRegister =new ParkRegister(dataHandler);
         this.usersRegister = new UsersRegister(dataHandler);
         this.tripRegister = new TripRegister(dataHandler);
     }
@@ -44,6 +45,10 @@ public class Company {
 
     public DataHandler getDataHandler() {
         return dataHandler;
+    }
+
+    public ParkRegister getParkRegister() {
+        return parkRegister;
     }
 
     public UsersRegister getUsersRegister() {

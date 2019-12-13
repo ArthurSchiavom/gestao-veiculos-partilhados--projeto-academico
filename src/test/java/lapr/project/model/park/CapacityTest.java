@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model.Parks;
+package lapr.project.model.park;
 
 import lapr.project.model.Vehicles.VehicleType;
-import lapr.project.model.Park.Capacity;
+import lapr.project.model.park.Capacity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

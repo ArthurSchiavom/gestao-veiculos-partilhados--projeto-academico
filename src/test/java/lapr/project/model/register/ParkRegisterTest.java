@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.register;
+package lapr.project.model.register;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import java.util.List;
+
+import lapr.project.Bootstrap.Bootstrap;
 import lapr.project.model.Company;
 import lapr.project.model.Coordinates;
-import lapr.project.model.Park.Park;
+import lapr.project.model.park.Park;
 import static org.junit.jupiter.api.Assertions.*;
-import lapr.project.bootstrap.Bootstrap;
 import lapr.project.shutdown.Shutdown;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -23,7 +24,7 @@ public class ParkRegisterTest {
     /**
      * Test of addPark method, of class ParkRegistor.
      */
-    @Ignore
+    @Test
     public void testAddPark() {
         Bootstrap bootstrap=new Bootstrap();
         bootstrap.boot();
@@ -31,7 +32,7 @@ public class ParkRegisterTest {
         ParkRegister parkRegistor=new ParkRegister(company.getDataHandler());
         boolean expResult=true;
         Coordinates cord=new Coordinates(37.819722,-122.478611, 0);
-        boolean result=parkRegistor.addPark("Parque das Camelias", cord);
+        boolean result=parkRegistor.addPark("Parque das Camelias", cord,"Grande e pequeno",(float)1.75,(float)3.2);
         Shutdown.shutdown();
         assertEquals(expResult,result);
     }
@@ -39,7 +40,7 @@ public class ParkRegisterTest {
     /**
      * Test of removeParkById method, of class ParkRegistor.
      */
-    @Ignore
+    @Test
     public void testRemoveParkById() {
         Bootstrap bootstrap=new Bootstrap();
         bootstrap.boot();
@@ -53,7 +54,7 @@ public class ParkRegisterTest {
     /**
      * Test of fetchParkByName method, of class ParkRegistor.
      */
-    @Ignore
+    @Test
     public void testFetchParkByName() {
         Bootstrap bootstrap=new Bootstrap();
         bootstrap.boot();
@@ -69,7 +70,7 @@ public class ParkRegisterTest {
     /**
      * Test of fetchParkById method, of class ParkRegistor.
      */
-    @Ignore
+    @Test
     public void testFetchParkById() {
         Bootstrap bootstrap=new Bootstrap();
         bootstrap.boot();
@@ -86,6 +87,20 @@ public class ParkRegisterTest {
         assertEquals(coordinatesExpected, coordinatesResult);
         assertEquals(nameExpected, nameResult);
         assertEquals(parkIdExpected, parkIdResult);
+    }
+    
+    /**
+     * Test of  UpdatePark method, of class ParkRegistor
+     */
+    @Test
+    public void UpdatePark(){
+        Bootstrap bootstrap=new Bootstrap();
+        bootstrap.boot();
+        Company company=Company.getInstance();
+        ParkRegister parkRegistor=new ParkRegister(company.getDataHandler());
+        //int nmrUpdLines=parkRegistor.UpdatePark(name, cord, vehicleCapacities, 0, description, 0, 0);
+        int expectedResult=1;
+        //assertEquals(expectedResult, nmrUpdLines);
     }
     
 }

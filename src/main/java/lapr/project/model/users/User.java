@@ -1,4 +1,4 @@
-package lapr.project.model.Users;
+package lapr.project.model.users;
 
 import java.util.Objects;
 

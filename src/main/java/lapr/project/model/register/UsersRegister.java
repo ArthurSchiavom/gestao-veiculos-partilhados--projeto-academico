@@ -1,16 +1,14 @@
-package lapr.project.register;
+package lapr.project.model.register;
 
 import lapr.project.data.DataHandler;
-import lapr.project.model.Users.Client;
-import lapr.project.model.Users.UserType;
-import lapr.project.model.Users.User;
-import lapr.project.model.Users.CreditCard;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.CreditCard;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
- * Handles the Users and its subclasses
+ * Handles the users and its subclasses
  */
 public class UsersRegister {
     private DataHandler dataHandler;

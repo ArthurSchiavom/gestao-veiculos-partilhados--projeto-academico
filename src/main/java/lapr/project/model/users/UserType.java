@@ -1,4 +1,4 @@
-package lapr.project.model.Users;
+package lapr.project.model.users;
 
 /**
  * Represents the type of client types
