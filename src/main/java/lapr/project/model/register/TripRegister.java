@@ -28,16 +28,16 @@ public class TripRegister {
         try {
             prepStat = dataHandler.prepareStatement(
                     "SELECT * FROM trip where start_time=? AND user_email=?");
-            dataHandler.setTimestamp(prepStat, 1, Timestamp.valueOf(startTime));
-            dataHandler.setString(prepStat, 2, clientEmail);
+            prepStat.setTimestamp( 1, Timestamp.valueOf(startTime));
+            prepStat.setString( 2, clientEmail);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
             if (resultSet == null || !resultSet.next()) {
                 return null;
             }
-            int vehicleId = dataHandler.getInt(resultSet, 3);
-            int startParkId = dataHandler.getInt(resultSet, 4);
-            int endParkId = dataHandler.getInt(resultSet, 5);
-            Timestamp endTimeTimeStamp = dataHandler.getTimestamp(resultSet, 6);
+            int vehicleId = resultSet.getInt(3);
+            int startParkId = resultSet.getInt(4);
+            int endParkId = resultSet.getInt(5);
+            Timestamp endTimeTimeStamp = resultSet.getTimestamp(6);
             LocalDateTime endTime = endTimeTimeStamp.toLocalDateTime();
 
             return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
