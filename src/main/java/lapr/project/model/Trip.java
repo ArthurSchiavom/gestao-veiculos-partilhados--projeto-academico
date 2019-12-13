@@ -7,6 +7,7 @@ package lapr.project.model;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Class that represents a trip
@@ -125,5 +126,19 @@ public class Trip {
      */
     public int getVehicleId() {
         return this.vehicleId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trip trip = (Trip) o;
+        return startTime.equals(trip.startTime) &&
+                clientEmail.equals(trip.clientEmail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startTime, clientEmail);
     }
 }

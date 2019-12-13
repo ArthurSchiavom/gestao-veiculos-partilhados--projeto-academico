@@ -169,4 +169,34 @@ public class TripTest {
         int result = instance.getVehicleId();
         assertEquals(expResult, result);
     }
+
+    @Test
+    void testEquals() {
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+
+        Object trip1 = new Trip(startTime, "email@email.com", 0,0);
+        assertEquals(trip1, trip1);
+
+        Trip trip2 = new Trip(startTime, "email@email.com", 0,0);
+        assertEquals(trip1, trip2);
+
+        trip1 = new Trip(startTime, "email2@email.com", 0,0);
+        assertNotEquals(trip1, trip2);
+
+        trip1 = null;
+        assertNotEquals(trip2, trip1);
+    }
+
+    @Test
+    void testHashCode() {
+        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+
+        Trip trip1 = new Trip(startTime, "email@email.com", 0,0);
+        Trip trip2 = new Trip(startTime, "email@email.com",0,0);
+        int expResult = trip1.hashCode();
+        assertEquals(expResult, trip2.hashCode());
+
+        trip1 = new Trip(startTime, "email2@email.com", 0,0);
+        assertNotEquals(expResult, trip1.hashCode());
+    }
 }
