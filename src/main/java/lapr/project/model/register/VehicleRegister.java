@@ -1,4 +1,4 @@
-package lapr.project.register;
+package lapr.project.model.register;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;

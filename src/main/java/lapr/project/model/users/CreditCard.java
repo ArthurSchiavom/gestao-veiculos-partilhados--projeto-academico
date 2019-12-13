@@ -1,4 +1,4 @@
-package lapr.project.model.Users;
+package lapr.project.model.users;
 
 import java.time.LocalDate;
 import java.util.Objects;

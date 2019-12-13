@@ -1,10 +1,8 @@
 package lapr.project.model;
 
 import lapr.project.data.DataHandler;
-import lapr.project.register.TripRegister;
-import lapr.project.register.UsersRegister;
-
-import java.sql.Connection;
+import lapr.project.model.register.TripRegister;
+import lapr.project.model.register.UsersRegister;
 
 /**
  * Represents a company

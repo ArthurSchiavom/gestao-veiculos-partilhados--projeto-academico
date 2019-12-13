@@ -1,4 +1,4 @@
-package lapr.project.register;
+package lapr.project.model.register;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Trip;
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Null;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

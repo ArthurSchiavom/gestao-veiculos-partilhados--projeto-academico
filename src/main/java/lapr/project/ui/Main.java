@@ -1,6 +1,6 @@
 package lapr.project.ui;
 
-import lapr.project.bootstrap.Bootstrap;
+import lapr.project.Bootstrap.Bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;
 import lapr.project.shutdown.Shutdown;

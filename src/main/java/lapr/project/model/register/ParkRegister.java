@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.register;
+package lapr.project.model.register;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Set;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
-import lapr.project.model.Park.Capacity;
-import lapr.project.model.Park.Park;
+import lapr.project.model.park.Capacity;
+import lapr.project.model.park.Park;
 import lapr.project.model.Vehicles.VehicleType;
 
 /**
@@ -33,8 +33,8 @@ public class ParkRegister {
      *
      * Adds a park to the database
      *
-     * @param name Park name
-     * @param cord Park coordinates
+     * @param name park name
+     * @param cord park coordinates
      * @return true if added with success the park, false otherwise
      */
     public boolean addPark(String name, Coordinates cord) {
@@ -109,8 +109,8 @@ public class ParkRegister {
     /**
      * Fetch a parkk by id
      *
-     * @param id Park id
-     * @return return a Park
+     * @param id park id
+     * @return return a park
      */
     
     public Park fetchParkById(int id) {
@@ -134,7 +134,7 @@ public class ParkRegister {
 
     /**
      *
-     * @param parkId Park id
+     * @param parkId park id
      * @return return a list of capacitys (of different types)
      */
     private Set<Capacity> getListOfCapacitys(int parkId) {
