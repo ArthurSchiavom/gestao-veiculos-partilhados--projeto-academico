@@ -26,10 +26,10 @@ CREATE TABLE vehicles (
                                  constraint ck_vehicles_longitude CHECK (longitude between -180 and 180), 
   weight			number(3)    constraint nn_vehicles_weight NOT NULL
 								 constraint ck_vehicles_weight CHECK (weight > 0),
-  altitude          number(6, 2) constraint nn_vehicles_altitude NOT NULL,
+  altitude_m          number(6, 2) constraint nn_vehicles_altitude NOT NULL,
   aerodynamic_coefficient number(4, 2) constraint nn_vehicles_aerodynamic_coefficient NOT NULL,
   frontal_area number(4,2) constraint nn_vehicles_frontal_area NOT NULL,
-  constraint uk_vehicles_longitude_latitude_altitude unique(latitude,longitude,altitude)
+  constraint uk_vehicles_longitude_latitude_altitude unique(latitude,longitude,altitude_m)
 );
 
 -- Tabela Vehicle_Types
@@ -42,14 +42,15 @@ CREATE TABLE vehicle_types (
 CREATE TABLE bicycles (
   vehicle_id        number(8) constraint pk_bicycles_vehicle_id PRIMARY KEY,                  
   bicycle_size      number(2) constraint nn_bicycles_bicycle_size NOT NULL
-                              constraint ck_bicycles_bicycle_size check (bicycle_size>=15)
+                              constraint ck_bicycles_bicycle_size check (bicycle_size>=15),
+  bicyble_description varchar2(150) constraint nn_bicycles_bicycle_description NOT NULL
   );
 
 -- Tabela Electric_Scooters  
 CREATE TABLE electric_scooters (
   vehicle_id                number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
   electric_scooter_type_name varchar2(50) constraint nn_electric_scooters_electric_scooter_type_name NOT NULL, 
-  description varchar2(150) constraint nn_electric_scooters_description NOT NULL,
+  scooter_description varchar2(150) constraint nn_electric_scooters_description NOT NULL,
   max_battery_capacity             number(3,2) constraint nn_electric_scooters_battery_level NOT NULL,
   actual_battery_capacity number(3) constraint nn_electric_scooters_actual_battery_capacity NOT NULL
 									constraint ck_electric_scooters_actual_battery_capacity CHECK (actual_battery_capacity >= 0 and actual_battery_capacity <= 100)
@@ -79,7 +80,8 @@ CREATE TABLE clients (
   is_riding              char(1)      DEFAULT '0' 
                                       constraint nn_clients_is_riding NOT NULL
                                       constraint ck_clients_is_riding  CHECK (is_riding = 0 OR is_riding = 1), 
-  age                    number(3)    constraint nn_clients_age NOT NULL
+  age                    number(3)    constraint nn_clients_age NOT NULL,
+  cycling_average_speed  number(4,2)  constraint nn_cycling_average_speed NOT NULL
   );
   
 
@@ -91,6 +93,9 @@ CREATE TABLE parks (
   latitude  number(9, 6) constraint nn_parks_latitude NOT NULL,
   longitude number(9, 6) constraint nn_parks_longitude NOT NULL,
   altitude  number(6, 2) constraint nn_parks_altitude NOT NULL,
+  park_description varchar2(150) constraint nn_parks_park_description NOT NULL,
+  park_input_voltage number(5,1) constraint parks_park_input_voltage NOT NULL,
+  park_input_current number(4,1) constraint parks_park_input_current NOT NULL,
   constraint uk_parks_longitude_latitude_altitude unique(latitude,longitude,altitude)
   );
   
@@ -114,7 +119,8 @@ CREATE TABLE pending_registrations (
   weight                 number(5, 2) CONSTRAINT nn_pending_registrations_weight NOT NULL, 
   gender                 char(1) CONSTRAINT nn_pending_registrations_gender NOT NULL
                                  CONSTRAINT ck_pending_registrations_gender CHECK(REGEXP_LIKE(gender, 'M|F', 'i')),
-  age                    number(3) CONSTRAINT nn_pending_registrations_age NOT NULL 
+  age                    number(3) CONSTRAINT nn_pending_registrations_age NOT NULL,
+  cycling_average_speed number(4,2) constraint nn_pending_registrations_cycling_average_speed NOT NULL
 );
 
 -- Tabela invoices
