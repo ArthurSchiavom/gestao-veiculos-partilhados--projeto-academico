@@ -5,10 +5,8 @@
  */
 package lapr.project.model;
 
-import java.util.Calendar;
-import lapr.project.model.Users.Client;
-import lapr.project.model.Vehicles.Vehicle;
-import lapr.project.model.Park.Park;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * Class that represents a trip
@@ -17,9 +15,9 @@ import lapr.project.model.Park.Park;
  */
 public class Trip {
 
-    private Calendar startTime;
-    private Calendar endTime = null;
-    private int clientId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime = null;
+    private String clientEmail;
     private int startParkId;
     private int endParkId = 0;
     private int vehicleId;
@@ -27,61 +25,60 @@ public class Trip {
     /**
      * Constructor that instantiates a trip
      *
-     * @param startTime - the start time of the trip
-     * @param endTime - the end time of the trip
-     * @param client - the client that is making the trip
-     * @param startPark - the starting point (park) for the trip
-     * @param endPark - the ending point (park) for the trip
-     * @param vehicle - the vehicle being used
+     * @param startTime   - the start time of the trip
+     * @param endTime     - the end time of the trip
+     * @param clientEmail - the email of the client that is taking the trip
+     * @param startPark   - the starting point (park) for the trip
+     * @param endPark     - the ending point (park) for the trip
+     * @param vehicle     - the vehicle being used
      */
-    public Trip(Calendar startTime, Calendar endTime, int client, int startPark, int endPark, int vehicle) {
+    public Trip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail, int startPark, int endPark, int vehicle) {
         this.startTime = startTime;
         this.endTime = endTime;
-        this.clientId = client;
+        this.clientEmail = clientEmail;
         this.startParkId = startPark;
         this.endParkId = endPark;
         this.vehicleId = vehicle;
     }
 
-     /**
+    /**
      * Constructor that instantiates a trip without the end park and the end time defined
      *
-     * @param startTime - the start time of the trip
-     * @param client - the client that is making the trip
-     * @param startPark - the starting point (park) for the trip
-     * @param vehicle - the vehicle being used
+     * @param startTime   - the start time of the trip
+     * @param clientEmail - the email of the client that is taking the trip
+     * @param startPark   - the starting point (park) for the trip
+     * @param vehicle     - the vehicle being used
      */
-    public Trip(Calendar startTime, int client, int startPark, int vehicle) {
+    public Trip(LocalDateTime startTime, String clientEmail, int startPark, int vehicle) {
         this.startTime = startTime;
-        this.clientId = client;
+        this.clientEmail = clientEmail;
         this.startParkId = startPark;
         this.vehicleId = vehicle;
     }
 
-        /**
+    /**
      * Constructor that instantiates a trip without the end time defined
      *
-     * @param startTime - the start time of the trip
-     * @param client - the client that is making the trip
-     * @param startPark - the starting point (park) for the trip
-     * @param endPark - the ending point (park) for the trip
-     * @param vehicle - the vehicle being used
+     * @param startTime   - the start time of the trip
+     * @param clientEmail - the email of the client that is taking the trip
+     * @param startPark   - the starting point (park) for the trip
+     * @param endPark     - the ending point (park) for the trip
+     * @param vehicle     - the vehicle being used
      */
-    public Trip(Calendar startTime, int client, int startPark, int endPark, int vehicle) {
+    public Trip(LocalDateTime startTime, String clientEmail, int startPark, int endPark, int vehicle) {
         this.startTime = startTime;
-        this.endTime = endTime;
-        this.clientId = client;
+        this.clientEmail = clientEmail;
         this.startParkId = startPark;
         this.endParkId = endPark;
         this.vehicleId = vehicle;
     }
-    
+
     /**
      * Returns the start time of the current trip.
      *
      * @return the start time of the trip
      */
-    public Calendar getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
@@ -90,7 +87,7 @@ public class Trip {
      *
      * @return the end time of the trip
      */
-    public Calendar getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
@@ -99,8 +96,8 @@ public class Trip {
      *
      * @return the client doing the trip
      */
-    public int getClientId() {
-        return this.clientId;
+    public String getClientEmail() {
+        return this.clientEmail;
     }
 
     /**

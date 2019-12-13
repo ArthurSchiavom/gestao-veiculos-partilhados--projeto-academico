@@ -1,6 +1,6 @@
 package lapr.project.model;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Receipt {
     private int pointsUsed;
     private double amountPaidCash;
-    private Calendar paymentDate;
+    private LocalDate paymentDate;
 
     /**
      * Instantiates a receipt for the invoices
@@ -18,8 +18,7 @@ public class Receipt {
      * @param pointsUsed the amount of points used to make the payment
      * @param amountPaidCash the amount paid in cash
      */
-    public Receipt(Calendar paymentDate, int pointsUsed, double amountPaidCash) {
-        //TODO: Add checks and tests for points used
+    public Receipt(LocalDate paymentDate, int pointsUsed, double amountPaidCash) {
         if(amountPaidCash < 0) {
             throw new IllegalArgumentException("Can't pay negative amount of money");
         }
@@ -51,7 +50,7 @@ public class Receipt {
      * 
      * @return the date the payment was made
      */
-    public Calendar getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 

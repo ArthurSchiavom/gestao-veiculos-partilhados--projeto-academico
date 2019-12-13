@@ -106,13 +106,13 @@ public class ParkRegister {
         }
         return parksSameNameOrNot;
     }
-
     /**
      * Fetch a parkk by id
      *
      * @param id Park id
      * @return return a Park
      */
+    
     public Park fetchParkById(int id) {
         String name;
         Coordinates cord;
