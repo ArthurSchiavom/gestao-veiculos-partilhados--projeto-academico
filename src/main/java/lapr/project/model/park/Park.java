@@ -11,7 +11,6 @@ import lapr.project.model.Vehicles.VehicleType;
 
 
 public class Park {
-    private String name;
     private Coordinates cord;
     private int id;
     private String description;
@@ -22,15 +21,13 @@ public class Park {
     /**
      * Instantiates a park object
      *
-     * @param name the name of the park
      * @param cord the coordinates of the park
      * @param vehicleCapacities capacity of the park
      * @param parkInputVoltage  the corrent of the park
      * @param parkInputCurrent  the atual corrent of the park
      * @param parkId id of the park
      */
-    public Park(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent) {
-        this.name = name;
+    public Park(Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent) {
         this.cord = cord;
         this.vehicleCapacities = vehicleCapacities;
         this.id = id;
@@ -49,10 +46,6 @@ public class Park {
 
     public float getParkInputCurrent() {
         return parkInputCurrent;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Coordinates getCoords() {

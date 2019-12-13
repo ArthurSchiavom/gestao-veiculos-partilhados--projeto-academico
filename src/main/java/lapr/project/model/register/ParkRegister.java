@@ -33,16 +33,13 @@ public class ParkRegister {
      *
      * Adds a park to the database
      *
-<<<<<<< HEAD:src/main/java/lapr/project/register/ParkRegister.java
      * @param name Park name
      * @param cord Park coordinates
      * @param park_descripton Description of the park
      * @param park_input_voltage Park input voltage
      * @param park_input_corrent Park input corrent
-=======
      * @param name park name
      * @param cord park coordinates
->>>>>>> 6558d13c057deecb817d0b6cb951984a549ef72a:src/main/java/lapr/project/model/register/ParkRegister.java
      * @return true if added with success the park, false otherwise
      */
     public boolean addPark(String name, Coordinates cord, String park_description, float park_input_voltage, float park_input_corrent) {

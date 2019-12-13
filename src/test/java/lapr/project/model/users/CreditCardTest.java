@@ -3,6 +3,7 @@ package lapr.project.model.users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import lapr.project.model.users.CreditCard;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;

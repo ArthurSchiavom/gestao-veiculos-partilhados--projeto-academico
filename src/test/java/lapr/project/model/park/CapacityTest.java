@@ -6,19 +6,16 @@
 package lapr.project.model.park;
 
 import lapr.project.model.Vehicles.VehicleType;
-import lapr.project.model.park.Capacity;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author kevin
  */
 public class CapacityTest {
-
     @Test
     public void testGetCapacity() {
         System.out.println("getCapacity");
