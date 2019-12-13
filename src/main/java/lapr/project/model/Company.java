@@ -18,6 +18,7 @@ public class Company {
      * Represents a Singleton of the class Company
      */
     private Company(DataHandler dataHandler) {
+        instance = this;
         this.dataHandler = dataHandler;
         
         this.usersRegister = new UsersRegister(dataHandler);
@@ -30,7 +31,7 @@ public class Company {
      */
     public static Company createCompany(DataHandler dataHandler){
         if(instance == null){
-            instance = new Company(dataHandler);
+            new Company(dataHandler);
         }
         return instance;
     }

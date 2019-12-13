@@ -6,13 +6,14 @@ import java.util.Objects;
  * Class that represents an user
  */
 public abstract class User {
-    private final String email, password;
+    private final String email, password,username;
     private final UserType type;
 
-    public User(String email, String password, UserType type) {
+    public User(String email, String username, String password, UserType type) {
         this.email = email;
         this.password = password;
         this.type = type;
+        this.username = username;
     }
 
     public UserType getType() {
@@ -23,6 +24,9 @@ public abstract class User {
     }
     public String getPassword(){
         return password;
+    }
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -56,6 +60,7 @@ public abstract class User {
     public String toString() {
         return "User{" +
                 "email='" + email + '\'' +
+                ",username='" + username+'\''+
                 ", password='" + password + '\'' +
                 ", type=" + type +
                 '}';

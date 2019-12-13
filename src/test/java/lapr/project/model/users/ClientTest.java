@@ -22,7 +22,7 @@ public class ClientTest {
 
     @BeforeEach
     void beforeEach() {
-        instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
+        instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
                 new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
     }
 
@@ -37,7 +37,7 @@ public class ClientTest {
     @Test
     void testGetCreditCardSecret() {
         System.out.println("getCreditCardSecret");
-        Client instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
+        Client instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
                 new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
         int expResult = 321;
         int result = instance.getCc().getCcv();
@@ -47,7 +47,7 @@ public class ClientTest {
     @Test
     void testGetAge() {
         System.out.println("getAge");
-        Client instance = new Client("1180852@isep.ipp.pt","password", 22, 180, 60f, 'm',
+        Client instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
                 new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
         int expResult = 22;
         int result = instance.getAge();

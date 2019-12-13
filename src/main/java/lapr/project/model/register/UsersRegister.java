@@ -38,9 +38,10 @@ public class UsersRegister {
             Date creditCardExpiration = dataHandler.getDate(resultSet, 4);
             int creditCardSecret = dataHandler.getInt(resultSet, 5);
             int height =  dataHandler.getInt(resultSet, 6);
-            float weight = (float) dataHandler.getDouble(resultSet, 7);
+            int weight =  dataHandler.getInt(resultSet, 7);
             char gender = dataHandler.getString(resultSet, 8).charAt(0);
             int age = dataHandler.getInt(resultSet, 10);
+            float cyclingAvgSpeed = dataHandler.getFloat(resultSet, 11);
 
             // get password of client
             stm = dataHandler.prepareStatement("SELECT user_password FROM registered_users where user_email=?");
@@ -51,10 +52,11 @@ public class UsersRegister {
                 stm.close();
                 return null;
             }
-            String password = dataHandler.getString(resultSet, 1);
+            String password = dataHandler.getString(resultSet, 3);
+            String username = dataHandler.getString(resultSet, 4);
             resultSet.close();
             stm.close();
-            return new Client(email, password, points, age, height, weight, gender, new CreditCard(creditCardNumber, creditCardExpiration.toLocalDate(), creditCardSecret));
+            return new Client(email,username ,password, points, age, height, weight, gender,cyclingAvgSpeed, new CreditCard(creditCardNumber, creditCardExpiration.toLocalDate(), creditCardSecret));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,13 +77,13 @@ public class UsersRegister {
      * @param creditCardNumber credit card number of the client
      * @param creditCardExpiration credit card expiration date of the client
      */
-    public boolean insertClient(String email, int paid, int amountLeftToPay, int creditCardSecret, int age, float height, float weight, char gender, String creditCardNumber, String creditCardExpiration) {
+    public boolean insertClient(String email, String username, String password, float paid, float amountLeftToPay, int creditCardSecret, int age, int height, int weight, char gender, String creditCardNumber, String creditCardExpiration, float cyclingAvgSpeed) {
         //create statement to be executed later
         PreparedStatement stm = null;
         String userTypeName = "Client";
         Date date;
         try {
-            date = (Date) new SimpleDateFormat("dd-MM-yyyy").parse(creditCardExpiration);
+            date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(creditCardExpiration);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             return false; // exit method
@@ -90,13 +92,13 @@ public class UsersRegister {
             //pending registrations
             stm = dataHandler.prepareStatement("Insert into pending_registrations(email,paid,amount_left_to_pay,credit_card_number,credit_card_expiration,credit_card_secret,height,weight,gender,age) values (?,?,?,?, ?, ?,?,?,?,?);");
             dataHandler.setString(stm, 1, email);
-            dataHandler.setInt(stm, 2, paid);
-            dataHandler.setInt(stm, 3, amountLeftToPay);
+            dataHandler.setFloat(stm, 2, paid);
+            dataHandler.setFloat(stm, 3, amountLeftToPay);
             dataHandler.setString(stm, 4, creditCardNumber);
             dataHandler.setDate(stm, 5, date); // creditCardExpiration (Date)
             dataHandler.setInt(stm, 6, creditCardSecret);
-            dataHandler.setDouble(stm, 7, height);
-            dataHandler.setDouble(stm, 8, weight);
+            dataHandler.setInt(stm, 7, height);
+            dataHandler.setInt(stm, 8, weight);
             dataHandler.setString(stm, 9, String.valueOf(gender)); // uses setString even tho its a char
             dataHandler.setInt(stm, 10, age);
             dataHandler.executeUpdate(stm);

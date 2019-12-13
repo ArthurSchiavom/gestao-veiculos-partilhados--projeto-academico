@@ -5,9 +5,9 @@ package lapr.project.model.users;
  */
 public class Client extends User {
 
-    private final int points, age, height;
-    private final float weight;
+    private final int points, age, height,weight;
     private final char gender; // M or F, to simplify
+    private final float cyclingAverageSpeed;
     private final CreditCard cc;
 
     /**
@@ -20,27 +20,29 @@ public class Client extends User {
      * @param weight   the weight (in kgs) of the client
      * @param gender   the physical gender of the client
      */
-    public Client(String email, String password, int age, int height, float weight, char gender, CreditCard creditCard) {
-        super(email, password, UserType.CLIENT);
+    public Client(String email, String username, String password, int age, int height, int weight, char gender, float cyclingAverageSpeed, CreditCard creditCard) {
+        super(email,username, password, UserType.CLIENT);
         this.age = age;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
         this.points = 0;
         this.cc = creditCard;
+        this.cyclingAverageSpeed = cyclingAverageSpeed;
     }
 
     /**
      * Constructor for already existent Clients
      */
-    public Client(String email, String password, int points, int age, int height, float weight, char gender, CreditCard creditCard) {
-        super(email, password, UserType.CLIENT);
+    public Client(String email, String username, String password, int points, int age, int height, int weight, char gender, float cyclingAverageSpeed, CreditCard creditCard) {
+        super(email, username, password, UserType.CLIENT);
         this.points = points;
         this.age = age;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
         this.cc = creditCard;
+        this.cyclingAverageSpeed = cyclingAverageSpeed;
     }
 
     public int getPoints() {
@@ -59,7 +61,7 @@ public class Client extends User {
         return cc;
     }
     
-    public float getWeight() {
+    public int getWeight() {
         return weight;
     }
 
@@ -69,5 +71,9 @@ public class Client extends User {
 
     public CreditCard getCreditCard() {
         return cc;
+    }
+
+    public float getCyclingAverageSpeed() {
+        return cyclingAverageSpeed;
     }
 }

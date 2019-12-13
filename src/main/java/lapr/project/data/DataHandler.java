@@ -187,6 +187,11 @@ public class DataHandler {
         executeSQLOperation(operation);
     }
 
+    public void setFloat(PreparedStatement preparedStatement, int position, float value) throws SQLException {
+        SQLOperation<Boolean> operation = () -> {preparedStatement.setFloat(position, value); return true;};
+        executeSQLOperation(operation);
+    }
+
     public void setString(PreparedStatement preparedStatement, int position, String value) throws SQLException {
         SQLOperation<Boolean> operation = () -> {preparedStatement.setString(position, value); return true;};
         executeSQLOperation(operation);
@@ -214,6 +219,11 @@ public class DataHandler {
 
     public double getDouble(ResultSet resultSet, int columnPosition) throws SQLException {
         SQLOperation<Double> operation = () -> {return resultSet.getDouble(columnPosition);};
+        return executeSQLOperation(operation);
+    }
+
+    public float getFloat(ResultSet resultSet, int columnPosition) throws SQLException {
+        SQLOperation<Float> operation = () -> {return resultSet.getFloat(columnPosition);};
         return executeSQLOperation(operation);
     }
 
