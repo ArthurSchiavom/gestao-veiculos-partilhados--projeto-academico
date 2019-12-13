@@ -7,10 +7,7 @@ package lapr.project.model.Park;
 
 import lapr.project.model.Vehicles.VehicleType;
 
-/**
- *
- * @author kevin
- */
+
 public class Capacity {
     private int maxCapacity;
     private int amountOccupied = 0;

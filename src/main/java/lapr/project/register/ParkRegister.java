@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.controller;
+package lapr.project.register;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,11 +22,11 @@ import lapr.project.model.Vehicles.VehicleType;
  *  This class regist and manipulates the data of all parks in data base
  */
 
-public class ParkRegistor {
+public class ParkRegister {
 
     DataHandler dataHandler;
 
-    public ParkRegistor(DataHandler dataHandler) {
+    public ParkRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
@@ -42,11 +42,12 @@ public class ParkRegistor {
         double latitude = cord.getLatitude();
         double longitude = cord.getLongitude();
         double altitude = cord.getAltitude();
-        PreparedStatement statement = dataHandler.prepareStatement("Insert into parks(park_name, latitude, longitude, altitude) values(?,?,?,?)");
+        PreparedStatement statement =dataHandler.prepareStatement("INSERT INTO PARKS(park_name, latitude, longitude, altitude) "+  "VALUES(?,?,?,?)");
         dataHandler.setString(statement, 1, name);
         dataHandler.setDouble(statement, 2, latitude);
         dataHandler.setDouble(statement, 3, longitude);
         dataHandler.setDouble(statement, 4, altitude);
+        dataHandler.executeQuery(statement);
        }catch(SQLException e){
            System.out.println(e.getMessage());
            return false;    
@@ -64,6 +65,7 @@ public class ParkRegistor {
        try{ 
         PreparedStatement statement = dataHandler.prepareStatement("DELETE FROM park WHERE park_id=?");
         dataHandler.setInt(statement, 1, id);
+        dataHandler.executeQuery(statement);
        }catch(SQLException e){
            System.out.println(e.getMessage());
            return false;
@@ -91,7 +93,7 @@ public class ParkRegistor {
             double longitude = dataHandler.getDouble(result, 4);
             double altitude = dataHandler.getDouble(result, 5);
             Set<Capacity> listOfCapacitys=getListOfCapacitys(parkId);
-            parksSameNameOrNot.add(new Park(parkName, new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId));
+            parksSameNameOrNot.add(new Park(parkName, new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId, 0f,0f));
         }
        }catch(SQLException e){
            System.out.println(e.getMessage());
@@ -114,7 +116,7 @@ public class ParkRegistor {
         ResultSet resultSet = dataHandler.executeQuery(statement);
         name = dataHandler.getString(resultSet, 1);
         cord = new Coordinates(dataHandler.getDouble(resultSet, 2), dataHandler.getDouble(resultSet, 3), dataHandler.getDouble(resultSet, 4));
-        return new Park(name, cord, getListOfCapacitys(id), id);
+        return new Park(name, cord, getListOfCapacitys(id), id,0,0);
       }catch(SQLException e){
           System.out.println(e.getMessage());
           return null;
@@ -137,7 +139,7 @@ public class ParkRegistor {
                 String vehicle_type_name = dataHandler.getString(resultForCapacity, 1);
                 int park_capacity = dataHandler.getInt(resultForCapacity, 2);
                 int amount_occupied = dataHandler.getInt(resultForCapacity, 3);
-                if (vehicle_type_name.trim().equalsIgnoreCase("bicycle")) {
+                if (vehicle_type_name.trim().equalsIgnoreCase(VehicleType.BICYCLE.toString())) {
                     vehicleType = VehicleType.BICYCLE;
                 } else {
                     vehicleType = VehicleType.ELECTRIC_SCOOTER;

@@ -10,14 +10,13 @@ import lapr.project.model.Coordinates;
 import java.util.Set;
 import lapr.project.model.Vehicles.VehicleType;
 
-/**
- *
- * @author kevin //
- */
+
 public class Park {
     private String name;
     private Coordinates cord;
     private int id;
+    private float parkInputVoltage;
+    private float parkInputCurrent;
     private Set<Capacity> vehicleCapacities;
 
     /**
@@ -26,13 +25,25 @@ public class Park {
      * @param name the name of the park
      * @param cord the coordinates of the park
      * @param vehicleCapacities capacity of the park
+     * @param parkInputVoltage  the corrent of the park
+     * @param parkInputCurrent  the atual corrent of the park
      * @param parkId id of the park
      */
-    public Park(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id) {
+    public Park(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id,float parkInputVoltage,float parkInputCurrent) {
         this.name = name;
         this.cord = cord;
         this.vehicleCapacities = vehicleCapacities;
         this.id = id;
+        this.parkInputVoltage = parkInputVoltage;
+        this.parkInputCurrent = parkInputCurrent;
+    }
+
+    public float getParkInputVoltage() {
+        return parkInputVoltage;
+    }
+
+    public float getParkInputCurrent() {
+        return parkInputCurrent;
     }
 
     public String getName() {
