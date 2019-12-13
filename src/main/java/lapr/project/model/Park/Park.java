@@ -15,6 +15,7 @@ public class Park {
     private String name;
     private Coordinates cord;
     private int id;
+    private String description;
     private float parkInputVoltage;
     private float parkInputCurrent;
     private Set<Capacity> vehicleCapacities;
@@ -29,15 +30,20 @@ public class Park {
      * @param parkInputCurrent  the atual corrent of the park
      * @param parkId id of the park
      */
-    public Park(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id,float parkInputVoltage,float parkInputCurrent) {
+    public Park(String name, Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent) {
         this.name = name;
         this.cord = cord;
         this.vehicleCapacities = vehicleCapacities;
         this.id = id;
+        this.description=description;
         this.parkInputVoltage = parkInputVoltage;
         this.parkInputCurrent = parkInputCurrent;
     }
 
+    public String getDescription() {
+        return description;
+    }
+    
     public float getParkInputVoltage() {
         return parkInputVoltage;
     }

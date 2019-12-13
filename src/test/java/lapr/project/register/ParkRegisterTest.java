@@ -46,7 +46,7 @@ public class ParkRegisterTest {
         bootstrap.boot();
         Company company=Company.getInstance();
         ParkRegister parkRegistor=new ParkRegister(company.getDataHandler());
-        boolean result =parkRegistor.removeParkById(1);
+        boolean result=parkRegistor.removeParkById(1);
         Shutdown.shutdown();
         assertEquals(true, result);
     }
