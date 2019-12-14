@@ -60,13 +60,13 @@ insert into vehicles (vehicle_type_name, available, latitude, longitude, weight,
 values('bicycle', 0, 45.123, 23.423, 30, 100, 1.2, 2.4);
 
 insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
-values('electric scooter', 1, 10.230, 15.323, 2, 50, 1.10, 0.9);
+values('electric_scooter', 1, 10.230, 15.323, 2, 50, 1.10, 0.9);
 
 insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area) 
-values('electric scooter', 0, 10.000, -27.123, 70, 12, 1.21, 0.1);
+values('electric_scooter', 0, 10.000, -27.123, 70, 12, 1.21, 0.1);
 
 insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area) 
-values('electric scooter', 0, 23.123, -23.423, 20, -2, 1.1, 0.3);
+values('electric_scooter', 0, 23.123, -23.423, 20, -2, 1.1, 0.3);
 
 -- park_vehicle
 insert into park_vehicle(park_id, vehicle_id)
@@ -166,10 +166,10 @@ insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occu
 values(1, 'bicycle', 20, 10);
 
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
-values(1, 'electric scooter', 20, 10);
+values(1, 'electric_scooter', 20, 10);
 
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
-values(2, 'electric scooter', 40, 10);
+values(2, 'electric_scooter', 40, 10);
 
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
 values(2, 'bicycle', 30, 20);
