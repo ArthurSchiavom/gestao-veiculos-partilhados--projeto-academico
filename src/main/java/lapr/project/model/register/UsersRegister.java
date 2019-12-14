@@ -127,8 +127,7 @@ public class UsersRegister {
     }
     
      public double distanceOfParkById(int id,Coordinates coordClient){
-        Company company = null;
-        company = company.getInstance();
+        Company company = Company.getInstance();
         ParkRegister pr = company.getParkRegister();
         Park park = pr.fetchParkById(id);
        double dist = coordClient.distance(park.getCoords());
