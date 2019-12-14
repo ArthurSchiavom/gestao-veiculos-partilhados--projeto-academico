@@ -45,6 +45,7 @@ CREATE TABLE vehicle_types (
 CREATE TABLE bicycles (
   vehicle_id        number(8) constraint pk_bicycles_vehicle_id PRIMARY KEY,                  
   bicycle_size      number(2) constraint nn_bicycles_bicycle_size NOT NULL
+                              constraint ck_bicycles_bicycle_size CHECK(bicycle_size > 0),
   bicyble_description varchar2(50) constraint nn_bicycles_bicycle_description NOT NULL
 );
 
@@ -94,7 +95,7 @@ CREATE TABLE parks (
   park_description varchar2(150) constraint nn_parks_park_description NOT NULL,
   park_input_voltage number(5,1) constraint parks_park_input_voltage NOT NULL,
   park_input_current number(4,1) constraint parks_park_input_current NOT NULL,
-  constraint uk_parks_longitude_latitude_altitude unique(latitude,longitude,altitude)
+  constraint uk_parks_latitude_longitude unique(latitude,longitude)
   );
 
 -- Tabela park_vehicle
@@ -119,7 +120,7 @@ CREATE TABLE pending_registrations (
   cycling_average_speed number(4,2) constraint nn_pending_registrations_cycling_average_speed NOT NULL,
   user_password  varchar2(20) CONSTRAINT nn_pending_registrations_user_password NOT NULL,
   user_name      varchar2(50) CONSTRAINT nn_pending_registrations_user_name NOT NULL,
-  Constraint ck_pending_registrations_email CHECK (REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$'))
+  Constraint ck_pending_registrations_email CHECK (REGEXP_LIKE(email, '^.*@.*$'))
 );
 
 -- Tabela invoices
@@ -176,7 +177,7 @@ CREATE TABLE registered_users (
   user_type_name varchar2(50), 
   user_password  varchar2(20) CONSTRAINT nn_registered_users_user_password NOT NULL,
   user_name      varchar2(50) CONSTRAINT nn_registered_users_user_name NOT NULL,
-  Constraint ck_registered_users_user_email CHECK (REGEXP_LIKE(user_email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$'))
+  Constraint ck_registered_users_user_email CHECK (REGEXP_LIKE(user_email, '^.*@.*$'))
 );
 
 -- Tabela paths
@@ -204,10 +205,10 @@ CREATE TABLE points_of_interest (
 CREATE TABLE trip_point_of_interest (
   start_time timestamp, 
   user_email varchar2(50), 
-  latitudeA  number(9), 
-  longitudeA number(9), 
-  latitudeB  number(9), 
-  longitudeB number(9), 
+  latitudeA  number(9, 6), 
+  longitudeA number(9, 6), 
+  latitudeB  number(9, 6), 
+  longitudeB number(9, 6), 
   constraint pk_trip_points_of_interest PRIMARY KEY (start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 );
 
