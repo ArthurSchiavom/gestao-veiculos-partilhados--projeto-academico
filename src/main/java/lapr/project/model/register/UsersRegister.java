@@ -6,6 +6,9 @@ import lapr.project.model.users.CreditCard;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import lapr.project.model.Company;
+import lapr.project.model.Coordinates;
+import lapr.project.model.park.Park;
 
 /**
  * Handles the users and its subclasses
@@ -117,5 +120,14 @@ public class UsersRegister {
             return false;
         }
         return true;
+    }
+    
+     public double distanceOfParkById(int id,Coordinates coordClient){
+        Company company = null;
+        company = company.getInstance();
+        ParkRegister pr = company.getParkRegister();
+        Park park = pr.fetchParkById(id);
+       double dist = coordClient.distance(park.getCoords());
+       return dist;
     }
 }
