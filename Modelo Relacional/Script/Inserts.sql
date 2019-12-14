@@ -44,7 +44,7 @@ values(-20.222, 122.12, 'Parque do kevin',220, 16);
 
 -- vehicle_types
 insert into vehicle_types(vehicle_type_name)
-values('electric scooter');
+values('electric_scooter');
 
 insert into vehicle_types(vehicle_type_name)
 values('bicycle');
