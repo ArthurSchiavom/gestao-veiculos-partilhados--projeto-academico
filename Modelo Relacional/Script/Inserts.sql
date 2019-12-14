@@ -1,18 +1,46 @@
 
 --------------- INSERT ---------------------
 
+-- points_of_interest
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(10.2, 30.2, 12.0, 'Clérigos');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(-10.6, 37.2, 12.0, 'Trindade');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(30.4, -20.2, 12.0, 'Baixa');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(3.4, -2.2, 2.0, 'Via Catarina');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(-1.3, 3.4, 8.0, 'Ribeira');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(-20.222, 122.12, 14, 'Parque do kevin');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(-80.222, 172.12, -20, 'Parque do Arthur');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(18.222, 22.12, 14, 'Parque do Ivo');
+
+insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
+values(18.222, 20.12, 10, 'Parque do Diogo');
+
 -- parks
-insert into parks(park_name, latitude, longitude, altitude) 
-values('Parque do Diogo', 18.222, 20.12, 10);
+insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
+values(18.222, 20.12, 'Parque do Diogo', 220, 16);
 
-insert into parks(park_name, latitude, longitude, altitude) 
-values('Parque do Ivo', 18.222, 22.12, 14);
+insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
+values(18.222, 22.12, 'Parque do Ivo', 220, 16);
 
-insert into parks(park_name, latitude, longitude, altitude) 
-values('Parque do Arthur', -80.222, 172.12, -20);
+insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
+values(-80.222, 172.12, 'Parque do Arthur', 220, 16);
 
-insert into parks(park_name, latitude, longitude, altitude) 
-values('Parque do Arthur', -20.222, 122.12, 14);
+insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
+values(-20.222, 122.12, 'Parque do kevin',220, 16);
 
 -- vehicle_types
 insert into vehicle_types(vehicle_type_name)
@@ -22,23 +50,23 @@ insert into vehicle_types(vehicle_type_name)
 values('bicycle');
 
 -- vehicles
-insert into vehicles (vehicle_type_name, available, latitude, longitude, altitude) 
-values('bicycle', 1, 20.123, 13.223, 12);
+insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
+values('bicycle', 1, 20.123, 13.223, 50, 12, 1.10, 0.3);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, altitude) 
-values('bicycle', 1, 22.123, -49.223, 0);
+insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
+values('bicycle', 1, 22.123, -49.223, 12, 0, 1.21, 0.2);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, altitude) 
-values('bicycle', 0, 45.123, 23.423, 100);
+insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
+values('bicycle', 0, 45.123, 23.423, 30, 100, 1.2, 2.4);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, altitude) 
-values('electric scooter', 1, 10.230, 15.323, 2);
+insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
+values('electric scooter', 1, 10.230, 15.323, 2, 50, 1.10, 0.9);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, altitude) 
-values('electric scooter', 0, 10.000, -27.123, 12);
+insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area) 
+values('electric scooter', 0, 10.000, -27.123, 70, 12, 1.21, 0.1);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, altitude) 
-values('electric scooter', 0, 23.123, -23.423, -2);
+insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area) 
+values('electric scooter', 0, 23.123, -23.423, 20, -2, 1.1, 0.3);
 
 -- park_vehicle
 insert into park_vehicle(park_id, vehicle_id)
@@ -60,31 +88,31 @@ insert into park_vehicle(park_id, vehicle_id)
 values(1, 6);
 
 -- bicycles
-insert into bicycles(vehicle_id, bicycle_size)
-values(1, 15);
+insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
+values(1, 15, 'PT001');
 
-insert into bicycles(vehicle_id, bicycle_size)
-values(2, 17);
+insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
+values(2, 17, 'PT002');
 
-insert into bicycles(vehicle_id, bicycle_size)
-values(3, 19);
+insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
+values(3, 19, 'PT003');
 
 -- electric _scooter_types
-insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, battery_per_km, time_to_charge_fully_minute)
-values('offroad', 2, 10, 3);
+insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, battery_per_km)
+values('offroad', 2, 10);
 
-insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, battery_per_km, time_to_charge_fully_minute)
-values('urban', 2, 1, 2);
+insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, battery_per_km)
+values('urban', 2, 1);
 
 -- electric_scooters
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, battery_level)
-values(4, 'offroad', 50);
+insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity)
+values(4, 'offroad', 'PT001', 1, 75);
 
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, battery_level)
-values(5, 'urban', 70);
+insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity)
+values(5, 'urban', 'PT002', 1, 20);
 
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, battery_level)
-values(6, 'urban', 10);
+insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity)
+values(6, 'urban', 'PT003', 1, 60);
 
 -- user_type
 insert into user_type(user_type_name)
@@ -94,37 +122,37 @@ insert into user_type(user_type_name)
 values('administrator');
 
 -- registered_users
-insert into registered_users(user_email, user_type_name, user_password)  
-values('a@a.a', 'client', '111');
+insert into registered_users(user_email, user_type_name, user_password, user_name)    
+values('a@a.a', 'client', '111', 'diogo64');
 
-insert into registered_users(user_email, user_type_name, user_password)  
-values('b@b.b', 'client', '222');
+insert into registered_users(user_email, user_type_name, user_password, user_name)    
+values('b@b.b', 'client', '222', 'arthur22');
 
-insert into registered_users(user_email, user_type_name, user_password)  
-values('c@c.c', 'client', '333');
+insert into registered_users(user_email, user_type_name, user_password, user_name)    
+values('c@c.c', 'client', '333', 'ivo1');
 
-insert into registered_users(user_email, user_type_name, user_password)  
-values('d@d.d', 'client', '444');
+insert into registered_users(user_email, user_type_name, user_password, user_name)      
+values('d@d.d', 'client', '444', 'elMan');
 
-insert into registered_users(user_email, user_type_name, user_password)  
-values('k@k.k', 'administrator', '555');
+insert into registered_users(user_email, user_type_name, user_password, user_name)      
+values('k@k.k', 'administrator', '555', 'MissMaam');
 
 -- clients
-insert into clients(user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age)
-values('a@a.a', 10, '1111111111111111', TO_DATE('10-10-2020', 'dd/mm/yyyy'), 111, 1.72, 74, 'M', '0', 20);
+insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('a@a.a', 10, '1111111111111111', TO_DATE('10-10-2020', 'dd/mm/yyyy'), 111, 1.72, 74, 'M', '0', 20, 18.2);
 
-insert into clients(user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age)
-values('b@b.b', 0, '2222222222222222', TO_DATE('12-02-2021', 'dd/mm/yyyy'), 222, 1.62, 54, 'F', '1', 19);
+insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('b@b.b', 0, '2222222222222222', TO_DATE('12-02-2021', 'dd/mm/yyyy'), 222, 1.62, 54, 'F', '1', 19, 14.3);
 
-insert into clients(user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age)
-values('c@c.c', 300, '3333333333333333', TO_DATE('02-12-2032', 'dd/mm/yyyy'), 333, 1.90, 120, 'M', '1', 25);
+insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('c@c.c', 300, '3333333333333333', TO_DATE('02-12-2032', 'dd/mm/yyyy'), 333, 1.90, 120, 'M', '1', 25, 4.9);
 
-insert into clients(user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age)
-values('d@d.d', 1000, '4444444444444444', TO_DATE('01-10-2022', 'dd/mm/yyyy'), 444, 1.40, 40, 'M', '1', 13);
+insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('d@d.d', 1000, '4444444444444444', TO_DATE('01-10-2022', 'dd/mm/yyyy'), 444, 1.40, 40, 'M', '1', 13, 12.2);
 
 -- pending_registrations
-insert into pending_registrations(email, paid, amount_left_to_pay, credit_card_number, credit_card_expiration, credit_card_secret, height, weight, gender, age)
-values('e@e.e', 0, 8, '6666666666666666',  TO_DATE('10-10-2020', 'dd/mm/yyyy'), 666, 1.80, 80, 'M', 19);
+insert into pending_registrations(email, amount_left_to_pay, credit_card_number, credit_card_expiration, credit_card_secret, height, weight, gender, age, cycling_average_speed, user_password, user_name)
+values('e@e.e', 8, '6666666666666666',  TO_DATE('10-10-2020', 'dd/mm/yyyy'), 666, 1.80, 80, 'M', 19, 13.1, '999', 'zeh');
 
 -- invoices
 insert into invoices(user_email, payment_start_date, amount, amount_left_to_pay, usage_cost, penalisation_cost)
@@ -146,13 +174,35 @@ values(2, 'electric scooter', 40, 10);
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
 values(2, 'bicycle', 30, 20);
 
--- trip
-insert into trip (start_time, user_email, vehicles_id, start_park_id, end_park_id)
-values(TO_DATE('04-12-2019', 'dd/mm/yyyy'), 'a@a.a', 1, 1, 2);
+-- trips
+insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 1, 2);
 
-insert into trip (start_time, user_email, vehicles_id, start_park_id, end_park_id, end_time)
-values(TO_DATE('21-12-2019', 'dd/mm/yyyy'), 'a@a.a', 2, 1, 2, TO_DATE('21-12-2019', 'dd/mm/yyyy'));
+insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id, end_time)
+values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 2, 1, 2, TO_DATE('21-12-2019', 'dd/mm/yyyy'));
 
 -- receipts
-insert into receipts(user_email, payment_start_date, payment_end_date, points_used, amount_paid_cash)
+insert into receipts (user_email, payment_start_date, payment_end_date, points_used, amount_paid_cash)
 values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), TO_DATE('20-10-2019', 'dd/mm/yyyy'), 0, 30);
+
+-- paths
+insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coefficient, wind_direction_degrees, wind_speed)
+values(18.222, 20.12, 10.2, 30.2, 0.002, 220, 12.1); -- parque Diogo -> clerigos
+
+insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coefficient, wind_direction_degrees, wind_speed)
+values(10.2, 30.2, 30.4, -20.2, 0.001, 210, 10.0); -- clerigos -> baixa
+
+insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coefficient, wind_direction_degrees, wind_speed)
+values(30.4, -20.2, 18.222, 22.12, 0.004, 110, 1.0); -- baixa -> parque ivo
+
+-- trip_points_of_interest
+insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 18.222, 20.12, 10.2, 30.2);
+
+insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 10.2, 30.2, 30.4, -20.2);
+
+insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 30.4, -20.2, 18.222, 22.12);
+
+
