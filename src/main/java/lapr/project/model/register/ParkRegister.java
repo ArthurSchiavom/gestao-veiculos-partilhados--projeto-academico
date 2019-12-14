@@ -85,7 +85,7 @@ public class ParkRegister {
     }
 
     /**
-     * Fetch a parks with the name given by parameter
+     * Fetch a parks with the description given by parameter
      *
      * @param description Name of park
      * @return Returns a list of parks with the same name (or just one)
@@ -134,7 +134,6 @@ public class ParkRegister {
      * @return return a park
      */
     public Park fetchParkById(int id) {
-        String name;
         Coordinates cord;
         double latitude;
         double longitude;
