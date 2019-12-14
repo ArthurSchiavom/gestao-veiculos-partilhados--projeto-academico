@@ -197,6 +197,11 @@ public class DataHandler {
         return executeRecoverableSQLOperation(operation);
     }
 
+    public CallableStatement prepareCall(String query) throws SQLException {
+        SQLOperation<CallableStatement> operation = () -> {return connection.prepareCall(query);};
+        return executeRecoverableSQLOperation(operation);
+    }
+
     public ResultSet executeQuery(PreparedStatement preparedStatement) throws SQLException {
         SQLOperation<ResultSet> operation = () -> {return preparedStatement.executeQuery();};
         return executeUnrecoverableSQLOperation(operation);
