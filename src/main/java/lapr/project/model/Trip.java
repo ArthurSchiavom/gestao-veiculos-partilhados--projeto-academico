@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * Class that represents a trip
  *
- * @author Jose
+ * 
  */
 public class Trip {
 

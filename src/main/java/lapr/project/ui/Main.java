@@ -3,10 +3,9 @@ package lapr.project.ui;
 import lapr.project.bootstrap.Bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Company;
+import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.shutdown.Shutdown;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -33,22 +32,9 @@ class Main {
         new Bootstrap().boot();
         DataHandler dh = Company.getInstance().getDataHandler();
         try {
-            PreparedStatement ps = dh.prepareStatement("select * from vehicles where not vehicle_id = ?");
-            ps.setInt(1, 99); // funciona sem net
-            ResultSet rs = dh.executeQuery(ps);
-            System.out.println("desligar");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            rs.next(); // funciona sem net
-            rs.getInt(1); // funciona sem net
-            rs.close(); // funciona sem net
-            ps.close(); // funciona sem net
+            Company.getInstance().getVehicleRegister().addEletricScooter(1, 64, 30, 1, 1, 1, true, ElectricScooterType.URBAN, "PT001", 1, 75);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("\n\n\nError code: " + e.getErrorCode());
         }
         Shutdown.shutdown();
 
