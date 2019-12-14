@@ -1,3 +1,5 @@
+select * from vehicles where vehicle_id = 1;
+
 create or replace procedure register_bicycle(
             p_available vehicles.available%type, 
             p_latitude vehicles.latitude%type, 
@@ -59,6 +61,6 @@ end;
 /
 
 begin
-    register_electric_scooter(1, 30.4, 30.4, 1, 1, 1, 1, 'offroad', 'PT001', 1, 75);
+    register_electric_scooter(1, 30.3, 30.3, 1, 1, 1, 1, 'offroad', 'PT001', 1, 75);
 end;
 /

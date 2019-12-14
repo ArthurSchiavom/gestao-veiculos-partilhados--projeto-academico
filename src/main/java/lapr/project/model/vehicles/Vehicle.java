@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Represents vehicle
  */
-public class Vehicle {
+public abstract class Vehicle {
 
     private final int id;
     private final double latitude, longitude;

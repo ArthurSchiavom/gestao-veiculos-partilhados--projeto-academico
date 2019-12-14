@@ -211,4 +211,9 @@ public class DataHandler {
         SQLOperation<Integer> operation = () -> {return preparedStatement.executeUpdate();};
         return executeUnrecoverableSQLOperation(operation);
     }
+
+    public Boolean execute(PreparedStatement preparedStatement) throws SQLException {
+        SQLOperation<Boolean> operation = () -> {return preparedStatement.execute();};
+        return executeUnrecoverableSQLOperation(operation);
+    }
 }

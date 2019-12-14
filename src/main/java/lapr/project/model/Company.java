@@ -4,6 +4,7 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.register.ParkRegister;
 import lapr.project.model.register.TripRegister;
 import lapr.project.model.register.UsersRegister;
+import lapr.project.model.register.VehicleRegister;
 //import lapr.project.model.register.ParkRegister;
 //import lapr.project.model.register.TripRegister;
 //import lapr.project.model.register.UsersRegister;
@@ -13,11 +14,12 @@ import lapr.project.model.register.UsersRegister;
  */
 public class Company {
     private static Company instance = null;
-    private DataHandler dataHandler;
+    private final DataHandler dataHandler;
 
-    private ParkRegister parkRegister;
-    private UsersRegister usersRegister;
-    private TripRegister tripRegister;
+    private final ParkRegister parkRegister;
+    private final UsersRegister usersRegister;
+    private final TripRegister tripRegister;
+    private final VehicleRegister vehicleRegister;
 
     /**
      * Represents a Singleton of the class Company
@@ -29,6 +31,7 @@ public class Company {
         this.parkRegister =new ParkRegister(dataHandler);
         this.usersRegister = new UsersRegister(dataHandler);
         this.tripRegister = new TripRegister(dataHandler);
+        this.vehicleRegister = new VehicleRegister(dataHandler);
     }
 
     /**
@@ -60,5 +63,9 @@ public class Company {
 
     public TripRegister getTripRegister() {
         return tripRegister;
+    }
+
+    public VehicleRegister getVehicleRegister() {
+        return vehicleRegister;
     }
 }
