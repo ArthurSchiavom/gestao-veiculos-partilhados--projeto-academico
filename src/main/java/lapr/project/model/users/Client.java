@@ -1,5 +1,4 @@
 package lapr.project.model.users;
-
 /**
  * Represents a client of the application, which is an user
  */
