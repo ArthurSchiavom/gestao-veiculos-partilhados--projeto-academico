@@ -5,7 +5,7 @@
  */
 package lapr.project.model;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +19,7 @@ public class PointOfInterestTest {
     public PointOfInterestTest() {
     }
     
-    @Before
+    @BeforeEach
     public void setUp() {
     }
 
