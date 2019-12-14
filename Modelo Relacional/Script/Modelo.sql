@@ -39,14 +39,12 @@ CREATE TABLE vehicles (
 -- Tabela Vehicle_Types
 CREATE TABLE vehicle_types (
   vehicle_type_name varchar2(50) constraint pk_vehicle_types_name PRIMARY KEY
-                                 constraint ck_vehicle_types_vehicle_type_name CHECK (REGEXP_LIKE(vehicle_type_name, 'BICYCLE|ELECTRIC SCOOTER', 'i'))
   );
 
 -- Tabela Bicycles 
 CREATE TABLE bicycles (
   vehicle_id        number(8) constraint pk_bicycles_vehicle_id PRIMARY KEY,                  
   bicycle_size      number(2) constraint nn_bicycles_bicycle_size NOT NULL
-                              constraint ck_bicycles_bicycle_size check (bicycle_size>=15),
   bicyble_description varchar2(50) constraint nn_bicycles_bicycle_description NOT NULL
 );
 
@@ -147,7 +145,6 @@ CREATE TABLE park_capacity (
 -- Tabela user_type
 CREATE TABLE user_type (
   user_type_name varchar2(50) CONSTRAINT pk_user_type_name PRIMARY KEY
-                              constraint ck_user_type_user_type_name CHECK (REGEXP_LIKE(user_type_name, 'ADMINISTRATOR|CLIENT', 'i'))
 );
 
 -- Tabela trips
@@ -158,8 +155,7 @@ CREATE TABLE trips (
   start_park_id number(6), 
   end_park_id   number(6), 
   end_time      timestamp, 
-  CONSTRAINT pk_trips_start_time_user_email PRIMARY KEY (start_time, user_email),
-  CONSTRAINT ck_trips_start_park_different_end_park CHECK (start_park_id != end_park_id)
+  CONSTRAINT pk_trips_start_time_user_email PRIMARY KEY (start_time, user_email)
   );
 
 -- Tabela receipts
