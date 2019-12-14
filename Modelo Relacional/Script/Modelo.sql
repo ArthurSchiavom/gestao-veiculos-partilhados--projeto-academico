@@ -29,7 +29,7 @@ CREATE TABLE vehicles (
                                  constraint ck_vehicles_longitude CHECK (longitude between -180 and 180), 
   weight			number(3)    constraint nn_vehicles_weight NOT NULL
 								 constraint ck_vehicles_weight CHECK (weight > 0),
-  altitude_m          number(6, 2) constraint nn_vehicles_altitude NOT NULL,
+  altitude_m          number(4) constraint nn_vehicles_altitude NOT NULL,
   aerodynamic_coefficient number(4, 2) constraint nn_vehicles_aerodynamic_coefficient NOT NULL,
   frontal_area number(4,1) constraint nn_vehicles_frontal_area NOT NULL,
                            constraint ck_vehicles_fraontal_area check(frontal_area > 0),
