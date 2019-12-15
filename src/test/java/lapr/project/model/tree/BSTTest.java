@@ -14,7 +14,7 @@ class BSTTest {
     private Integer[] posorderT = {7, 8, 13, 10, 17, 15, 30, 50, 40, 20};
 
     private BST<Integer> instance;
-
+    
     void setUp() {
         instance = new BST<>();
         for (int i : arr)
@@ -25,7 +25,7 @@ class BSTTest {
      * Test of size method, of class BST.
      */
     @Test
-    void testSize() {
+    void sizeTest() {
         setUp();
         assertEquals(instance.size(), arr.length);
         BST<String> sInstance = new BST<>();
@@ -42,8 +42,8 @@ class BSTTest {
      * Test of insert method, of class BST.
      */
     @Test
-    void testInsert() {
-        int[] arr = {20, 15, 10, 13, 8, 17, 40, 50, 30, 20, 15, 10};
+    void insertTest() {
+        int[] arr = {20, 15, 10, 13, 8, 17, 40, 50, 30, 20, 15};
         BST<Integer> instance = new BST<>();
         for (int i = 0; i < 9; i++) {            //new elements
             instance.insert(arr[i]);
@@ -53,13 +53,21 @@ class BSTTest {
             instance.insert(arr[i]);
             assertEquals(instance.size(), 9);
         }
+        Integer a = 33;
+        instance.insert(a);
+        assertEquals(instance.size(), 10);
+        instance.insert(a);
+        assertEquals(instance.size(), 10);
+        instance.insert(null);
+        assertEquals(instance.size(), 10);
+
     }
 
     /**
      * Test of remove method, of class BST.
      */
     @Test
-    void testRemove() {
+    void removeTest() {
         setUp();
 
         int qtd = arr.length;
@@ -80,7 +88,7 @@ class BSTTest {
      * Test of isEmpty method, of class BST.
      */
     @Test
-    void testIsEmpty() {
+    void isEmptyTest() {
         setUp();
 
         assertFalse(instance.isEmpty());
@@ -98,7 +106,7 @@ class BSTTest {
      * Test of height method, of class BST.
      */
     @Test
-    void testHeight() {
+    void heightTest() {
         instance = new BST<>();
         assertEquals(instance.height(), -1);
         for (int idx = 0; idx < arr.length; idx++) {
@@ -113,7 +121,7 @@ class BSTTest {
      * Test of smallestelement method, of class TREE.
      */
     @Test
-    void testSmallestElement() {
+    void smallestElementTest() {
         setUp();
         assertEquals(new Integer(7), instance.smallestElement());
         instance.remove(7);
@@ -126,7 +134,7 @@ class BSTTest {
      * Test of processBstByLevel method, of class TREE.
      */
     @Test
-    void testProcessBstByLevel() {
+    void processBstByLevelTest() {
         setUp();
         Map<Integer, List<Integer>> expResult = new HashMap<>();
         expResult.put(0, Collections.singletonList(20));
@@ -152,7 +160,7 @@ class BSTTest {
      * Test of inOrder method, of class BST.
      */
     @Test
-    void testInOrder() {
+    void inOrderTest() {
         setUp();
         List<Integer> lExpected = Arrays.asList(inorderT);
         assertEquals(lExpected, instance.inOrder());
@@ -162,7 +170,7 @@ class BSTTest {
      * Test of preOrder method, of class BST.
      */
     @Test
-    void testPreOrder() {
+    void preOrderTest() {
         setUp();
         List<Integer> lExpected = Arrays.asList(preorderT);
         assertEquals(lExpected, instance.preOrder());
@@ -172,7 +180,7 @@ class BSTTest {
      * Test of posOrder method, of class BST.
      */
     @Test
-    void testPosOrder() {
+    void posOrderTest() {
         setUp();
         List<Integer> lExpected = Arrays.asList(posorderT);
         assertEquals(lExpected, instance.posOrder());
