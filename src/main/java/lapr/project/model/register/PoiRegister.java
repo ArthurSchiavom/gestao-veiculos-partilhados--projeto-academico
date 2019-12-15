@@ -5,12 +5,9 @@
  */
 package lapr.project.model.register;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.PointOfInterest;
@@ -74,7 +71,7 @@ public class PoiRegister {
         PreparedStatement stm = null;
         try {
             if (altitude == null) {
-                stm = dataHandler.prepareStatement("Insert into points_of_interest(latitude, longitude, description) values (?,?,?);");
+                stm = dataHandler.prepareStatement("Insert into points_of_interest(latitude, longitude, description) values (?,?,?)");
                 stm.setDouble(1, latitude);
                 stm.setDouble(2, longitude);
                 stm.setString(3, description);
