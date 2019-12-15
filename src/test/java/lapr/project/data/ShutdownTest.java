@@ -1,6 +1,7 @@
-package lapr.project.shutdown;
+package lapr.project.data;
 
-import lapr.project.bootstrap.Bootstrap;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import lapr.project.data.Bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static lapr.project.shutdown.Shutdown.shutdown;
+import static lapr.project.data.Shutdown.shutdown;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ShutdownTest {
@@ -18,7 +19,6 @@ public class ShutdownTest {
         Bootstrap.boot();
     }
 
-    @Test
     void testShutdown() {
         shutdown();
         DataHandler dh = Company.getInstance().getDataHandler();

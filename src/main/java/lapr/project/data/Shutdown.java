@@ -1,4 +1,4 @@
-package lapr.project.shutdown;
+package lapr.project.data;
 
 import lapr.project.data.registers.Company;
 

@@ -9,12 +9,12 @@ import java.sql.SQLException;
 import java.util.List;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 
-import lapr.project.bootstrap.Bootstrap;
+import lapr.project.data.Bootstrap;
 import lapr.project.model.Coordinates;
 import lapr.project.model.park.Park;
 import static org.junit.jupiter.api.Assertions.*;
 
-import lapr.project.shutdown.Shutdown;
+import lapr.project.data.Shutdown;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 

@@ -1,9 +1,9 @@
-package lapr.project.bootstrap;
+package lapr.project.data;
 
+import lapr.project.data.Bootstrap;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import lapr.project.shutdown.Shutdown;
-import lapr.project.shutdown.ShutdownTest;
+import lapr.project.data.Shutdown;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class BootstrapTest {
         Shutdown.shutdown();
     }
 
-    @Test
+    
     void bootTest() {
         try {
             Bootstrap.boot();
