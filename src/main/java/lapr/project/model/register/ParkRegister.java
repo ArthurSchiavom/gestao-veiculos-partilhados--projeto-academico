@@ -69,8 +69,8 @@ public class ParkRegister {
      */
     public boolean removeParkById(int id) {
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("DELETE FROM parks WHERE park_id=?;");
-            statement.setInt( 1, id);
+            PreparedStatement statement = dataHandler.prepareStatement("DELETE FROM PARKS WHERE PARK_ID=?");
+            statement.setInt(1, id);
             ResultSet resultSet = dataHandler.executeQuery(statement);
             if (resultSet == null) {
                 return false;
@@ -90,7 +90,7 @@ public class ParkRegister {
      * @param description Name of park
      * @return Returns a list of parks with the same name (or just one)
      */
-    public List<Park> fetchParkByName(String description) {
+    public List<Park> fetchParkByDescription(String description) {
         int parkId;
         double latitude;
         double longitude;
@@ -101,10 +101,10 @@ public class ParkRegister {
         String parkDescription = description.toLowerCase().trim();
         List<Park> parksSameNameOrNot = new ArrayList<>();
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_name)=?;");
+            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_description)=?");
             statement.setString( 1, parkDescription);
             ResultSet result = dataHandler.executeQuery(statement);
-            if (result == null) {
+            if (result == null || result.next()==false) {
                 return null;
             }
             while (result.next()) {
@@ -138,18 +138,18 @@ public class ParkRegister {
         double latitude;
         double longitude;
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where park_id=?;");
-            statement.setInt( 1, id);
+            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where park_id=?");
+            statement.setInt(1, id);
             ResultSet resultSet = dataHandler.executeQuery(statement);
-            if (resultSet == null ) {
+            if (resultSet == null || resultSet.next()==false) {
                 return null;
             }
-            latitude=resultSet.getDouble( 1);
-            longitude=resultSet.getDouble( 2);
+            latitude=resultSet.getDouble(2);
+            longitude=resultSet.getDouble(3);
             cord = new Coordinates(latitude,longitude, getAltitude(latitude, longitude));
-            String description = resultSet.getString( 3);
-            float park_input_voltage = resultSet.getFloat( 4);
-            float park_input_corrent = resultSet.getFloat( 5);
+            String description = resultSet.getString( 4);
+            float park_input_voltage = resultSet.getFloat( 5);
+            float park_input_corrent = resultSet.getFloat( 6);
             return new Park(cord, getListOfCapacitys(id), id, description, park_input_voltage, park_input_corrent);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -166,16 +166,17 @@ public class ParkRegister {
      */
     private Integer getAltitude(double latitude, double longitude) {
         try {
-            PreparedStatement statementForAltitude = dataHandler.prepareStatement("Select altitude from points_of_interest where latitude=? and longitude=?;");
-            statementForAltitude.setDouble( 1, latitude);
-            statementForAltitude.setDouble( 2, longitude);
+            PreparedStatement statementForAltitude = dataHandler.prepareStatement("Select altitude_m from points_of_interest where latitude=? and longitude=?");
+            statementForAltitude.setDouble(1,latitude);
+            statementForAltitude.setDouble(2,longitude);
             ResultSet resultAltitude = dataHandler.executeQuery(statementForAltitude);
-            if (resultAltitude == null) {
+            if (resultAltitude == null || resultAltitude.next()==false) {
                 return null;
             }
+            int altitude=resultAltitude.getInt(1);
             resultAltitude.close();
             statementForAltitude.close();
-            return resultAltitude.getInt( 1);
+            return altitude;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -203,7 +204,7 @@ public class ParkRegister {
                 int amount_occupied = resultForCapacity.getInt( 3);
                 
                 //Aqui caso se adiciona outros tipos ..... faz se else if
-                if (vehicle_type_name.trim().equalsIgnoreCase(VehicleType.BICYCLE.toString())) {
+                if (vehicle_type_name.trim().equalsIgnoreCase(VehicleType.BICYCLE.getSQLName())) {
                     vehicleType = VehicleType.BICYCLE;
                 } else {
                     vehicleType = VehicleType.ELECTRIC_SCOOTER;
@@ -231,12 +232,12 @@ public class ParkRegister {
      * @param parkInputCurrent the current corrent of the park
      * @return return true if successfully removed and false otherwise
      */
-    public boolean UpdatePark(String name, Coordinates cord, Set<Capacity> vehicleCapacities, int id, String description, float parkInputVoltage, float parkInputCurrent) {
+    public boolean updatePark(Coordinates cord, Set<Capacity> vehicleCapacities, int id, String description, float parkInputVoltage, float parkInputCurrent) {
         try {
             double latitude = cord.getLatitude();
             double longintude = cord.getLongitude();
 
-            PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id =? ,latitude=? ,longitude= ?,park_description =?,park_input_voltage= ?,park_input_current =?  FROM park WHERE park_id=?;");
+            PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id =? ,latitude=? ,longitude= ?,park_description =?,park_input_voltage= ?,park_input_current =?  FROM park WHERE park_id=?");
             statement.setInt( 1, id);
             statement.setDouble( 2, latitude);
             statement.setDouble( 3, longintude);

@@ -73,4 +73,12 @@ public class Park {
     public int getParkId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Park{" + "cord=" + cord + ", id=" + id + ", description=" + description + ", parkInputVoltage=" + parkInputVoltage + ", parkInputCurrent=" + parkInputCurrent + ", vehicleCapacities=" + vehicleCapacities + '}';
+    }
+    
+    
+    
 }
