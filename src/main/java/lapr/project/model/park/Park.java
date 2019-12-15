@@ -8,6 +8,7 @@ package lapr.project.model.park;
 import lapr.project.model.Coordinates;
 import lapr.project.model.vehicles.VehicleType;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -30,7 +31,7 @@ public class Park {
      */
     public Park(Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent) {
         this.cord = cord;
-        this.vehicleCapacities = vehicleCapacities;
+        this.vehicleCapacities = new HashSet<>(vehicleCapacities);
         this.id = id;
         this.description=description;
         this.parkInputVoltage = parkInputVoltage;
@@ -52,6 +53,7 @@ public class Park {
     public Coordinates getCoords() {
         return cord;
     }
+
     public int getAmountOccupiedByType(VehicleType tipo){
         for (Capacity capacity : vehicleCapacities){
             if (capacity.getVehicleType().compareTo(tipo) == 0){

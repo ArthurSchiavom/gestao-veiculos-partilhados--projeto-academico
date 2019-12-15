@@ -19,12 +19,12 @@ public class Bootstrap {
     /**
      * A password de utilizador da BD.
      */
-    private final String password = "melhorgrupoole";
+    private final String wordpass = "melhorgrupoole";
 
     public void boot(){
         DataHandler dataHandler = null;
         try {
-            dataHandler = new DataHandler(JDBCURL, USERNAME,password);
+            dataHandler = new DataHandler(JDBCURL, USERNAME, wordpass);
         } catch (SQLException e) {
             System.out.println("Failed to connect to the database"); // throw new SQLException("Failed to connect to the database");
             return;
