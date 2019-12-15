@@ -9,7 +9,6 @@ import java.util.List;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import lapr.project.bootstrap.Bootstrap;
-import lapr.project.model.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.model.park.Park;
 import static org.junit.jupiter.api.Assertions.*;

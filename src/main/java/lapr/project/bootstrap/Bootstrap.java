@@ -1,7 +1,7 @@
 package lapr.project.bootstrap;
 
 import lapr.project.data.DataHandler;
-import lapr.project.model.Company;
+import lapr.project.data.registers.Company;
 
 import java.sql.SQLException;
 

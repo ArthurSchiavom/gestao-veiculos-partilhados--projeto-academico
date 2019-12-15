@@ -1,7 +1,6 @@
 package lapr.project.data.registers;
 
 import lapr.project.data.DataHandler;
-import lapr.project.model.Company;
 import lapr.project.model.vehicles.*;
 
 import java.sql.CallableStatement;

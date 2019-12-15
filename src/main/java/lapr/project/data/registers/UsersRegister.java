@@ -6,7 +6,6 @@ import lapr.project.model.users.CreditCard;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import lapr.project.model.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.model.park.Park;
 

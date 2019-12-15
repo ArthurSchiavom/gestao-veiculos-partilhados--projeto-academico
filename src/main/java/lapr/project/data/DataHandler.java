@@ -1,12 +1,11 @@
 package lapr.project.data;
 
 
-import lapr.project.model.Company;
+import lapr.project.data.registers.Company;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.*;
 
 import static java.lang.Thread.sleep;

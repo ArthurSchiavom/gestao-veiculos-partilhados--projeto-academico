@@ -1,6 +1,6 @@
 package lapr.project.shutdown;
 
-import lapr.project.model.Company;
+import lapr.project.data.registers.Company;
 
 public class Shutdown {
     public static void shutdown() {

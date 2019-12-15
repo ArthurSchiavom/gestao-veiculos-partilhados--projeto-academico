@@ -2,7 +2,7 @@ package lapr.project.ui;
 
 import lapr.project.bootstrap.Bootstrap;
 import lapr.project.data.DataHandler;
-import lapr.project.model.Company;
+import lapr.project.data.registers.Company;
 import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.shutdown.Shutdown;
 
@@ -32,7 +32,7 @@ class Main {
         new Bootstrap().boot();
         DataHandler dh = Company.getInstance().getDataHandler();
         try {
-            Company.getInstance().getVehicleRegister().addEletricScooter(1, 64, 30, 1, 1, 1, true, ElectricScooterType.URBAN, "PT001", 1, 75);
+            Company.getInstance().getVehicleRegister().addEletricScooter(1, 63, 30, 1, 1, 1, true, ElectricScooterType.URBAN, "PT001", 1, 75);
         } catch (SQLException e) {
             e.printStackTrace();
         }
