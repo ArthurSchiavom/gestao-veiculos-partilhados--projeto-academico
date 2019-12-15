@@ -14,12 +14,16 @@ import lapr.project.model.PointOfInterest;
 
 /**
  *
- * @author Jose
+ * 
  */
 public class PoiRegister {
 
     DataHandler dataHandler;
 
+    /**
+     * Instantiates a poi register
+     * @param dataHandler 
+     */
     public PoiRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
@@ -71,25 +75,19 @@ public class PoiRegister {
         PreparedStatement stm = null;
         try {
             if (altitude == null) {
-                stm = dataHandler.prepareStatement("Insert into points_of_interest(latitude, longitude, description) values (?,?,?)");
-                stm.setDouble(1, latitude);
-                stm.setDouble(2, longitude);
-                stm.setString(3, description);
-
-                dataHandler.executeUpdate(stm);
-                stm.close(); // closes statement
-            } else {
-                stm = dataHandler.prepareStatement("Insert into points_of_interest(latitude, longitude, altitude_m, description) values (?,?,?,?);");
-
-                stm.setDouble(1, latitude);
-                stm.setDouble(2, longitude);
-                stm.setInt(3, altitude);
-                stm.setString(4, description);
-
-                dataHandler.executeUpdate(stm);
-
-                stm.close(); // closes statement
+                altitude = 0;
             }
+            stm = dataHandler.prepareStatement("Insert into points_of_interest(latitude, longitude, altitude_m, poi_description) values (?,?,?,?)");
+
+            stm.setDouble(1, latitude);
+            stm.setDouble(2, longitude);
+            stm.setInt(3, altitude);
+            stm.setString(4, description);
+
+            dataHandler.executeUpdate(stm);
+
+            stm.close(); // closes statement
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;

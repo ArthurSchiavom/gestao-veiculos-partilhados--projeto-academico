@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Jose
+ * 
  */
 public class PointOfInterestTest {
     
@@ -63,14 +63,14 @@ public class PointOfInterestTest {
         assertEquals(poi1, poi1);
         
         Coordinates cor2 = new Coordinates(0,0,0);
-        Object poi2= new PointOfInterest("parque 2", cor2);
+        PointOfInterest poi2= new PointOfInterest("parque 2", cor2);
         assertEquals(poi1, poi2);
 
         poi1 = null;
         assertNotEquals(poi2, poi1);
 
         Coordinates cor3 = new Coordinates(3,3,3);   
-         Object poi3 = new PointOfInterest("parque 3", cor3);
+         PointOfInterest poi3 = new PointOfInterest("parque 3", cor3);
         assertNotEquals(poi3, poi2);
     }
 
@@ -86,7 +86,7 @@ public class PointOfInterestTest {
         assertEquals(expResult, poi1.hashCode());
 
         Coordinates cor2 = new Coordinates(0,0,0);
-        Object poi2= new PointOfInterest("parque 2", cor2);
+        PointOfInterest poi2= new PointOfInterest("parque 2", cor2);
         expResult = poi2.hashCode();
         assertNotEquals(expResult, poi1.hashCode());
     }

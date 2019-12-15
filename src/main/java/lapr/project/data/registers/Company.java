@@ -16,6 +16,8 @@ public class Company {
     private final UsersRegister usersRegister;
     private final TripRegister tripRegister;
     private final VehicleRegister vehicleRegister;
+    private final PathRegister pathRegister;
+    private final PoiRegister poiRegister;
 
     /**
      * Represents a Singleton of the class Company
@@ -28,6 +30,8 @@ public class Company {
         this.usersRegister = new UsersRegister(dataHandler);
         this.tripRegister = new TripRegister(dataHandler);
         this.vehicleRegister = new VehicleRegister(dataHandler);
+        this.pathRegister = new PathRegister(dataHandler);
+        this.poiRegister = new PoiRegister(dataHandler);
     }
 
     /**
@@ -63,5 +67,13 @@ public class Company {
 
     public VehicleRegister getVehicleRegister() {
         return vehicleRegister;
+    }
+    
+    public PathRegister getPathRegister() {
+        return pathRegister;
+    }
+    
+    public PoiRegister getPoiRegister() {
+        return poiRegister;
     }
 }
