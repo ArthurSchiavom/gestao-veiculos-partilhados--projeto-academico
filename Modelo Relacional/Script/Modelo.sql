@@ -152,8 +152,8 @@ CREATE TABLE trips (
   start_time    timestamp DEFAULT systimestamp, 
   user_email    varchar2(50), 
   vehicle_id   number(8), 
-  start_park_id number(6), 
-  end_park_id   number(6), 
+  start_park_id varchar2(50), 
+  end_park_id   varchar2(50), 
   end_time      timestamp, 
   CONSTRAINT pk_trips_start_time_user_email PRIMARY KEY (start_time, user_email)
   );
