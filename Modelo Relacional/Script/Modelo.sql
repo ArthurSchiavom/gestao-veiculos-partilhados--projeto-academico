@@ -189,7 +189,8 @@ CREATE TABLE paths (
   kinetic_coefficient    number(4, 3) DEFAULT 0 constraint nn_paths_kinetic_coefficient NOT NULL, 
   wind_direction_degrees number(3) DEFAULT 0 constraint nn_paths_wind_direction_degrees NOT NULL, 
   wind_speed             number(4, 1) DEFAULT 0 constraint nn_paths_wind_speed NOT NULL, 
-constraint pk_paths_latitudes_longitudes PRIMARY KEY (latitudeA, longitudeA, latitudeB, longitudeB)
+constraint pk_paths_latitudes_longitudes PRIMARY KEY (latitudeA, longitudeA, latitudeB, longitudeB),
+constraint ck_paths_latitudes_longitudes CHECK(latitudeA != latitudeB and longitudeA != longitudeB)
 );
 
 -- Tabela Points_of_interest
