@@ -7,6 +7,7 @@ import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.shutdown.Shutdown;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class Main {
@@ -29,13 +30,19 @@ class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new Bootstrap().boot();
+        try {
+            Bootstrap.boot();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            return;
+        }
         DataHandler dh = Company.getInstance().getDataHandler();
         try {
-            Company.getInstance().getVehicleRegister().addEletricScooter(1, 63, 30, 1, 1, 1, true, ElectricScooterType.URBAN, "PT001", 1, 75);
+            Company.getInstance().getVehicleRegister().addEletricScooter(1, 61, 30, 1, 1, 1, true, ElectricScooterType.URBAN, "PT001", 1, 75);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.log(Level.INFO, "test");
         Shutdown.shutdown();
 
 

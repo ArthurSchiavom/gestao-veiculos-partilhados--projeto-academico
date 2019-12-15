@@ -192,26 +192,36 @@ public class DataHandler {
     }
 
     public PreparedStatement prepareStatement(String query) throws SQLException {
+        if (connection == null)
+            throw new SQLException("Not connected to the database");
         SQLOperation<PreparedStatement> operation = () -> {return connection.prepareStatement(query);};
         return executeRecoverableSQLOperation(operation);
     }
 
     public CallableStatement prepareCall(String query) throws SQLException {
+        if (connection == null)
+            throw new SQLException("Not connected to the database");
         SQLOperation<CallableStatement> operation = () -> {return connection.prepareCall(query);};
         return executeRecoverableSQLOperation(operation);
     }
 
     public ResultSet executeQuery(PreparedStatement preparedStatement) throws SQLException {
+        if (connection == null)
+            throw new SQLException("Not connected to the database");
         SQLOperation<ResultSet> operation = () -> {return preparedStatement.executeQuery();};
         return executeUnrecoverableSQLOperation(operation);
     }
 
     public Integer executeUpdate(PreparedStatement preparedStatement) throws SQLException {
+        if (connection == null)
+            throw new SQLException("Not connected to the database");
         SQLOperation<Integer> operation = () -> {return preparedStatement.executeUpdate();};
         return executeUnrecoverableSQLOperation(operation);
     }
 
     public Boolean execute(PreparedStatement preparedStatement) throws SQLException {
+        if (connection == null)
+            throw new SQLException("Not connected to the database");
         SQLOperation<Boolean> operation = () -> {return preparedStatement.execute();};
         return executeUnrecoverableSQLOperation(operation);
     }

@@ -6,28 +6,29 @@ import lapr.project.data.registers.Company;
 import java.sql.SQLException;
 
 public class Bootstrap {
-    /**
-     * O URL da BD.
-     */
-    private final String JDBCURL = "jdbc:oracle:thin:@vsrvbd1.dei.isep.ipp.pt:1521/pdborcl";
+    private Bootstrap() {}
 
     /**
-     * O nome de utilizador da BD.
+     * O URL da BD. nota: sonarqube não permite nomes que começem por letra maiúscula
      */
-    private final String USERNAME ="LAPR3_2019_G029";
+    private static final String jdbcurl = "jdbc:oracle:thin:@vsrvbd1.dei.isep.ipp.pt:1521/pdborcl";
 
     /**
-     * A password de utilizador da BD.
+     * O nome de utilizador da BD. nota: sonarqube não permite nomes que começem por letra maiúscula
      */
-    private final String wordpass = "melhorgrupoole";
+    private static final String username ="LAPR3_2019_G029";
 
-    public void boot(){
+    /**
+     * A password de utilizador da BD. nota: sonarqube não permite nomes que começem por letra maiúscula
+     */
+    private static final String wordpass = "melhorgrupoole";
+
+    public static void boot() throws SQLException {
         DataHandler dataHandler = null;
         try {
-            dataHandler = new DataHandler(JDBCURL, USERNAME, wordpass);
+            dataHandler = new DataHandler(jdbcurl, username, wordpass);
         } catch (SQLException e) {
-            System.out.println("Failed to connect to the database"); // throw new SQLException("Failed to connect to the database");
-            return;
+            throw new SQLException("Failed to connect to the database");
         }
         Company.createCompany(dataHandler);
         // Launch UI
