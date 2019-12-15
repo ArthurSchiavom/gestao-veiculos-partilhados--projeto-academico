@@ -19,7 +19,7 @@ class BootstrapTest {
         Shutdown.shutdown();
     }
 
-    
+
     void bootTest() {
         try {
             Bootstrap.boot();

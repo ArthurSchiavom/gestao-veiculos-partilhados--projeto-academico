@@ -1,15 +1,10 @@
-package lapr.project.tree;
+package lapr.project.model.tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- *
- * @author DEI-ESINF
- */
 public class BST<E extends Comparable<E>> implements BSTInterface<E> {
 
     /** Nested static class for a binary search tree node. */
@@ -45,16 +40,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
     //----------- end of nested Node class -----------
 
 
-
-
-
-
     protected Node<E> root = null;     // root of the tree
-
-//    /* Constructs an empty binary search tree. */
-//    public BST() {
-//          root = null;
-//    }
 
     /*
      * @return root Node of the tree (or null if tree is empty)
@@ -79,14 +65,14 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
             return;
 
         if (root == null)
-            root = new Node<E>(element, null, null);
+            root = new Node<>(element, null, null);
         else
             insert(element, root);
     }
 
     private Node<E> insert(E element, Node<E> node) {
         if (node == null)
-            return new Node<E>(element, null, null);
+            return new Node<>(element, null, null);
 
         if (node.getElement().compareTo(element) > 0)
             node.setLeft(insert(element, node.getLeft()));
@@ -96,9 +82,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         return node;
     }
 
-    /**
-     * Removes an element from the tree maintaining its consistency as a Binary Search Tree.
-     */
+
     /**
      * Removes an element from the tree maintaining its consistency as a Binary Search Tree.
      */
@@ -109,7 +93,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
     private Node<E> remove(E element, Node<E> node) {
 
         if (node == null) {
-            return null;    //throw new IllegalArgumentException("Element does not exist");
+            return null;
         }
         if (element.compareTo(node.getElement())==0) {
             // node is the Node to be removed
@@ -216,10 +200,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         if (res != null)
             return res;
         res = find(element, node.left);
-        if (res != null)
-            return res;
-
-        return null;
+        return res;
     }
 
 
@@ -251,7 +232,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
      * @return iterable collection of the tree's elements reported in pre-order
      */
     public Iterable<E> preOrder(){
-        List<E> resultado = new ArrayList<E>();
+        List<E> resultado = new ArrayList<>();
         preOrderSubtree(root, resultado);
         return resultado;
     }
@@ -274,7 +255,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
      * @return iterable collection of the tree's elements reported in post-order
      */
     public Iterable<E> posOrder(){
-        List<E> resultado = new ArrayList<E>();
+        List<E> resultado = new ArrayList<>();
         posOrderSubtree(root, resultado);
         return resultado;
     }
@@ -339,10 +320,10 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         if (level!=0){
             for(int i=0;i<level-1;i++)
                 sb.append("|\t");
-            sb.append("|-------"+root.getElement()+"\n");
+            sb.append("|-------").append(root.getElement()).append("\n");
         }
         else
-            sb.append(root.getElement()+"\n");
+            sb.append(root.getElement()).append("\n");
         toStringRec(root.getLeft(), level+1, sb);
     }
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.tree;
+package lapr.project.model.tree;
 
 import java.util.List;
 import java.util.Map;
