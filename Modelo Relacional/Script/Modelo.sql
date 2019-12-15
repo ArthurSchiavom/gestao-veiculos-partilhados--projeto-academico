@@ -88,11 +88,10 @@ CREATE TABLE clients (
 
 -- Tabela Parks    
 CREATE TABLE parks (
-  park_id   number(6) GENERATED AS IDENTITY
+  park_id   varchar2(50)
                       constraint pk_parks_park_id PRIMARY KEY,
   latitude  number(9, 6) constraint nn_parks_latitude NOT NULL,
   longitude number(9, 6) constraint nn_parks_longitude NOT NULL,
-  park_description varchar2(150) constraint nn_parks_park_description NOT NULL,
   park_input_voltage number(5,1) constraint parks_park_input_voltage NOT NULL,
   park_input_current number(4,1) constraint parks_park_input_current NOT NULL,
   constraint uk_parks_latitude_longitude unique(latitude,longitude)
@@ -100,7 +99,7 @@ CREATE TABLE parks (
 
 -- Tabela park_vehicle
 CREATE TABLE park_vehicle (
-  park_id    number(6), 
+  park_id    varchar2(50), 
   vehicle_id number(8), 
   CONSTRAINT pk_park_vehicle_park_id_vehicle_id PRIMARY KEY (park_id, vehicle_id)
 );
