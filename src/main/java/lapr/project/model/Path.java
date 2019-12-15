@@ -14,43 +14,65 @@ import lapr.project.model.PointOfInterest;
  */
 public class Path {
     
-    private PointOfInterest pointA;
-    private PointOfInterest pointB;
+    private Double latitudeA;
+    private Double longitudeA;
+    private Double latitudeB;
+    private Double longitudeB;
     private Double kineticCoefficient;
     private int windDirectionDegrees;
     private Double windSpeed;
     
     
-    /**
-     * Constructor that instantiates a path.
-     * @param pointA - start point
-     * @param pointB - end point
-     * @param kineticCoefficient - kinetic coefficient
-     * @param windDirectionDegrees - wind direction in degrees
-     * @param windSpeed - wind speed
-     */
-    public Path(PointOfInterest pointA, PointOfInterest pointB, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
-        this.pointA = pointA;
-        this.pointB = pointB;
+   /**
+    * Constructor that instantiates a path.
+    * @param latitudeA - latitude of start point
+    * @param longitudeA - longitude of start point
+    * @param latitudeB - latitude of end point
+    * @param longitudeB - longitude of end point
+    * @param kineticCoefficient - kinetic Coefficient
+    * @param windDirectionDegrees - wind direction in degrees
+    * @param windSpeed - wind speed
+    */
+    public Path(Double latitudeA, Double longitudeA, Double latitudeB, Double longitudeB, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
+        this.latitudeA = latitudeA;
+        this.longitudeA = longitudeA;
+        this.latitudeB = latitudeB;
+        this.longitudeB = longitudeB;
         this.kineticCoefficient = kineticCoefficient;
         this.windDirectionDegrees = windDirectionDegrees;
         this.windSpeed = windSpeed;
     }
     
     /**
-     * Returns the starting point of the trip
-     * @return the starting point of the trip
+     * Returns the latitude of the starting point of the path
+     * @return the latitude of the starting point of the path
      */
-    public PointOfInterest getPointA() {
-        return this.pointA;
+    public Double getLatA() {
+        return this.latitudeA;
     }
     
     /**
-     * Returns the ending point of the path
-     * @return the ending point of the path
+     * Returns the longitude of the starting point of the path
+     * @return  the longitude of the starting point of the path
      */
-    public PointOfInterest getPointB() {
-        return this.pointB;
+    public Double getLonA() {
+        return this.longitudeA;
+    }
+    
+      /**
+     * Returns the latitude of the starting point of the path
+     * @return the latitude of the starting point of the path
+     */
+    public Double getLatB() {
+        return this.latitudeB;
+    }
+    
+    /**
+     * Returns the longitude of the starting point of the path
+     * @return  the longitude of the starting point of the path
+     */
+    public Double getLonB() {
+        return this.longitudeB;
     }
     
     /**
@@ -86,11 +108,11 @@ public class Path {
             return false;
         }
         Path path = (Path) o;
-        return (pointA.equals(path.pointA) && pointB.equals(path.pointB));
+        return Double.compare(path.latitudeA, latitudeA) == 0 && Double.compare(path.longitudeA, longitudeA) == 0 && Double.compare(path.latitudeB, latitudeB) == 0 && Double.compare(path.longitudeB, longitudeB) == 0;
     }
     
         @Override
     public int hashCode() {
-        return Objects.hash(pointA, pointB, kineticCoefficient, windDirectionDegrees, windSpeed);
+        return Objects.hash(latitudeA, latitudeA, latitudeB, longitudeB, kineticCoefficient, windDirectionDegrees, windSpeed);
     }
 }
