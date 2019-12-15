@@ -15,7 +15,6 @@ import java.util.Set;
 public class Park {
     private Coordinates cord;
     private int id;
-    private String description;
     private float parkInputVoltage;
     private float parkInputCurrent;
     private Set<Capacity> vehicleCapacities;
@@ -29,19 +28,14 @@ public class Park {
      * @param parkInputCurrent  the atual corrent of the park
      * @param id id of the park
      */
-    public Park(Coordinates cord, Set<Capacity> vehicleCapacities,int id,String description,float parkInputVoltage,float parkInputCurrent) {
+    public Park(Coordinates cord, Set<Capacity> vehicleCapacities,int id,float parkInputVoltage,float parkInputCurrent) {
         this.cord = cord;
         this.vehicleCapacities = new HashSet<>(vehicleCapacities);
         this.id = id;
-        this.description=description;
         this.parkInputVoltage = parkInputVoltage;
         this.parkInputCurrent = parkInputCurrent;
     }
 
-    public String getDescription() {
-        return description;
-    }
-    
     public float getParkInputVoltage() {
         return parkInputVoltage;
     }
@@ -78,7 +72,7 @@ public class Park {
 
     @Override
     public String toString() {
-        return "Park{" + "cord=" + cord + ", id=" + id + ", description=" + description + ", parkInputVoltage=" + parkInputVoltage + ", parkInputCurrent=" + parkInputCurrent + ", vehicleCapacities=" + vehicleCapacities + '}';
+        return "Park{" + "cord=" + cord + ", id=" + id +", parkInputVoltage=" + parkInputVoltage + ", parkInputCurrent=" + parkInputCurrent + ", vehicleCapacities=" + vehicleCapacities + '}';
     }
     
     

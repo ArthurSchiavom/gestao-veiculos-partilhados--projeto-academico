@@ -21,22 +21,22 @@
       ><path d="M-7 -7 L19 -7 L19 42 L-7 42 L-7 -7 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath6"
-      ><path d="M-70 -15 L140 -15 L140 30 L-70 30 L-70 -15 Z"
+      ><path d="M-85 -15 L170 -15 L170 30 L-85 30 L-85 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath7"
-      ><path d="M-85 -15 L170 -15 L170 30 L-85 30 L-85 -15 Z"
+      ><path d="M-70 -15 L140 -15 L140 30 L-70 30 L-70 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath8"
       ><path d="M0 0 L629 0 L629 104 L0 104 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath9"
-      ><path d="M89 11 L89 26 L4 26 L4 11 ZM412 30 L412 45 L211 45 L211 30 ZM518 59 L518 96 L120 96 L120 59 ZM0 0 L0 104 L629 104 L629 0 Z"
+      ><path d="M89 11 L89 26 L4 26 L4 11 ZM412 30 L412 45 L211 45 L211 30 ZM521 63 L521 95 L121 95 L121 63 ZM0 0 L0 104 L629 104 L629 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath10"
-      ><path d="M518 10 L518 47 L120 47 L120 10 ZM392 61 L392 76 L232 76 L232 61 ZM452 84 L452 99 L172 99 L172 84 ZM0 0 L0 104 L629 104 L629 0 Z"
+      ><path d="M521 14 L521 46 L121 46 L121 14 ZM392 61 L392 76 L232 76 L232 61 ZM452 84 L452 99 L172 99 L172 84 ZM0 0 L0 104 L629 104 L629 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath11"
-      ><path d="M392 30 L392 45 L232 45 L232 30 ZM452 53 L452 68 L172 68 L172 53 ZM349 78 L349 93 L275 93 L275 78 ZM0 0 L0 104 L200 104 L200 103 L419 103 L419 104 L629 104 L629 0 L518 0 L518 16 L120 16 L120 0 Z"
+      ><path d="M392 30 L392 45 L232 45 L232 30 ZM452 53 L452 68 L172 68 L172 53 ZM349 78 L349 93 L275 93 L275 78 ZM0 0 L0 104 L200 104 L200 103 L419 103 L419 104 L629 104 L629 0 L521 0 L521 15 L121 15 L121 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath12"
       ><path d="M392 7 L392 22 L232 22 L232 7 ZM452 30 L452 45 L172 45 L172 30 ZM349 55 L349 70 L275 70 L275 55 ZM419 80 L419 95 L200 95 L200 80 ZM0 0 L0 104 L629 104 L629 0 Z"
@@ -60,7 +60,7 @@
       ><path d="M-160 -15 L320 -15 L320 30 L-160 30 L-160 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath19"
-      ><path d="M-398 -37 L796 -37 L796 74 L-398 74 L-398 -37 Z"
+      ><path d="M-400 -32 L800 -32 L800 64 L-400 64 L-400 -32 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath20"
       ><path d="M-201 -15 L402 -15 L402 30 L-201 30 L-201 -15 Z"
@@ -106,13 +106,13 @@
     ><g stroke-linecap="butt" font-size="11px" transform="translate(573,204)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke-linejoin="round" stroke="black" stroke-opacity="1" stroke-miterlimit="0"
     ><rect fill="none" x="0" width="8" height="31" y="0" clip-path="url(#clipPath5)"
     /></g
-    ><g font-size="11px" transform="translate(542,2)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="13" xml:space="preserve" y="12" clip-path="url(#clipPath6)" stroke="none"
-      >: System</text
-    ></g
     ><g font-size="11px" transform="translate(2,37)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath7)" stroke="none"
+    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath6)" stroke="none"
       >Administrator</text
+    ></g
+    ><g font-size="11px" transform="translate(542,2)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><text x="13" xml:space="preserve" y="12" clip-path="url(#clipPath7)" stroke="none"
+      >: System</text
     ></g
     ><g stroke-linecap="butt" font-size="11px" transform="translate(-2,26)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke-linejoin="round" stroke="black" stroke-opacity="1"
     ><line y2="50" fill="none" x1="50" clip-path="url(#clipPath9)" x2="575" y1="50"
@@ -164,12 +164,12 @@
       /><text fill="black" x="9" xml:space="preserve" y="12" clip-path="url(#clipPath18)" stroke="none"
       >2: inserts the requested data</text
     ></g
-    ><g font-size="11px" transform="translate(118,85)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
-    ><rect x="0" width="398" height="37" y="0" clip-path="url(#clipPath19)" stroke="none"
-      /><text fill="black" x="140" xml:space="preserve" y="15" clip-path="url(#clipPath19)" stroke="none"
+    ><g font-size="11px" transform="translate(119,89)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
+    ><rect x="0" width="400" height="32" y="0" clip-path="url(#clipPath19)" stroke="none"
+      /><text fill="black" x="141" xml:space="preserve" y="13" clip-path="url(#clipPath19)" stroke="none"
       >1.1: requests necessary</text
-      ><text fill="black" x="5" xml:space="preserve" y="30" clip-path="url(#clipPath19)" stroke="none"
-      >data(latitude,longitude,park_description,park_input_voltage,park_input_corrent)</text
+      ><text fill="black" x="17" xml:space="preserve" y="28" clip-path="url(#clipPath19)" stroke="none"
+      >data(latitude,longitude,parkDescription,parkInputVoltage,parkInputCorrent)</text
     ></g
     ><g font-size="11px" transform="translate(209,56)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
     ><rect x="0" width="201" height="15" y="0" clip-path="url(#clipPath20)" stroke="none"

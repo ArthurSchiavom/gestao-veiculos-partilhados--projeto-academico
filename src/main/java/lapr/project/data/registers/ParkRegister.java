@@ -8,9 +8,7 @@ package lapr.project.data.registers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
@@ -22,7 +20,6 @@ import lapr.project.model.vehicles.VehicleType;
  * This class regist and manipulates the data of all parks in data base
  */
 public class ParkRegister {
-
     DataHandler dataHandler;
 
     public ParkRegister(DataHandler dataHandler) {
@@ -34,24 +31,22 @@ public class ParkRegister {
      * Adds a park to the database
      *
      * @param cord Park coordinates
-     * @param parkDescription Description of the park
      * @param parkInputVoltage Park input voltage
      * @param parkInputCorrent Park input corrent
      * @return true if added with success the park, false otherwise
      */
-    public boolean addPark( Coordinates cord, String parkDescription, float parkInputVoltage, float parkInputCorrent) {
+    public boolean addPark( Coordinates cord, float parkInputVoltage, float parkInputCorrent) {
         double latitude;
         double longitude;
         int nrLines;
         try {
             latitude = cord.getLatitude();
             longitude = cord.getLongitude();
-            PreparedStatement statement = dataHandler.prepareStatement("INSERT INTO PARKS(latitude, longitude,park_description,park_input_voltage,park_input_current) " + "VALUES(?,?,?,?,?)");
+            PreparedStatement statement = dataHandler.prepareStatement("INSERT INTO PARKS(latitude, longitude,park_input_voltage,park_input_current) " + "VALUES(?,?,?,?)");
             statement.setDouble( 1, latitude);
             statement.setDouble( 2, longitude);
-            statement.setString( 3, parkDescription);
-            statement.setFloat( 4, parkInputVoltage);
-            statement.setFloat( 5, parkInputCorrent);
+            statement.setFloat( 3, parkInputVoltage);
+            statement.setFloat( 4, parkInputCorrent);
             nrLines = dataHandler.executeUpdate(statement);
             if (nrLines == 0) {
                 return false;
@@ -87,48 +82,48 @@ public class ParkRegister {
         return true;
     }
 
-    /**
-     * Fetch a parks with the description given by parameter
-     *
-     * @param description Name of park
-     * @return Returns a list of parks with the same name (or just one)
-     */
-    public List<Park> fetchParkByDescription(String description) {
-        int parkId;
-        double latitude;
-        double longitude;
-        String park_description;
-        float parkInputVoltage;
-        float parkInputCorrent;
-        int altitude;
-        String parkDescription = description.toLowerCase().trim();
-        List<Park> parksSameNameOrNot = new ArrayList<>();
-        try {
-            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_description)=?");
-            statement.setString( 1, parkDescription);
-            ResultSet result = dataHandler.executeQuery(statement);
-            if (result == null || result.next()==false) {
-                return null;
-            }
-            while (result.next()) {
-                parkId = result.getInt( 1);
-                latitude = result.getDouble( 2);
-                longitude = result.getDouble( 3);
-                park_description = result.getString( 4);
-                parkInputVoltage = result.getFloat( 5);
-                parkInputCorrent = result.getFloat( 6);
-                altitude = getAltitude(latitude, longitude);
-                Set<Capacity> listOfCapacitys = getListOfCapacitys(parkId);
-                parksSameNameOrNot.add(new Park(new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId, park_description, parkInputVoltage, parkInputCorrent));
-            }
-            result.close();
-            statement.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-        return parksSameNameOrNot;
-    }
+//    /**
+//     * Fetch a parks with the description given by parameter
+//     *
+//     * @param description Name of park
+//     * @return Returns a list of parks with the same name (or just one)
+//     */
+//    public List<Park> fetchParkByDescription(String description) {
+//        int parkId;
+//        double latitude;
+//        double longitude;
+//        String park_description;
+//        float parkInputVoltage;
+//        float parkInputCorrent;
+//        int altitude;
+//        String parkDescription = description.toLowerCase().trim();
+//        List<Park> parksSameNameOrNot = new ArrayList<>();
+//        try {
+//            PreparedStatement statement = dataHandler.prepareStatement("Select * from parks where lower(park_description)=?");
+//            statement.setString( 1, parkDescription);
+//            ResultSet result = dataHandler.executeQuery(statement);
+//            if (result == null || result.next()==false) {
+//                return null;
+//            }
+//            while (result.next()) {
+//                parkId = result.getInt( 1);
+//                latitude = result.getDouble( 2);
+//                longitude = result.getDouble( 3);
+//                park_description = result.getString( 4);
+//                parkInputVoltage = result.getFloat( 5);
+//                parkInputCorrent = result.getFloat( 6);
+//                altitude = getAltitude(latitude, longitude);
+//                Set<Capacity> listOfCapacitys = getListOfCapacitys(parkId);
+//                parksSameNameOrNot.add(new Park(new Coordinates(latitude, longitude, altitude), listOfCapacitys, parkId, park_description, parkInputVoltage, parkInputCorrent));
+//            }
+//            result.close();
+//            statement.close();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            return null;
+//        }
+//        return parksSameNameOrNot;
+//    }
 
     /**
      * Fetch a parkk by id
@@ -152,10 +147,9 @@ public class ParkRegister {
             latitude=resultSet.getDouble(2);
             longitude=resultSet.getDouble(3);
             cord = new Coordinates(latitude,longitude, getAltitude(latitude, longitude));
-            String description = resultSet.getString( 4);
-            parkInputVoltage = resultSet.getFloat( 5);
-            parkInputCorrent = resultSet.getFloat( 6);
-            return new Park(cord, getListOfCapacitys(id), id, description, parkInputVoltage, parkInputCorrent);
+            parkInputVoltage = resultSet.getFloat( 4);
+            parkInputCorrent = resultSet.getFloat( 5);
+            return new Park(cord, getListOfCapacitys(id), id, parkInputVoltage, parkInputCorrent);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -232,24 +226,22 @@ public class ParkRegister {
      * @param cord of the park
      * @param vehicleCapacities of the park
      * @param id the park id
-     * @param description of the park
      * @param parkInputVoltage the voltage of the park
      * @param parkInputCurrent the current corrent of the park
      * @return return true if successfully removed and false otherwise
      */
-    public boolean updatePark(Coordinates cord, Set<Capacity> vehicleCapacities, int id, String description, float parkInputVoltage, float parkInputCurrent) {
+    public boolean updatePark(Coordinates cord, Set<Capacity> vehicleCapacities, int id, float parkInputVoltage, float parkInputCurrent) {
         try {
             double latitude = cord.getLatitude();
             double longintude = cord.getLongitude();
 
-            PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id =? ,latitude=? ,longitude= ?,park_description =?,park_input_voltage= ?,park_input_current =?  FROM park WHERE park_id=?");
+            PreparedStatement statement = dataHandler.prepareStatement("Update park SET park_id =? ,latitude=? ,longitude= ?,park_input_voltage= ?,park_input_current =?  FROM park WHERE park_id=?");
             statement.setInt( 1, id);
             statement.setDouble( 2, latitude);
             statement.setDouble( 3, longintude);
-            statement.setString( 4, description);
-            statement.setFloat( 5, parkInputVoltage);
-            statement.setFloat( 6, parkInputCurrent);
-            statement.setInt( 7, id);
+            statement.setFloat( 4, parkInputVoltage);
+            statement.setFloat( 5, parkInputCurrent);
+            statement.setInt( 6, id);
             int nLinhas=dataHandler.executeUpdate(statement);
             if (nLinhas==0){
                 return false;
