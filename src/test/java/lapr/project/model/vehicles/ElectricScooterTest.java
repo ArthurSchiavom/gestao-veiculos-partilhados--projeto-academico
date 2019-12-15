@@ -1,37 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr.project.model.vehicles;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author kevin
- */
-public class ElectricScooterTest {
-//
-//    @Test
-//    public void testGetBatteryLevel() {
-//        System.out.println("getBatteryLevel");
-//        ElectricScooter instance = new ElectricScooter(1,"hello",50,170,0,true,VehicleType.ELECTRIC_SCOOTER,50.5F,ScooterType.OFF_ROAD);
-//        float expResult = 50.5F;
-//        float result = instance.getBatteryLevel();
-//        assertNotNull(result);
-//        assertEquals(expResult, result, 0.0);
-//    }
-//
-//    @Test
-//    public void testGetScooterType() {
-//        System.out.println("getScooterType");
-//        ElectricScooter instance = new ElectricScooter(1,"hello",50,170,0,true,VehicleType.ELECTRIC_SCOOTER,50.5F,ScooterType.OFF_ROAD);
-//        ScooterType expResult = ScooterType.OFF_ROAD;
-//        ScooterType result = instance.getScooterType();
-//        assertNotNull(result);
-//        assertEquals(expResult, result);
-//    }
-//
+class ElectricScooterTest {
+
+    ElectricScooter instance;
+    @BeforeEach
+    void beforeEach() {
+        instance = new ElectricScooter(1,2.3F,2.4F,35,2.3F,2.9F,60,true,VehicleType.ELECTRIC_SCOOTER,ElectricScooterType.URBAN,15,150f,"description");
+    }
+    @Test
+    void getElectricScooterType() {
+        assertEquals(ElectricScooterType.URBAN, instance.getElectricScooterType());
+    }
+
+    @Test
+    void getActual_battery_capacity() {
+        assertEquals(15, instance.getActual_battery_capacity());
+    }
+
+    @Test
+    void getMax_battery_capacity() {
+        assertEquals(150f, instance.getMax_battery_capacity());
+    }
+
+    @Test
+    void getEletric_scooter_description() {
+        assertEquals("description", instance.getEletric_scooter_description());
+    }
 }
