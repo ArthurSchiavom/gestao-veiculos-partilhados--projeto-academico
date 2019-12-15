@@ -1,7 +1,5 @@
 package lapr.project.model.users;
 
-import lapr.project.model.vehicles.VehicleType;
-
 /**
  * Represents the type of client types
  */
