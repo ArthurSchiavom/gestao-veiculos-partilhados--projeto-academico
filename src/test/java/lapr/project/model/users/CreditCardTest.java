@@ -53,6 +53,12 @@ class CreditCardTest {
     }
 
     @Test
+    void testToString() {
+        System.out.println(cc.toString());
+        assertEquals("CreditCard{ccNumber='00000000000000', ccExpiration=2020-12-31, ccv=0}",cc.toString(),"toString");
+    }
+
+    @Test
     void testHashCode() {
         CreditCard cc1 = cc;
         CreditCard cc2 = new CreditCard("00000000000000", expirationDate, 000);

@@ -35,6 +35,22 @@ public class ClientTest {
     }
 
     @Test
+    void testGetCyclingAvgSpeed() {
+        assertEquals(2.3F, instance.getCyclingAverageSpeed());
+    }
+
+    @Test
+    void testCreditCard() {
+        assertEquals(instance.getCreditCard(), new CreditCard("12341234123412", LocalDate.of(2020, 12, 31), 321));
+    }
+
+    @Test
+    void testToString() {
+        System.out.println(instance.toString());
+        assertEquals("Client{points=0, age=22, height=180, weight=60, gender=m, cyclingAverageSpeed=2.3, cc=CreditCard{ccNumber='12341234123412', ccExpiration=2020-12-31, ccv=321}}", instance.toString());
+    }
+
+    @Test
     void testGetCreditCardSecret() {
         System.out.println("getCreditCardSecret");
         Client instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
