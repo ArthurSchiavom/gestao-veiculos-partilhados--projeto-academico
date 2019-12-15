@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model.register;
+package lapr.project.data.registers;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

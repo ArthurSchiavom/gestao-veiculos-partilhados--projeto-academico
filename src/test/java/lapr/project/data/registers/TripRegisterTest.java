@@ -1,4 +1,4 @@
-package lapr.project.model.register;
+package lapr.project.data.registers;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Trip;
@@ -7,10 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

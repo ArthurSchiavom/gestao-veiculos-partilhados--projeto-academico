@@ -1,10 +1,10 @@
 package lapr.project.model;
 
 import lapr.project.data.DataHandler;
-import lapr.project.model.register.ParkRegister;
-import lapr.project.model.register.TripRegister;
-import lapr.project.model.register.UsersRegister;
-import lapr.project.model.register.VehicleRegister;
+import lapr.project.data.registers.ParkRegister;
+import lapr.project.data.registers.TripRegister;
+import lapr.project.data.registers.UsersRegister;
+import lapr.project.data.registers.VehicleRegister;
 //import lapr.project.model.register.ParkRegister;
 //import lapr.project.model.register.TripRegister;
 //import lapr.project.model.register.UsersRegister;

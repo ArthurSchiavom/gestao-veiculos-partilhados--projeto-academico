@@ -1,4 +1,4 @@
-package lapr.project.model.register;
+package lapr.project.data.registers;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Trip;

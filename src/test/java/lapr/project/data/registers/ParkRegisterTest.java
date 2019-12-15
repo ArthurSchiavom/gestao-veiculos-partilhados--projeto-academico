@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model.register;
+package lapr.project.data.registers;
 
 import java.util.List;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -14,7 +14,6 @@ import lapr.project.model.Coordinates;
 import lapr.project.model.park.Park;
 import static org.junit.jupiter.api.Assertions.*;
 import lapr.project.shutdown.Shutdown;
-import org.junit.jupiter.api.Test;
 
 /**
  *
