@@ -26,7 +26,7 @@ public class Bootstrap {
         try {
             dataHandler = new DataHandler(JDBCURL, USERNAME,password);
         } catch (SQLException e) {
-            System.out.println("Failed to connect to the database");
+            System.out.println("Failed to connect to the database"); // throw new SQLException("Failed to connect to the database");
             return;
         }
         Company.createCompany(dataHandler);
