@@ -266,7 +266,7 @@ public class ParkRegister {
                 return cap.getAmountOccupied();
             }
         }
-        throw IllegalArgumentException;
+        throw new IllegalArgumentException("Park does not exist");
     }
 
     /**
