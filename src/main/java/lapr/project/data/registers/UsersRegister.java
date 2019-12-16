@@ -141,7 +141,7 @@ public class UsersRegister {
        double dist = coordClient.distance(park.getCoords());
        return dist;
     }
-     
+
     public int numPlacesOfParkById(int id,VehicleType vT){
         Company company = Company.getInstance();
         ParkRegister pr = company.getParkRegister();

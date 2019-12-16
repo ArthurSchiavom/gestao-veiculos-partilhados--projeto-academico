@@ -17,7 +17,7 @@ public class Capacity {
      * 
      * @param capacity
      * @param amountOccupied
-     * @param vehicleType 
+     * @param vehicleType
      */
     public Capacity(int capacity,int amountOccupied,VehicleType vehicleType){
         this.maxCapacity = capacity;
@@ -36,5 +36,4 @@ public class Capacity {
     public VehicleType getVehicleType() {
         return vehicleType;
     }
-    
 }

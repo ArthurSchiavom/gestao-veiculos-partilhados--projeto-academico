@@ -199,3 +199,4 @@ nbdist/
 !third-parties/ride-sharing-assessment-interfaces*.jar
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,netbeans,intellij
+.idea/
