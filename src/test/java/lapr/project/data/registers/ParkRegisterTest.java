@@ -51,19 +51,6 @@ public class ParkRegisterTest {
     }
 
     /**
-     * Test of fetchParkByName method, of class ParkRegistor.
-     */
-    @Ignore
-    public void testFetchParkByName() {
-        Company company=Company.getInstance();
-        ParkRegister parkRegistor=new ParkRegister(company.getDataHandler());
-        List<Park> listaParques=parkRegistor.fetchParkByDescription("Parque do Arthur");
-        int sizeResult=listaParques.size();
-        int expectedSize=2;
-        assertEquals(expectedSize,sizeResult);
-    }
-
-    /**
      * Test of fetchParkById method, of class ParkRegistor.
      */
     @Ignore

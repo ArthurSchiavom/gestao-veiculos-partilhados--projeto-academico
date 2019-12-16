@@ -8,6 +8,7 @@ package lapr.project.data.registers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import lapr.project.data.DataHandler;
@@ -252,5 +253,32 @@ public class ParkRegister {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Returns the number of bicycles at a certain park
+     * @param id id of the park
+     * @return number of current bicycles at a park, or null if the park does not exist
+     */
+    public int getNumberOfBicyclesAtPark(int id) throws IllegalArgumentException{
+        for(Capacity cap : getListOfCapacitys(id)){
+            if(cap.getVehicleType().equals(VehicleType.BICYCLE)){
+                return cap.getAmountOccupied();
+            }
+        }
+        throw IllegalArgumentException;
+    }
+
+    /**
+     * Gets the nearest parks from a certain coordinate and returns their availability
+     * @param coords
+     * @param radius
+     * @return
+     */
+    public HashMap<Park,Set<Capacity>> getNearestParksAndAvailability(Coordinates coords, Double radius){
+        HashMap<Park,Set<Capacity>> nearestParksAvailability = new HashMap<>();
+
+
+        return nearestParksAvailability;
     }
 }
