@@ -23,17 +23,11 @@ CREATE TABLE vehicles (
   vehicle_type_name varchar2(50) constraint nn_vehicles_vehicle_type_name NOT NULL,
   available         number(1)    constraint nn_vehicles_available NOT NULL
                                  CONSTRAINT ck_vehicles_available CHECK (available = 0 OR available = 1),
-  latitude          number(9, 6) constraint nn_vehicles_latitude NOT NULL
-                                 constraint ck_vehicles_latitude CHECK (latitude between -90 and 90), 
-  longitude         number(9, 6) constraint nn_vehicles_longitude NOT NULL
-                                 constraint ck_vehicles_longitude CHECK (longitude between -180 and 180), 
-  altitude_m          number(4) constraint nn_vehicles_altitude NOT NULL,
   weight			number(3)    constraint nn_vehicles_weight NOT NULL
 								 constraint ck_vehicles_weight CHECK (weight > 0),
   aerodynamic_coefficient number(4, 2) constraint nn_vehicles_aerodynamic_coefficient NOT NULL,
   frontal_area number(4,1) constraint nn_vehicles_frontal_area NOT NULL,
-                           constraint ck_vehicles_fraontal_area check(frontal_area > 0),
-  constraint uk_vehicles_longitude_latitude_altitude unique(latitude,longitude,altitude_m)
+                           constraint ck_vehicles_fraontal_area check(frontal_area > 0)
 );
 
 -- Tabela Vehicle_Types
@@ -135,7 +129,7 @@ CREATE TABLE invoices (
 
 -- Tabela park_capacity
 CREATE TABLE park_capacity (
-  park_id           number(6), 
+  park_id           varchar2(50), 
   vehicle_type_name varchar2(50), 
   park_capacity     number(5) CONSTRAINT nn_park_capacity_park_capacity NOT NULL, 
   amount_occupied   number(5) DEFAULT 0 CONSTRAINT nn_park_capacity_amount_occupied NOT NULL, 

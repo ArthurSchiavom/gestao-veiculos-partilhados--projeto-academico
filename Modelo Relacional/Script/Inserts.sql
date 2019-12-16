@@ -30,17 +30,17 @@ insert into points_of_interest(latitude, longitude, altitude_m, poi_description)
 values(18.222, 20.12, 10, 'Parque do Diogo');
 
 -- parks
-insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
-values(18.222, 20.12, 'Parque do Diogo', 220, 16);
+insert into parks(park_id,latitude, longitude, park_input_voltage, park_input_current)
+values('park1',18.222, 20.12, 220, 16);
 
-insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
-values(18.222, 22.12, 'Parque do Ivo', 220, 16);
+insert into parks(park_id,latitude, longitude, park_input_voltage, park_input_current)
+values('park2',18.222, 22.12, 220, 16);
 
-insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
-values(-80.222, 172.12, 'Parque do Arthur', 220, 16);
+insert into parks(park_id,latitude, longitude, park_input_voltage, park_input_current)
+values('park3',-80.222, 172.12, 220, 16);
 
-insert into parks(latitude, longitude, park_description, park_input_voltage, park_input_current)
-values(-20.222, 122.12, 'Parque do kevin',220, 16);
+insert into parks(park_id,latitude, longitude, park_input_voltage, park_input_current)
+values('park4',-20.222, 122.12,220, 16);
 
 -- vehicle_types
 insert into vehicle_types(vehicle_type_name)
@@ -50,42 +50,42 @@ insert into vehicle_types(vehicle_type_name)
 values('bicycle');
 
 -- vehicles
-insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
-values('bicycle', 1, 20.123, 13.223, 50, 12, 1.10, 0.3);
+insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('bicycle', 1, 50, 1.10, 0.3);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
-values('bicycle', 1, 22.123, -49.223, 12, 0, 1.21, 0.2);
+insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('bicycle', 1, 12, 1.21, 0.2);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
-values('bicycle', 0, 45.123, 23.423, 30, 100, 1.2, 2.4);
+insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('bicycle', 0, 30, 1.2, 2.4);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area)
-values('electric_scooter', 1, 10.230, 15.323, 2, 50, 1.10, 0.9);
+insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('electric_scooter', 1, 2, 1.10, 0.9);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area) 
-values('electric_scooter', 0, 10.000, -27.123, 70, 12, 1.21, 0.1);
+insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
+values('electric_scooter', 0, 70, 1.21, 0.1);
 
-insert into vehicles (vehicle_type_name, available, latitude, longitude, weight, altitude_m, aerodynamic_coefficient, frontal_area) 
-values('electric_scooter', 0, 23.123, -23.423, 20, -2, 1.1, 0.3);
+insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
+values('electric_scooter', 0, 20, 1.1, 0.3);
 
 -- park_vehicle
 insert into park_vehicle(park_id, vehicle_id)
-values(1, 1);
+values('park1', 1);
 
 insert into park_vehicle(park_id, vehicle_id)
-values(1, 2);
+values('park1', 2);
 
 insert into park_vehicle(park_id, vehicle_id)
-values(1, 3);
+values('park1', 3);
 
 insert into park_vehicle(park_id, vehicle_id)
-values(1, 4);
+values('park1', 4);
 
 insert into park_vehicle(park_id, vehicle_id)
-values(1, 5);
+values('park1', 5);
 
 insert into park_vehicle(park_id, vehicle_id)
-values(1, 6);
+values('park1', 6);
 
 -- bicycles
 insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
@@ -163,23 +163,23 @@ values('b@b.b', TO_DATE('01-12-2019', 'dd/mm/yyyy'), 10, 0, 4, 2);
 
 -- park_capacity
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
-values(1, 'bicycle', 20, 10);
+values('park1', 'bicycle', 20, 10);
 
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
-values(1, 'electric_scooter', 20, 10);
+values('park1', 'electric_scooter', 20, 10);
 
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
-values(2, 'electric_scooter', 40, 10);
+values('park2', 'electric_scooter', 40, 10);
 
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
-values(2, 'bicycle', 30, 20);
+values('park2', 'bicycle', 30, 20);
 
 -- trips
 insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id)
-values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 1, 2);
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1', 'park2');
 
 insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id, end_time)
-values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 2, 1, 2, TO_DATE('21-12-2019', 'dd/mm/yyyy'));
+values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 2, 'park1', 'park2', TO_DATE('21-12-2019', 'dd/mm/yyyy'));
 
 -- receipts
 insert into receipts (user_email, payment_start_date, payment_end_date, points_used, amount_paid_cash)
