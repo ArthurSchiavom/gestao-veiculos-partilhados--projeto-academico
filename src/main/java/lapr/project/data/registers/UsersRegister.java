@@ -6,9 +6,6 @@ import lapr.project.model.users.CreditCard;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import lapr.project.model.Coordinates;
-import lapr.project.model.park.Park;
-import lapr.project.model.vehicles.VehicleType;
 
 /**
  * Handles the users and its subclasses
@@ -132,21 +129,5 @@ public class UsersRegister {
                 } catch (SQLException e) {}
         }
         return true;
-    }
-    
-     public double distanceOfParkById(int id,Coordinates coordClient){
-        Company company = Company.getInstance();
-        ParkRegister pr = company.getParkRegister();
-        Park park = pr.fetchParkById(id);
-       double dist = coordClient.distance(park.getCoords());
-       return dist;
-    }
-
-    public int numPlacesOfParkById(int id,VehicleType vT){
-        Company company = Company.getInstance();
-        ParkRegister pr = company.getParkRegister();
-        Park park = pr.fetchParkById(id);
-        int places = (park.getMaxAmountByType(vT)- park.getAmountOccupiedByType(vT));
-        return places;
     }
 }

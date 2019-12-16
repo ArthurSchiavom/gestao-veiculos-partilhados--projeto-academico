@@ -9,11 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import lapr.project.data.DataHandler;
-import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
-import lapr.project.model.PointOfInterest;
 
-/**
+ /**
  * Class that regists paths
  *
  */

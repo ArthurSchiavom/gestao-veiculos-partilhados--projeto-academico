@@ -6,7 +6,6 @@
 package lapr.project.model;
 
 import java.util.Objects;
-import lapr.project.model.PointOfInterest;
 
 /**
  * Class that represents a path

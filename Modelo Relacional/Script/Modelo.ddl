@@ -106,7 +106,7 @@ CREATE TABLE invoices (
 CREATE TABLE park_capacity (
   park_id           number(6) NOT NULL, 
   vehicle_type_name varchar2(50) NOT NULL, 
-  capacity          number(10) NOT NULL, 
+  parkCapacity          number(10) NOT NULL,
   amount_occupied   number(10) DEFAULT 0 NOT NULL, 
   PRIMARY KEY (park_id, 
   vehicle_type_name));

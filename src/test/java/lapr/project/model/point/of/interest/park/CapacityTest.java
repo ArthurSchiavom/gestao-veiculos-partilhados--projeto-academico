@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model.park;
+package lapr.project.model.point.of.interest.park;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import lapr.project.model.vehicles.VehicleType;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ public class CapacityTest {
         Capacity instance = new Capacity(30,20, VehicleType.ELECTRIC_SCOOTER);
         int expResult = 30;
         int result = instance.getMaxCapacity();
-        assertNotNull(result);
         assertEquals(expResult, result);
     }
 
@@ -33,7 +31,6 @@ public class CapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         int expResult = 20;
         int result = instance.getAmountOccupied();
-        assertNotNull(result);
         assertEquals(expResult, result);
     }
     
@@ -43,7 +40,6 @@ public class CapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         VehicleType expResult = VehicleType.ELECTRIC_SCOOTER;
         VehicleType result = instance.getVehicleType();
-        assertNotNull(result);
         assertEquals(expResult, result);
     }
     
@@ -53,7 +49,6 @@ public class CapacityTest {
         Capacity instance = new Capacity(30,20,VehicleType.ELECTRIC_SCOOTER);
         VehicleType expResult = VehicleType.BICYCLE;
         VehicleType result = instance.getVehicleType();
-        assertNotNull(result);
         assertNotEquals(expResult, result);
     }
 }

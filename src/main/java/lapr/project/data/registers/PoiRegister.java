@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
-import lapr.project.model.PointOfInterest;
+import lapr.project.model.point.of.interest.PointOfInterest;
 
 /**
  *

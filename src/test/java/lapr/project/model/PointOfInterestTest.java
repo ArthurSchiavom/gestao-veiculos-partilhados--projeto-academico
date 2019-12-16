@@ -5,6 +5,7 @@
  */
 package lapr.project.model;
 
+import lapr.project.model.point.of.interest.PointOfInterest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

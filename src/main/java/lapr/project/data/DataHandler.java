@@ -20,6 +20,8 @@ public class DataHandler {
     private static final int MAX_RECONNECTION_ATTEMPTS = 3;
     private static final int CONNECTION_FAILURE_ORA_CODE = 17008;
     private static final int RECONNECTION_INTERVAL_MILLIS = 2000;
+    private static final int QUERY_TIMEOUT_SECONDS = 3;
+
     private static final String NOT_CONNECTED_ERROR_MSG = "Not connected to the database";
 
 
@@ -212,14 +214,22 @@ public class DataHandler {
     public PreparedStatement prepareStatement(String query) throws SQLException {
         if (connection == null)
             throw new SQLException(NOT_CONNECTED_ERROR_MSG);
-        SQLOperation<PreparedStatement> operation = () -> connection.prepareStatement(query);
+        SQLOperation<PreparedStatement> operation = () -> {
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setQueryTimeout(QUERY_TIMEOUT_SECONDS);
+            return stm;
+        };
         return executeRecoverableSQLOperation(operation);
     }
 
     public CallableStatement prepareCall(String query) throws SQLException {
         if (connection == null)
             throw new SQLException(NOT_CONNECTED_ERROR_MSG);
-        SQLOperation<CallableStatement> operation = () -> connection.prepareCall(query);
+        SQLOperation<CallableStatement> operation = () -> {
+            CallableStatement cs = connection.prepareCall(query);
+            cs.setQueryTimeout(QUERY_TIMEOUT_SECONDS);
+            return cs;
+        };
         return executeRecoverableSQLOperation(operation);
     }
 
@@ -241,6 +251,13 @@ public class DataHandler {
         if (connection == null)
             throw new SQLException(NOT_CONNECTED_ERROR_MSG);
         SQLOperation<Boolean> operation = () -> preparedStatement.execute();
+        return executeUnrecoverableSQLOperation(operation);
+    }
+
+    public int[] executeBatch(Statement statement) throws SQLException {
+        if (connection == null)
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<int[]> operation = () -> statement.executeBatch();
         return executeUnrecoverableSQLOperation(operation);
     }
 }

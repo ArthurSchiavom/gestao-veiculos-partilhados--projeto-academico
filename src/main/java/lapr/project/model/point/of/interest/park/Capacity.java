@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.model.park;
+package lapr.project.model.point.of.interest.park;
 
 import lapr.project.model.vehicles.VehicleType;
 

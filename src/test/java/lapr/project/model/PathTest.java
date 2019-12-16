@@ -5,6 +5,7 @@
  */
 package lapr.project.model;
 
+import lapr.project.model.point.of.interest.PointOfInterest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
