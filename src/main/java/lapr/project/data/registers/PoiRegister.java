@@ -43,7 +43,11 @@ public class PoiRegister {
             stm.setDouble(1, latitude);
             stm.setDouble(2, longitude);
             ResultSet resultSet = dataHandler.executeQuery(stm);
-            if (resultSet == null || resultSet.next() == false) { //resultSet is empty
+            if (resultSet == null) {
+                stm.close();
+                return null;
+            }
+            else if (!resultSet.next()) {
                 resultSet.close();
                 stm.close();
                 return null;

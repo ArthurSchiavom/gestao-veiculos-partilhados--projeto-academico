@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.lang.Thread.sleep;
 
@@ -14,23 +16,27 @@ import static java.lang.Thread.sleep;
  * Exemplo de classe cujas instâncias manipulam dados de BD Oracle.
  */
 public class DataHandler {
-    private static final int MAX_ATTEMPTS = 3;
+    private static final Logger LOGGER = Logger.getLogger("DataHandlerLog");
+    private static final int MAX_RECONNECTION_ATTEMPTS = 3;
+    private static final int CONNECTION_FAILURE_ORA_CODE = 17008;
     private static final int RECONNECTION_INTERVAL_MILLIS = 2000;
+    private static final String NOT_CONNECTED_ERROR_MSG = "Not connected to the database";
+
 
     /**
      * O URL da BD.
      */
-    private String jdbcUrl;
+    private final String jdbcUrl;
 
     /**
      * O nome de utilizador da BD.
      */
-    private String username;
+    private final String username;
 
     /**
      * A password de utilizador da BD.
      */
-    private String password;
+    private final String password;
 
     /**
      * A ligação à BD.
@@ -47,10 +53,12 @@ public class DataHandler {
      */
     private ResultSet rSet;
 
+    private static Boolean created = false;
+
     /**
      * Use connection properties set on file application.properties
      */
-    public DataHandler() {
+    private DataHandler() {
         this.jdbcUrl = System.getProperty("database.url");
         this.username = System.getProperty("database.username");
         this.password = System.getProperty("database.password");
@@ -64,7 +72,13 @@ public class DataHandler {
      * @param username o nome do utilizador.
      * @param password a password do utilizador.
      */
-    public DataHandler(String jdbcUrl, String username, String password) throws SQLException {
+    public DataHandler(String jdbcUrl, String username, String password) throws SQLException, IllegalAccessException {
+        synchronized (created) {
+            if (created)
+                throw new IllegalAccessException("Only a single DataHandler instance is allowed");
+            else
+                created = false;
+        }
         this.jdbcUrl = jdbcUrl;
         this.username = username;
         this.password = password;
@@ -144,7 +158,7 @@ public class DataHandler {
     }
 
     private static boolean attemptingToReconnect = false;
-    private static synchronized void continuousReconnectAttempt() {
+    private synchronized void continuousReconnectAttempt() {
         if (attemptingToReconnect)
             return;
 
@@ -154,7 +168,9 @@ public class DataHandler {
             while (!connected) {
                 connected = true;
                 try { Company.getInstance().getDataHandler().openConnection(); } catch (Exception e) { connected = false;}
-                try { sleep(2000); } catch (InterruptedException e) {}
+                try { wait(2000); } catch (InterruptedException e) {
+                    LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
+                }
             }
             attemptingToReconnect = false;
         }).start();
@@ -166,10 +182,12 @@ public class DataHandler {
             try {
                 return operation.executeOperation();
             } catch (SQLException e) {
-                if (e.getErrorCode() == 17008 && nAttempt < 3) {
+                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS) {
                     try {
-                        sleep(RECONNECTION_INTERVAL_MILLIS);
-                    } catch (InterruptedException ex) {}
+                        wait(RECONNECTION_INTERVAL_MILLIS);
+                    } catch (InterruptedException ex) {
+                        LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
+                    }
                     openConnection();
                 }
                 else {
@@ -193,36 +211,36 @@ public class DataHandler {
 
     public PreparedStatement prepareStatement(String query) throws SQLException {
         if (connection == null)
-            throw new SQLException("Not connected to the database");
-        SQLOperation<PreparedStatement> operation = () -> {return connection.prepareStatement(query);};
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<PreparedStatement> operation = () -> connection.prepareStatement(query);
         return executeRecoverableSQLOperation(operation);
     }
 
     public CallableStatement prepareCall(String query) throws SQLException {
         if (connection == null)
-            throw new SQLException("Not connected to the database");
-        SQLOperation<CallableStatement> operation = () -> {return connection.prepareCall(query);};
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<CallableStatement> operation = () -> connection.prepareCall(query);
         return executeRecoverableSQLOperation(operation);
     }
 
     public ResultSet executeQuery(PreparedStatement preparedStatement) throws SQLException {
         if (connection == null)
-            throw new SQLException("Not connected to the database");
-        SQLOperation<ResultSet> operation = () -> {return preparedStatement.executeQuery();};
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<ResultSet> operation = () -> preparedStatement.executeQuery();
         return executeUnrecoverableSQLOperation(operation);
     }
 
     public Integer executeUpdate(PreparedStatement preparedStatement) throws SQLException {
         if (connection == null)
-            throw new SQLException("Not connected to the database");
-        SQLOperation<Integer> operation = () -> {return preparedStatement.executeUpdate();};
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<Integer> operation = () -> preparedStatement.executeUpdate();
         return executeUnrecoverableSQLOperation(operation);
     }
 
     public Boolean execute(PreparedStatement preparedStatement) throws SQLException {
         if (connection == null)
-            throw new SQLException("Not connected to the database");
-        SQLOperation<Boolean> operation = () -> {return preparedStatement.execute();};
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<Boolean> operation = () -> preparedStatement.execute();
         return executeUnrecoverableSQLOperation(operation);
     }
 }

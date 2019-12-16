@@ -56,13 +56,10 @@ public class Facade implements Serviceable {
      */
     @Override
     public void getNearestParks(double v, double v1, String s) {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(s));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(s))) {
             writer.write("41.152712,-8.609297,494");
             writer.newLine();
             writer.write("41.145883,-8.610680,282");
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

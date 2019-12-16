@@ -49,13 +49,17 @@ public class PathRegister {
             stm.setDouble(3, latitude2);
             stm.setDouble(4, longitude2);
             ResultSet resultSet = dataHandler.executeQuery(stm);
-            if (resultSet == null || resultSet.next() == false) { //resultSet is empty
+            if (resultSet == null) {
+                stm.close();
+                return null;
+            }
+            else if (!resultSet.next()) {
                 resultSet.close();
                 stm.close();
                 return null;
             }
-            double lat1 = resultSet.getDouble(1);
             double lon1 = resultSet.getDouble(2);
+            double lat1 = resultSet.getDouble(1);
             double lat2 = resultSet.getDouble(3);
             double lon2 = resultSet.getDouble(4);
             double kinetic = resultSet.getDouble(5);

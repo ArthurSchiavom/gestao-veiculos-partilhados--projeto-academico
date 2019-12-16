@@ -29,15 +29,14 @@ public class UsersRegister {
     public Client fetchClient(String email) {
         PreparedStatement stm = null;
         Client client;
+        ResultSet resultSet = null;
         try {
             stm = dataHandler.prepareStatement("SELECT * FROM clients where user_email=?");
             stm.setString( 1, email);
-            ResultSet resultSet = dataHandler.executeQuery(stm);
-            if(resultSet == null || resultSet.next()== false){ //resultSet is empty
-                resultSet.close();
-                stm.close();
+            resultSet = dataHandler.executeQuery(stm);
+            if (resultSet == null || !resultSet.next())
                 return null;
-            }
+
             int points = resultSet.getInt( 2);
             String creditCardNumber = resultSet.getString( 3);
             Date creditCardExpiration = resultSet.getDate( 4);
@@ -52,11 +51,9 @@ public class UsersRegister {
             stm = dataHandler.prepareStatement("SELECT * FROM registered_users where user_email=?");
             stm.setString( 1, email);
             resultSet = dataHandler.executeQuery(stm);
-            if(resultSet == null|| !resultSet.next()){
-                resultSet.close();
-                stm.close();
+            if (resultSet == null || !resultSet.next())
                 return null;
-            }
+
             String password = resultSet.getString( 3);
             String username = resultSet.getString( 4);
             resultSet.close();
@@ -64,6 +61,18 @@ public class UsersRegister {
             return new Client(email,username ,password, points, age, height, weight, gender,cyclingAvgSpeed, new CreditCard(creditCardNumber, creditCardExpiration.toLocalDate(), creditCardSecret));
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {}
+            }
+
+            if (stm != null) {
+                try {
+                    stm.close();
+                } catch (SQLException e) {}
+            }
         }
         return null;
     }
@@ -116,12 +125,11 @@ public class UsersRegister {
             e.printStackTrace();
             System.out.println(e.getMessage());
             return false;
-        }finally {
-            try {
-                stm.close(); // closes statement
-                return false;
-            } catch (SQLException e) {
-            }
+        } finally {
+            if (stm != null)
+                try {
+                    stm.close(); // closes statement
+                } catch (SQLException e) {}
         }
         return true;
     }
