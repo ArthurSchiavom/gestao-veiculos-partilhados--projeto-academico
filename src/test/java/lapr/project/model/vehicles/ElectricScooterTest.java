@@ -18,16 +18,16 @@ class ElectricScooterTest {
 
     @Test
     void getActual_battery_capacity() {
-        assertEquals(15, instance.getActual_battery_capacity());
+        assertEquals(15, instance.getActualBatteryCapacity());
     }
 
     @Test
     void getMax_battery_capacity() {
-        assertEquals(150f, instance.getMax_battery_capacity());
+        assertEquals(150f, instance.getMaxBatteryCapacity());
     }
 
     @Test
     void getEletric_scooter_description() {
-        assertEquals("description", instance.getEletric_scooter_description());
+        assertEquals("description", instance.getEletricScooterDescription());
     }
 }

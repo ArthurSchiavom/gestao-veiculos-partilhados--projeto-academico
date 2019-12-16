@@ -114,7 +114,7 @@ class CoordinatesTest {
 
         coords1 = new Coordinates(38.7071631, -9.135517,50);
         coords2 = new Coordinates(40.4166909, -3.7003454,500);
-        expResult = 953.096;
+        expResult = 674.986;
         assertEquals(expResult,coords1.distance(coords2),0.01);
     }
 

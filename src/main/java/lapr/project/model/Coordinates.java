@@ -73,7 +73,8 @@ public class Coordinates {
     }
 
     /**
-     * Calculates distance to other coords
+     * Calculates distance to other coords using haversine distance
+     * Calculated according with <url>https://stackoverflow.com/a/16794680</url>
      *
      * @param other secondary coords to calculate distance
      * @return the distance between the two coordinates
@@ -90,9 +91,9 @@ public class Coordinates {
                     * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             double distance = R * c;
-            int altitudeDistance = Math.abs(altitude - other.getAltitude());
-            distance += altitudeDistance;
-            return distance;
+            int height = altitude - other.getAltitude();
+            distance = Math.pow(distance, 2) + Math.pow(height, 2);
+            return Math.sqrt(distance);
         }
     }
 

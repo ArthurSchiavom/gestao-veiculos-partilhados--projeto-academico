@@ -35,8 +35,8 @@ public class TripRegister {
                 return null;
             }
             int vehicleId = resultSet.getInt(3);
-            int startParkId = resultSet.getInt(4);
-            int endParkId = resultSet.getInt(5);
+            String startParkId = resultSet.getString(4);
+            String endParkId = resultSet.getString(5);
             Timestamp endTimeTimeStamp = resultSet.getTimestamp(6);
             LocalDateTime endTime = endTimeTimeStamp.toLocalDateTime();
 
@@ -57,7 +57,8 @@ public class TripRegister {
      * @param vehicleId   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, int startParkId, int endParkId, int vehicleId) {
+    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId,
+            String endParkId, int vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, endParkId, vehicleId);
     }
 
@@ -71,7 +72,7 @@ public class TripRegister {
      * @param vehicleId   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, int startParkId, int vehicleId) {
+    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId, int vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, vehicleId);
     }
 
@@ -87,7 +88,8 @@ public class TripRegister {
      * @param vehicleId   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail, int startParkId, int endParkId, int vehicleId) {
+    public Trip createNewTrip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail,
+            String startParkId, String endParkId, int vehicleId) {
         return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
     }
 }
