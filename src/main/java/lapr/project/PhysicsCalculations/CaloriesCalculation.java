@@ -5,7 +5,6 @@
  */
 package lapr.project.PhysicsCalculations;
 
-import lapr.project.model.users.Client;
 
 /**
  * Class that has the methods to calculate the calories burnt between two points
@@ -67,8 +66,8 @@ public class CaloriesCalculation {
      * @param DistanceTraveled - distance between the points
      * @return the slop between the starting and ending point
      */
-    public static Double calculateSlop(int height, double DistanceTraveled) {
-        double cateto = Math.sqrt(Math.pow(DistanceTraveled, 2) - Math.pow(height, 2));
+    public static Double calculateSlop(int height, double distanceTraveled) {
+        double cateto = Math.sqrt(Math.pow(distanceTraveled, 2) - Math.pow(height, 2));
         double slop = height/cateto;
         return Math.round(slop * 100.0)/100.0;
     }

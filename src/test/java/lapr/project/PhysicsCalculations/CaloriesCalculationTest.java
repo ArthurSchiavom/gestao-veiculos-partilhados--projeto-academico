@@ -7,12 +7,13 @@ package lapr.project.PhysicsCalculations;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
  *
- * @author Jose
+ *
  */
 public class CaloriesCalculationTest {
-    
+
     public CaloriesCalculationTest() {
     }
 
@@ -20,16 +21,19 @@ public class CaloriesCalculationTest {
      * Test of calculateTimeSpent method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateTimeSpent() {    
+    public void testCalculateTimeSpent() {
         double velocity = 3.0;
         double distanceMade = 300.0;
         Double expResult = 100.0;
         Double result = CaloriesCalculation.calculateTimeSpent(velocity, distanceMade);
         assertEquals(expResult, result);
+        Double notExpResult = 20.0;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
-     * Test of calculatePowerRollingResistance method, of class CaloriesCalculation.
+     * Test of calculatePowerRollingResistance method, of class
+     * CaloriesCalculation.
      */
     @Test
     public void testCalculatePowerRollingResistance() {
@@ -39,6 +43,8 @@ public class CaloriesCalculationTest {
         Double expResult = 5.586;
         Double result = CaloriesCalculation.calculatePowerRollingResistance(velocity, mass, kineticCoefficient);
         assertEquals(expResult, result);
+        Double notExpResult = 5.10;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
@@ -52,6 +58,8 @@ public class CaloriesCalculationTest {
         Double expResult = 2485.77;
         Double result = CaloriesCalculation.calculateClimbingPower(velocity, mass, slope);
         assertEquals(expResult, result);
+        Double notExpResult = 2000.10;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
@@ -66,6 +74,8 @@ public class CaloriesCalculationTest {
         Double expResult = 0.606375;
         Double result = CaloriesCalculation.calculatePowerAirDrag(velocity, windSpeed, aerodynamicCoefficient, frontalArea);
         assertEquals(expResult, result);
+        Double notExpResult = 0.40;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
@@ -74,11 +84,13 @@ public class CaloriesCalculationTest {
     @Test
     public void testCalculateSlop() {
         int height = 200;
-        double DistanceTraveled = 300.0;
+        double distanceTraveled = 300.0;
         Double expResult = 0.89;
-        Double result = CaloriesCalculation.calculateSlop(height, DistanceTraveled);
+        Double result = CaloriesCalculation.calculateSlop(height, distanceTraveled);
         assertEquals(expResult, result);
-       
+        Double notExpResult = 0.10;
+        assertNotEquals(notExpResult, result);
+
     }
 
     /**
@@ -99,6 +111,8 @@ public class CaloriesCalculationTest {
         Double expResult = 59559.40;
         Double result = CaloriesCalculation.calculateCaloriesBurnt(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, bicycleMass, startAltitude, endAltitude);
         assertEquals(expResult, result);
+        Double notExpResult = 50000.0;
+        assertNotEquals(notExpResult, result);
     }
-    
+
 }
