@@ -88,8 +88,8 @@ CREATE TABLE parks (
   longitude number(9, 6) constraint nn_parks_longitude NOT NULL,
   park_input_voltage number(5,1) constraint parks_park_input_voltage NOT NULL,
   park_input_current number(4,1) constraint parks_park_input_current NOT NULL,
-  available number(1) constraint parks_available NOT NULL DEFAULT 1
-  constraint uk_parks_latitude_longitude unique(latitude,longitude)
+  available number(1) DEFAULT 1 constraint parks_available NOT NULL,
+  constraint uk_parks_latitude_longitude unique(latitude,longitude),
   constraint ck_available CHECK (available = 1 OR available = 0)
   );
 
@@ -199,13 +199,13 @@ CREATE TABLE points_of_interest (
 
 -- Tabela trip_points_of_interest  
 CREATE TABLE trip_parks (
+  trip_parks_id number(5) GENERATED AS IDENTITY constraint pk_trip_parks_trip_parks_id PRIMARY KEY,
   start_time timestamp, 
   user_email varchar2(50), 
   latitudeA  number(9, 6), 
   longitudeA number(9, 6), 
   latitudeB  number(9, 6), 
-  longitudeB number(9, 6), 
-  constraint pk_trip_points_of_interest PRIMARY KEY (start_time, user_email)
+  longitudeB number(9, 6)
 );
 
 ALTER TABLE vehicles ADD CONSTRAINT fk_vehicles_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
