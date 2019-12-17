@@ -5,10 +5,13 @@ package lapr.project.model.users;
  */
 public class Client extends User {
 
-    private final int points, age, height, weight;
+    private final int points;
+    private final int age;
+    private final int height;
+    private final int weight;
     private final char gender; // M or F, to simplify
     private final float cyclingAverageSpeed;
-    private final CreditCard cc;
+    private final CreditCard creditCard;
 
     /**
      * Instantiates a client object
@@ -27,7 +30,7 @@ public class Client extends User {
         this.weight = weight;
         this.gender = gender;
         this.points = 0;
-        this.cc = creditCard;
+        this.creditCard = creditCard;
         this.cyclingAverageSpeed = cyclingAverageSpeed;
     }
 
@@ -52,7 +55,7 @@ public class Client extends User {
         this.height = height;
         this.weight = weight;
         this.gender = gender;
-        this.cc = creditCard;
+        this.creditCard = creditCard;
         this.cyclingAverageSpeed = cyclingAverageSpeed;
     }
 
@@ -68,10 +71,6 @@ public class Client extends User {
         return height;
     }
 
-    public CreditCard getCc() {
-        return cc;
-    }
-
     public int getWeight() {
         return weight;
     }
@@ -81,7 +80,7 @@ public class Client extends User {
     }
 
     public CreditCard getCreditCard() {
-        return cc;
+        return creditCard;
     }
 
     public float getCyclingAverageSpeed() {
@@ -97,7 +96,7 @@ public class Client extends User {
                 ", weight=" + weight +
                 ", gender=" + gender +
                 ", cyclingAverageSpeed=" + cyclingAverageSpeed +
-                ", cc=" + cc.toString() +
+                ", cc=" + creditCard.toString() +
                 '}';
     }
 }

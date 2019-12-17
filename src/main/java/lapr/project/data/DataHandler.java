@@ -106,7 +106,7 @@ public class DataHandler {
 
         if (connection == null)
             openConnection();
-        ScriptRunner runner = new ScriptRunner(connection, true, false);
+        ScriptRunner runner = new ScriptRunner(connection, false, false);
 
         runner.runScript(new BufferedReader(new FileReader(fileName)));
 
@@ -120,7 +120,7 @@ public class DataHandler {
     private void openConnection() throws SQLException {
         connection = DriverManager.getConnection(
                 jdbcUrl, username, password);
-        connection.setAutoCommit(true);
+        connection.setAutoCommit(false);
     }
 
     /**
