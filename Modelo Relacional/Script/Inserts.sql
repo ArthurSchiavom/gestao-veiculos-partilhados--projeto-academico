@@ -68,25 +68,6 @@ values('electric_scooter', 0, 70, 1.21, 0.1);
 insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
 values('electric_scooter', 0, 20, 1.1, 0.3);
 
--- park_vehicle
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 1);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 2);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 3);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 4);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 5);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 6);
-
 -- bicycles
 insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
 values(1, 15, 'PT001');
@@ -205,4 +186,22 @@ values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 10.2, 30
 insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 30.4, -20.2, 18.222, 22.12);
 
+-- park_vehicle
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 1);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 2);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 3);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 4);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 5);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 6);
 
