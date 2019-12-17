@@ -126,7 +126,11 @@ public class UsersRegister {
                     stm.close(); // closes statement
                 } catch (SQLException e) {}
         }
-        dataHandler.commitTransaction();
+        try {
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 }

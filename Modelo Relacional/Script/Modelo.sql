@@ -218,8 +218,8 @@ ALTER TABLE invoices ADD CONSTRAINT fk_invoices_user_email FOREIGN KEY (user_ema
 ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id);
 ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
 ALTER TABLE trips ADD CONSTRAINT fk_trip_user_email FOREIGN KEY (user_email) REFERENCES clients (user_email);
-ALTER TABLE trips ADD CONSTRAINT fk_trip_start_park_id FOREIGN KEY (start_park_id) REFERENCES parks (park_id);
-ALTER TABLE trips ADD CONSTRAINT fk_trip_end_park_id FOREIGN KEY (end_park_id) REFERENCES parks (park_id);
+ALTER TABLE trips ADD CONSTRAINT fk_trip_start_park_id FOREIGN KEY (start_park_id) REFERENCES parks (park_id) DEFERRABLE;
+ALTER TABLE trips ADD CONSTRAINT fk_trip_end_park_id FOREIGN KEY (end_park_id) REFERENCES parks (park_id) DEFERRABLE;
 ALTER TABLE receipts ADD CONSTRAINT fk_receipts_user_email_payment_start_date FOREIGN KEY (user_email, payment_start_date) REFERENCES invoices (user_email, payment_start_date);
 ALTER TABLE trips ADD CONSTRAINT fk_trip_vehicles FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE clients ADD CONSTRAINT fk_clients_user_email FOREIGN KEY (user_email) REFERENCES registered_users (user_email);

@@ -18,8 +18,7 @@ import lapr.project.model.Path;
 
 
 public class PathRegister {
-
-    DataHandler dataHandler;
+    private final DataHandler dataHandler;
 
     /**
      * Instantiates a pathRegister
@@ -77,7 +76,6 @@ public class PathRegister {
      * @param latitude2 - latitude of the ending point
      * @param longitude2 - longitude of the ending point
      * @param kineticCoefficient - kinetic coefficient of the path
-     * @param windDirectionDegrees - wind direction in degrees in the path
      * @param windSpeed - wind speed in the path
      * @return 
      */

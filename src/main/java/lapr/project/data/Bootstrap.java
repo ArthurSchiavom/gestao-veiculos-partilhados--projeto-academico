@@ -2,7 +2,11 @@ package lapr.project.data;
 
 import lapr.project.data.registers.Company;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,25 +15,22 @@ public class Bootstrap {
 
     private Bootstrap() {}
 
-    /**
-     * O URL da BD. nota: sonarqube não permite nomes que começem por letra maiúscula
-     */
-    private static final String JDBC_URL = "jdbc:oracle:thin:@vsrvbd1.dei.isep.ipp.pt:1521/pdborcl";
-
-    /**
-     * O nome de utilizador da BD. nota: sonarqube não permite nomes que começem por letra maiúscula
-     */
-    private static final String USERNAME ="LAPR3_2019_G029";
-
-    /**
-     * A password de utilizador da BD. nota: sonarqube não permite nomes que começem por letra maiúscula
-     */
-    private static final String WORDPASS = "melhorgrupoole";
-
     public static void boot() throws SQLException {
+        try {
+            Properties properties =
+                    new Properties(System.getProperties());
+            InputStream input = new FileInputStream("target/classes/application.properties");
+            properties.load(input);
+            input.close();
+            System.setProperties(properties);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
         DataHandler dataHandler = null;
         try {
-            dataHandler = new DataHandler(JDBC_URL, USERNAME, WORDPASS);
+            dataHandler = new DataHandler();
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         } catch (IllegalAccessException e) {

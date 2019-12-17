@@ -2,6 +2,7 @@ package lapr.project.data;
 
 
 import lapr.project.data.registers.Company;
+import lapr.project.utils.Updateable;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,7 +21,7 @@ public class DataHandler {
     private static final int MAX_RECONNECTION_ATTEMPTS = 3;
     private static final int CONNECTION_FAILURE_ORA_CODE = 17008;
     private static final int RECONNECTION_INTERVAL_MILLIS = 2000;
-    private static final int QUERY_TIMEOUT_SECONDS = 3;
+    private static final int QUERY_TIMEOUT_SECONDS = 10;
 
     private static final String NOT_CONNECTED_ERROR_MSG = "Not connected to the database";
 
@@ -43,50 +44,34 @@ public class DataHandler {
     /**
      * A ligação à BD.
      */
-    private Connection connection;
+    private Connection connection = null;
 
     /**
      * A invocação de "stored procedures".
      */
-    private CallableStatement callStmt;
+    private CallableStatement callStmt = null;
 
     /**
      * Conjunto de resultados retornados por "stored procedures".
      */
-    private ResultSet rSet;
+    private ResultSet rSet = null;
 
-    private static Boolean created = false;
+    private static Updateable<Boolean> created = new Updateable<>(false);
 
     /**
+     * <b>Only one instance allowed at all times</b>
      * Use connection properties set on file application.properties
      */
-    private DataHandler() {
+    public DataHandler() throws IllegalAccessException, SQLException {
+        synchronized (created) { // Ensure that at no time the application can have 2 instances
+            if (created.getValue())
+                throw new IllegalAccessException("Only a single DataHandler instance is allowed");
+            else
+                created.setValue(true);
+        }
         this.jdbcUrl = System.getProperty("database.url");
         this.username = System.getProperty("database.username");
         this.password = System.getProperty("database.password");
-    }
-
-    /**
-     * Constrói uma instância de "DataHandler" recebendo, por parâmetro, o URL
-     * da BD e as credenciais do utilizador.
-     *
-     * @param jdbcUrl  o URL da BD.
-     * @param username o nome do utilizador.
-     * @param password a password do utilizador.
-     */
-    public DataHandler(String jdbcUrl, String username, String password) throws SQLException, IllegalAccessException {
-        synchronized (created) {
-            if (created)
-                throw new IllegalAccessException("Only a single DataHandler instance is allowed");
-            else
-                created = false;
-        }
-        this.jdbcUrl = jdbcUrl;
-        this.username = username;
-        this.password = password;
-        connection = null;
-        callStmt = null;
-        rSet = null;
         openConnection();
     }
 
@@ -98,12 +83,11 @@ public class DataHandler {
      * @throws SQLException
      */
     public void scriptRunner(String fileName) throws IOException, SQLException {
-
         openConnection();
 
         if (connection == null)
             openConnection();
-        ScriptRunner runner = new ScriptRunner(connection, false, false);
+        ScriptRunner runner = new ScriptRunner(connection, true, false);
 
         runner.runScript(new BufferedReader(new FileReader(fileName)));
 
@@ -117,20 +101,7 @@ public class DataHandler {
     private void openConnection() throws SQLException {
         connection = DriverManager.getConnection(
                 jdbcUrl, username, password);
-        connection.setAutoCommit(false);
-    }
-
-    /**
-     * Commits the current transaction
-     */
-    public void commitTransaction(){
-        if(connection!=null){
-            try {
-                connection.commit();
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, e.getMessage());
-            }
-        }
+        connection.setAutoCommit(true);
     }
 
     /**
@@ -183,7 +154,7 @@ public class DataHandler {
             while (!connected) {
                 connected = true;
                 try { Company.getInstance().getDataHandler().openConnection(); } catch (Exception e) { connected = false;}
-                try { wait(2000); } catch (InterruptedException e) {
+                try { Thread.sleep(RECONNECTION_INTERVAL_MILLIS); } catch (InterruptedException e) {
                     LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
                 }
             }
@@ -191,7 +162,7 @@ public class DataHandler {
         }).start();
     }
 
-    public <T> T executeRecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
+    private <T> T executeRecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
         int nAttempt = 1;
         while (true) {
             try {
@@ -199,7 +170,7 @@ public class DataHandler {
             } catch (SQLException e) {
                 if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS) {
                     try {
-                        wait(RECONNECTION_INTERVAL_MILLIS);
+                        Thread.sleep(RECONNECTION_INTERVAL_MILLIS);
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
                     }
@@ -214,7 +185,7 @@ public class DataHandler {
         }
     }
 
-    public <T> T executeUnrecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
+    private <T> T executeUnrecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
         try {
             return operation.executeOperation();
         } catch (SQLException e) {
@@ -271,6 +242,20 @@ public class DataHandler {
         if (connection == null)
             throw new SQLException(NOT_CONNECTED_ERROR_MSG);
         SQLOperation<int[]> operation = () -> statement.executeBatch();
+        return executeUnrecoverableSQLOperation(operation);
+    }
+
+    public Boolean commitTransaction() throws SQLException {
+        if (connection == null)
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<Boolean> operation = () -> {connection.commit(); return true;};
+        return executeUnrecoverableSQLOperation(operation);
+    }
+
+    public Boolean rollbackTransaction() throws SQLException {
+        if (connection == null)
+            throw new SQLException(NOT_CONNECTED_ERROR_MSG);
+        SQLOperation<Boolean> operation = () -> {connection.commit(); return true;};
         return executeUnrecoverableSQLOperation(operation);
     }
 }
