@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TripRegister {
     private DataHandler dataHandler;
@@ -167,5 +169,34 @@ public class TripRegister {
     public Trip createNewTrip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail,
             String startParkId, String endParkId, int vehicleId) {
         return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+    }
+
+    /**
+     * returns a list of vehicles that are currently being used
+     * @param startTime
+     * @return
+     */
+
+
+    public List<Integer> getListOfVehicles(LocalDateTime startTime) {
+        List<Integer> dispVehicles  = new ArrayList<>();
+        try {
+            PreparedStatement statement = dataHandler.prepareStatement("Select * from trips where ? BETWEEN start_time and nvl(end_time, sysdate)");
+            statement.setTimestamp(1,Timestamp.valueOf(startTime));
+            ResultSet resultVehicles = dataHandler.executeQuery(statement);
+            if (resultVehicles == null) {
+                return dispVehicles;
+            }
+            while (resultVehicles.next()) {
+                int vehicleId = resultVehicles.getInt("vehicle_id");
+                dispVehicles.add(vehicleId);
+            }
+            resultVehicles.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return dispVehicles;
+        }
+        return dispVehicles;
     }
 }
