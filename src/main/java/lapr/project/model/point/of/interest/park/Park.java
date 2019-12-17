@@ -9,6 +9,7 @@ import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.vehicles.VehicleType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,7 +24,12 @@ public class Park extends PointOfInterest {
         this.id = id;
         this.parkInputVoltage = parkInputVoltage;
         this.parkInputCurrent = parkInputCurrent;
-        this.vehicleCapacities = vehicleCapacities;
+
+        if(vehicleCapacities==null) {
+            this.vehicleCapacities = new ArrayList<>();
+        } else {
+            this.vehicleCapacities = new ArrayList<>(vehicleCapacities);
+        }
     }
 
     public String getId() {
@@ -31,7 +37,7 @@ public class Park extends PointOfInterest {
     }
 
     public List<Capacity> getVehicleCapacities() {
-        return vehicleCapacities;
+        return new ArrayList<>(vehicleCapacities);
     }
 
     public float getParkInputVoltage() {

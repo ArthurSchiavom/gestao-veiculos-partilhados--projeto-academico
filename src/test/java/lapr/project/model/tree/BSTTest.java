@@ -185,4 +185,24 @@ class BSTTest {
         List<Integer> lExpected = Arrays.asList(posorderT);
         assertEquals(lExpected, instance.posOrder());
     }
+
+    @Test
+    void testToString() {
+        instance = new BST<>();
+        String expResult = "";
+        assertEquals(expResult, instance.toString());
+
+        setUp();
+        expResult = "|\t|-------50\n" +
+                "|-------40\n" +
+                "|\t|-------30\n" +
+                "20\n" +
+                "|\t|-------17\n" +
+                "|-------15\n" +
+                "|\t|\t|-------13\n" +
+                "|\t|-------10\n" +
+                "|\t|\t|-------8\n" +
+                "|\t|\t|\t|-------7\n";
+        assertEquals(expResult, instance.toString());
+    }
 }

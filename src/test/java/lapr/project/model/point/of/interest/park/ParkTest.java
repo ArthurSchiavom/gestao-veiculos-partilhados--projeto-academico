@@ -144,7 +144,15 @@ public class ParkTest {
         Park park = new Park("novo park", 10.2f, 10.1f,
                 null, "descricao",
                 new Coordinates(45, 45, 0));
-        assertNull(park.getVehicleCapacities());
+        List<Capacity> expResult = new ArrayList<>();
+        assertEquals(expResult, park.getVehicleCapacities());
+
+        Capacity cap = new Capacity(30, 20, VehicleType.BICYCLE);
+        expResult.add(cap);
+        park = new Park("novo park", 10.2f, 10.1f,
+                expResult, "descricao",
+                new Coordinates(45, 45, 0));
+        assertEquals(expResult, park.getVehicleCapacities());
     }
 
     @Test
