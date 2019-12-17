@@ -132,8 +132,6 @@ public class ParkRegister {
                 vehicleType = VehicleType.parseVehicleType(vehicleTypeName);
                 capacity.add(new Capacity(parkCapacity, amountOccupied, vehicleType));
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             throw e;
         } finally {
