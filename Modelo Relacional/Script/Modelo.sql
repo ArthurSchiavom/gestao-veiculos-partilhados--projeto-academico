@@ -145,15 +145,20 @@ CREATE TABLE user_type (
 
 -- Tabela trips
 CREATE TABLE trips (
-  start_time    timestamp DEFAULT systimestamp, 
-  user_email    varchar2(50), 
-  vehicle_id   number(8), 
-  start_park_id varchar2(50), 
+  start_time    timestamp DEFAULT systimestamp
+                         constraint nn_trips_start_time not null, 
+  user_email    varchar2(50)
+                         constraint nn_trips_user_email not null,  
+  vehicle_id   number(8) 
+                        constraint nn_trips_vehicle_id not null, 
+  start_park_id varchar2(50)
+                        constraint nn_trips_start_park_id not null, 
   end_park_id   varchar2(50), 
   end_time      timestamp, 
+  CONSTRAINT ck_trips_end_park_id_end_time CHECK ((end_park_id is null and end_time is null) or (end_park_id is not null and end_time is not null)),
+  CONSTRAINT ck_trips_start_time_end_time CHECK ((end_time is null) or (start_time<end_time)),
   CONSTRAINT pk_trips_start_time_user_email PRIMARY KEY (start_time, user_email)
   );
-
 -- Tabela receipts
 CREATE TABLE receipts (
   user_email       varchar2(50), 

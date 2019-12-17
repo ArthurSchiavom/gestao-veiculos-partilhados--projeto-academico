@@ -156,8 +156,8 @@ insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occu
 values('park2', 'bicycle', 30, 20);
 
 -- trips
-insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id)
-values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1', 'park2');
+insert into trips (start_time, user_email, vehicle_id, start_park_id)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1');
 
 insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id, end_time)
 values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 2, 'park1', 'park2', TO_DATE('21-12-2019', 'dd/mm/yyyy'));
