@@ -25,7 +25,6 @@ public class UsersRegister {
      */
     public Client fetchClient(String email) {
         PreparedStatement stm = null;
-        Client client;
         ResultSet resultSet = null;
         try {
             stm = dataHandler.prepareStatement("SELECT * FROM clients where user_email=?");
@@ -119,7 +118,6 @@ public class UsersRegister {
                 return false;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
             return false;
         } finally {
@@ -128,6 +126,7 @@ public class UsersRegister {
                     stm.close(); // closes statement
                 } catch (SQLException e) {}
         }
+        dataHandler.commitTransaction();
         return true;
     }
 }

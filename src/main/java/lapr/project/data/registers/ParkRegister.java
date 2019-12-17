@@ -97,7 +97,7 @@ public class ParkRegister {
             coord = new Coordinates(latitude, longitude, altitude);
             parkInputVoltage = rs.getFloat(4);
             parkInputCorrent = rs.getFloat(5);
-            return new Park(id, parkInputVoltage, parkInputCorrent, getListOfCapacitys(id), rs.getString(9), coord);
+            return new Park(id, parkInputVoltage, parkInputCorrent, getListOfCapacities(id), rs.getString(9), coord);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -108,7 +108,7 @@ public class ParkRegister {
      * @param parkId park id
      * @return return a list of capacitys (of different types)
      */
-    private List<Capacity> getListOfCapacitys(String parkId) {
+    private List<Capacity> getListOfCapacities(String parkId) {
         VehicleType vehicleType;
         List<Capacity> capacity = new ArrayList<>();
         int parkCapacity;
@@ -196,7 +196,6 @@ public class ParkRegister {
                 return null;
             }
             while(rs.next()){ // if it has next
-//                parkId = rs.getString(1);
                 parkId = rs.getString("park_id");
                 latitude = rs.getDouble("latitude");
                 longitude = rs.getDouble("longitude");
@@ -204,7 +203,7 @@ public class ParkRegister {
                 coord = new Coordinates(latitude, longitude, altitude);
                 parkInputVoltage = rs.getFloat("park_input_voltage");
                 parkInputCorrent = rs.getFloat("park_input_current");
-                parkList.add(new Park(parkId, parkInputVoltage, parkInputCorrent, getListOfCapacitys(parkId), rs.getString("poi_description"), coord));
+                parkList.add(new Park(parkId, parkInputVoltage, parkInputCorrent, getListOfCapacities(parkId), rs.getString("poi_description"), coord));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -222,13 +221,13 @@ public class ParkRegister {
      *
      * @param coords
      * @param radius
-     * @return
+     * @return hashmap containing parks and their corresponding capacities
      */
     public HashMap<Park,List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius){
         HashMap<Park,List<Capacity>> nearestParksAvailability = new HashMap<>();
         for(Park park : fetchAllParks()){
             if(coords.distance(park.getCoordinates()) <= radius){
-                nearestParksAvailability.put(park,getListOfCapacitys(park.getId()));
+                nearestParksAvailability.put(park, getListOfCapacities(park.getId()));
             }
         }
         return nearestParksAvailability;

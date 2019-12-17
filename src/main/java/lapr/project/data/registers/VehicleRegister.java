@@ -3,10 +3,7 @@ package lapr.project.data.registers;
 import lapr.project.data.DataHandler;
 import lapr.project.model.vehicles.*;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class VehicleRegister {
     private final DataHandler dh;
@@ -65,7 +62,6 @@ public class VehicleRegister {
         cs.setFloat(4, frontal_area);
         cs.setInt(5, size);
         cs.setString(6, description);
-
         dh.execute(cs);
     }
 
