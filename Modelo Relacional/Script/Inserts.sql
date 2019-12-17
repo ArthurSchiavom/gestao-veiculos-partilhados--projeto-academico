@@ -196,13 +196,13 @@ insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coeffici
 values(30.4, -20.2, 18.222, 22.12, 0.004, 110, 1.0); -- baixa -> parque ivo
 
 -- trip_points_of_interest
-insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 18.222, 20.12, 10.2, 30.2);
 
-insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 10.2, 30.2, 30.4, -20.2);
 
-insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 30.4, -20.2, 18.222, 22.12);
 
 

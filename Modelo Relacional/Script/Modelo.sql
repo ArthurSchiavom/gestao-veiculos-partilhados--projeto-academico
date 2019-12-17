@@ -15,7 +15,7 @@ DROP TABLE receipts CASCADE CONSTRAINTS;
 DROP TABLE registered_users CASCADE CONSTRAINTS;
 DROP TABLE paths CASCADE CONSTRAINTS;
 DROP TABLE points_of_interest CASCADE CONSTRAINTS;
-DROP TABLE trip_point_of_interest CASCADE CONSTRAINTS;
+DROP TABLE trip_parks CASCADE CONSTRAINTS;
 
 -- Tabela Vehicles
 CREATE TABLE vehicles (
@@ -198,7 +198,7 @@ CREATE TABLE points_of_interest (
 );
 
 -- Tabela trip_points_of_interest  
-CREATE TABLE trip_point_of_interest (
+CREATE TABLE trip_parks (
   start_time timestamp, 
   user_email varchar2(50), 
   latitudeA  number(9, 6), 
@@ -224,8 +224,8 @@ ALTER TABLE receipts ADD CONSTRAINT fk_receipts_user_email_payment_start_date FO
 ALTER TABLE trips ADD CONSTRAINT fk_trip_vehicles FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE clients ADD CONSTRAINT fk_clients_user_email FOREIGN KEY (user_email) REFERENCES registered_users (user_email);
 ALTER TABLE registered_users ADD CONSTRAINT fk_registered_users_user_type_name FOREIGN KEY (user_type_name) REFERENCES user_type (user_type_name);
-ALTER TABLE trip_point_of_interest ADD CONSTRAINT fk_trip_point_of_interest_table_trips FOREIGN KEY (start_time, user_email) REFERENCES trips (start_time, user_email);
-ALTER TABLE trip_point_of_interest ADD CONSTRAINT fk_trip_point_of_interest_table_paths FOREIGN KEY (latitudeA, longitudeA, latitudeB, longitudeB) REFERENCES paths (latitudeA, longitudeA, latitudeB, longitudeB);
+ALTER TABLE trip_parks ADD CONSTRAINT fk_trip_parks_table_trips FOREIGN KEY (start_time, user_email) REFERENCES trips (start_time, user_email);
+ALTER TABLE trip_parks ADD CONSTRAINT fk_trip_parks_table_paths FOREIGN KEY (latitudeA, longitudeA, latitudeB, longitudeB) REFERENCES paths (latitudeA, longitudeA, latitudeB, longitudeB);
 ALTER TABLE parks ADD CONSTRAINT fk_parks_latitude_longitude FOREIGN KEY (latitude, longitude) REFERENCES points_of_interest (latitude, longitude);
 ALTER TABLE paths ADD CONSTRAINT fk_parks_latitudeB_longitudeB FOREIGN KEY (latitudeB, longitudeB) REFERENCES points_of_interest (latitude, longitude);
 ALTER TABLE paths ADD CONSTRAINT fk_parks_latitudeA_longitudeA FOREIGN KEY (latitudeA, longitudeA) REFERENCES points_of_interest (latitude, longitude);
