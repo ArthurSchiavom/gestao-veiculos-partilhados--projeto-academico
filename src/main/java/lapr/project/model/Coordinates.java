@@ -6,7 +6,6 @@ import java.util.Objects;
  * A coordinates class holds information about coordinates lat and lon in
  * decimal degrees
  *
- * @author Pedro Ivo
  */
 public class Coordinates {
 

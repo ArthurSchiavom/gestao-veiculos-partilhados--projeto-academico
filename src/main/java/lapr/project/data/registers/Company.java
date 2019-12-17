@@ -1,9 +1,6 @@
 package lapr.project.data.registers;
 
 import lapr.project.data.DataHandler;
-//import lapr.project.model.register.ParkRegister;
-//import lapr.project.model.register.TripRegister;
-//import lapr.project.model.register.UsersRegister;
 
 /**
  * Represents a company
@@ -11,7 +8,6 @@ import lapr.project.data.DataHandler;
 public class Company {
     private static Company instance = null;
     private final DataHandler dataHandler;
-
     private final ParkRegister parkRegister;
     private final UsersRegister usersRegister;
     private final TripRegister tripRegister;

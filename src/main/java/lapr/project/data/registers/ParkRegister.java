@@ -18,7 +18,7 @@ import lapr.project.model.vehicles.VehicleType;
  * This class regist and manipulates the data of all parks in data base
  */
 public class ParkRegister {
-    DataHandler dataHandler;
+    private DataHandler dataHandler;
 
     public ParkRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
@@ -121,16 +121,16 @@ public class ParkRegister {
                 return null;
             }
             while (resultForCapacity.next()) {
-                String vehicle_type_name = resultForCapacity.getString(1);
-                parkCapacity = resultForCapacity.getInt(2);
-                amountOccupied = resultForCapacity.getInt(3);
-                if (vehicle_type_name.trim().equalsIgnoreCase(VehicleType.BICYCLE.getSQLName())) {
+                String vehicleTypeName = resultForCapacity.getString("vehicle_type_name");
+                parkCapacity = resultForCapacity.getInt("park_capacity");
+                amountOccupied = resultForCapacity.getInt("amount_occupied");
+                if (vehicleTypeName.trim().equalsIgnoreCase(VehicleType.BICYCLE.getSQLName())) {
                     vehicleType = VehicleType.BICYCLE;
                 } else {
                     vehicleType = VehicleType.ELECTRIC_SCOOTER;
                 }
                 capacity.add(new Capacity(parkCapacity, amountOccupied, vehicleType));
-            }
+        }
             resultForCapacity.close();
             statement.close();
         } catch (SQLException e) {
@@ -173,5 +173,64 @@ public class ParkRegister {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Loads a list of parks that exist in sql table
+     * @return list of all parks that exist in sql table 'Parks'
+     */
+    private List<Park> fetchAllParks(){
+        List<Park> parkList = new ArrayList<>();
+        PreparedStatement stm = null;
+        double latitude;
+        double longitude;
+        int altitude;
+        Coordinates coord;
+        float parkInputVoltage;
+        float parkInputCorrent;
+        String parkId;
+        try {
+            stm = dataHandler.prepareStatement("Select * from parks p, points_of_interest poi WHERE p.latitude = poi.latitude AND p.longitude = poi.longitude");
+            ResultSet rs = dataHandler.executeQuery(stm);
+            if (rs == null) {
+                return null;
+            }
+            while(rs.next()){ // if it has next
+//                parkId = rs.getString(1);
+                parkId = rs.getString("park_id");
+                latitude = rs.getDouble("latitude");
+                longitude = rs.getDouble("longitude");
+                altitude = rs.getInt("altitude_m");
+                coord = new Coordinates(latitude, longitude, altitude);
+                parkInputVoltage = rs.getFloat("park_input_voltage");
+                parkInputCorrent = rs.getFloat("park_input_current");
+                parkList.add(new Park(parkId, parkInputVoltage, parkInputCorrent, getListOfCapacitys(parkId), rs.getString("poi_description"), coord));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return parkList;
+    }
+
+    /**
+     * Gets the nearest parks from a certain coordinate and returns their availability
+     *
+     * <h1></h1>We are running through every park in the sql table instead of parsing it to a tree because, it has a smaller complexity initially
+     * and if we were to need the tree again, it could be outdated by then, so we would have to again load the tree with all the information
+     * in the table, making it higher complexity than simply iterating all of them</h1>
+     *
+     * @param coords
+     * @param radius
+     * @return
+     */
+    public HashMap<Park,List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius){
+        HashMap<Park,List<Capacity>> nearestParksAvailability = new HashMap<>();
+        for(Park park : fetchAllParks()){
+            if(coords.distance(park.getCoordinates()) <= radius){
+                nearestParksAvailability.put(park,getListOfCapacitys(park.getId()));
+            }
+        }
+        return nearestParksAvailability;
     }
 }
