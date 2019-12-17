@@ -8,6 +8,7 @@ package lapr.project.model;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * 
  */
 public class PointOfInterestTest {
-    
-    public PointOfInterestTest() {
-    }
     
     @BeforeEach
     public void setUp() {
@@ -37,6 +35,23 @@ public class PointOfInterestTest {
         
         String expResult2 = "parque 2";
         assertNotEquals(expResult2, result);
+
+        try{
+            instance = new PointOfInterest(null, coordenadas);
+            fail("Didn't catch the IllegalArgumentException exception");
+        } catch (IllegalArgumentException e) {
+            assertTrue(true,"Caught the IllegalArgumentException" +
+                    " exception");
+        }
+
+        try{
+            instance = new PointOfInterest("an interesting description",
+                    null);
+            fail("Didn't catch the IllegalArgumentException exception");
+        } catch (IllegalArgumentException e) {
+            assertTrue(true,"Caught the IllegalArgumentException" +
+                    " exception");
+        }
     }
 
     /**

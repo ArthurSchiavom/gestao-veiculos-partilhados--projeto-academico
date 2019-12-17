@@ -26,9 +26,10 @@ public class VehicleRegister {
             return null;
 
         boolean available;
-        available = (rs.getInt(3) == 1) ? true : false;
+        available = rs.getInt(3) == 1;
         VehicleType vehicleType = VehicleType.parseVehicleType(rs.getString(2));
         String childTableName = null;
+        assert vehicleType != null;
         switch (vehicleType) {
             case BICYCLE:
                 childTableName = "bicycles";
@@ -45,38 +46,51 @@ public class VehicleRegister {
 
         switch (vehicleType) {
             case BICYCLE:
-                vehicle = new Bicycle(vehicleId, rs.getDouble(4), rs.getDouble(5), rs.getInt(6), rs.getFloat(8), rs.getFloat(9), rs.getInt(7), available, vehicleType, rs2.getInt(2), rs2.getString(3));
+                vehicle = new Bicycle(vehicleId, rs.getFloat(5),
+                        rs.getFloat(6), rs.getInt(4),
+                        available, rs2.getInt(2),
+                        rs2.getString(3));
                 break;
             case ELECTRIC_SCOOTER:
-                vehicle = new ElectricScooter(vehicleId, rs.getDouble(4), rs.getDouble(5), rs.getInt(6), rs.getFloat(8), rs.getFloat(9), rs.getInt(7), available, vehicleType, ElectricScooterType.parseScooterType(rs2.getString(2)), rs2.getInt(3), rs2.getFloat(4), rs2.getString(5));
+                vehicle = new ElectricScooter(vehicleId, rs.getFloat(5),
+                        rs.getFloat(6), rs.getInt(4),
+                        rs.getBoolean(3), ElectricScooterType.parseScooterType(
+                                rs2.getString(2)),
+                        rs2.getInt(3), rs2.getFloat(4),
+                        rs2.getString(5));
         }
-
         return vehicle;
     }
 
-    public void addBicycle(float aerodynamic_coefficient, float frontal_area, int weight, boolean available, int size, String description) throws SQLException {
+    public void addBicycle(float aerodynamicCoefficient, float frontalArea,
+                           int weight, boolean available, int size,
+                           String description) throws SQLException {
 
         CallableStatement cs = dh.prepareCall(
                 "{call register_bicycle(?, ?, ?, ?, ?, ?)}");
         int availableInt = available ? 1 : 0;
         cs.setInt(1, availableInt);
         cs.setInt(2, weight);
-        cs.setFloat(3, aerodynamic_coefficient);
-        cs.setFloat(4, frontal_area);
+        cs.setFloat(3, aerodynamicCoefficient);
+        cs.setFloat(4, frontalArea);
         cs.setInt(5, size);
         cs.setString(6, description);
 
         dh.execute(cs);
     }
 
-    public void addEletricScooter(float aerodynamic_coefficient, float frontal_area, int weight, boolean available, ElectricScooterType type, String description, float maxBatteryCapacity, int actualBatteryCapacity) throws SQLException {
+    public void addEletricScooter(float aerodynamicCoefficient, float frontalArea,
+                                  int weight, boolean available,
+                                  ElectricScooterType type, String description,
+                                  float maxBatteryCapacity,
+                                  int actualBatteryCapacity) throws SQLException {
         CallableStatement cs = dh.prepareCall(
                 "{call register_electric_scooter(?, ?, ?, ?, ?, ?, ?, ?)}");
         int availableInt = available ? 1 : 0;
         cs.setInt(1, availableInt);
         cs.setInt(2, weight);
-        cs.setFloat(3, aerodynamic_coefficient);
-        cs.setFloat(4, frontal_area);
+        cs.setFloat(3, aerodynamicCoefficient);
+        cs.setFloat(4, frontalArea);
         cs.setString(5, type.getSQLName());
         cs.setString(6, description);
         cs.setFloat(7, maxBatteryCapacity);

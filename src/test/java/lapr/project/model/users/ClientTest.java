@@ -32,6 +32,11 @@ public class ClientTest {
         int expResult = 0;
         int result = instance.getPoints();
         assertEquals(expResult, result);
+
+        Client client = new Client("email@email.com", "username", "password",50, 20, 150, 60, 'M',
+                10.4f, new CreditCard("12341234123412",
+                LocalDate.of(2020,3,27), 123));
+        assertEquals(50, client.getPoints());
     }
 
     @Test

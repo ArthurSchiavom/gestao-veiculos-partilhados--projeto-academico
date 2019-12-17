@@ -10,11 +10,16 @@ public class ElectricScooter extends Vehicle {
     private final float maxBatteryCapacity;
     private final String description;
 
-    public ElectricScooter(int id, double latitude, double longitude, int altitude, float aerodynamic_coefficient, float frontal_area, int weight, boolean available, VehicleType type, ElectricScooterType electricScooterType, int actual_battery_capacity, float max_battery_capacity, String description) {
-        super(id, latitude, longitude, altitude, aerodynamic_coefficient, frontal_area, weight, available, type);
+    public ElectricScooter(int id, float aerodynamicCoefficient,
+                           float frontalArea, int weight, boolean available,
+                           ElectricScooterType electricScooterType,
+                           int actualBatteryCapacity, float maxBatteryCapacity,
+                           String description) {
+        super(id, aerodynamicCoefficient, frontalArea, weight, available,
+                VehicleType.ELECTRIC_SCOOTER);
         this.electricScooterType = electricScooterType;
-        this.actualBatteryCapacity = actual_battery_capacity;
-        this.maxBatteryCapacity = max_battery_capacity;
+        this.actualBatteryCapacity = actualBatteryCapacity;
+        this.maxBatteryCapacity = maxBatteryCapacity;
         this.description = description;
     }
 
@@ -30,7 +35,7 @@ public class ElectricScooter extends Vehicle {
         return maxBatteryCapacity;
     }
 
-    public String getEletricScooterDescription() {
+    public String getElectricScooterDescription() {
         return description;
     }
 }

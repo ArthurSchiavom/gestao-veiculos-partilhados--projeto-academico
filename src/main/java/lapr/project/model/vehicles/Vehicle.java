@@ -8,19 +8,17 @@ import java.util.Objects;
 public abstract class Vehicle {
 
     private final int id;
-    private final double latitude, longitude;
-    private final float aerodynamic_coefficient, frontal_area;
-    private final int altitude, weight;
+    private final float aerodynamicCoefficient;
+    private final float frontalArea;
+    private final int weight;
     private final boolean available;
     private final VehicleType type;
 
-    public Vehicle(int id, double latitude, double longitude, int altitude, float aerodynamic_coefficient, float frontal_area, int weight, boolean available, VehicleType type) {
+    public Vehicle(int id, float aerodynamicCoefficient, float frontalArea,
+                   int weight, boolean available, VehicleType type) {
         this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.aerodynamic_coefficient = aerodynamic_coefficient;
-        this.frontal_area = frontal_area;
-        this.altitude = altitude;
+        this.aerodynamicCoefficient = aerodynamicCoefficient;
+        this.frontalArea = frontalArea;
         this.weight = weight;
         this.available = available;
         this.type = type;
@@ -30,24 +28,12 @@ public abstract class Vehicle {
         return id;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public float getAerodynamicCoefficient() {
+        return aerodynamicCoefficient;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public float getAerodynamic_coefficient() {
-        return aerodynamic_coefficient;
-    }
-
-    public float getFrontal_area() {
-        return frontal_area;
-    }
-
-    public int getAltitude() {
-        return altitude;
+    public float getFrontalArea() {
+        return frontalArea;
     }
 
     public int getWeight() {
@@ -72,6 +58,6 @@ public abstract class Vehicle {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }

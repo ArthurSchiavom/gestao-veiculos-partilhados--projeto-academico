@@ -34,6 +34,10 @@ public class TripTest {
         LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
         LocalDateTime result = instance.getStartTime();
         assertEquals(expResult, result);
+
+        instance = new Trip(startTime,clientEmail,startParkId,endParkId,vehicleId);
+        result = instance.getStartTime();
+        assertEquals(expResult, result);
     }
 
     /**

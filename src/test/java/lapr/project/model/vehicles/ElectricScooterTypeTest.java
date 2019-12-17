@@ -2,8 +2,7 @@ package lapr.project.model.vehicles;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ElectricScooterTypeTest {
     @Test
@@ -19,10 +18,13 @@ public class ElectricScooterTypeTest {
     void parseScooterTypeTest() {
         String sqlName = "urban";
         ElectricScooterType electricScooterType = ElectricScooterType.parseScooterType(sqlName);
-        assertTrue(electricScooterType == ElectricScooterType.URBAN);
+        assertSame(ElectricScooterType.URBAN, electricScooterType);
 
         sqlName = "offroad";
         electricScooterType = ElectricScooterType.parseScooterType(sqlName);
-        assertTrue(electricScooterType == ElectricScooterType.OFFROAD);
+        assertSame(ElectricScooterType.OFFROAD, electricScooterType);
+
+        sqlName = "flying";
+        assertNull(ElectricScooterType.parseScooterType(sqlName));
     }
 }

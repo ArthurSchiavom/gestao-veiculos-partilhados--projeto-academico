@@ -7,8 +7,11 @@ public class Bicycle extends Vehicle {
     private final int size;
     private final String description;
 
-    public Bicycle(int id, double latitude, double longitude, int altitude, float aerodynamic_coefficient, float frontal_area, int weight, boolean available, VehicleType type, int size, String description) {
-        super(id, latitude, longitude, altitude, aerodynamic_coefficient, frontal_area, weight, available, type);
+    public Bicycle(int id, float aerodynamicCoefficient, float frontalArea,
+                   int weight, boolean available, int size,
+                   String description) {
+        super(id, aerodynamicCoefficient, frontalArea, weight, available,
+                VehicleType.BICYCLE);
         this.size = size;
         this.description = description;
     }

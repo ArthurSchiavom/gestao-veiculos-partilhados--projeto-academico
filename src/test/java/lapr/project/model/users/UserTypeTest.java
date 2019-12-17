@@ -2,8 +2,7 @@ package lapr.project.model.users;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTypeTest {
     @Test
@@ -24,5 +23,9 @@ public class UserTypeTest {
         sqlName = "client";
         userType = UserType.parseUserType(sqlName);
         assertTrue(userType == UserType.CLIENT);
+
+        sqlName = "user";
+        userType = UserType.parseUserType(sqlName);
+        assertNull(userType);
     }
 }

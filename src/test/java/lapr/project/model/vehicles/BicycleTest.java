@@ -8,7 +8,9 @@ class BicycleTest {
     Bicycle instance;
     @BeforeEach
     void beforeEach() {
-        instance = new Bicycle(1,2.3F,2.4F,35,2.3F,2.9F,60,true,VehicleType.BICYCLE,15,"description");
+        instance = new Bicycle(1,2.4f,
+                2.3F,30,true,
+                15,"description");
     }
     @Test
     void getSize() {

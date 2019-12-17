@@ -23,6 +23,13 @@ public class UtilsTest {
         } catch (FileNotFoundException e) {
             fail();
         }
+
+        try{
+            List<String[]> result = Utils.parseDataFile("lol", ";", "#");
+            fail("File not found exception not thrown");
+        } catch (FileNotFoundException e) {
+            assertTrue(true,"File not found exception thrown");
+        }
     }
 
     @Test

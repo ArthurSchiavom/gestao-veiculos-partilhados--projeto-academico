@@ -39,21 +39,48 @@ class UserTest {
 
     @Test
     void testHashCode() {
-        assertEquals(new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
-                new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321)).hashCode(),instance.hashCode(),"Wrong email");
+        Client client1 = new Client("1180852@isep.ipp.pt","username","password",
+                22, 180, 60, 'm',2.3F, new CreditCard(
+                        "12341234123412", LocalDate.of(2020,12,31),
+                        321));
+        Client client2 = new Client("1180852@isep.ipp.pt","lol","password231",
+                22, 180, 60, 'm',2.3F, new CreditCard(
+                "12341234123412", LocalDate.of(2020,12,31),
+                321));
+        int expResult = client2.hashCode();
+        assertEquals(expResult, client1.hashCode());
+
+        client1 = new Client("1170852@isep.ipp.pt","username1","password1",
+                22, 180, 60, 'm',2.3F, new CreditCard(
+                "12341234123412", LocalDate.of(2020,12,31),
+                321));
+        assertNotEquals(expResult, client1.hashCode());
     }
 
     @Test
     void testEquals() {
-        assertEquals(instance.equals(new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
-                new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321))),true,"The objects should be equal");
+        Object receipt1 = new Client("1170852@isep.ipp.pt","username1","password1",
+                22, 180, 60, 'm',2.3F, new CreditCard(
+                "12341234123412", LocalDate.of(2020,12,31),
+                321));
+        assertEquals(receipt1, receipt1);
 
-    }
+        Client receipt2 = new Client("1170852@isep.ipp.pt","username2","password3",
+                22, 180, 60, 'm',2.3F, new CreditCard(
+                "12341234123412", LocalDate.of(2020,12,31),
+                321));
+        assertEquals(receipt1, receipt2);
 
-    @Test
-    void testToString() {
-        System.out.println(instance);
-        assertEquals("Client{points=0, age=22, height=180, weight=60, gender=m, cyclingAverageSpeed=2.3, cc=CreditCard{ccNumber='12341234123412', ccExpiration=2020-12-31, ccv=321}}",instance.toString(),"ToString");
+        receipt1 = new Client("1180852@isep.ipp.pt","username3","password4",
+                22, 180, 60, 'm',2.3F, new CreditCard(
+                "12341234123412", LocalDate.of(2020,12,31),
+                321));
+        assertNotEquals(receipt1, receipt2);
 
+        receipt1 = null;
+        assertNotEquals(receipt2, receipt1);
+
+        receipt1 = "";
+        assertNotEquals(receipt1, receipt2);
     }
 }

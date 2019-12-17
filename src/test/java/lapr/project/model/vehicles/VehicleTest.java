@@ -7,10 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VehicleTest {
 
-    Vehicle instance;
+    private Vehicle instance;
     @BeforeEach
     void beforeEach() {
-        instance = new Bicycle(1,2.3F,2.4F,35,2.3F,2.9F,60,true,VehicleType.BICYCLE,15,"description");
+        instance = new Bicycle(1,2.3F,
+                2.4F,35,true,
+                15,"description");
     }
 
     @Test
@@ -19,38 +21,23 @@ class VehicleTest {
     }
 
     @Test
-    void getLatitude() {
-        assertEquals(2.3F, instance.getLatitude());
-    }
-
-    @Test
-    void getLongitude() {
-        assertEquals(2.4F, instance.getLongitude());
-    }
-
-    @Test
     void getAerodynamic_coefficient() {
-        assertEquals(2.3F, instance.getAerodynamic_coefficient());
+        assertEquals(2.3F, instance.getAerodynamicCoefficient());
     }
 
     @Test
     void getFrontal_area() {
-        assertEquals(2.9F, instance.getFrontal_area());
-    }
-
-    @Test
-    void getAltitude() {
-        assertEquals(35, instance.getAltitude());
+        assertEquals(2.4F, instance.getFrontalArea());
     }
 
     @Test
     void getWeight() {
-        assertEquals(60, instance.getWeight());
+        assertEquals(35, instance.getWeight());
     }
 
     @Test
     void isAvailable() {
-        assertEquals(true, instance.isAvailable());
+        assertTrue(instance.isAvailable());
     }
 
     @Test
@@ -60,11 +47,36 @@ class VehicleTest {
 
     @Test
     void testEquals() {
-        assertEquals(true, instance.equals(new Bicycle(1,2.3F,2.4F,35,2.3F,2.9F,60,true,VehicleType.BICYCLE,15,"description")));
+        Object receipt1 = new Bicycle(0, 10f, 10f, 50,
+                true, 15, "description");
+        assertEquals(receipt1, receipt1);
+
+        Vehicle receipt2 = new Bicycle(0, 12f, 10f, 50,
+                true, 15, "description");
+        assertEquals(receipt1, receipt2);
+
+        receipt1 = new Bicycle(1, 10f, 10f, 50,
+                true, 15, "description");
+        assertNotEquals(receipt1, receipt2);
+
+        receipt1 = null;
+        assertNotEquals(receipt2, receipt1);
+
+        receipt1 = "";
+        assertNotEquals(receipt1, receipt2);
     }
 
     @Test
     void testHashCode() {
-        assertEquals(new Bicycle(1,2.3F,2.4F,35,2.3F,2.9F,60,true,VehicleType.BICYCLE,15,"description").hashCode(), instance.hashCode());
+        Vehicle receipt1 = new Bicycle(0, 10f, 10f, 50,
+                true, 15, "description");
+        Vehicle receipt2 = new Bicycle(0, 10f, 10f, 50,
+                true, 15, "description");
+        int expResult = receipt2.hashCode();
+        assertEquals(expResult, receipt1.hashCode());
+
+        receipt1 = new Bicycle(1, 10f, 10f, 50,
+                true, 15, "description");
+        assertNotEquals(expResult, receipt1.hashCode());
     }
 }

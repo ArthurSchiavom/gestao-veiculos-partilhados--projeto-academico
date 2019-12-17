@@ -9,7 +9,9 @@ class ElectricScooterTest {
     ElectricScooter instance;
     @BeforeEach
     void beforeEach() {
-        instance = new ElectricScooter(1,2.3F,2.4F,35,2.3F,2.9F,60,true,VehicleType.ELECTRIC_SCOOTER,ElectricScooterType.URBAN,15,150f,"description");
+        instance = new ElectricScooter(1,2.3F,2.4F,
+                35,true,ElectricScooterType.URBAN,15,
+                150f,"description");
     }
     @Test
     void getElectricScooterType() {
@@ -28,6 +30,6 @@ class ElectricScooterTest {
 
     @Test
     void getEletric_scooter_description() {
-        assertEquals("description", instance.getEletricScooterDescription());
+        assertEquals("description", instance.getElectricScooterDescription());
     }
 }
