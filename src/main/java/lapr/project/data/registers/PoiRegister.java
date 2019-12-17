@@ -17,8 +17,7 @@ import lapr.project.model.point.of.interest.PointOfInterest;
  * 
  */
 public class PoiRegister {
-
-    DataHandler dataHandler;
+    private final DataHandler dataHandler;
 
     /**
      * Instantiates a poi register

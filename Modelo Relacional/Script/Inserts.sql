@@ -68,25 +68,6 @@ values('electric_scooter', 0, 70, 1.21, 0.1);
 insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
 values('electric_scooter', 0, 20, 1.1, 0.3);
 
--- park_vehicle
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 1);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 2);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 3);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 4);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 5);
-
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 6);
-
 -- bicycles
 insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
 values(1, 15, 'PT001');
@@ -175,8 +156,8 @@ insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occu
 values('park2', 'bicycle', 30, 20);
 
 -- trips
-insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id)
-values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1', 'park2');
+insert into trips (start_time, user_email, vehicle_id, start_park_id)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1');
 
 insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id, end_time)
 values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 2, 'park1', 'park2', TO_DATE('21-12-2019', 'dd/mm/yyyy'));
@@ -196,13 +177,31 @@ insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coeffici
 values(30.4, -20.2, 18.222, 22.12, 0.004, 110, 1.0); -- baixa -> parque ivo
 
 -- trip_points_of_interest
-insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 18.222, 20.12, 10.2, 30.2);
 
-insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 10.2, 30.2, 30.4, -20.2);
 
-insert into trip_point_of_interest(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 30.4, -20.2, 18.222, 22.12);
 
+-- park_vehicle
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 1);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 2);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 3);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 4);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 5);
+
+insert into park_vehicle(park_id, vehicle_id)
+values('park1', 6);
 

@@ -55,18 +55,34 @@ create or replace procedure register_park(
                     p_altitude_m points_of_interest.altitude_m%type, 
                     p_poi_description points_of_interest.poi_description%type,
                     p_park_Input_Voltage parks.park_Input_Voltage%type,
-                    p_park_input_current parks.park_input_current%type
+                    p_park_input_current parks.park_input_current%type,
+                    p_max_eletric_scooters park_capacity.park_capacity%type,
+                    p_max_bicycles park_capacity.park_capacity%type
                     )
 is
 begin
     insert into points_of_interest(latitude, longitude, altitude_m, poi_description) VALUES(p_latitude, p_longitude, p_altitude_m, p_poi_description);
     insert into parks(park_id, latitude, longitude, park_Input_Voltage, park_input_current) VALUES(p_park_id, p_latitude, p_longitude, p_park_Input_Voltage, p_park_input_current);
+    insert into park_capacity values (p_park_id, 'electric_scooter', p_max_eletric_scooters, 0);
+    insert into park_capacity values (p_park_id, 'bicycle', p_max_bicycles, 0);
+end;
+/
+
+create or replace procedure remove_park(p_park_id parks.park_id%type)
+is
+    v_latitude points_of_interest.latitude%type; 
+    v_longitude points_of_interest.latitude%type;
+begin
+    select p.latitude into v_latitude from parks p where p.park_id = p_park_id;
+    select p.longitude into v_longitude from parks p where p.park_id = p_park_id;
 end;
 /
 
 
+
+
 begin
-    register_park('new park', 10.1, 10.4, 1, 'cool place', 2, 2);
+    register_park('doggo park', 10.2, 10.5, 1, 'cute place', 2, 2, 10, 20);
 end;
 /
 
