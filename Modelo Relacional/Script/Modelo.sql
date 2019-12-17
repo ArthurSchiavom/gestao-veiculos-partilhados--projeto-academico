@@ -217,10 +217,10 @@ ALTER TABLE vehicles ADD CONSTRAINT fk_vehicles_vehicle_type_name FOREIGN KEY (v
 ALTER TABLE bicycles ADD CONSTRAINT fk_bicycles_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_electric_scooter_type_name FOREIGN KEY (electric_scooter_type_name) REFERENCES electric_scooter_types (electric_scooter_type_name);
-ALTER TABLE park_vehicle ADD CONSTRAINT fk_park_vehicle_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id);
+ALTER TABLE park_vehicle ADD CONSTRAINT fk_park_vehicle_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id) DEFERRABLE;
 ALTER TABLE park_vehicle ADD CONSTRAINT fk_park_vehicle_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE invoices ADD CONSTRAINT fk_invoices_user_email FOREIGN KEY (user_email) REFERENCES clients (user_email);
-ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id);
+ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id) DEFERRABLE;
 ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
 ALTER TABLE trips ADD CONSTRAINT fk_trip_user_email FOREIGN KEY (user_email) REFERENCES clients (user_email);
 ALTER TABLE trips ADD CONSTRAINT fk_trip_start_park_id FOREIGN KEY (start_park_id) REFERENCES parks (park_id) DEFERRABLE;

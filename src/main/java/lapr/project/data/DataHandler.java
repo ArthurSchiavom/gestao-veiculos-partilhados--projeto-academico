@@ -5,25 +5,28 @@ import lapr.project.data.registers.Company;
 import lapr.project.utils.Updateable;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Exemplo de classe cujas instâncias manipulam dados de BD Oracle.
  */
 public class DataHandler {
     private static final Logger LOGGER = Logger.getLogger("DataHandlerLog");
-    private static final int MAX_RECONNECTION_ATTEMPTS = 3;
+    private static final int MAX_RECONNECTION_ATTEMPTS_RECOVERABLE = 3;
+    private static final int MAX_RECONNECTION_ATTEMPTS_UNRECOVERABLE = 10;
     private static final int CONNECTION_FAILURE_ORA_CODE = 17008;
-    private static final int RECONNECTION_INTERVAL_MILLIS = 2000;
+    private static final int RECONNECTION_INTERVAL_MILLIS = 3000;
     private static final int QUERY_TIMEOUT_SECONDS = 10;
-
     private static final String NOT_CONNECTED_ERROR_MSG = "Not connected to the database";
+
+    private static Updateable<Boolean> created = new Updateable<>(false);
 
 
     /**
@@ -56,7 +59,7 @@ public class DataHandler {
      */
     private ResultSet rSet = null;
 
-    private static Updateable<Boolean> created = new Updateable<>(false);
+    private List<AutoCloseable> autoCloseablesCloseQueue = new ArrayList<>();
 
     /**
      * <b>Only one instance allowed at all times</b>
@@ -73,6 +76,22 @@ public class DataHandler {
         this.username = System.getProperty("database.username");
         this.password = System.getProperty("database.password");
         openConnection();
+    }
+
+    public void queueForClose(AutoCloseable autoCloseable) {
+        autoCloseablesCloseQueue.add(autoCloseable);
+    }
+
+    public void closeQueuedAutoCloseables() {
+        for (AutoCloseable obj : autoCloseablesCloseQueue) {
+            if (obj != null) {
+                try {
+                    obj.close();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Failed to close an open AutoCloseable object: \n" + ex.getMessage());
+                }
+            }
+        }
     }
 
     /**
@@ -140,6 +159,7 @@ public class DataHandler {
             }
             connection = null;
         }
+        closeQueuedAutoCloseables();
         return message.toString();
     }
 
@@ -150,11 +170,13 @@ public class DataHandler {
 
         attemptingToReconnect = true;
         new Thread(() -> {
+            int nAttempt = 1;
             boolean connected = false;
-            while (!connected) {
+            while (!connected && nAttempt < MAX_RECONNECTION_ATTEMPTS_UNRECOVERABLE) {
+                nAttempt++;
                 connected = true;
                 try { Company.getInstance().getDataHandler().openConnection(); } catch (Exception e) { connected = false;}
-                try { Thread.sleep(RECONNECTION_INTERVAL_MILLIS); } catch (InterruptedException e) {
+                try { wait(RECONNECTION_INTERVAL_MILLIS); } catch (InterruptedException e) {
                     LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
                 }
             }
@@ -168,9 +190,9 @@ public class DataHandler {
             try {
                 return operation.executeOperation();
             } catch (SQLException e) {
-                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS) {
+                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS_RECOVERABLE) {
                     try {
-                        Thread.sleep(RECONNECTION_INTERVAL_MILLIS);
+                        wait(RECONNECTION_INTERVAL_MILLIS);
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
                     }
