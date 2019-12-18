@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.PhysicsCalculations;
+package lapr.project.utils.physics.calculations;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +21,7 @@ public class CaloriesCalculationTest {
      * Test of calculateTimeSpent method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateTimeSpent() {
+    public void calculateTimeSpentTest() {
         double velocity = 3.0;
         double distanceMade = 300.0;
         Double expResult = 100.0;
@@ -36,7 +36,7 @@ public class CaloriesCalculationTest {
      * CaloriesCalculation.
      */
     @Test
-    public void testCalculatePowerRollingResistance() {
+    public void calculatePowerRollingResistanceTest() {
         double velocity = 3.0;
         double mass = 95.0;
         double kineticCoefficient = 0.002;
@@ -51,7 +51,7 @@ public class CaloriesCalculationTest {
      * Test of calculateClimbingPower method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateClimbingPower() {
+    public void calculateClimbingPowerTest() {
         double velocity = 3.0;
         double mass = 95.0;
         double slope = 0.89;
@@ -66,7 +66,7 @@ public class CaloriesCalculationTest {
      * Test of calculatePowerAirDrag method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculatePowerAirDrag() {
+    public void calculatePowerAirDragTest() {
         double velocity = 3.0;
         double windSpeed = 1.0;
         double aerodynamicCoefficient = 1.10;
@@ -82,7 +82,7 @@ public class CaloriesCalculationTest {
      * Test of calculateSlop method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateSlop() {
+    public void calculateSlopTest() {
         int height = 200;
         double distanceTraveled = 300.0;
         Double expResult = 0.89;
@@ -97,7 +97,7 @@ public class CaloriesCalculationTest {
      * Test of calculateCaloriesBurnt method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateCaloriesBurnt() {
+    public void calculateCaloriesBurntTest() {
         double velocity = 3.0;
         double windSpeed = 1.0;
         double kineticCoefficient = 0.002;

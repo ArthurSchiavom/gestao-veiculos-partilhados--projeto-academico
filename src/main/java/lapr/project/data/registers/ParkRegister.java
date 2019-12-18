@@ -131,8 +131,10 @@ public class ParkRegister {
         PreparedStatement ps = null;
         try {
             ps = dataHandler.prepareStatement("Select * from park_capacity where park_id=?");
+            dataHandler.queueForClose(ps);
             ps.setString(1, parkId);
             rs = dataHandler.executeQuery(ps);
+            dataHandler.queueForClose(rs);
             if (rs == null) {
                 return null;
             }
@@ -146,27 +148,80 @@ public class ParkRegister {
         } catch (SQLException e) {
             throw e;
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, "failed to close result set.");
-                }
-            }
-
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, "failed to close prepared statement.");
-                }
-            }
+            dataHandler.closeQueuedAutoCloseables();
         }
         return capacity;
     }
 
-    public void updatePark(String id, String description, Coordinates coord, Float parkInputVoltage, Float parkInputCurrent, Integer maxEletricScooters, Integer maxBicycles) {
+    public void updateParkId(String currentId, String newId, String description/*, Coordinates newCoord, Float newParkInputVoltage, Float newParkInputCurrent, Integer newMaxEletricScooters, Integer newMaxBicycles*/) throws SQLException {
+        try {
+            PreparedStatement psParks;
+            PreparedStatement psParkCapacity;
+            PreparedStatement psTripsStart;
+            PreparedStatement psTripsEnd;
+            PreparedStatement psParkVehicle;
 
+            psParks = dataHandler.prepareStatement("UPDATE parks SET park_id = ? where park_id = ?");
+            dataHandler.queueForClose(psParks);
+            psParks.setString(1, newId);
+            psParks.setString(2, currentId);
+            dataHandler.executeUpdate(psParks);
+
+            psParkCapacity = dataHandler.prepareStatement("UPDATE park_capacity SET park_id = ? where park_id = ?");
+            dataHandler.queueForClose(psParkCapacity);
+            psParkCapacity.setString(1, newId);
+            psParkCapacity.setString(2, currentId);
+            dataHandler.executeUpdate(psParkCapacity);
+
+            psTripsStart = dataHandler.prepareStatement("UPDATE trips SET start_park_id = ? where start_park_id = ?");
+            dataHandler.queueForClose(psTripsStart);
+            psTripsStart.setString(1, newId);
+            psTripsStart.setString(2, currentId);
+            dataHandler.executeUpdate(psTripsStart);
+
+            psTripsEnd = dataHandler.prepareStatement("UPDATE trips SET end_park_id = ? where end_park_id = ?");
+            dataHandler.queueForClose(psTripsEnd);
+            psTripsEnd.setString(1, newId);
+            psTripsEnd.setString(2, currentId);
+            dataHandler.executeUpdate(psTripsEnd);
+
+            psParkVehicle = dataHandler.prepareStatement("UPDATE park_vehicle SET park_id = ? where park_id = ?");
+            dataHandler.queueForClose(psParkVehicle);
+            psParkVehicle.setString(1, newId);
+            psParkVehicle.setString(2, currentId);
+            dataHandler.executeUpdate(psParkVehicle);
+
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
+        }
+    }
+
+    public void updateParkDescription(String parkId, String newDescription) throws SQLException {
+        double longitude;
+        double latitude;
+        try {
+            PreparedStatement getLatLonPS = dataHandler.prepareStatement("SELECT latitude, longitude from parks where park_id = ?");
+            dataHandler.queueForClose(getLatLonPS);
+            getLatLonPS.setString(1, parkId);
+            ResultSet latLonRS = dataHandler.executeQuery(getLatLonPS);
+            dataHandler.queueForClose(latLonRS);
+            latitude = latLonRS.getDouble("latitude");
+            longitude = latLonRS.getDouble("longitude");
+
+            PreparedStatement updateDescriptionPS = dataHandler.prepareStatement("UPDATE points_of_interest SET poi_description = ? WHERE latitude = ? AND longitude = ?");
+            dataHandler.queueForClose(updateDescriptionPS);
+            updateDescriptionPS.setString(1, newDescription);
+            updateDescriptionPS.setDouble(2, latitude);
+            updateDescriptionPS.setDouble(3, longitude);
+            dataHandler.executeUpdate(updateDescriptionPS);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
+        }
     }
 
     /**
@@ -218,7 +273,8 @@ public class ParkRegister {
      * @param radius
      * @return hashmap containing parks and their corresponding capacities
      */
-    public HashMap<Park, List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius) throws SQLException {
+    public HashMap<Park, List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius) throws
+            SQLException {
         HashMap<Park, List<Capacity>> nearestParksAvailability = new HashMap<>();
         for (Park park : fetchAllParks()) {
             if (coords.distance(park.getCoordinates()) <= radius) {

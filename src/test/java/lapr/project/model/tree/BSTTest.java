@@ -29,13 +29,13 @@ class BSTTest {
         setUp();
         assertEquals(instance.size(), arr.length);
         BST<String> sInstance = new BST<>();
-        assertEquals(sInstance.size(), 0);
+        assertEquals(0,sInstance.size());
         sInstance.insert("A");
-        assertEquals(sInstance.size(), 1);
+        assertEquals(1,sInstance.size());
         sInstance.insert("B");
-        assertEquals(sInstance.size(), 2);
+        assertEquals(2,sInstance.size());
         sInstance.insert("A");
-        assertEquals(sInstance.size(), 2);
+        assertEquals(2,sInstance.size());
     }
 
     /**
@@ -47,19 +47,19 @@ class BSTTest {
         BST<Integer> instance = new BST<>();
         for (int i = 0; i < 9; i++) {            //new elements
             instance.insert(arr[i]);
-            assertEquals(instance.size(), i + 1);
+            assertEquals(i + 1,instance.size());
         }
         for (int i = 9; i < arr.length; i++) {    //duplicated elements => same size
             instance.insert(arr[i]);
-            assertEquals(instance.size(), 9);
+            assertEquals(9,instance.size());
         }
         Integer a = 33;
         instance.insert(a);
-        assertEquals(instance.size(), 10);
+        assertEquals(10,instance.size());
         instance.insert(a);
-        assertEquals(instance.size(), 10);
+        assertEquals(10,instance.size());
         instance.insert(null);
-        assertEquals(instance.size(), 10);
+        assertEquals(10,instance.size());
 
     }
 

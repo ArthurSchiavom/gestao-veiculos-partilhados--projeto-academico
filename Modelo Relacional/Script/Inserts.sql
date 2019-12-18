@@ -120,10 +120,10 @@ values('k@k.k', 'administrator', '555', 'MissMaam');
 
 -- clients
 insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('a@a.a', 10, '1111111111111111', TO_DATE('10-10-2020', 'dd/mm/yyyy'), 111, 1.72, 74, 'M', '0', 20, 18.2);
+values('a@a.a', 10, '1111111111111111', TO_DATE('10-10-2020', 'dd/mm/yyyy'), 111, 1.72, 74, 'M', '1', 20, 18.2);
 
 insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('b@b.b', 0, '2222222222222222', TO_DATE('12-02-2021', 'dd/mm/yyyy'), 222, 1.62, 54, 'F', '1', 19, 14.3);
+values('b@b.b', 0, '2222222222222222', TO_DATE('12-02-2021', 'dd/mm/yyyy'), 222, 1.62, 54, 'F', '0', 19, 14.3);
 
 insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
 values('c@c.c', 300, '3333333333333333', TO_DATE('02-12-2032', 'dd/mm/yyyy'), 333, 1.90, 120, 'M', '1', 25, 4.9);
@@ -159,8 +159,8 @@ values('park2', 'bicycle', 30, 20);
 insert into trips (start_time, user_email, vehicle_id, start_park_id)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1');
 
-insert into trips (start_time, user_email, vehicle_id, start_park_id, end_park_id, end_time)
-values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 2, 'park1', 'park2', TO_DATE('21-12-2019', 'dd/mm/yyyy'));
+insert into trips (start_time, user_email, vehicle_id, start_park_id)
+values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'b@b.b', 2, 'park1');
 
 -- receipts
 insert into receipts (user_email, payment_start_date, payment_end_date, points_used, amount_paid_cash)
