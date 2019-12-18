@@ -1,18 +1,21 @@
 --Finds the scooter with the highest amount of battery in the park
 CREATE OR REPLACE FUNCTION findHighestChargeScooter(start_park_id_in IN varchar2) 
-RETURN vehicles%rowtype IS
+RETURN electric_scooters%rowtype IS
 	scooter electric_scooters%rowtype;
 BEGIN
-	WITH parked_eletric_scooters pes AS (
-	SELECT v.vehicle_id vehicle_id
-	FROM JOIN park_vehicle pv
-	ON pv.vehicle_id=v.vehicle_id
-	WHERE v.vehicle_type_name LIKE 'electric_scooter')
-	SELECT * FROM electric_scooters es
+	WITH parked_electric_scooters AS (
+		SELECT v.vehicle_id v_id
+		FROM vehicles v
+		INNER JOIN park_vehicle pv
+		ON pv.vehicle_id=v.vehicle_id AND pv.park_id=start_park_id_in
+		WHERE v.vehicle_type_name LIKE 'electric_scooter'
+	)
+	SELECT es.vehicle_id, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.electric_scooter_description
 	INTO scooter
-	WHERE pes.vehicle_id=es.vehicle_id
-	ORDER BY es.actual_battery_capacity DESC
-	FETCH FIRST ROW ONLY;
+	FROM electric_scooters es, parked_electric_scooters pes
+	WHERE pes.v_id=es.vehicle_id 
+	ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC
+	FETCH FIRST ROW ONLY;	
 	RETURN scooter;
 EXCEPTION
 	WHEN no_data_found THEN
@@ -21,7 +24,7 @@ END;
 /
 
 --Finds an available vehicle at a park
-CREATE OR REPLACE FUNCTION findAvailableiBicycle(start_park_id_in IN varchar2) 
+CREATE OR REPLACE FUNCTION findAvailableBicycle(start_park_id_in IN varchar2) 
 RETURN vehicles%rowtype IS
 	vehicle vehicles%rowtype;
 BEGIN
