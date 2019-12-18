@@ -38,7 +38,6 @@ public class PathRegister {
      */
     public Path fetchPath(Double latitude1, Double longitude1, Double latitude2, Double longitude2) {
         PreparedStatement stm = null;
-        Path path;
         try {
             stm = dataHandler.prepareStatement("SELECT * FROM paths where latitudeA=? AND longitudeA =? AND latitudeB=? AND longitudeB =?");
             stm.setDouble(1, latitude1);
@@ -46,25 +45,21 @@ public class PathRegister {
             stm.setDouble(3, latitude2);
             stm.setDouble(4, longitude2);
             ResultSet resultSet = dataHandler.executeQuery(stm);
-            if (resultSet == null) {
-                stm.close();
+            if (resultSet == null || !resultSet.next()) {
                 return null;
             }
-            else if (!resultSet.next()) {
-                resultSet.close();
-                stm.close();
-                return null;
-            }
-            double lon1 = resultSet.getDouble(2);
-            double lat1 = resultSet.getDouble(1);
-            double lat2 = resultSet.getDouble(3);
-            double lon2 = resultSet.getDouble(4);
-            double kinetic = resultSet.getDouble(5);
-            int windDirectionDegrees = resultSet.getInt(6);
-            double windSpeed = resultSet.getDouble(7);
+            double lon1 = resultSet.getDouble("longitudeA");
+            double lat1 = resultSet.getDouble("latitudeA");
+            double lat2 = resultSet.getDouble("latitudeB");
+            double lon2 = resultSet.getDouble("longitudeB");
+            double kinetic = resultSet.getDouble("kinetic_coefficient");
+            int windDirectionDegrees = resultSet.getInt("wind_direction_degrees");
+            double windSpeed = resultSet.getDouble("wind_speed");
             return new Path(lat1, lon1, lat2, lon2, kinetic, windDirectionDegrees, windSpeed);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
         }
         return null;
     }
@@ -104,11 +99,13 @@ public class PathRegister {
                 if (nrLines == 0) {
                     return false;
                 }
-                stm.close();
-         
+
+                dataHandler.commitTransaction();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
         }
         return true;
     }

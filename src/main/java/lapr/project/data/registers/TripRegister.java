@@ -93,6 +93,8 @@ public class TripRegister {
                     "INSERT INTO park_vehicle  park_id =?,vehicle_id=?" + "VALUES(?,?)");
             prepStat.setString(1,trip.getEndParkId());
             prepStat.setInt(2,trip.getVehicleId());
+
+            dataHandler.commitTransaction();
             return true;
         }catch (SQLException ex){
             ex.printStackTrace();
@@ -117,6 +119,7 @@ public class TripRegister {
             prepStat.setString(4,trip.getStartParkId());
             prepStat.setString(5,trip.getEndParkId());
             prepStat.setTimestamp(6,Timestamp.valueOf(trip.getEndTime()));
+            dataHandler.commitTransaction();
             return true;
         }catch (SQLException ex){
             ex.printStackTrace();
