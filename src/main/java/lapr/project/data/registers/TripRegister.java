@@ -178,8 +178,9 @@ public class TripRegister {
      */
 
 
-    public List<Integer> getListOfVehiclesAvailable(LocalDateTime startTime) {
-        List<Integer> dispVehicles  = new ArrayList<>();
+    public List<Trip> getListOfVehiclesAvailable(LocalDateTime startTime) {
+        List<Trip> dispVehicles  = new ArrayList<>();
+       // List<String> users = new ArrayList<>();
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from trips where ? BETWEEN start_time and nvl(end_time, sysdate)");
             statement.setTimestamp(1,Timestamp.valueOf(startTime));
@@ -188,8 +189,19 @@ public class TripRegister {
                 return dispVehicles;
             }
             while (resultVehicles.next()) {
+                Timestamp startT = resultVehicles.getTimestamp("start_time");
+                LocalDateTime start_time = startT.toLocalDateTime();
+                String userEmail = resultVehicles.getString("user_email");
                 int vehicleId = resultVehicles.getInt("vehicle_id");
-                dispVehicles.add(vehicleId);
+                String startParkId = resultVehicles.getString("start_park_id");
+                String endParkId = resultVehicles.getString("end_park_id");
+                Timestamp endT = resultVehicles.getTimestamp("start_time");
+                LocalDateTime end_time = endT.toLocalDateTime();
+
+
+                Trip trip = new Trip(start_time,end_time,userEmail,startParkId,endParkId,vehicleId);
+
+               dispVehicles.add(trip);
             }
             resultVehicles.close();
             statement.close();
