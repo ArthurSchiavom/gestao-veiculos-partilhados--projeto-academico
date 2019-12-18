@@ -1,8 +1,11 @@
 package lapr.project.data.registers;
 
 import lapr.project.data.DataHandler;
+import lapr.project.model.Path;
 import lapr.project.model.users.Client;
 import lapr.project.model.users.CreditCard;
+import lapr.project.model.vehicles.Bicycle;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,13 +24,13 @@ public class UsersRegister {
     /**
      * Inserts a list of clients
      */
-    public void insertClients(List<String> email, List<String> username, List<String> password, List<Float> amountLeftToPay, List<Integer> creditCardSecret, List<Integer> age, List<Integer> height, List<Integer> weight, List<Character> gender, List<String> creditCardNumber, List<String> creditCardExpiration, List<Float> cyclingAvgSpeed) throws SQLException {
-        if(!(email.size()==username.size() && username.size() == password.size() && password.size() == amountLeftToPay.size() && amountLeftToPay.size() == creditCardExpiration.size() && creditCardExpiration.size() == age.size() && age.size() == height.size() && height.size() == weight.size() && weight.size()== gender.size() && gender.size() == creditCardNumber.size() && creditCardNumber.size() == creditCardExpiration.size() && creditCardExpiration.size() == cyclingAvgSpeed.size() && cyclingAvgSpeed.size() == creditCardSecret.size())){
+    public void insertClients(List<String> email, List<String> username, List<String> password, List<Float> amountLeftToPay, List<Integer> age, List<Integer> height, List<Integer> weight, List<Character> gender, List<String> creditCardNumber, List<Float> cyclingAvgSpeed) throws SQLException {
+        if(!(email.size()==username.size() && username.size() == password.size() && password.size() == amountLeftToPay.size() && amountLeftToPay.size() == age.size() && age.size() == height.size() && height.size() == weight.size() && weight.size()== gender.size() && gender.size() == creditCardNumber.size() && creditCardNumber.size() == cyclingAvgSpeed.size())){
             throw new IllegalArgumentException("Lists have different sizes.");
         }
         for(int i = 0 ; i < email.size(); i++){
             try {
-                insertClient(email.get(i), username.get(i), password.get(i), amountLeftToPay.get(i), creditCardSecret.get(i), age.get(i), height.get(i), weight.get(i), gender.get(i),  creditCardNumber.get(i), creditCardExpiration.get(i), cyclingAvgSpeed.get(i));
+                insertClient(email.get(i), username.get(i), password.get(i), amountLeftToPay.get(i), age.get(i), height.get(i), weight.get(i), gender.get(i),  creditCardNumber.get(i), cyclingAvgSpeed.get(i));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -52,9 +55,7 @@ public class UsersRegister {
                 return null;
             }
             int points = resultSet.getInt( "points");
-            String creditCardNumber = resultSet.getString( "credit_card_number");
-            Date creditCardExpiration = resultSet.getDate( "credit_card_expiration");
-            int creditCardSecret = resultSet.getInt( "credit_card_secret");
+            String creditCardNumber = resultSet.getString( "visa");
             int height =  resultSet.getInt( "height_m");
             int weight =  resultSet.getInt( "weight_kg");
             char gender = resultSet.getString( "gender").charAt(0);
@@ -70,7 +71,7 @@ public class UsersRegister {
 
             String password = resultSet.getString( "user_password");
             String username = resultSet.getString( "user_name");
-            return new Client(email,username ,password, points, age, height, weight, gender,cyclingAvgSpeed, new CreditCard(creditCardNumber, creditCardExpiration.toLocalDate(), creditCardSecret));
+            return new Client(email,username ,password, points, age, height, weight, gender,cyclingAvgSpeed, new CreditCard(creditCardNumber));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -102,27 +103,24 @@ public class UsersRegister {
      * @param creditCardNumber credit card number of the client
      * @param creditCardExpiration credit card expiration date of the client
      */
-    private void insertClient(String email, String username, String password, float amountLeftToPay, int creditCardSecret, int age, int height, int weight, char gender, String creditCardNumber, String creditCardExpiration, float cyclingAvgSpeed) throws ParseException, SQLException {
+    private void insertClient(String email, String username, String password, float amountLeftToPay, int age, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed) throws ParseException, SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
-        Date date = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(creditCardExpiration).toInstant().toEpochMilli());
         try {
             //pending registrations
-            stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, credit_card_number, credit_card_expiration, credit_card_secret, height, weight, gender, age, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+            stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, visa, height, weight, gender, age, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,?,?,?)");
 
             stm.setString( 1, email.toLowerCase().trim()); // capital letters do not matter in email addresses
             stm.setFloat( 2, amountLeftToPay);
             stm.setString( 3, creditCardNumber.trim());
-            stm.setDate( 4, date); // creditCardExpiration (Date)
-            stm.setInt( 5, creditCardSecret);
-            stm.setInt( 6, height);
-            stm.setInt( 7, weight);
-            stm.setString( 8, String.valueOf(gender)); // uses setString even
+            stm.setInt( 4, height);
+            stm.setInt( 5, weight);
+            stm.setString( 6, String.valueOf(gender)); // uses setString even
             // tho its a char
-            stm.setInt( 9, age);
-            stm.setFloat( 10, cyclingAvgSpeed);
-            stm.setString( 11, password.trim());
-            stm.setString( 12, username.trim());
+            stm.setInt( 7, age);
+            stm.setFloat( 8, cyclingAvgSpeed);
+            stm.setString( 9, password.trim());
+            stm.setString( 10, username.trim());
             int nrLines = dataHandler.executeUpdate(stm);
             if (nrLines == 0) {
                 throw new IllegalArgumentException("Client not inserted correctly");
@@ -136,5 +134,16 @@ public class UsersRegister {
                 } catch (SQLException e) {}
         }
         dataHandler.commitTransaction();
+    }
+
+    /**
+     * Calculates the prediction for calory loss of the route choosen by the client
+     */
+    private double predictBurntCalories(Client cli, Bicycle bicycle, List<Path> route){
+        double totalCaloryLoss = 0;
+        for(Path path : route){
+            totalCaloryLoss+= PhysicsMethods.calculateCaloriesBurnt(cli.getCyclingAverageSpeed(),path.getWindSpeed(),path.getKineticCoefficient(),bicycle.getAerodynamicCoefficient(),bicycle.getFrontalArea(),1.2f,cli.getWeight(),bicycle.getWeight(),0,0);
+        }
+        return totalCaloryLoss;
     }
 }

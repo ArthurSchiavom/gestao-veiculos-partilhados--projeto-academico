@@ -30,7 +30,7 @@ public class PathRegister {
     }
 
     /**
-     * Fetchs a path from the data base
+     * Fetches a path from the data base
      *
      * point (primary keys)
      * @return a path from the data base

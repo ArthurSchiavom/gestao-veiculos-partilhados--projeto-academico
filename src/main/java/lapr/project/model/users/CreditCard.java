@@ -1,32 +1,17 @@
 package lapr.project.model.users;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class CreditCard {
     private String ccNumber;
-    private LocalDate ccExpiration;
-    private int ccv;
 
     /**
      * Instantiates a credit card
      *
      * @param ccNumber the number on the credit card
-     * @param ccExpiration the expiration date of the credit card, must follow the "MM/YY" format"
-     * @param ccVerification the security verification
      */
-    public CreditCard(String ccNumber, LocalDate ccExpiration, int ccVerification) {
-        this.ccv = ccVerification;
+    public CreditCard(String ccNumber) {
         this.ccNumber = ccNumber;
-        this.ccExpiration = LocalDate.of(ccExpiration.getYear(), ccExpiration.getMonth(), ccExpiration.getDayOfMonth());
-    }
-
-    /**
-     * Returns the credit card security number
-     * @return the credit card security number
-     */
-    public int getCcv() {
-        return ccv;
     }
 
     /**
@@ -35,14 +20,6 @@ public class CreditCard {
      */
     public String getCcNumber() {
         return ccNumber;
-    }
-
-    /**
-     * Returns the credit card expiration date in the format "MM/YY"
-     * @return the credit card expiration date in the format "MM/YY"
-     */
-    public LocalDate getCcExpiration() {
-        return ccExpiration;
     }
 
     @Override
@@ -60,10 +37,6 @@ public class CreditCard {
 
     @Override
     public String toString() {
-        return "CreditCard{" +
-                "ccNumber='" + ccNumber + '\'' +
-                ", ccExpiration=" + ccExpiration +
-                ", ccv=" + ccv +
-                '}';
+        return "ccNumber='" + ccNumber+"'";
     }
 }
