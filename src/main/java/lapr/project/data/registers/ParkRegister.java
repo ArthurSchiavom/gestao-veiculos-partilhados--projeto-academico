@@ -49,20 +49,19 @@ public class ParkRegister {
 
     }
 
-    public List<SQLException> registerParks(List<String> id, List<String> description, List<Coordinates> coord, List<Float> parkInputVoltage, List<Float> parkInputCurrent, List<Integer> maxEletricScooters, List<Integer> maxBicycles) {
+    public void registerParks(List<String> id, List<String> description, List<Coordinates> coord, List<Float> parkInputVoltage, List<Float> parkInputCurrent, List<Integer> maxEletricScooters, List<Integer> maxBicycles) throws SQLException {
         if (!(id.size() == description.size() && description.size() == coord.size() && coord.size() == parkInputVoltage.size() && parkInputVoltage.size() == parkInputCurrent.size())) {
             throw new IllegalArgumentException("Lists have different sizes.");
         }
-        List<SQLException> exceptions = new ArrayList<>();
-        for (int i = 0; i < id.size(); i++) {
-            try {
+
+        try {
+            for (int i = 0; i < id.size(); i++) {
                 addParkNoCommit(id.get(i), description.get(i), coord.get(i), parkInputVoltage.get(i), parkInputCurrent.get(i), maxEletricScooters.get(i), maxBicycles.get(i));
-                dataHandler.commitTransaction();
-            } catch (SQLException e) {
-                exceptions.add(e);
             }
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            throw e;
         }
-        return exceptions;
     }
 
     /**
