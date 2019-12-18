@@ -7,14 +7,16 @@ package lapr.project.utils.physics.calculations;
 
 
 /**
- * Class that has the methods to calculate the calories burnt between two points
+ * Class that has the methods to calculate the calories burnt between two points and the autonomy of the scooter
  *
  */
-public class CaloriesCalculation {
+public class PhysicsMethods {
 
     private static final double AIR_DENSITY = 1.225;
     private static final double GRAVITATIONAL_CONSTANT = 9.8;
     private static final double CONVERT_JOULE_CAL = 0.239006;   // 1 Joule = 0.239006 cal;
+    private static final double SCOOTER_MAX_SPEED = 20;
+    private static final double SCOOTER_EFICIENCY = 0.70;
 
     /**
      * Returns the time spent to go from one point to another
@@ -107,4 +109,42 @@ public class CaloriesCalculation {
 
         return Math.round(energySpentCal*100.0)/100.0;
     }
+    
+    /**
+     * Returns the actual battery of the scooter in W.h
+     * @param maxBatteryCapacity - The max battery of the scooter
+     * @param percentageBattery - The percentage of the actual battery
+     * @return the actual battery of the scooter in W.h
+     */
+    public static Double calculateActualBatteryWattHrs(Double maxBatteryCapacity, int percentageBattery) {
+        return ((maxBatteryCapacity * percentageBattery) / 100) * 1000;
+    }
+    
+    /**
+     * Returns the time that the battery of the scooter will take to discharge in hours
+     * @param maxBatteryCapacity - The max battery of the scooter
+     * @param percentageBattery - The percentage of the actual battery
+     * @param motorPower - The power of the motor
+     * @return the time that the battery of the scooter will take to discharge in hours
+     */
+    public static Double calculateTimeByBatteryChargeAndMotorPowerHrs(Double maxBatteryCapacity, int percentageBattery, int motorPower) {
+        Double batteryCapacity = calculateActualBatteryWattHrs(maxBatteryCapacity, percentageBattery);
+        return batteryCapacity/motorPower;
+    }
+    
+    /**
+     * Returns the real scooter autonomy in Km
+     * @param maxBatteryCapacity - The max battery of the scooter
+     * @param percentageBattery - The percentage of the actual battery
+     * @param motorPower - The power of the motor
+     * @return the real scooter autonomy in Km
+     */
+    public static Double calculateScooterAutonomyKM(Double maxBatteryCapacity, int percentageBattery, int motorPower) {
+        Double timeDuration =  calculateTimeByBatteryChargeAndMotorPowerHrs(maxBatteryCapacity, percentageBattery, motorPower);
+        Double fullAutonomy = timeDuration * SCOOTER_MAX_SPEED;
+        Double realAutonomy = fullAutonomy * SCOOTER_EFICIENCY;
+        return Math.round(realAutonomy * 100.0) /100.0;
+    }
+    
+    
 }

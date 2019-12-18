@@ -73,6 +73,7 @@ public class VehicleRegister {
         cs.setInt(5, size);
         cs.setString(6, description);
         dh.execute(cs);
+        dh.commitTransaction();
     }
 
     public void addEletricScooter(float aerodynamicCoefficient, float frontalArea,
@@ -93,6 +94,8 @@ public class VehicleRegister {
         cs.setInt(8, actualBatteryCapacity);
 
         dh.execute(cs);
+
+        dh.commitTransaction();
     }
 
 }

@@ -28,38 +28,33 @@ public class PoiRegister {
     }
 
     /**
-     * Fetches a Poi object from the oraqle sql table
+     * Fetches a Poi object from the oracle sql table
      *
      * @param latitude - latitude of the poi
      * @param longitude- longitude of the poi
-     * @return the point of interest from the oraqle sql table
+     * @return the point of interest from the oracle sql table
      */
     public PointOfInterest fetchPoi(Double latitude, Double longitude) {
         PreparedStatement stm = null;
-        PointOfInterest poi;
         try {
             stm = dataHandler.prepareStatement("SELECT * FROM points_of_interest where latitude=? AND longitude =?");
             stm.setDouble(1, latitude);
             stm.setDouble(2, longitude);
             ResultSet resultSet = dataHandler.executeQuery(stm);
-            if (resultSet == null) {
-                stm.close();
+            if (resultSet == null || !resultSet.next()) {
                 return null;
             }
-            else if (!resultSet.next()) {
-                resultSet.close();
-                stm.close();
-                return null;
-            }
-            double lat = resultSet.getDouble(1);
-            double lon = resultSet.getDouble(2);
-            int alt = resultSet.getInt(3);
-            String desc = resultSet.getString(4);
+            double lat = resultSet.getDouble("latitude");
+            double lon = resultSet.getDouble("longitude");
+            int alt = resultSet.getInt("altitude_m");
+            String desc = resultSet.getString("poi_description");
 
             Coordinates coordinates = new Coordinates(lat, lon, alt);
             return new PointOfInterest(desc, coordinates);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
         }
         return null;
     }
@@ -89,6 +84,7 @@ public class PoiRegister {
 
             dataHandler.executeUpdate(stm);
 
+            dataHandler.commitTransaction();
             stm.close(); // closes statement
 
         } catch (SQLException e) {
