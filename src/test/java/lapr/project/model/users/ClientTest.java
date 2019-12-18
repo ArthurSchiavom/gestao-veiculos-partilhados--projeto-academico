@@ -61,7 +61,7 @@ public class ClientTest {
         Client instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
                 new CreditCard("12341234123412", LocalDate.of(2020,12,31), 321));
         int expResult = 321;
-        int result = instance.getCc().getCcv();
+        int result = instance.getCreditCard().getCcv();
         assertEquals(expResult, result);
     }
 
@@ -103,7 +103,7 @@ public class ClientTest {
     void testGetCreditCardNumber() {
         System.out.println("getCreditCardNumber");
         String expResult = "12341234123412";
-        String result = instance.getCc().getCcNumber();
+        String result = instance.getCreditCard().getCcNumber();
         assertEquals(expResult, result);
     }
 

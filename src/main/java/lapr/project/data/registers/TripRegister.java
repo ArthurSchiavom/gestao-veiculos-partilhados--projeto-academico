@@ -178,7 +178,7 @@ public class TripRegister {
      */
 
 
-    public List<Integer> getListOfVehicles(LocalDateTime startTime) {
+    public List<Integer> getListOfVehiclesAvailable(LocalDateTime startTime) {
         List<Integer> dispVehicles  = new ArrayList<>();
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from trips where ? BETWEEN start_time and nvl(end_time, sysdate)");
