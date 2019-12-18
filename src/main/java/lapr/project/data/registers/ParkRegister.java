@@ -153,6 +153,9 @@ public class ParkRegister {
         return capacity;
     }
 
+    /**
+     * Updates park Id
+     */
     public void updateParkId(String currentId, String newId, String description/*, Coordinates newCoord, Float newParkInputVoltage, Float newParkInputCurrent, Integer newMaxEletricScooters, Integer newMaxBicycles*/) throws SQLException {
         try {
             PreparedStatement psParks;
@@ -199,6 +202,9 @@ public class ParkRegister {
         }
     }
 
+    /**
+     * Updates park description
+     */
     public void updateParkDescription(String parkId, String newDescription) throws SQLException {
         double longitude;
         double latitude;
@@ -217,6 +223,7 @@ public class ParkRegister {
             updateDescriptionPS.setDouble(2, latitude);
             updateDescriptionPS.setDouble(3, longitude);
             dataHandler.executeUpdate(updateDescriptionPS);
+            dataHandler.commitTransaction();
         } catch (SQLException e) {
             throw e;
         } finally {
