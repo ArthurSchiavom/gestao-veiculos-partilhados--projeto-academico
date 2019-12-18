@@ -200,9 +200,9 @@ insert into park_vehicle(park_id, vehicle_id)
 values('park1', 4);
 
 insert into park_vehicle(park_id, vehicle_id)
-values('park1', 5);
+values('park2', 5);
 
 insert into park_vehicle(park_id, vehicle_id)
-values('park1', 6);
+values('park3', 6);
 
 COMMIT;

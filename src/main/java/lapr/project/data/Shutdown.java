@@ -11,9 +11,6 @@ public class Shutdown {
 
     public static void shutdown() {
         DataHandler dh = Company.getInstance().getDataHandler();
-        try {
-            dh.rollbackTransaction();
-        } catch (SQLException e) {}
         dh.closeAll();
     }
 }

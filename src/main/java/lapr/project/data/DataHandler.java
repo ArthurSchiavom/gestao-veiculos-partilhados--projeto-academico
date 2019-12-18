@@ -131,6 +131,14 @@ public class DataHandler {
     public String closeAll() {
         StringBuilder message = new StringBuilder();
 
+        try {
+            rollbackTransaction();
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "Failed to rollback transaction: \n" + e.getMessage());
+        }
+
+        closeQueuedAutoCloseables();
+
         if (rSet != null) {
             try {
                 rSet.close();
@@ -159,7 +167,7 @@ public class DataHandler {
             }
             connection = null;
         }
-        closeQueuedAutoCloseables();
+
         return message.toString();
     }
 
@@ -277,7 +285,7 @@ public class DataHandler {
     public Boolean rollbackTransaction() throws SQLException {
         if (connection == null)
             throw new SQLException(NOT_CONNECTED_ERROR_MSG);
-        SQLOperation<Boolean> operation = () -> {connection.commit(); return true;};
+        SQLOperation<Boolean> operation = () -> {connection.rollback(); return true;};
         return executeUnrecoverableSQLOperation(operation);
     }
 }

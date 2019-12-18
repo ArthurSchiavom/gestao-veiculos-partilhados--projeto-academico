@@ -197,6 +197,7 @@ nbdist/
 
 #Include the interfaces jar, so that your project continues to compile.
 !third-parties/ride-sharing-assessment-interfaces*.jar
+!target/classes/application.properties
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,netbeans,intellij
 .idea/

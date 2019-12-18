@@ -1,5 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
+/* To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,8 +6,6 @@ package lapr.project.data.registers;
 
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
@@ -17,28 +14,13 @@ import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.VehicleType;
 
 /**
- * This class regist and manipulates the data of all parks in data base
+ * This class registers and manipulates the data of all parks in data base
  */
 public class ParkRegister {
-    private static final Logger LOGGER = Logger.getLogger("ParkRegisterLog");
     private final DataHandler dataHandler;
 
     public ParkRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
-    }
-
-    public void addParks(List<String> id, List<String> description, List<Coordinates> coord, List<Float> parkInputVoltage, List<Float> parkInputCurrent, List<Integer> maxEletricScooters, List<Integer> maxBicycles) throws SQLException {
-        if(!(id.size()==description.size() && description.size() == coord.size() && coord.size() == parkInputVoltage.size() && parkInputVoltage.size() == parkInputCurrent.size())){
-            throw new IllegalArgumentException("Lists have different sizes.");
-        }
-        for(int i = 0 ; i < id.size(); i++){
-            try {
-                addPark(id.get(i),description.get(i),coord.get(i),parkInputVoltage.get(i),parkInputCurrent.get(i),maxEletricScooters.get(i),maxBicycles.get(i));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        dataHandler.commitTransaction();
     }
 
     /**
@@ -49,7 +31,7 @@ public class ParkRegister {
      * @param parkInputCurrent Park input current
      * @return true if added with success the park, false otherwise
      */
-    private void addPark(String id, String description, Coordinates coord, float parkInputVoltage, float parkInputCurrent, int maxEletricScooters, int maxBicycles) throws SQLException {
+    private void addParkNoCommit(String id, String description, Coordinates coord, float parkInputVoltage, float parkInputCurrent, int maxEletricScooters, int maxBicycles) throws SQLException {
         try (CallableStatement cs = dataHandler.prepareCall("{call register_park(?, ?, ?, ?, ?, ?, ?, ?, ?)}")) { // ensure everything is done with one request to the database => ensure database information consistency
             cs.setString(1, id);
             cs.setDouble(2, coord.getLatitude());
@@ -65,6 +47,22 @@ public class ParkRegister {
             throw e;
         }
 
+    }
+
+    public List<SQLException> registerParks(List<String> id, List<String> description, List<Coordinates> coord, List<Float> parkInputVoltage, List<Float> parkInputCurrent, List<Integer> maxEletricScooters, List<Integer> maxBicycles) {
+        if (!(id.size() == description.size() && description.size() == coord.size() && coord.size() == parkInputVoltage.size() && parkInputVoltage.size() == parkInputCurrent.size())) {
+            throw new IllegalArgumentException("Lists have different sizes.");
+        }
+        List<SQLException> exceptions = new ArrayList<>();
+        for (int i = 0; i < id.size(); i++) {
+            try {
+                addParkNoCommit(id.get(i), description.get(i), coord.get(i), parkInputVoltage.get(i), parkInputCurrent.get(i), maxEletricScooters.get(i), maxBicycles.get(i));
+                dataHandler.commitTransaction();
+            } catch (SQLException e) {
+                exceptions.add(e);
+            }
+        }
+        return exceptions;
     }
 
     /**
@@ -91,7 +89,7 @@ public class ParkRegister {
      * @param id park id
      * @return return a park
      */
-    public Park fetchParkById(String id) {
+    public Park fetchParkById(String id) throws SQLException {
         Coordinates coord;
         double latitude;
         double longitude;
@@ -100,8 +98,10 @@ public class ParkRegister {
         float parkInputCorrent;
         try {
             PreparedStatement ps = dataHandler.prepareStatement("Select * from parks p, points_of_interest poi where park_id=? AND p.latitude = poi.latitude AND p.longitude = poi.longitude");
+            dataHandler.queueForClose(ps);
             ps.setString(1, id);
             ResultSet rs = dataHandler.executeQuery(ps);
+            dataHandler.queueForClose(rs);
             if (rs == null || !rs.next()) {
                 return null;
             }
@@ -113,8 +113,9 @@ public class ParkRegister {
             parkInputCorrent = rs.getFloat("park_input_current");
             return new Park(id, parkInputVoltage, parkInputCorrent, getListOfCapacities(id), rs.getString("poi_description"), coord);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
         }
     }
 
@@ -153,10 +154,7 @@ public class ParkRegister {
         return capacity;
     }
 
-    /**
-     * Updates park Id
-     */
-    public void updateParkId(String currentId, String newId, String description/*, Coordinates newCoord, Float newParkInputVoltage, Float newParkInputCurrent, Integer newMaxEletricScooters, Integer newMaxBicycles*/) throws SQLException {
+    public void updateParkId(String currentId, String newId) throws SQLException {
         try {
             PreparedStatement psParks;
             PreparedStatement psParkCapacity;
@@ -202,9 +200,6 @@ public class ParkRegister {
         }
     }
 
-    /**
-     * Updates park description
-     */
     public void updateParkDescription(String parkId, String newDescription) throws SQLException {
         double longitude;
         double latitude;
@@ -213,6 +208,8 @@ public class ParkRegister {
             dataHandler.queueForClose(getLatLonPS);
             getLatLonPS.setString(1, parkId);
             ResultSet latLonRS = dataHandler.executeQuery(getLatLonPS);
+            if (!latLonRS.next())
+                throw new SQLException("No such park");
             dataHandler.queueForClose(latLonRS);
             latitude = latLonRS.getDouble("latitude");
             longitude = latLonRS.getDouble("longitude");
@@ -223,6 +220,53 @@ public class ParkRegister {
             updateDescriptionPS.setDouble(2, latitude);
             updateDescriptionPS.setDouble(3, longitude);
             dataHandler.executeUpdate(updateDescriptionPS);
+
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
+        }
+    }
+
+    public void updateParkInputVoltage(String parkId, float newInputVoltage) throws SQLException {
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("UPDATE parks SET park_input_voltage = ? where park_id = ?");
+            dataHandler.queueForClose(ps);
+            ps.setFloat(1, newInputVoltage);
+            ps.setString(2, parkId);
+            dataHandler.executeUpdate(ps);
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
+        }
+    }
+
+    public void updateParkInputCurrent(String parkId, float newInputCurrent) throws SQLException {
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("UPDATE parks SET park_input_current = ? where park_id = ?");
+            dataHandler.queueForClose(ps);
+            ps.setFloat(1, newInputCurrent);
+            ps.setString(2, parkId);
+            int changed = dataHandler.executeUpdate(ps);
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
+        }
+    }
+
+    public void updateParkCapacity(String parkId, VehicleType vehicleType, int newCapacity) throws SQLException {
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("UPDATE park_capacity SET park_capacity = ? where park_id = ? AND vehicle_type_name = ?");
+            dataHandler.queueForClose(ps);
+            ps.setInt(1, newCapacity);
+            ps.setString(2, parkId);
+            ps.setString(3, vehicleType.getSQLName());
+            dataHandler.executeUpdate(ps);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             throw e;
@@ -236,9 +280,8 @@ public class ParkRegister {
      *
      * @return list of all parks that exist in sql table 'Parks'
      */
-    private List<Park> fetchAllParks() {
+    private List<Park> fetchAllParks() throws SQLException {
         List<Park> parkList = new ArrayList<>();
-        PreparedStatement stm = null;
         double latitude;
         double longitude;
         int altitude;
@@ -247,12 +290,12 @@ public class ParkRegister {
         float parkInputCorrent;
         String parkId;
         try {
-            stm = dataHandler.prepareStatement("Select * from parks p, points_of_interest poi WHERE p.latitude = poi.latitude AND p.longitude = poi.longitude");
+            PreparedStatement stm = dataHandler.prepareStatement("Select p.park_id, p.latitude, p.longitude, p.park_input_voltage, p.park_input_current, p.available, poi.altitude_m, poi.poi_description from parks p, points_of_interest poi WHERE p.latitude = poi.latitude AND p.longitude = poi.longitude");
+            dataHandler.queueForClose(stm);
             ResultSet rs = dataHandler.executeQuery(stm);
-            if (rs == null) {
-                return null;
-            }
-            while (rs.next()) { // if it has next
+            dataHandler.queueForClose(rs);
+
+            while (rs.next()) {
                 parkId = rs.getString("park_id");
                 latitude = rs.getDouble("latitude");
                 longitude = rs.getDouble("longitude");
@@ -263,8 +306,9 @@ public class ParkRegister {
                 parkList.add(new Park(parkId, parkInputVoltage, parkInputCorrent, getListOfCapacities(parkId), rs.getString("poi_description"), coord));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
         }
         return parkList;
     }
@@ -280,8 +324,7 @@ public class ParkRegister {
      * @param radius
      * @return hashmap containing parks and their corresponding capacities
      */
-    public HashMap<Park, List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius) throws
-            SQLException {
+    public HashMap<Park, List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius) throws SQLException {
         HashMap<Park, List<Capacity>> nearestParksAvailability = new HashMap<>();
         for (Park park : fetchAllParks()) {
             if (coords.distance(park.getCoordinates()) <= radius) {
@@ -290,25 +333,26 @@ public class ParkRegister {
         }
         return nearestParksAvailability;
     }
-    
-    
+
     /**
-     * Return True if returned the vehicle to the park with sucess, false otherwise 
-     * @param parkId Park id
+     * Return True if returned the vehicle to the park with sucess, false otherwise
+     *
+     * @param parkId    Park id
      * @param vehicleId Vehicle id
-     * @return 
+     * @return
      */
-    public boolean returnVehicleToPark(String parkId,int vehicleId){
-        int nrLines;
-        try{
-            PreparedStatement preparedStatement=dataHandler.prepareStatement("Insert into park_vehicle(park_id,vehicle_id) values (?,?)");
-            preparedStatement.setString(1, parkId);
-            preparedStatement.setInt(2, vehicleId);
-            nrLines=preparedStatement.executeUpdate();
-            return nrLines > 0;
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-            return false;
+    public void returnVehicleToPark(String parkId, int vehicleId) throws SQLException {
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id,vehicle_id) values (?,?)");
+            dataHandler.queueForClose(ps);
+            ps.setString(1, parkId);
+            ps.setInt(2, vehicleId);
+            ps.executeUpdate();
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
         }
     }
 }
