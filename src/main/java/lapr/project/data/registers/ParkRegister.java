@@ -27,6 +27,20 @@ public class ParkRegister {
         this.dataHandler = dataHandler;
     }
 
+    public void addParks(List<String> id, List<String> description, List<Coordinates> coord, List<Float> parkInputVoltage, List<Float> parkInputCurrent, List<Integer> maxEletricScooters, List<Integer> maxBicycles) throws SQLException {
+        if(!(id.size()==description.size() && description.size() == coord.size() && coord.size() == parkInputVoltage.size() && parkInputVoltage.size() == parkInputCurrent.size())){
+            throw new IllegalArgumentException("Lists have different sizes.");
+        }
+        for(int i = 0 ; i < id.size(); i++){
+            try {
+                addPark(id.get(i),description.get(i),coord.get(i),parkInputVoltage.get(i),parkInputCurrent.get(i),maxEletricScooters.get(i),maxBicycles.get(i));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        dataHandler.commitTransaction();
+    }
+
     /**
      * Adds a park to the database
      *
@@ -35,7 +49,7 @@ public class ParkRegister {
      * @param parkInputCurrent Park input current
      * @return true if added with success the park, false otherwise
      */
-    public void addPark(String id, String description, Coordinates coord, float parkInputVoltage, float parkInputCurrent, int maxEletricScooters, int maxBicycles) throws SQLException {
+    private void addPark(String id, String description, Coordinates coord, float parkInputVoltage, float parkInputCurrent, int maxEletricScooters, int maxBicycles) throws SQLException {
         try (CallableStatement cs = dataHandler.prepareCall("{call register_park(?, ?, ?, ?, ?, ?, ?, ?, ?)}")) { // ensure everything is done with one request to the database => ensure database information consistency
             cs.setString(1, id);
             cs.setDouble(2, coord.getLatitude());
@@ -47,7 +61,6 @@ public class ParkRegister {
             cs.setInt(8, maxEletricScooters);
             cs.setInt(9, maxBicycles);
             dataHandler.execute(cs);
-            dataHandler.commitTransaction();
         } catch (SQLException e) {
             throw e;
         }
@@ -130,8 +143,6 @@ public class ParkRegister {
                 vehicleType = VehicleType.parseVehicleType(vehicleTypeName);
                 capacity.add(new Capacity(parkCapacity, amountOccupied, vehicleType));
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             throw e;
         } finally {

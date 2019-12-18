@@ -18,7 +18,7 @@ public class CreditCard {
     public CreditCard(String ccNumber, LocalDate ccExpiration, int ccVerification) {
         this.ccv = ccVerification;
         this.ccNumber = ccNumber;
-        this.ccExpiration = LocalDate.of(ccExpiration.getYear(), ccExpiration.getMonth(), 31);
+        this.ccExpiration = LocalDate.of(ccExpiration.getYear(), ccExpiration.getMonth(), ccExpiration.getDayOfMonth());
     }
 
     /**
