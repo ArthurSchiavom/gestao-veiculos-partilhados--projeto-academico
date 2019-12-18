@@ -32,9 +32,6 @@ public class PathRegister {
     /**
      * Fetchs a path from the data base
      *
-     * @param startPoint - contains the latitude and longitude of the starting
-     * point (primary keys)
-     * @param endPoint - containts the latitude and longitude of the ending
      * point (primary keys)
      * @return a path from the data base
      */
@@ -82,7 +79,7 @@ public class PathRegister {
 
             Coordinates startingPoint = new Coordinates(lat1, lon1, startAltitude);
             Coordinates endingPoint = new Coordinates(lat2, lon2, endAltitude);
-
+            return new Path(startingPoint,endingPoint,kinetic,windDirectionDegrees,windSpeed);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
