@@ -82,7 +82,7 @@ CREATE TABLE clients (
 -- Tabela Parks    
 CREATE TABLE parks (
   park_id   varchar2(50)
-                      constraint pk_parks_park_id PRIMARY KEY initially deferred,
+                      constraint pk_parks_park_id PRIMARY KEY,
   latitude  number(9, 6) constraint nn_parks_latitude NOT NULL,
   longitude number(9, 6) constraint nn_parks_longitude NOT NULL,
   park_input_voltage number(5,1) constraint parks_park_input_voltage NOT NULL,

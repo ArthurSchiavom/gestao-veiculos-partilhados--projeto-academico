@@ -16,17 +16,17 @@ import java.util.Map;
 
 public interface BSTInterface<E> {
 
-    public boolean isEmpty();
-    public void insert(E element);
-    public void remove(E element);
+    boolean isEmpty();
+    void insert(E element);
+    void remove(E element);
 
-    public int size();
-    public int height();
+    int size();
+    int height();
     
-    public E smallestElement();
-    public Iterable<E> inOrder();
-    public Iterable<E> preOrder();
-    public Iterable<E> posOrder();
-    public Map<Integer,List<E>> nodesByLevel();
+    E smallestElement();
+    Iterable<E> inOrder();
+    Iterable<E> preOrder();
+    Iterable<E> posOrder();
+    Map<Integer,List<E>> nodesByLevel();
     
 }
