@@ -9,96 +9,77 @@ import java.util.Objects;
 
 /**
  * Class that represents a path
- * 
+ *
  */
 public class Path {
-    
-    private Double latitudeA;
-    private Double longitudeA;
-    private Double latitudeB;
-    private Double longitudeB;
+
+    private Coordinates startPoint;
+    private Coordinates endPoint;
     private Double kineticCoefficient;
     private int windDirectionDegrees;
     private Double windSpeed;
-    
-    
-   /**
-    * Constructor that instantiates a path.
-    * @param latitudeA - latitude of start point
-    * @param longitudeA - longitude of start point
-    * @param latitudeB - latitude of end point
-    * @param longitudeB - longitude of end point
-    * @param kineticCoefficient - kinetic Coefficient
-    * @param windDirectionDegrees - wind direction in degrees
-    * @param windSpeed - wind speed
-    */
-    public Path(Double latitudeA, Double longitudeA, Double latitudeB, Double longitudeB, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
-        this.latitudeA = latitudeA;
-        this.longitudeA = longitudeA;
-        this.latitudeB = latitudeB;
-        this.longitudeB = longitudeB;
+
+    /**
+     * Instantiates a path
+     * @param startPoint - start point of the path
+     * @param endPoint - end point of the path
+     * @param windDirectionDegrees - wind direction in degrees
+     * @param windSpeed - wind speed
+     */
+    public Path(Coordinates startPoint, Coordinates endPoint, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
         this.kineticCoefficient = kineticCoefficient;
         this.windDirectionDegrees = windDirectionDegrees;
         this.windSpeed = windSpeed;
     }
-    
+
     /**
-     * Returns the latitude of the starting point of the path
-     * @return the latitude of the starting point of the path
+     * Returns the starting point of the path
+     * 
+     * @return the starting point of the path 
      */
-    public Double getLatA() {
-        return this.latitudeA;
+    public Coordinates getStartingPoint() {
+        return this.startPoint;
     }
     
     /**
-     * Returns the longitude of the starting point of the path
-     * @return  the longitude of the starting point of the path
+     * Returns the ending point of the path
+     * 
+     * @return the ending point of the path
      */
-    public Double getLonA() {
-        return this.longitudeA;
-    }
-    
-      /**
-     * Returns the latitude of the starting point of the path
-     * @return the latitude of the starting point of the path
-     */
-    public Double getLatB() {
-        return this.latitudeB;
-    }
-    
-    /**
-     * Returns the longitude of the starting point of the path
-     * @return  the longitude of the starting point of the path
-     */
-    public Double getLonB() {
-        return this.longitudeB;
+    public Coordinates getEndingPoint() {
+        return this.endPoint;
     }
     
     /**
      * Returns the kinetic coefficient in that path
+     *
      * @return the kinetic coefficient in that path
      */
-    public Double getKineticCoefficient(){
+    public Double getKineticCoefficient() {
         return this.kineticCoefficient;
     }
-    
+
     /**
      * Returns the wind direction in degrees in the path
+     *
      * @return the wind direction in degrees in the path
      */
     public int getWindDirectionDegrees() {
         return this.windDirectionDegrees;
     }
-    
+
     /**
      * Returns the wind speed in the path
+     *
      * @return the wind speed in the path
      */
     public Double getWindSpeed() {
         return this.windSpeed;
     }
-    
-     @Override
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -107,11 +88,11 @@ public class Path {
             return false;
         }
         Path path = (Path) o;
-        return Double.compare(path.latitudeA, latitudeA) == 0 && Double.compare(path.longitudeA, longitudeA) == 0 && Double.compare(path.latitudeB, latitudeB) == 0 && Double.compare(path.longitudeB, longitudeB) == 0;
+        return startPoint.equals(path.getStartingPoint()) && endPoint.equals(path.getEndingPoint());
     }
-    
-        @Override
+
+    @Override
     public int hashCode() {
-        return Objects.hash(latitudeA, latitudeA, latitudeB, longitudeB, kineticCoefficient, windDirectionDegrees, windSpeed);
+        return Objects.hash(startPoint, endPoint, kineticCoefficient, windDirectionDegrees, windSpeed);
     }
 }
