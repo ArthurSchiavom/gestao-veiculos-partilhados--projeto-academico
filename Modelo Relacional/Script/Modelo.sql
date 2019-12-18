@@ -15,7 +15,7 @@ DROP TABLE receipts CASCADE CONSTRAINTS;
 DROP TABLE registered_users CASCADE CONSTRAINTS;
 DROP TABLE paths CASCADE CONSTRAINTS;
 DROP TABLE points_of_interest CASCADE CONSTRAINTS;
-DROP TABLE trip_parks CASCADE CONSTRAINTS;
+DROP TABLE trip_paths CASCADE CONSTRAINTS;
 
 -- Tabela Vehicles
 CREATE TABLE vehicles (
@@ -45,12 +45,14 @@ CREATE TABLE bicycles (
 
 -- Tabela Electric_Scooters  
 CREATE TABLE electric_scooters (
-  vehicle_id                number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
-  electric_scooter_type_name varchar2(50),
-  actual_battery_capacity number(3) constraint nn_electric_scooters_actual_battery_capacity NOT NULL
+  vehicle_id                        number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
+  electric_scooter_type_name        varchar2(50),
+  actual_battery_capacity           number(3) constraint nn_electric_scooters_actual_battery_capacity NOT NULL
 									constraint ck_electric_scooters_actual_battery_capacity CHECK (actual_battery_capacity >= 0 and actual_battery_capacity <= 100),
-  max_battery_capacity             number(3,2) constraint nn_electric_scooters_battery_level NOT NULL,
-  electric_scooter_description varchar2(50) constraint nn_electric_scooters_description NOT NULL
+  max_battery_capacity              number(3,2) constraint nn_electric_scooters_battery_level NOT NULL,
+  electric_scooter_description      varchar2(50) constraint nn_electric_scooters_description NOT NULL,
+  engine_power                      number(6) constraint nn_electric_scooters_engine_power NOT NULL
+                                            constraint ck_electric_scooters_engine_power CHECK (engine_power >= 0)
   );
 
 -- Tabela Electric_Scooter_Types  
@@ -65,10 +67,7 @@ CREATE TABLE clients (
   user_email             varchar2(50) constraint pk_clients_user_email PRIMARY KEY, 
   points                 number(6)   DEFAULT 0 
                                       constraint nn_clients_points NOT NULL, 
-  credit_card_number     char(16)     constraint nn_clients_credit_card_number NOT NULL,
-  credit_card_expiration date         constraint nn_clients_credit_card_expiration NOT NULL, 
-  credit_card_secret     number(3)    constraint nn_clients_credit_card_secret NOT NULL
-                                      constraint ck_clients_credit_card_secret CHECK (REGEXP_LIKE(credit_card_secret, '\d{3}$')), 
+  visa     char(16)     constraint nn_clients_visa NOT NULL,
   height_m               number(3) constraint nn_clients_height_m NOT NULL, 
   weight_kg              number(3) constraint nn_clients_weight_kg NOT NULL, 
   gender                 char(1)      constraint nn_clients_gender NOT NULL
@@ -96,17 +95,14 @@ CREATE TABLE parks (
 -- Tabela park_vehicle
 CREATE TABLE park_vehicle (
   park_id    varchar2(50), 
-  vehicle_id number(8), 
-  CONSTRAINT pk_park_vehicle_park_id_vehicle_id PRIMARY KEY (park_id, vehicle_id)
+  vehicle_id number(8) CONSTRAINT pk_park_vehicle_vehicle_id PRIMARY KEY
 );
 
 -- Tabela pending_registrations 
 CREATE TABLE pending_registrations (
   email                  varchar2(50) CONSTRAINT pk_pending_registrations_email PRIMARY KEY, 
   amount_left_to_pay     number(6, 2) DEFAULT 10 CONSTRAINT nn_pending_registrations_amount_left_to_pay NOT NULL, 
-  credit_card_number     CHAR(16) CONSTRAINT nn_pending_registrations_credit_card_number NOT NULL, 
-  credit_card_expiration date CONSTRAINT nn_pending_registrations_credit_card_expiration NOT NULL, 
-  credit_card_secret     number(3) CONSTRAINT nn_pending_registrations_credit_card_secret NOT NULL, 
+  visa     CHAR(16) CONSTRAINT nn_pending_registrations_visa NOT NULL,
   height                 number(3) CONSTRAINT nn_pending_registrations_height NOT NULL, 
   weight                 number(3) CONSTRAINT nn_pending_registrations_weight NOT NULL, 
   gender                 char(1) CONSTRAINT nn_pending_registrations_gender NOT NULL
@@ -203,8 +199,8 @@ CREATE TABLE points_of_interest (
 );
 
 -- Tabela trip_points_of_interest  
-CREATE TABLE trip_parks (
-  trip_parks_id number(5) GENERATED AS IDENTITY constraint pk_trip_parks_trip_parks_id PRIMARY KEY,
+CREATE TABLE trip_paths (
+  trip_paths_id number(5) GENERATED AS IDENTITY constraint pk_trip_paths_trip_paths_id PRIMARY KEY,
   start_time timestamp, 
   user_email varchar2(50), 
   latitudeA  number(9, 6), 
@@ -229,9 +225,10 @@ ALTER TABLE receipts ADD CONSTRAINT fk_receipts_user_email_payment_start_date FO
 ALTER TABLE trips ADD CONSTRAINT fk_trip_vehicles FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
 ALTER TABLE clients ADD CONSTRAINT fk_clients_user_email FOREIGN KEY (user_email) REFERENCES registered_users (user_email);
 ALTER TABLE registered_users ADD CONSTRAINT fk_registered_users_user_type_name FOREIGN KEY (user_type_name) REFERENCES user_type (user_type_name);
-ALTER TABLE trip_parks ADD CONSTRAINT fk_trip_parks_table_trips FOREIGN KEY (start_time, user_email) REFERENCES trips (start_time, user_email);
-ALTER TABLE trip_parks ADD CONSTRAINT fk_trip_parks_table_paths FOREIGN KEY (latitudeA, longitudeA, latitudeB, longitudeB) REFERENCES paths (latitudeA, longitudeA, latitudeB, longitudeB);
+ALTER TABLE trip_paths ADD CONSTRAINT fk_trip_paths_table_trips FOREIGN KEY (start_time, user_email) REFERENCES trips (start_time, user_email);
+ALTER TABLE trip_paths ADD CONSTRAINT fk_trip_paths_table_paths FOREIGN KEY (latitudeA, longitudeA, latitudeB, longitudeB) REFERENCES paths (latitudeA, longitudeA, latitudeB, longitudeB);
 ALTER TABLE parks ADD CONSTRAINT fk_parks_latitude_longitude FOREIGN KEY (latitude, longitude) REFERENCES points_of_interest (latitude, longitude);
 ALTER TABLE paths ADD CONSTRAINT fk_parks_latitudeB_longitudeB FOREIGN KEY (latitudeB, longitudeB) REFERENCES points_of_interest (latitude, longitude);
 ALTER TABLE paths ADD CONSTRAINT fk_parks_latitudeA_longitudeA FOREIGN KEY (latitudeA, longitudeA) REFERENCES points_of_interest (latitude, longitude);
 
+COMMIT;

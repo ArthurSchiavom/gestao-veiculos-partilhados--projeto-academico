@@ -86,14 +86,14 @@ insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, 
 values('urban', 2, 1);
 
 -- electric_scooters
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity)
-values(4, 'offroad', 'PT001', 1, 75);
+insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power)
+values(4, 'offroad', 'PT001', 1, 75, 300);
 
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity)
-values(5, 'urban', 'PT002', 1, 20);
+insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power)
+values(5, 'urban', 'PT002', 1, 20, 700);
 
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity)
-values(6, 'urban', 'PT003', 1, 60);
+insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power)
+values(6, 'urban', 'PT003', 1, 60, 1500);
 
 -- user_type
 insert into user_type(user_type_name)
@@ -119,21 +119,21 @@ insert into registered_users(user_email, user_type_name, user_password, user_nam
 values('k@k.k', 'administrator', '555', 'MissMaam');
 
 -- clients
-insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('a@a.a', 10, '1111111111111111', TO_DATE('10-10-2020', 'dd/mm/yyyy'), 111, 1.72, 74, 'M', '1', 20, 18.2);
+insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('a@a.a', 10, '1111111111111111', 1.72, 74, 'M', '1', 20, 18.2);
 
-insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('b@b.b', 0, '2222222222222222', TO_DATE('12-02-2021', 'dd/mm/yyyy'), 222, 1.62, 54, 'F', '0', 19, 14.3);
+insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('b@b.b', 0, '2222222222222222', 1.62, 54, 'F', '0', 19, 14.3);
 
-insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('c@c.c', 300, '3333333333333333', TO_DATE('02-12-2032', 'dd/mm/yyyy'), 333, 1.90, 120, 'M', '1', 25, 4.9);
+insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('c@c.c', 300, '3333333333333333', 1.90, 120, 'M', '1', 25, 4.9);
 
-insert into clients (user_email, points, credit_card_number, credit_card_expiration, credit_card_secret, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('d@d.d', 1000, '4444444444444444', TO_DATE('01-10-2022', 'dd/mm/yyyy'), 444, 1.40, 40, 'M', '1', 13, 12.2);
+insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
+values('d@d.d', 1000, '4444444444444444', 1.40, 40, 'M', '1', 13, 12.2);
 
 -- pending_registrations
-insert into pending_registrations(email, amount_left_to_pay, credit_card_number, credit_card_expiration, credit_card_secret, height, weight, gender, age, cycling_average_speed, user_password, user_name)
-values('e@e.e', 8, '6666666666666666',  TO_DATE('10-10-2020', 'dd/mm/yyyy'), 666, 1.80, 80, 'M', 19, 13.1, '999', 'zeh');
+insert into pending_registrations(email, amount_left_to_pay, visa, height, weight, gender, age, cycling_average_speed, user_password, user_name)
+values('e@e.e', 8, '6666666666666666', 1.80, 80, 'M', 19, 13.1, '999', 'zeh');
 
 -- invoices
 insert into invoices(user_email, payment_start_date, amount, amount_left_to_pay, usage_cost, penalisation_cost)
@@ -177,13 +177,13 @@ insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coeffici
 values(30.4, -20.2, 18.222, 22.12, 0.004, 110, 1.0); -- baixa -> parque ivo
 
 -- trip_points_of_interest
-insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_paths(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 18.222, 20.12, 10.2, 30.2);
 
-insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_paths(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 10.2, 30.2, 30.4, -20.2);
 
-insert into trip_parks(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
+insert into trip_paths(start_time, user_email, latitudeA, longitudeA, latitudeB, longitudeB)
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 30.4, -20.2, 18.222, 22.12);
 
 -- park_vehicle
@@ -205,3 +205,4 @@ values('park1', 5);
 insert into park_vehicle(park_id, vehicle_id)
 values('park1', 6);
 
+COMMIT;
