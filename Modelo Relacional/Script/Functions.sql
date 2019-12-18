@@ -1,3 +1,28 @@
+--Finds the scooter with the minimum battery+10% in the park
+CREATE OR REPLACE FUNCTION findMinimumBatteryScooter(start_park_id_in IN varchar2, minimum_battery_in IN numeric)
+RETURN electric_scooters%rowtype IS
+	scooter electric_scooters%rowtype;
+BEGIN
+	WITH parked_electric_scooters AS (
+		SELECT v.vehicle_id v_id
+		FROM vehicles v
+		INNER JOIN park_vehicle pv
+		ON pv.vehicle_id=v.vehicle_id AND pv.park_id=start_park_id_in
+		WHERE v.vehicle_type_name LIKE 'electric_scooter'
+	)
+	SELECT es.vehicle_id, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.electric_scooter_description
+	INTO scooter
+	FROM electric_scooters es, parked_electric_scooters pes
+	WHERE pes.v_id=es.vehicle_id AND es.actual_battery_capacity*es.max_battery_capacity>minimum_battery_in*1.1
+	ORDER BY es.actual_battery_capacity*es.max_battery_capacity ASC
+	FETCH FIRST ROW ONLY;
+	RETURN scooter;
+EXCEPTION
+	WHEN no_data_found THEN
+		RETURN null;
+END;
+/
+
 --Finds the scooter with the highest amount of battery in the park
 CREATE OR REPLACE FUNCTION findHighestChargeScooter(start_park_id_in IN varchar2) 
 RETURN electric_scooters%rowtype IS
@@ -32,7 +57,7 @@ BEGIN
 	INTO vehicle
 	FROM vehicles v 
 	INNER JOIN park_vehicle pv 
-	ON pv.vehicle_id=v.vehicle_id 
+	ON pv.vehicle_id=v.vehicle_id AND pv.park_id=start_park_id_in
 	WHERE v.vehicle_type_name LIKE 'bicycle'
 	ORDER BY weight ASC
 	FETCH FIRST ROW ONLY;
