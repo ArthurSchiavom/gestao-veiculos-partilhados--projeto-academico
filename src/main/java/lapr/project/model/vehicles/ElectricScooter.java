@@ -14,6 +14,19 @@ public class ElectricScooter extends Vehicle {
     private final float maxBatteryCapacity;
     private final String description;
 
+    /**
+     * Instatiates an eletric scooter object
+     *
+     * @param id                     the id of the eletric scooter
+     * @param aerodynamicCoefficient the aerodynamic coefficient of the scooter
+     * @param frontalArea            the frontal area of the scooter
+     * @param weight                 the weight in kgs of the eletric scooter
+     * @param available              if the scooter is available right now or not
+     * @param electricScooterType    the type of the eletric scooter(city or offroad)
+     * @param actualBatteryCapacity  the current battery capacity
+     * @param maxBatteryCapacity     the maximum battery capacity
+     * @param description            the description of the eletric scooter
+     */
     public ElectricScooter(int id, float aerodynamicCoefficient,
                            float frontalArea, int weight, boolean available,
                            ElectricScooterType electricScooterType,
