@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.project.PhysicsCalculations;
+package lapr.project.utils.physics.calculations;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
  *
- * @author Jose
+ *
  */
 public class CaloriesCalculationTest {
-    
+
     public CaloriesCalculationTest() {
     }
 
@@ -20,45 +21,52 @@ public class CaloriesCalculationTest {
      * Test of calculateTimeSpent method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateTimeSpent() {    
+    public void calculateTimeSpentTest() {
         double velocity = 3.0;
         double distanceMade = 300.0;
         Double expResult = 100.0;
         Double result = CaloriesCalculation.calculateTimeSpent(velocity, distanceMade);
         assertEquals(expResult, result);
+        Double notExpResult = 20.0;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
-     * Test of calculatePowerRollingResistance method, of class CaloriesCalculation.
+     * Test of calculatePowerRollingResistance method, of class
+     * CaloriesCalculation.
      */
     @Test
-    public void testCalculatePowerRollingResistance() {
+    public void calculatePowerRollingResistanceTest() {
         double velocity = 3.0;
         double mass = 95.0;
         double kineticCoefficient = 0.002;
         Double expResult = 5.586;
         Double result = CaloriesCalculation.calculatePowerRollingResistance(velocity, mass, kineticCoefficient);
         assertEquals(expResult, result);
+        Double notExpResult = 5.10;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
      * Test of calculateClimbingPower method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateClimbingPower() {
+    public void calculateClimbingPowerTest() {
         double velocity = 3.0;
         double mass = 95.0;
         double slope = 0.89;
         Double expResult = 2485.77;
         Double result = CaloriesCalculation.calculateClimbingPower(velocity, mass, slope);
         assertEquals(expResult, result);
+        Double notExpResult = 2000.10;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
      * Test of calculatePowerAirDrag method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculatePowerAirDrag() {
+    public void calculatePowerAirDragTest() {
         double velocity = 3.0;
         double windSpeed = 1.0;
         double aerodynamicCoefficient = 1.10;
@@ -66,26 +74,30 @@ public class CaloriesCalculationTest {
         Double expResult = 0.606375;
         Double result = CaloriesCalculation.calculatePowerAirDrag(velocity, windSpeed, aerodynamicCoefficient, frontalArea);
         assertEquals(expResult, result);
+        Double notExpResult = 0.40;
+        assertNotEquals(notExpResult, result);
     }
 
     /**
      * Test of calculateSlop method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateSlop() {
+    public void calculateSlopTest() {
         int height = 200;
-        double DistanceTraveled = 300.0;
+        double distanceTraveled = 300.0;
         Double expResult = 0.89;
-        Double result = CaloriesCalculation.calculateSlop(height, DistanceTraveled);
+        Double result = CaloriesCalculation.calculateSlop(height, distanceTraveled);
         assertEquals(expResult, result);
-       
+        Double notExpResult = 0.10;
+        assertNotEquals(notExpResult, result);
+
     }
 
     /**
      * Test of calculateCaloriesBurnt method, of class CaloriesCalculation.
      */
     @Test
-    public void testCalculateCaloriesBurnt() {
+    public void calculateCaloriesBurntTest() {
         double velocity = 3.0;
         double windSpeed = 1.0;
         double kineticCoefficient = 0.002;
@@ -99,6 +111,8 @@ public class CaloriesCalculationTest {
         Double expResult = 59559.40;
         Double result = CaloriesCalculation.calculateCaloriesBurnt(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, bicycleMass, startAltitude, endAltitude);
         assertEquals(expResult, result);
+        Double notExpResult = 50000.0;
+        assertNotEquals(notExpResult, result);
     }
-    
+
 }
