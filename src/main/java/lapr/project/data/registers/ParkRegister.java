@@ -283,4 +283,25 @@ public class ParkRegister {
         }
         return nearestParksAvailability;
     }
+    
+    
+    /**
+     * Return True if returned the vehicle to the park with sucess, false otherwise 
+     * @param parkId Park id
+     * @param vehicleId Vehicle id
+     * @return 
+     */
+    public boolean returnVehicleToPark(String parkId,int vehicleId){
+        int nrLines;
+        try{
+            PreparedStatement preparedStatement=dataHandler.prepareStatement("Insert into park_vehicle(park_id,vehicle_id) values (?,?)");
+            preparedStatement.setString(1, parkId);
+            preparedStatement.setInt(2, vehicleId);
+            nrLines=preparedStatement.executeUpdate();
+            return nrLines > 0;
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 }
