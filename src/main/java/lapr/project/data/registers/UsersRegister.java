@@ -133,7 +133,6 @@ public class UsersRegister {
                     stm.close(); // closes statement
                 } catch (SQLException e) {}
         }
-        dataHandler.commitTransaction();
     }
 
     /**
