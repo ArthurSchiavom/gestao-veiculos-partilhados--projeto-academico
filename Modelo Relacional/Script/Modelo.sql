@@ -40,7 +40,7 @@ CREATE TABLE bicycles (
   vehicle_id        number(8) constraint pk_bicycles_vehicle_id PRIMARY KEY,                  
   bicycle_size      number(2) constraint nn_bicycles_bicycle_size NOT NULL
                               constraint ck_bicycles_bicycle_size CHECK(bicycle_size > 0),
-  bicyble_description varchar2(50) constraint nn_bicycles_bicycle_description NOT NULL
+  bicycle_description varchar2(50) constraint nn_bicycles_bicycle_description NOT NULL
 );
 
 -- Tabela Electric_Scooters  

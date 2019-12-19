@@ -13,11 +13,11 @@ public class ElectricScooter extends Vehicle {
     private final int actualBatteryCapacity;
     private final float maxBatteryCapacity;
     private final String description;
+    private final int enginePower;
 
     /**
      * Instatiates an eletric scooter object
-     *
-     * @param id                     the id of the eletric scooter
+     *  @param id                     the id of the eletric scooter
      * @param aerodynamicCoefficient the aerodynamic coefficient of the scooter
      * @param frontalArea            the frontal area of the scooter
      * @param weight                 the weight in kgs of the eletric scooter
@@ -26,18 +26,20 @@ public class ElectricScooter extends Vehicle {
      * @param actualBatteryCapacity  the current battery capacity
      * @param maxBatteryCapacity     the maximum battery capacity
      * @param description            the description of the eletric scooter
+     * @param enginePower
      */
     public ElectricScooter(int id, float aerodynamicCoefficient,
                            float frontalArea, int weight, boolean available,
                            ElectricScooterType electricScooterType,
                            int actualBatteryCapacity, float maxBatteryCapacity,
-                           String description) {
+                           String description, int enginePower) {
         super(id, aerodynamicCoefficient, frontalArea, weight, available,
                 VehicleType.ELECTRIC_SCOOTER);
         this.electricScooterType = electricScooterType;
         this.actualBatteryCapacity = actualBatteryCapacity;
         this.maxBatteryCapacity = maxBatteryCapacity;
         this.description = description;
+        this.enginePower = enginePower;
     }
 
     public ElectricScooterType getElectricScooterType() {
@@ -52,8 +54,12 @@ public class ElectricScooter extends Vehicle {
         return maxBatteryCapacity;
     }
 
-    public String getElectricScooterDescription() {
+    public String getDescription() {
         return description;
+    }
+
+    public int getEnginePower() {
+        return enginePower;
     }
 
     /**

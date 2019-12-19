@@ -11,25 +11,30 @@ class ElectricScooterTest {
     void beforeEach() {
         instance = new ElectricScooter(1,2.3F,2.4F,
                 35,true,ElectricScooterType.URBAN,15,
-                150f,"description");
+                150f,"description", 120);
     }
     @Test
-    void getElectricScooterType() {
+    void getElectricScooterTypeTest() {
         assertEquals(ElectricScooterType.URBAN, instance.getElectricScooterType());
     }
 
     @Test
-    void getActual_battery_capacity() {
+    void getActualBatteryCapacityTest() {
         assertEquals(15, instance.getActualBatteryCapacity());
     }
 
     @Test
-    void getMax_battery_capacity() {
+    void getMaxBatteryCapacityTest() {
         assertEquals(150f, instance.getMaxBatteryCapacity());
     }
 
     @Test
-    void getEletric_scooter_description() {
-        assertEquals("description", instance.getElectricScooterDescription());
+    void getDescriptionTest() {
+        assertEquals("description", instance.getDescription());
+    }
+
+    @Test
+    void getEnginePowerTest() {
+        assertEquals(120, instance.getEnginePower());
     }
 }

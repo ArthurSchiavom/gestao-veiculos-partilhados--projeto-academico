@@ -69,13 +69,13 @@ insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coeffici
 values('electric_scooter', 0, 20, 1.1, 0.3);
 
 -- bicycles
-insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
+insert into bicycles(vehicle_id, bicycle_size, bicycle_description)
 values(1, 15, 'PT001');
 
-insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
+insert into bicycles(vehicle_id, bicycle_size, bicycle_description)
 values(2, 17, 'PT002');
 
-insert into bicycles(vehicle_id, bicycle_size, bicyble_description)
+insert into bicycles(vehicle_id, bicycle_size, bicycle_description)
 values(3, 19, 'PT003');
 
 -- electric _scooter_types
