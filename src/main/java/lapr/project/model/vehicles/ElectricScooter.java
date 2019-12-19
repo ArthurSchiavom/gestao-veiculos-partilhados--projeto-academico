@@ -1,8 +1,9 @@
 package lapr.project.model.vehicles;
 
-import lapr.project.model.point.of.interest.PointOfInterest;
 
 import java.util.List;
+import lapr.project.model.Path;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 /**
  * Represents an eletric scooter
@@ -17,22 +18,24 @@ public class ElectricScooter extends Vehicle {
 
     /**
      * Instatiates an eletric scooter object
-     *  @param id                     the id of the eletric scooter
+     *
+     * @param id the id of the eletric scooter
      * @param aerodynamicCoefficient the aerodynamic coefficient of the scooter
-     * @param frontalArea            the frontal area of the scooter
-     * @param weight                 the weight in kgs of the eletric scooter
-     * @param available              if the scooter is available right now or not
-     * @param electricScooterType    the type of the eletric scooter(city or offroad)
-     * @param actualBatteryCapacity  the current battery capacity
-     * @param maxBatteryCapacity     the maximum battery capacity
-     * @param description            the description of the eletric scooter
-     * @param enginePower
+     * @param frontalArea the frontal area of the scooter
+     * @param weight the weight in kgs of the eletric scooter
+     * @param available if the scooter is available right now or not
+     * @param electricScooterType the type of the eletric scooter(city or
+     * offroad)
+     * @param actualBatteryCapacity the current battery capacity
+     * @param maxBatteryCapacity the maximum battery capacity
+     * @param description the description of the eletric scooter
+     * @param enginePower the power of the engine
      */
     public ElectricScooter(int id, float aerodynamicCoefficient,
-                           float frontalArea, int weight, boolean available,
-                           ElectricScooterType electricScooterType,
-                           int actualBatteryCapacity, float maxBatteryCapacity,
-                           String description, int enginePower) {
+            float frontalArea, int weight, boolean available,
+            ElectricScooterType electricScooterType,
+            int actualBatteryCapacity, float maxBatteryCapacity,
+            String description, int enginePower) {
         super(id, aerodynamicCoefficient, frontalArea, weight, available,
                 VehicleType.ELECTRIC_SCOOTER);
         this.electricScooterType = electricScooterType;
@@ -62,25 +65,25 @@ public class ElectricScooter extends Vehicle {
         return enginePower;
     }
 
-    /**
-     * Calculates the required battery for a trip with a preset destination
-     *
-     * @param path the path that the user has planned to take
-     * @return the required battery for the total trip
-     */
-    public static int calculateNecessaryBattery(List<PointOfInterest> path) {
-        throw new UnsupportedOperationException();
+    public Double getScooterAutonomy() {
+        return PhysicsMethods.calculateScooterAutonomyKM((double) maxBatteryCapacity, actualBatteryCapacity, enginePower);
     }
 
     /**
-     * Calculates the battery required between two points
+     * Returns true if a scooter has the necessary autonomy to make a trip
      *
-     * @param startPoint the starting point of interest
-     * @param endPoint   the ending point of interest
-     * @return the required battery for traveling between two points
+     * @param trip - the trip
+     * @return true if a scooter has the necessary autonomy to make a trip
      */
-    private static int calculateNecessaryBattery(PointOfInterest startPoint,
-                                                 PointOfInterest endPoint) {
-        throw new UnsupportedOperationException();
+    public boolean hasAutonomy(List<Path> trip) {
+        double distance = 0;
+        for (Path path : trip) {
+            distance += path.getStartingPoint().distance(path.getEndingPoint());
+        }
+        if (getScooterAutonomy() > (distance + distance * 0.10)) {
+            return true;
+        }
+        return false;
     }
+
 }

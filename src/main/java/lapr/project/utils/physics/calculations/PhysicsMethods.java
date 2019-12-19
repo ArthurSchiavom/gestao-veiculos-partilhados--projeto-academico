@@ -68,10 +68,10 @@ public class PhysicsMethods {
      * @param DistanceTraveled - distance between the points
      * @return the slop between the starting and ending point
      */
-    public static Double calculateSlop(int height, double distanceTraveled) {
+    public static Double calculateSlope(int height, double distanceTraveled) {
         double cateto = Math.sqrt(Math.pow(distanceTraveled, 2) - Math.pow(height, 2));
-        double slop = height/cateto;
-        return Math.round(slop * 100.0)/100.0;
+        double slope = height/cateto;
+        return Math.round(slope * 100.0)/100.0;
     }
 
     /**
@@ -96,7 +96,7 @@ public class PhysicsMethods {
         double time = calculateTimeSpent(velocity, distanceMade);
         double totalMass = personMass + bicycleMass;
         int heightDifference = endAltitude - startAltitude;
-        double slope = calculateSlop(heightDifference, distanceMade);
+        double slope = calculateSlope(heightDifference, distanceMade);
 
         double powerRollingResistance = calculatePowerRollingResistance(velocity, totalMass, kineticCoefficient);
         double powerClimbing = calculateClimbingPower(velocity, totalMass, slope);

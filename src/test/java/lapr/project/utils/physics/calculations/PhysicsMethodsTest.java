@@ -78,14 +78,14 @@ public class PhysicsMethodsTest {
     }
 
     /**
-     * Test of calculateSlop method, of class PhysicsMethods.
+     * Test of calculateSlope method, of class PhysicsMethods.
      */
     @Test
     public void calculateSlopTest() {
         int height = 200;
         double distanceTraveled = 300.0;
         Double expResult = 0.89;
-        Double result = PhysicsMethods.calculateSlop(height, distanceTraveled);
+        Double result = PhysicsMethods.calculateSlope(height, distanceTraveled);
         assertEquals(expResult, result);
         Double notExpResult = 0.10;
         assertNotEquals(notExpResult, result);
