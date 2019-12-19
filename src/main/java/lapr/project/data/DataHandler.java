@@ -1,11 +1,9 @@
 package lapr.project.data;
 
 
-import lapr.project.data.registers.Company;
 import lapr.project.utils.Updateable;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
@@ -116,8 +114,11 @@ public class DataHandler {
 
     /**
      * Estabelece a ligação à BD. <b>Não são efetuadas quaisquer verificações sobre o estado da conexão atual.</b>
+     *
+     * @throws SQLException if a database access error occurs or the url is null
+     * @throws SQLTimeoutException when the driver has determined that the timeout value specified by the setLoginTimeout method has been exceeded and has at least tried to cancel the current database connection attempt
      */
-    private void openConnection() throws SQLException {
+    protected void openConnection() throws SQLException {
         connection = DriverManager.getConnection(
                 jdbcUrl, username, password);
         connection.setAutoCommit(false);
@@ -171,25 +172,14 @@ public class DataHandler {
         return message.toString();
     }
 
-    private static boolean attemptingToReconnect = false;
+    private Updateable<Boolean> attemptingToReconnect = new Updateable<>(false);
     private synchronized void continuousReconnectAttempt() {
-        if (attemptingToReconnect)
+        if (attemptingToReconnect.getValue())
             return;
 
-        attemptingToReconnect = true;
-        new Thread(() -> {
-            int nAttempt = 1;
-            boolean connected = false;
-            while (!connected && nAttempt < MAX_RECONNECTION_ATTEMPTS_UNRECOVERABLE) {
-                nAttempt++;
-                connected = true;
-                try { Company.getInstance().getDataHandler().openConnection(); } catch (Exception e) { connected = false;}
-                try { wait(RECONNECTION_INTERVAL_MILLIS); } catch (InterruptedException e) {
-                    LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
-                }
-            }
-            attemptingToReconnect = false;
-        }).start();
+        attemptingToReconnect.setValue(true);
+        new Thread(new ReconnectorRunnable(attemptingToReconnect, this, MAX_RECONNECTION_ATTEMPTS_UNRECOVERABLE, RECONNECTION_INTERVAL_MILLIS))
+                .start();
     }
 
     private <T> T executeRecoverableSQLOperation(SQLOperation<T> operation) throws SQLException {
@@ -198,9 +188,11 @@ public class DataHandler {
             try {
                 return operation.executeOperation();
             } catch (SQLException e) {
-                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS_RECOVERABLE) {
+                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS_RECOVERABLE && !Shutdown.wasShutdownIssued()) {
                     try {
-                        wait(RECONNECTION_INTERVAL_MILLIS);
+                        synchronized (this) {
+                            this.wait(RECONNECTION_INTERVAL_MILLIS);
+                        }
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.WARNING, "Failed to make thread wait, skipping wait period.");
                     }
