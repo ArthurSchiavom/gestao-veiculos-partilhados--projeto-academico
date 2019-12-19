@@ -181,12 +181,19 @@ public class TripRegister {
      */
 
 
-    public List<Trip> getListOfVehiclesAvailable(LocalDateTime startTime) {
+    public List<Trip> getListOfVehiclesNotAvailable(LocalDateTime startTime,LocalDateTime endTime) {
         List<Trip> dispVehicles  = new ArrayList<>();
         try {
-            PreparedStatement statement = dataHandler.prepareStatement("Select * from trips where ? BETWEEN start_time and nvl(end_time, sysdate)");
+            PreparedStatement statement = dataHandler.prepareStatement("Select * from trips  WHERE (? >= start_time AND ? < nvl(end_time, sysdate)) OR (? > start_time AND ? <= nvl(end_time, sysdate) ) OR (? >= nvl(end_time, sysdate) AND ? <= start_time)");
+            dataHandler.queueForClose(statement);
             statement.setTimestamp(1,Timestamp.valueOf(startTime));
+            statement.setTimestamp(2,Timestamp.valueOf(startTime));
+            statement.setTimestamp(3,Timestamp.valueOf(endTime));
+            statement.setTimestamp(4,Timestamp.valueOf(endTime));
+            statement.setTimestamp(5,Timestamp.valueOf(endTime));
+            statement.setTimestamp(6,Timestamp.valueOf(startTime));
             ResultSet resultVehicles = dataHandler.executeQuery(statement);
+            dataHandler.queueForClose(resultVehicles);
             if (resultVehicles == null) {
                 return dispVehicles;
             }
@@ -196,20 +203,15 @@ public class TripRegister {
                 String userEmail = resultVehicles.getString("user_email");
                 int vehicleId = resultVehicles.getInt("vehicle_id");
                 String startParkId = resultVehicles.getString("start_park_id");
-                String endParkId = resultVehicles.getString("end_park_id");
-                Timestamp endT = resultVehicles.getTimestamp("end_time");
-                LocalDateTime end_time = endT.toLocalDateTime();
 
-
-                Trip trip = new Trip(start_time,end_time,userEmail,startParkId,endParkId,vehicleId);
+                Trip trip = new Trip(start_time,null,userEmail,startParkId,null,vehicleId);
 
                dispVehicles.add(trip);
             }
-            resultVehicles.close();
-            statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             return dispVehicles;
+        } finally {
+             dataHandler.closeQueuedAutoCloseables();
         }
         return dispVehicles;
     }
