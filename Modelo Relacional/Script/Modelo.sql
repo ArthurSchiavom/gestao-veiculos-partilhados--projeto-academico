@@ -118,10 +118,10 @@ CREATE TABLE pending_registrations (
 CREATE TABLE invoices (
   user_email         varchar2(50), 
   payment_start_date date, 
-  amount             number(9, 2) CONSTRAINT nn_invoices_amount NOT NULL, 
   amount_left_to_pay number(9, 2) DEFAULT null, 
   usage_cost         number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_usage_cost NOT NULL, 
-  penalisation_cost  number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_penalisation_cost NOT NULL, 
+  penalisation_cost  number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_penalisation_cost NOT NULL,
+  points_used        number(6)    DEFAULT 0 constraint nn_invoices_points_used NOT NULL,
   CONSTRAINT pk_invoices_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date) 
 );
 
@@ -160,7 +160,6 @@ CREATE TABLE receipts (
   user_email       varchar2(50), 
   payment_start_date date,
   payment_end_date date CONSTRAINT nn_receipts_payment_end_date NOT NULL,
-  points_used      number(6) CONSTRAINT nn_receipts_points_used NOT NULL, 
   amount_paid_cash number(9, 2) CONSTRAINT nn_receipts_amount_paid_cash NOT NULL, 
   CONSTRAINT pk_receipts_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date),
   CONSTRAINT ck_receipts_start_end_payment_date CHECK(payment_start_date < payment_end_date)

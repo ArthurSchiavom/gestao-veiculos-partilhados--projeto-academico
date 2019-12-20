@@ -136,11 +136,11 @@ insert into pending_registrations(email, amount_left_to_pay, visa, height, weigh
 values('e@e.e', 8, '6666666666666666', 1.80, 80, 'M', 19, 13.1, '999', 'zeh');
 
 -- invoices
-insert into invoices(user_email, payment_start_date, amount, amount_left_to_pay, usage_cost, penalisation_cost)
-values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), 5, 10, 2, 3);
+insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost,points_used)
+values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), 10, 10, 2,20);
 
-insert into invoices(user_email, payment_start_date, amount, amount_left_to_pay, usage_cost, penalisation_cost)
-values('b@b.b', TO_DATE('01-12-2019', 'dd/mm/yyyy'), 10, 0, 4, 2);
+insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost,points_used)
+values('b@b.b', TO_DATE('01-12-2019', 'dd/mm/yyyy'), 0, 4, 2,17);
 
 -- park_capacity
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)
@@ -163,8 +163,8 @@ insert into trips (start_time, user_email, vehicle_id, start_park_id)
 values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'b@b.b', 2, 'park1');
 
 -- receipts
-insert into receipts (user_email, payment_start_date, payment_end_date, points_used, amount_paid_cash)
-values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), TO_DATE('20-10-2019', 'dd/mm/yyyy'), 0, 30);
+insert into receipts (user_email, payment_start_date, payment_end_date, amount_paid_cash)
+values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), TO_DATE('20-10-2019', 'dd/mm/yyyy'), 30);
 
 -- paths
 insert into paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coefficient, wind_direction_degrees, wind_speed)
