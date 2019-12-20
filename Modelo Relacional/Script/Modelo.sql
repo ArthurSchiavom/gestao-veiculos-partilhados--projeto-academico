@@ -104,7 +104,7 @@ CREATE TABLE pending_registrations (
   gender                 char(1) CONSTRAINT nn_pending_registrations_gender NOT NULL
                                  CONSTRAINT ck_pending_registrations_gender CHECK(REGEXP_LIKE(gender, 'M|F', 'i')),
   cycling_average_speed number(4,2) constraint nn_pending_registrations_cycling_average_speed NOT NULL,
-  user_password  varchar2(20) CONSTRAINT nn_pending_registrations_user_password NOT NULL,
+  user_password  varchar2(20) DEFAULT 'qwerty' CONSTRAINT nn_pending_registrations_user_password NOT NULL,
   user_name      varchar2(50) CONSTRAINT nn_pending_registrations_user_name NOT NULL,
   Constraint ck_pending_registrations_email CHECK (REGEXP_LIKE(email, '^.*@.*$'))
 );

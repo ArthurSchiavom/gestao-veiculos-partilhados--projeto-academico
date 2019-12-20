@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class UsersRegister {
     private DataHandler dataHandler;
-    private static String DEFAULT_PASSWORD = "qwerty";
     private static float DEFAULT_VALUE_TO_PAY = 0;
 
     public UsersRegister(DataHandler dataHandler) {
@@ -111,7 +110,7 @@ public class UsersRegister {
         PreparedStatement stm = null;
         try {
             //pending registrations
-            stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, visa, height_cm, weight, gender, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,?,?)");
+            stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, visa, height_cm, weight, gender, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,DEFAULT,?)");
 
             stm.setString( 1, email.toLowerCase().trim()); // capital letters do not matter in email addresses
             stm.setFloat( 2, DEFAULT_VALUE_TO_PAY);
@@ -121,8 +120,7 @@ public class UsersRegister {
             stm.setString( 6, String.valueOf(gender)); // uses setString even
             // tho its a char
             stm.setFloat( 7, cyclingAvgSpeed);
-            stm.setString( 8, DEFAULT_PASSWORD);
-            stm.setString( 9, username.trim());
+            stm.setString( 8, username.trim());
             int nrLines = dataHandler.executeUpdate(stm);
             if (nrLines == 0) {
                 throw new IllegalArgumentException("Client not inserted correctly");

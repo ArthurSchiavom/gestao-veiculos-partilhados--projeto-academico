@@ -2,7 +2,7 @@ package lapr.project.assessment;
 
 import lapr.project.controller.RegisterBicyclesController;
 import lapr.project.controller.RegisterElectricScootersController;
-import lapr.project.controller.UserController;
+import lapr.project.controller.addUserController;
 import lapr.project.data.registers.Company;
 import lapr.project.utils.Utils;
 
@@ -21,7 +21,7 @@ public class Facade implements Serviceable {
     private final Company company = Company.getInstance();
     private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
     private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
-    private final UserController userController = new UserController(company);
+    private final addUserController addUserController = new addUserController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -116,7 +116,7 @@ public class Facade implements Serviceable {
             return -1;
         }
         try {
-            return userController.addUsers(email, username, height, weight, gender, visa, cyclingAvgSpeed);
+            return addUserController.addUsers(email, username, height, weight, gender, visa, cyclingAvgSpeed);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to register the users on the database");
             return -1;

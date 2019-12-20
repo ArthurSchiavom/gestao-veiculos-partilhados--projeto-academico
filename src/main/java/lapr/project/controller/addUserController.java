@@ -6,12 +6,12 @@ import lapr.project.data.registers.UsersRegister;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserController {
+public class addUserController {
 
     private Company company;
     private UsersRegister usersRegister;
 
-    public UserController(Company company) {
+    public addUserController(Company company) {
         this.company = company;
         usersRegister = company.getUsersRegister();
     }
