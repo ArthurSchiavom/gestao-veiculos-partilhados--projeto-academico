@@ -13,9 +13,9 @@ class ElectricScooterTest {
     ElectricScooter instance;
     @BeforeEach
     void beforeEach() {
-        instance = new ElectricScooter(1,2.3F,2.4F,
+        instance = new ElectricScooter("PT001",2.3F,2.4F,
                 35,true,ElectricScooterType.URBAN,15,
-                1f,"description", 500);
+                1f, 500);
     }
     @Test
     void getElectricScooterTypeTest() {
@@ -30,11 +30,6 @@ class ElectricScooterTest {
     @Test
     void getMaxBatteryCapacityTest() {
         assertEquals(1f, instance.getMaxBatteryCapacity());
-    }
-
-    @Test
-    void getDescriptionTest() {
-        assertEquals("description", instance.getDescription());
     }
 
     @Test

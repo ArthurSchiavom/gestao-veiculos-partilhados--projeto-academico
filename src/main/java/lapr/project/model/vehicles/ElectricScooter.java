@@ -13,7 +13,6 @@ public class ElectricScooter extends Vehicle {
     private final ElectricScooterType electricScooterType;
     private final int actualBatteryCapacity;
     private final float maxBatteryCapacity;
-    private final String description;
     private final int enginePower;
 
     /**
@@ -39,7 +38,6 @@ public class ElectricScooter extends Vehicle {
         this.electricScooterType = electricScooterType;
         this.actualBatteryCapacity = actualBatteryCapacity;
         this.maxBatteryCapacity = maxBatteryCapacity;
-        this.description = description;
         this.enginePower = enginePower;
     }
 
@@ -53,10 +51,6 @@ public class ElectricScooter extends Vehicle {
 
     public float getMaxBatteryCapacity() {
         return maxBatteryCapacity;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public int getEnginePower() {

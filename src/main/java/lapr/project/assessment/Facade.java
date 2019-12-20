@@ -1,8 +1,9 @@
 package lapr.project.assessment;
 
+import lapr.project.controller.RegisterBicyclesController;
+import lapr.project.controller.RegisterElectricScootersController;
 import lapr.project.controller.UserController;
 import lapr.project.data.registers.Company;
-import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.utils.Utils;
 
 import java.io.BufferedWriter;
@@ -17,13 +18,10 @@ import java.util.logging.Logger;
 
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
-    private final Company company;
-    private UserController userController;
-
-    public Facade() {
-        this.company = Company.getInstance();
-        userController = new UserController(company);
-    }
+    private final Company company = Company.getInstance();
+    private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
+    private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
+    private final UserController userController = new UserController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -36,14 +34,6 @@ public class Facade implements Serviceable {
 
         return parsedData;
     }
-
-    private static final int BICYCLES_BICYCLE_DESCRIPTION_INDEX = 0;
-    private static final int BICYCLES_WEIGHT_INDEX = 1;
-    private static final int BICYCLES_PARK_LAT_INDEX = 2;
-    private static final int BICYCLES_PARK_LON_INDEX = 3;
-    private static final int BICYCLES_AERODYNAMIC_COEFFICIENT_INDEX = 4;
-    private static final int BICYCLES_FRONTAL_AREA_INDEX = 5;
-    private static final int BICYCLES_WHEEL_SIZE_INDEX = 6;
 
     private static final int USER_USERNAME = 0;
     private static final int USER_EMAIL = 1;
@@ -59,106 +49,16 @@ public class Facade implements Serviceable {
         if (parsedData == null)
             return -1;
 
-        List<Integer> weight = new ArrayList<>();
-        List<Float> aerodynamicCoefficient = new ArrayList<>();
-        List<Float> frontalArea = new ArrayList<>();
-        List<Integer> size = new ArrayList<>();
-        List<String> description = new ArrayList<>();
-        List<Double> parkLatitude = new ArrayList<>();
-        List<Double> parkLongitude = new ArrayList<>();
-        int i = 0;
-        try {
-            for (i = 0; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
-
-                aerodynamicCoefficient.add(Float.parseFloat(line[BICYCLES_AERODYNAMIC_COEFFICIENT_INDEX]));
-                weight.add(Integer.parseInt(line[BICYCLES_WEIGHT_INDEX]));
-                frontalArea.add(Float.parseFloat(line[BICYCLES_FRONTAL_AREA_INDEX]));
-                size.add(Integer.parseInt(line[BICYCLES_WHEEL_SIZE_INDEX]));
-                description.add(line[BICYCLES_BICYCLE_DESCRIPTION_INDEX]);
-                parkLatitude.add(Double.parseDouble(line[BICYCLES_PARK_LAT_INDEX]));
-                parkLongitude.add(Double.parseDouble(line[BICYCLES_PARK_LON_INDEX]));
-            }
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "Invalid data at line number " + i + " of the file " + s);
-            return -1;
-        } catch (IndexOutOfBoundsException e) {
-            LOGGER.log(Level.SEVERE, "Not all columns are present at line " + i + " of the file " + s);
-            return -1;
-        }
-
-        try {
-            return company.getVehicleRegister().registerBicycles(aerodynamicCoefficient, frontalArea, weight,
-                     size, description, parkLatitude, parkLongitude);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to register the bicycles on the database");
-            e.printStackTrace();
-            return -1;
-        }
+        return registerBicyclesController.registerBicycles(parsedData, s);
     }
 
-    private static final int SCOOTERS_DESCRIPTION_INDEX = 0;
-    private static final int SCOOTERS_WEIGHT_INDEX = 1;
-    private static final int SCOOTERS_TYPE_INDEX = 2;
-    private static final int SCOOTERS_PARK_LAT_INDEX = 3;
-    private static final int SCOOTERS_PARK_LON_INDEX = 4;
-    private static final int SCOOTERS_MAX_BATTERY_CAPACITY_INDEX = 5;
-    private static final int SCOOTERS_ACTUAL_BATTERY_CAPACITY_INDEX = 6;
-    private static final int SCOOTERS_AERODYNAMIC_COEFFICIENT_INDEX = 7;
-    private static final int SCOOTERS_FRONTAL_AREA_INDEX = 8;
-    private static final int SCOOTERS_ENGINE_POWER_INDEX = 9;
     @Override
     public int addEscooters(String s) {
         List<String[]> parsedData = loadParsedData(s);
         if (parsedData == null)
             return -1;
 
-        List<Float> aerodynamicCoefficient = new ArrayList<>();
-        List<Float> frontalArea = new ArrayList<>();
-        List<Integer> weight = new ArrayList<>();
-        List<ElectricScooterType> type = new ArrayList<>();
-        List<String> description = new ArrayList<>();
-        List<Float> maxBatteryCapacity = new ArrayList<>();
-        List<Integer> actualBatteryCapacity = new ArrayList<>();
-        List<Integer> enginePower = new ArrayList<>();
-        List<Double> parkLatitude = new ArrayList<>();
-        List<Double> parkLongitude = new ArrayList<>();
-
-        int i = 0;
-        try {
-            for (i = 0; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
-
-                aerodynamicCoefficient.add(Float.parseFloat(line[SCOOTERS_AERODYNAMIC_COEFFICIENT_INDEX]));
-                frontalArea.add(Float.parseFloat(line[BICYCLES_FRONTAL_AREA_INDEX]));
-                weight.add(Integer.parseInt(line[SCOOTERS_WEIGHT_INDEX]));
-                ElectricScooterType currentType = line[SCOOTERS_TYPE_INDEX].equalsIgnoreCase("city") ? ElectricScooterType.URBAN : ElectricScooterType.OFFROAD;
-                type.add(currentType);
-                description.add(line[SCOOTERS_DESCRIPTION_INDEX]);
-                maxBatteryCapacity.add(Float.parseFloat(line[SCOOTERS_MAX_BATTERY_CAPACITY_INDEX]));
-                actualBatteryCapacity.add(Integer.parseInt(line[SCOOTERS_ACTUAL_BATTERY_CAPACITY_INDEX]));
-                enginePower.add(Integer.parseInt(line[SCOOTERS_ENGINE_POWER_INDEX]));
-                parkLatitude.add(Double.parseDouble(line[SCOOTERS_PARK_LAT_INDEX]));
-                parkLongitude.add(Double.parseDouble(line[SCOOTERS_PARK_LON_INDEX]));
-            }
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "Invalid data at line number " + i + " of the file " + s);
-            return -1;
-        } catch (IndexOutOfBoundsException e) {
-            LOGGER.log(Level.SEVERE, "Not all columns are present at line " + i + " of the file " + s);
-            return -1;
-        }
-
-        try {
-            return company.getVehicleRegister().registerElectricScooters(aerodynamicCoefficient, frontalArea, weight, type, description, maxBatteryCapacity, actualBatteryCapacity, enginePower, parkLatitude, parkLongitude);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to register the scooters on the database");
-            return -1;
-        }
+        return registerElectricScootersController.registerElectricScooters(parsedData, s);
     }
 
     @Override
@@ -205,7 +105,8 @@ public class Facade implements Serviceable {
                 cyclingAvgSpeed.add(Float.parseFloat(line[USER_CYCLING_AVERAGE_SPEED]));
                 visa.add(line[USER_VISA]);
                 gender.add(line[USER_GENDER].charAt(0));
-                password.add(line[SCOOTERS_ENGINE_POWER_INDEX]);
+                //password.add(line[SCOOTERS_ENGINE_POWER_INDEX]);
+                throw new UnsupportedOperationException();
             }
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, "Invalid data at line number " + i + " of the file " + s);
@@ -215,7 +116,7 @@ public class Facade implements Serviceable {
             return -1;
         }
         try {
-            return userController.addUsers(email,username,height,weight,gender,visa,cyclingAvgSpeed);
+            return userController.addUsers(email, username, height, weight, gender, visa, cyclingAvgSpeed);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to register the users on the database");
             return -1;

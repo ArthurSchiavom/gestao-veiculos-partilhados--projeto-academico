@@ -8,17 +8,12 @@ class BicycleTest {
     Bicycle instance;
     @BeforeEach
     void beforeEach() {
-        instance = new Bicycle(1,2.4f,
+        instance = new Bicycle("PT001",2.4f,
                 2.3F,30,true,
-                15,"description");
+                15);
     }
     @Test
     void getSize() {
         assertEquals(15, instance.getSize());
-    }
-
-    @Test
-    void getDescription() {
-        assertEquals("description", instance.getDescription());
     }
 }

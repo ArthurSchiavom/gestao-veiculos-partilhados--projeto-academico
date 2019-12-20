@@ -10,14 +10,14 @@ class VehicleTest {
     private Vehicle instance;
     @BeforeEach
     void beforeEach() {
-        instance = new Bicycle(1,2.3F,
+        instance = new Bicycle("PT001",2.3F,
                 2.4F,35,true,
-                15,"description");
+                15);
     }
 
     @Test
-    void getId() {
-        assertEquals(1, instance.getId());
+    void getDescriptionTest() {
+        assertEquals("PT001", instance.getDescription());
     }
 
     @Test
@@ -47,36 +47,36 @@ class VehicleTest {
 
     @Test
     void testEquals() {
-        Object receipt1 = new Bicycle(0, 10f, 10f, 50,
-                true, 15, "description");
-        assertEquals(receipt1, receipt1);
+        Object bike = new Bicycle("PT002", 10f, 10f, 50,
+                true, 15);
+        assertEquals(bike, bike);
 
-        Vehicle receipt2 = new Bicycle(0, 12f, 10f, 50,
-                true, 15, "description");
-        assertEquals(receipt1, receipt2);
+        Vehicle bike2 = new Bicycle("PT002", 12f, 10f, 50,
+                true, 15);
+        assertEquals(bike, bike2);
 
-        receipt1 = new Bicycle(1, 10f, 10f, 50,
-                true, 15, "description");
-        assertNotEquals(receipt1, receipt2);
+        bike = new Bicycle("PT004", 10f, 10f, 50,
+                true, 15);
+        assertNotEquals(bike, bike2);
 
-        receipt1 = null;
-        assertNotEquals(receipt2, receipt1);
+        bike = null;
+        assertNotEquals(bike2, bike);
 
-        receipt1 = "";
-        assertNotEquals(receipt1, receipt2);
+        bike = "";
+        assertNotEquals(bike, bike2);
     }
 
     @Test
     void testHashCode() {
-        Vehicle receipt1 = new Bicycle(0, 10f, 10f, 50,
-                true, 15, "description");
-        Vehicle receipt2 = new Bicycle(0, 10f, 10f, 50,
-                true, 15, "description");
-        int expResult = receipt2.hashCode();
-        assertEquals(expResult, receipt1.hashCode());
+        Vehicle bike1 = new Bicycle("PT002", 10f, 10f, 50,
+                true, 15);
+        Vehicle bike2 = new Bicycle("PT002", 10f, 10f, 50,
+                true, 15);
+        int expResult = bike2.hashCode();
+        assertEquals(expResult, bike1.hashCode());
 
-        receipt1 = new Bicycle(1, 10f, 10f, 50,
-                true, 15, "description");
-        assertNotEquals(expResult, receipt1.hashCode());
+        bike1 = new Bicycle("PT003", 10f, 10f, 50,
+                true, 15);
+        assertNotEquals(expResult, bike1.hashCode());
     }
 }
