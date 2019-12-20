@@ -33,7 +33,7 @@ public class ClientTest {
         int result = instance.getPoints();
         assertEquals(expResult, result);
 
-        Client client = new Client("email@email.com", "username", "password",50, 20, 150, 60, 'M',
+        Client client = new Client("email@email.com", "username", "password", 20, 150, 60, 'M',
                 10.4f, new CreditCard("12341234123412"));
         assertEquals(50, client.getPoints());
     }
@@ -52,16 +52,6 @@ public class ClientTest {
     void testToString() {
         System.out.println(instance.toString());
         assertEquals("Client{points=0, age=22, height=180, weight=60, gender=m, cyclingAverageSpeed=2.3, cc=ccNumber='12341234123412'}", instance.toString());
-    }
-
-    @Test
-    void testGetAge() {
-        System.out.println("getAge");
-        Client instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
-                new CreditCard("12341234123412"));
-        int expResult = 22;
-        int result = instance.getAge();
-        assertEquals(expResult, result);
     }
 
     @Test

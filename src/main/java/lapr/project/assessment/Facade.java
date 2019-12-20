@@ -1,5 +1,6 @@
 package lapr.project.assessment;
 
+import lapr.project.controller.UserController;
 import lapr.project.data.registers.Company;
 import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.utils.Utils;
@@ -17,9 +18,11 @@ import java.util.logging.Logger;
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
     private final Company company;
+    private UserController userController;
 
     public Facade() {
         this.company = Company.getInstance();
+        userController = new UserController(company);
     }
 
     private List<String[]> loadParsedData(String filePath) {
@@ -41,6 +44,14 @@ public class Facade implements Serviceable {
     private static final int BICYCLES_AERODYNAMIC_COEFFICIENT_INDEX = 4;
     private static final int BICYCLES_FRONTAL_AREA_INDEX = 5;
     private static final int BICYCLES_WHEEL_SIZE_INDEX = 6;
+
+    private static final int USER_USERNAME = 0;
+    private static final int USER_EMAIL = 1;
+    private static final int USER_HEIGHT = 2;
+    private static final int USER_WEIGHT = 3;
+    private static final int USER_CYCLING_AVERAGE_SPEED = 4;
+    private static final int USER_VISA = 5;
+    private static final int USER_GENDER = 6;
 
     @Override
     public int addBicycles(String s) {
@@ -167,7 +178,48 @@ public class Facade implements Serviceable {
 
     @Override
     public int addUsers(String s) {
-        throw new UnsupportedOperationException();
+        List<String[]> parsedData = loadParsedData(s);
+        if (parsedData == null)
+            return -1;
+
+        List<String> username = new ArrayList<>();
+        List<String> email = new ArrayList<>();
+        List<Integer> height = new ArrayList<>();
+        List<Integer> weight = new ArrayList<>();
+        List<Float> cyclingAvgSpeed = new ArrayList<>();
+        List<String> visa = new ArrayList<>();
+        List<Character> gender = new ArrayList<>();
+        List<String> password = new ArrayList<>();
+
+        int i = 0;
+        try {
+            for (i = 0; i < parsedData.size(); i++) {
+                String[] line = parsedData.get(i);
+                if (line.length == 1 && line[0].isEmpty())
+                    continue;
+
+                username.add(line[USER_USERNAME]);
+                email.add(line[USER_EMAIL]);
+                height.add(Integer.parseInt(line[USER_HEIGHT]));
+                weight.add(Integer.parseInt(line[USER_WEIGHT]));
+                cyclingAvgSpeed.add(Float.parseFloat(line[USER_CYCLING_AVERAGE_SPEED]));
+                visa.add(line[USER_VISA]);
+                gender.add(line[USER_GENDER].charAt(0));
+                password.add(line[SCOOTERS_ENGINE_POWER_INDEX]);
+            }
+        } catch (NumberFormatException e) {
+            LOGGER.log(Level.SEVERE, "Invalid data at line number " + i + " of the file " + s);
+            return -1;
+        } catch (IndexOutOfBoundsException e) {
+            LOGGER.log(Level.SEVERE, "Not all columns are present at line " + i + " of the file " + s);
+            return -1;
+        }
+        try {
+            return userController.addUsers(email,username,height,weight,gender,visa,cyclingAvgSpeed);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to register the users on the database");
+            return -1;
+        }
     }
 
     @Override

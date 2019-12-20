@@ -6,7 +6,6 @@ package lapr.project.model.users;
 public class Client extends User {
 
     private final int points;
-    private final int age;
     private final int height;
     private final int weight;
     private final char gender; // M or F, to simplify
@@ -18,14 +17,12 @@ public class Client extends User {
      *
      * @param email    the client email
      * @param password the client password
-     * @param age      the age of the client in years
      * @param height   the height (in cms) of the client
      * @param weight   the weight (in kgs) of the client
      * @param gender   the physical gender of the client
      */
-    public Client(String email, String username, String password, int age, int height, int weight, char gender, float cyclingAverageSpeed, CreditCard creditCard) {
+    public Client(String email, String username, String password, int height, int weight, char gender, float cyclingAverageSpeed, CreditCard creditCard) {
         super(email, username, password, UserType.CLIENT);
-        this.age = age;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
@@ -41,17 +38,15 @@ public class Client extends User {
      * @param username            the username of the client
      * @param password            the password of the client
      * @param points              the points of the client
-     * @param age                 the age in years of the client
      * @param height              the height in cms of the client
      * @param weight              the weight in cms of the client
      * @param gender              the gender(just a char either m or f)
      * @param cyclingAverageSpeed the average cycling speed in kms/h
      * @param creditCard          the credit card info of the client
      */
-    public Client(String email, String username, String password, int points, int age, int height, int weight, char gender, float cyclingAverageSpeed, CreditCard creditCard) {
+    public Client(String email, String username, String password, int points, int height, int weight, char gender, float cyclingAverageSpeed, CreditCard creditCard) {
         super(email, username, password, UserType.CLIENT);
         this.points = points;
-        this.age = age;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
@@ -61,10 +56,6 @@ public class Client extends User {
 
     public int getPoints() {
         return points;
-    }
-
-    public int getAge() {
-        return age;
     }
 
     public float getHeight() {
@@ -91,7 +82,6 @@ public class Client extends User {
     public String toString() {
         return "Client{" +
                 "points=" + points +
-                ", age=" + age +
                 ", height=" + height +
                 ", weight=" + weight +
                 ", gender=" + gender +

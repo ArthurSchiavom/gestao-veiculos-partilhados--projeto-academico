@@ -119,21 +119,21 @@ insert into registered_users(user_email, user_type_name, user_password, user_nam
 values('k@k.k', 'administrator', '555', 'MissMaam');
 
 -- clients
-insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('a@a.a', 10, '1111111111111111', 1.72, 74, 'M', '1', 20, 18.2);
+insert into clients (user_email, points, visa, height_cm, weight_kg, gender, is_riding, cycling_average_speed)
+values('a@a.a', 10, '1111111111111111', 1.72, 74, 'M', '1', 18.2);
 
-insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('b@b.b', 0, '2222222222222222', 1.62, 54, 'F', '0', 19, 14.3);
+insert into clients (user_email, points, visa, height_cm, weight_kg, gender, is_riding, cycling_average_speed)
+values('b@b.b', 0, '2222222222222222', 1.62, 54, 'F', '0', 14.3);
 
-insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('c@c.c', 300, '3333333333333333', 1.90, 120, 'M', '1', 25, 4.9);
+insert into clients (user_email, points, visa, height_cm, weight_kg, gender, is_riding, cycling_average_speed)
+values('c@c.c', 300, '3333333333333333', 1.90, 120, 'M', '1', 4.9);
 
-insert into clients (user_email, points, visa, height_m, weight_kg, gender, is_riding, age, cycling_average_speed)
-values('d@d.d', 1000, '4444444444444444', 1.40, 40, 'M', '1', 13, 12.2);
+insert into clients (user_email, points, visa, height_cm, weight_kg, gender, is_riding, cycling_average_speed)
+values('d@d.d', 1000, '4444444444444444', 1.40, 40, 'M', '1', 12.2);
 
 -- pending_registrations
-insert into pending_registrations(email, amount_left_to_pay, visa, height, weight, gender, age, cycling_average_speed, user_password, user_name)
-values('e@e.e', 8, '6666666666666666', 1.80, 80, 'M', 19, 13.1, '999', 'zeh');
+insert into pending_registrations(email, amount_left_to_pay, visa, height_cm, weight, gender, cycling_average_speed, user_password, user_name)
+values('e@e.e', 0, '6666666666666666', 1.80, 80,'M',13.1, '999', 'zeh');
 
 -- invoices
 insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost,points_used)

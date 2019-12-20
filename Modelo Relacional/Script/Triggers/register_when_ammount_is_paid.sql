@@ -7,7 +7,7 @@ BEGIN
         IF :new.amount_left_to_pay <= 0 THEN
                 SELECT user_type_name INTO user_type_n FROM user_type WHERE UPPER(user_type_name) LIKE 'CLIENT';
                 INSERT INTO registered_users VALUES (:new.email,user_type_n, :new.user_password,:new.user_name);
-                INSERT INTO clients VALUES(:new.email,0,:new.visa,:new.height,:new.weight,:new.gender,'0',:new.age,:new.cycling_average_speed);
+                INSERT INTO clients VALUES(:new.email,0,:new.visa,:new.height,:new.weight,:new.gender,'0',:new.cycling_average_speed);
         END IF;
 EXCEPTION
         WHEN no_data_found THEN

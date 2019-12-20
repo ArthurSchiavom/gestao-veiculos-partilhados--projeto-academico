@@ -65,14 +65,13 @@ CREATE TABLE clients (
   points                 number(6)   DEFAULT 0 
                                       constraint nn_clients_points NOT NULL, 
   visa     char(16)     constraint nn_clients_visa NOT NULL,
-  height_m               number(3) constraint nn_clients_height_m NOT NULL, 
+  height_cm               number(3) constraint nn_clients_height_m NOT NULL, 
   weight_kg              number(3) constraint nn_clients_weight_kg NOT NULL, 
   gender                 char(1)      constraint nn_clients_gender NOT NULL
                                       constraint ck_clients_gender CHECK (REGEXP_LIKE(gender, 'M|F', 'i')), 
   is_riding              char(1)      DEFAULT '0' 
                                       constraint nn_clients_is_riding NOT NULL
                                       constraint ck_clients_is_riding  CHECK (is_riding = 0 OR is_riding = 1), 
-  age                    number(3)    constraint nn_clients_age NOT NULL,
   cycling_average_speed  number(4,2)  constraint nn_cycling_average_speed NOT NULL
   );
 
@@ -100,11 +99,10 @@ CREATE TABLE pending_registrations (
   email                  varchar2(50) CONSTRAINT pk_pending_registrations_email PRIMARY KEY, 
   amount_left_to_pay     number(6, 2) DEFAULT 10 CONSTRAINT nn_pending_registrations_amount_left_to_pay NOT NULL, 
   visa     CHAR(16) CONSTRAINT nn_pending_registrations_visa NOT NULL,
-  height                 number(3) CONSTRAINT nn_pending_registrations_height NOT NULL, 
+  height_cm                 number(3) CONSTRAINT nn_pending_registrations_height NOT NULL, 
   weight                 number(3) CONSTRAINT nn_pending_registrations_weight NOT NULL, 
   gender                 char(1) CONSTRAINT nn_pending_registrations_gender NOT NULL
                                  CONSTRAINT ck_pending_registrations_gender CHECK(REGEXP_LIKE(gender, 'M|F', 'i')),
-  age                    number(3) CONSTRAINT nn_pending_registrations_age NOT NULL,
   cycling_average_speed number(4,2) constraint nn_pending_registrations_cycling_average_speed NOT NULL,
   user_password  varchar2(20) CONSTRAINT nn_pending_registrations_user_password NOT NULL,
   user_name      varchar2(50) CONSTRAINT nn_pending_registrations_user_name NOT NULL,
