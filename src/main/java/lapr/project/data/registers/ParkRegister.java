@@ -24,12 +24,16 @@ public class ParkRegister {
     }
 
     /**
-     * Adds a park to the database
      *
-     * @param coord            Park coordinates
-     * @param parkInputVoltage Park input voltage
-     * @param parkInputCurrent Park input current
-     * @return true if added with success the park, false otherwise
+     * @param id
+     * @param description
+     * @param coord
+     * @param parkInputVoltage
+     * @param parkInputCurrent
+     * @param maxEletricScooters
+     * @param maxBicycles
+     * @return number of lines affected
+     * @throws SQLException
      */
     private void addParkNoCommit(String id, String description, Coordinates coord, float parkInputVoltage, float parkInputCurrent, int maxEletricScooters, int maxBicycles) throws SQLException {
         try (CallableStatement cs = dataHandler.prepareCall("{call register_park(?, ?, ?, ?, ?, ?, ?, ?, ?)}")) { // ensure everything is done with one request to the database => ensure database information consistency
@@ -46,7 +50,6 @@ public class ParkRegister {
         } catch (SQLException e) {
             throw e;
         }
-
     }
 
     public void registerParks(List<String> id, List<String> description, List<Coordinates> coord, List<Float> parkInputVoltage, List<Float> parkInputCurrent, List<Integer> maxEletricScooters, List<Integer> maxBicycles) throws SQLException {

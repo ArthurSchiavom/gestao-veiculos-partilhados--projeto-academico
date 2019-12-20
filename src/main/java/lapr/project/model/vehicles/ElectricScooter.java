@@ -19,7 +19,7 @@ public class ElectricScooter extends Vehicle {
     /**
      * Instatiates an eletric scooter object
      *
-     * @param id the id of the eletric scooter
+     * @param description the description of the eletric scooter
      * @param aerodynamicCoefficient the aerodynamic coefficient of the scooter
      * @param frontalArea the frontal area of the scooter
      * @param weight the weight in kgs of the eletric scooter
@@ -28,15 +28,13 @@ public class ElectricScooter extends Vehicle {
      * offroad)
      * @param actualBatteryCapacity the current battery capacity
      * @param maxBatteryCapacity the maximum battery capacity
-     * @param description the description of the eletric scooter
      * @param enginePower the power of the engine
      */
-    public ElectricScooter(int id, float aerodynamicCoefficient,
+    public ElectricScooter(String description, float aerodynamicCoefficient,
             float frontalArea, int weight, boolean available,
             ElectricScooterType electricScooterType,
-            int actualBatteryCapacity, float maxBatteryCapacity,
-            String description, int enginePower) {
-        super(id, aerodynamicCoefficient, frontalArea, weight, available,
+            int actualBatteryCapacity, float maxBatteryCapacity, int enginePower) {
+        super(description, aerodynamicCoefficient, frontalArea, weight, available,
                 VehicleType.ELECTRIC_SCOOTER);
         this.electricScooterType = electricScooterType;
         this.actualBatteryCapacity = actualBatteryCapacity;

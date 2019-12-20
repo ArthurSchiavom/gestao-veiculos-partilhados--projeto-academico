@@ -7,16 +7,15 @@ import java.util.Objects;
  */
 public abstract class Vehicle {
 
-    private final int id;
+    private final String description;
     private final float aerodynamicCoefficient;
     private final float frontalArea;
     private final int weight;
     private final boolean available;
     private final VehicleType type;
 
-    public Vehicle(int id, float aerodynamicCoefficient, float frontalArea,
-                   int weight, boolean available, VehicleType type) {
-        this.id = id;
+    public Vehicle(String description, float aerodynamicCoefficient, float frontalArea, int weight, boolean available, VehicleType type) {
+        this.description = description;
         this.aerodynamicCoefficient = aerodynamicCoefficient;
         this.frontalArea = frontalArea;
         this.weight = weight;
@@ -24,8 +23,8 @@ public abstract class Vehicle {
         this.type = type;
     }
 
-    public int getId() {
-        return id;
+    public String getDescription() {
+        return description;
     }
 
     public float getAerodynamicCoefficient() {
@@ -53,11 +52,11 @@ public abstract class Vehicle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vehicle vehicle = (Vehicle) o;
-        return id == vehicle.id;
+        return description.equals(vehicle.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hashCode(description);
     }
 }
