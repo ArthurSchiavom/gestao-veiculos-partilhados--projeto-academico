@@ -50,50 +50,50 @@ insert into vehicle_types(vehicle_type_name)
 values('bicycle');
 
 -- vehicles
-insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
-values('bicycle', 1, 50, 1.10, 0.3);
+insert into vehicles (description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('PT001', 'bicycle', 1, 50, 1.10, 0.3);
 
-insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
-values('bicycle', 1, 12, 1.21, 0.2);
+insert into vehicles (description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('PT002', 'bicycle', 1, 12, 1.21, 0.2);
 
-insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
-values('bicycle', 0, 30, 1.2, 2.4);
+insert into vehicles (description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('PT003', 'bicycle', 0, 30, 1.2, 2.4);
 
-insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
-values('electric_scooter', 1, 2, 1.10, 0.9);
+insert into vehicles (description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area)
+values('PT004', 'electric_scooter', 1, 2, 1.10, 0.9);
 
-insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
-values('electric_scooter', 0, 70, 1.21, 0.1);
+insert into vehicles (description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
+values('PT005', 'electric_scooter', 0, 70, 1.21, 0.1);
 
-insert into vehicles (vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
-values('electric_scooter', 0, 20, 1.1, 0.3);
+insert into vehicles (description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
+values('PT006', 'electric_scooter', 0, 20, 1.1, 0.3);
 
 -- bicycles
-insert into bicycles(vehicle_id, bicycle_size, bicycle_description)
-values(1, 15, 'PT001');
+insert into bicycles(vehicle_description, bicycle_size)
+values('PT001', 15);
 
-insert into bicycles(vehicle_id, bicycle_size, bicycle_description)
-values(2, 17, 'PT002');
+insert into bicycles(vehicle_description, bicycle_size)
+values('PT002', 17);
 
-insert into bicycles(vehicle_id, bicycle_size, bicycle_description)
-values(3, 19, 'PT003');
+insert into bicycles(vehicle_description, bicycle_size)
+values('PT003', 19);
 
 -- electric _scooter_types
-insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, battery_per_km)
-values('offroad', 2, 10);
+insert into electric_scooter_types(electric_scooter_type_name)
+values('offroad');
 
-insert into electric_scooter_types(electric_scooter_type_name, battery_per_min, battery_per_km)
-values('urban', 2, 1);
+insert into electric_scooter_types(electric_scooter_type_name)
+values('urban');
 
 -- electric_scooters
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power)
-values(4, 'offroad', 'PT001', 1, 75, 300);
+insert into electric_scooters(vehicle_description, electric_scooter_type_name, max_battery_capacity, actual_battery_capacity, engine_power)
+values('PT004', 'offroad', 1, 75, 300);
 
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power)
-values(5, 'urban', 'PT002', 1, 20, 700);
+insert into electric_scooters(vehicle_description, electric_scooter_type_name, max_battery_capacity, actual_battery_capacity, engine_power)
+values('PT005', 'urban', 1, 20, 700);
 
-insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power)
-values(6, 'urban', 'PT003', 1, 60, 1500);
+insert into electric_scooters(vehicle_description, electric_scooter_type_name, max_battery_capacity, actual_battery_capacity, engine_power)
+values('PT006', 'urban', 1, 60, 1500);
 
 -- user_type
 insert into user_type(user_type_name)
@@ -156,11 +156,11 @@ insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occu
 values('park2', 'bicycle', 30, 20);
 
 -- trips
-insert into trips (start_time, user_email, vehicle_id, start_park_id)
-values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 1, 'park1');
+insert into trips (start_time, user_email, vehicle_description, start_park_id)
+values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 'PT001', 'park1');
 
-insert into trips (start_time, user_email, vehicle_id, start_park_id)
-values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'b@b.b', 2, 'park1');
+insert into trips (start_time, user_email, vehicle_description, start_park_id)
+values(TO_TIMESTAMP('2019-12-03 13:00', 'yyyy-mm-dd hh24:mi'), 'b@b.b', 'PT002', 'park1');
 
 -- receipts
 insert into receipts (user_email, payment_start_date, payment_end_date, amount_paid_cash)
@@ -187,22 +187,22 @@ insert into trip_paths(start_time, user_email, latitudeA, longitudeA, latitudeB,
 values(TO_TIMESTAMP('2019-10-01 10:50', 'yyyy-mm-dd hh24:mi'), 'a@a.a', 30.4, -20.2, 18.222, 22.12);
 
 -- park_vehicle
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 1);
+insert into park_vehicle(park_id, vehicle_description)
+values('park1', 'PT001');
 
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 2);
+insert into park_vehicle(park_id, vehicle_description)
+values('park1', 'PT002');
 
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 3);
+insert into park_vehicle(park_id, vehicle_description)
+values('park1', 'PT003');
 
-insert into park_vehicle(park_id, vehicle_id)
-values('park1', 4);
+insert into park_vehicle(park_id, vehicle_description)
+values('park1', 'PT004');
 
-insert into park_vehicle(park_id, vehicle_id)
-values('park2', 5);
+insert into park_vehicle(park_id, vehicle_description)
+values('park2', 'PT005');
 
-insert into park_vehicle(park_id, vehicle_id)
-values('park3', 6);
+insert into park_vehicle(park_id, vehicle_description)
+values('park3', 'PT006');
 
 COMMIT;

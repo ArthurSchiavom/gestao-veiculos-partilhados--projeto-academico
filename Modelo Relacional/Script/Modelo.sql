@@ -19,7 +19,8 @@ DROP TABLE trip_paths CASCADE CONSTRAINTS;
 
 -- Tabela Vehicles
 CREATE TABLE vehicles (
-  vehicle_id        number(8) GENERATED AS IDENTITY CONSTRAINT pk_vehicles_vehicle_id PRIMARY KEY, 
+  description varchar2(50) constraint nn_vehicles_description NOT NULL
+                        CONSTRAINT pk_vehicles_description PRIMARY KEY,
   vehicle_type_name varchar2(50) constraint nn_vehicles_vehicle_type_name NOT NULL,
   available         number(1)    constraint nn_vehicles_available NOT NULL
                                  CONSTRAINT ck_vehicles_available CHECK (available = 0 OR available = 1),
@@ -37,29 +38,25 @@ CREATE TABLE vehicle_types (
 
 -- Tabela Bicycles 
 CREATE TABLE bicycles (
-  vehicle_id        number(8) constraint pk_bicycles_vehicle_id PRIMARY KEY,                  
-  bicycle_size      number(2) constraint nn_bicycles_bicycle_size NOT NULL
-                              constraint ck_bicycles_bicycle_size CHECK(bicycle_size > 0),
-  bicycle_description varchar2(50) constraint nn_bicycles_bicycle_description NOT NULL
+  vehicle_description       varchar(50) constraint pk_bicycles_vehicle_description PRIMARY KEY,                  
+  bicycle_size              number(2) constraint nn_bicycles_bicycle_size NOT NULL
+                                    constraint ck_bicycles_bicycle_size CHECK(bicycle_size > 0)
 );
 
 -- Tabela Electric_Scooters  
 CREATE TABLE electric_scooters (
-  vehicle_id                        number(8) constraint pk_electric_scooters_vehicle_id   PRIMARY KEY, 
+  vehicle_description               varchar(50) constraint pk_electric_scooters_vehicle_description   PRIMARY KEY, 
   electric_scooter_type_name        varchar2(50),
   actual_battery_capacity           number(3) constraint nn_electric_scooters_actual_battery_capacity NOT NULL
 									constraint ck_electric_scooters_actual_battery_capacity CHECK (actual_battery_capacity >= 0 and actual_battery_capacity <= 100),
   max_battery_capacity              number(3,2) constraint nn_electric_scooters_battery_level NOT NULL,
-  electric_scooter_description      varchar2(50) constraint nn_electric_scooters_description NOT NULL,
   engine_power                      number(6) constraint nn_electric_scooters_engine_power NOT NULL
                                             constraint ck_electric_scooters_engine_power CHECK (engine_power >= 0)
   );
 
 -- Tabela Electric_Scooter_Types  
 CREATE TABLE electric_scooter_types (
-  electric_scooter_type_name   varchar2(50) constraint pk_eletric_scooter_types_eletric_scooter_type_name PRIMARY KEY, 
-  battery_per_min             number(5, 2) constraint nn_eletric_scooter_types_battery_per_min NOT NULL, 
-  battery_per_km              number(5, 2) constraint nn_eletric_scooter_types_battery_per_km NOT NULL 
+  electric_scooter_type_name   varchar2(50) constraint pk_eletric_scooter_types_eletric_scooter_type_name PRIMARY KEY
 );
 
 -- Tabela Clients
@@ -94,8 +91,8 @@ CREATE TABLE parks (
 
 -- Tabela park_vehicle
 CREATE TABLE park_vehicle (
-  park_id    varchar2(50), 
-  vehicle_id number(8) CONSTRAINT pk_park_vehicle_vehicle_id PRIMARY KEY
+  vehicle_description varchar2(50) CONSTRAINT pk_park_vehicle_description PRIMARY KEY,
+  park_id    varchar2(50)
 );
 
 -- Tabela pending_registrations 
@@ -145,8 +142,8 @@ CREATE TABLE trips (
                          constraint nn_trips_start_time not null, 
   user_email    varchar2(50)
                          constraint nn_trips_user_email not null,  
-  vehicle_id   number(8) 
-                        constraint nn_trips_vehicle_id not null, 
+  vehicle_description   varchar2(50) 
+                        constraint nn_trips_vehicle_description not null, 
   start_park_id varchar2(50)
                         constraint nn_trips_start_park_id not null, 
   end_park_id   varchar2(50), 
@@ -209,11 +206,11 @@ CREATE TABLE trip_paths (
 );
 
 ALTER TABLE vehicles ADD CONSTRAINT fk_vehicles_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
-ALTER TABLE bicycles ADD CONSTRAINT fk_bicycles_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
-ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
+ALTER TABLE bicycles ADD CONSTRAINT fk_bicycles_vehicle_description FOREIGN KEY (vehicle_description) REFERENCES vehicles (description);
+ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_vehicle_description FOREIGN KEY (vehicle_description) REFERENCES vehicles (description);
 ALTER TABLE electric_scooters ADD CONSTRAINT fk_electric_scooters_electric_scooter_type_name FOREIGN KEY (electric_scooter_type_name) REFERENCES electric_scooter_types (electric_scooter_type_name);
 ALTER TABLE park_vehicle ADD CONSTRAINT fk_park_vehicle_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id) initially deferred;
-ALTER TABLE park_vehicle ADD CONSTRAINT fk_park_vehicle_vehicle_id FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
+ALTER TABLE park_vehicle ADD CONSTRAINT fk_park_vehicle_vehicle_description FOREIGN KEY (vehicle_description) REFERENCES vehicles (description);
 ALTER TABLE invoices ADD CONSTRAINT fk_invoices_user_email FOREIGN KEY (user_email) REFERENCES clients (user_email);
 ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_park_id FOREIGN KEY (park_id) REFERENCES parks (park_id) initially deferred;
 ALTER TABLE park_capacity ADD CONSTRAINT fk_park_capacity_vehicle_type_name FOREIGN KEY (vehicle_type_name) REFERENCES vehicle_types (vehicle_type_name);
@@ -221,7 +218,7 @@ ALTER TABLE trips ADD CONSTRAINT fk_trip_user_email FOREIGN KEY (user_email) REF
 ALTER TABLE trips ADD CONSTRAINT fk_trip_start_park_id FOREIGN KEY (start_park_id) REFERENCES parks (park_id) initially deferred;
 ALTER TABLE trips ADD CONSTRAINT fk_trip_end_park_id FOREIGN KEY (end_park_id) REFERENCES parks (park_id) initially deferred;
 ALTER TABLE receipts ADD CONSTRAINT fk_receipts_user_email_payment_start_date FOREIGN KEY (user_email, payment_start_date) REFERENCES invoices (user_email, payment_start_date);
-ALTER TABLE trips ADD CONSTRAINT fk_trip_vehicles FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id);
+ALTER TABLE trips ADD CONSTRAINT fk_trip_vehicles FOREIGN KEY (vehicle_description) REFERENCES vehicles (description);
 ALTER TABLE clients ADD CONSTRAINT fk_clients_user_email FOREIGN KEY (user_email) REFERENCES registered_users (user_email);
 ALTER TABLE registered_users ADD CONSTRAINT fk_registered_users_user_type_name FOREIGN KEY (user_type_name) REFERENCES user_type (user_type_name);
 ALTER TABLE trip_paths ADD CONSTRAINT fk_trip_paths_table_trips FOREIGN KEY (start_time, user_email) REFERENCES trips (start_time, user_email);
