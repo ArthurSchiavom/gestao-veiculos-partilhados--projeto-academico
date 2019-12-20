@@ -12,13 +12,15 @@ import java.util.Properties;
 
 /**
  * Class that takes care of sending emails
+ *
+ * Adapted from : https://www.mkyong.com/java/java-how-to-send-email/
  */
 public class Emailer {
-    private static final String SMTP_SERVER = "smtp.gmail.com";
-    private static final String USERNAME = "ridesharinglapr3@gmail.com";
-    private static final String PASSWORD = "melhorgrupoole";
+    private static final String SMTP_SERVER = System.getProperty("email.server");
+    private static final String USERNAME = System.getProperty("email.username");
+    private static final String PASSWORD = System.getProperty("email.password");
 
-    private static final String EMAIL_FROM = "ridesharinglapr3@gmail.com";
+    private static final String EMAIL_FROM = System.getProperty("email.from");
 
     /**
      * Sends an email
