@@ -57,4 +57,13 @@ public class UtilsTest {
         String[] a10 = {"Data1", "asoudhwData2", "Data3"};
         assertTrue(Utils.areArraysEqual(a9, a10));
     }
+
+    @Test
+    void trimArrayElementsTest() {
+        String[] arr = {};
+        Utils.trimArrayElements(arr);
+        String[] result = Utils.trimArrayElements("a a a   a   ", "bbbb", " ccc ccc   ");
+        String[] expected = {"a a a   a", "bbbb", "ccc ccc"};
+        assertTrue(Utils.areArraysEqual(result, expected));
+    }
 }

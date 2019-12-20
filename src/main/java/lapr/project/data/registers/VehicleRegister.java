@@ -4,12 +4,13 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.vehicles.*;
 
 import java.sql.*;
+import java.util.List;
 
 public class VehicleRegister {
-    private final DataHandler dh;
+    private final DataHandler dataHandler;
 
-    public VehicleRegister(DataHandler dh) {
-        this.dh = dh;
+    public VehicleRegister(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
     }
 
     public Vehicle fetchVehicle(int vehicleId) throws SQLException {
@@ -57,45 +58,97 @@ public class VehicleRegister {
         return vehicle;
     }
 
-    public void registerBicycle(float aerodynamicCoefficient, float frontalArea,
-                                int weight, boolean available, int size,
-                                String description) throws SQLException {
+    /**
+     * Registers a bicycle in the database.
+     *
+     * @param aerodynamicCoefficient
+     * @param frontalArea
+     * @param weight
+     * @param size
+     * @param description
+     * @param parkLatitude
+     * @param parkLongitude
+     * @return
+     * @throws SQLException
+     */
+    private int registerBicycleNoCommit(float aerodynamicCoefficient, float frontalArea,
+                                         int weight, int size,
+                                         String description, double parkLatitude, double parkLongitude) throws SQLException {
 
-        CallableStatement cs = dh.prepareCall(
-                "{call register_bicycle(?, ?, ?, ?, ?, ?)}");
-        int availableInt = available ? 1 : 0;
-        cs.setInt(1, availableInt);
-        cs.setInt(2, weight);
-        cs.setFloat(3, aerodynamicCoefficient);
-        cs.setFloat(4, frontalArea);
-        cs.setInt(5, size);
-        cs.setString(6, description);
-        dh.execute(cs);
-        dh.commitTransaction();
+        CallableStatement cs = dataHandler.prepareCall(
+                "{call register_bicycle(?, ?, ?, ?, ?, ?, ?)}");
+        cs.setInt(1, weight);
+        cs.setFloat(2, aerodynamicCoefficient);
+        cs.setFloat(3, frontalArea);
+        cs.setInt(4, size);
+        cs.setString(5, description);
+        cs.setDouble(6, parkLatitude);
+        cs.setDouble(7, parkLongitude);
+        dataHandler.execute(cs);
+        return 3;
     }
 
-    public void registerEletricScooter(float aerodynamicCoefficient, float frontalArea,
-                                       int weight, boolean available,
-                                       ElectricScooterType type, String description,
-                                       float maxBatteryCapacity,
-                                       int actualBatteryCapacity,
-                                       int enginePower) throws SQLException {
-        CallableStatement cs = dh.prepareCall(
-                "{call register_electric_scooter(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-        int availableInt = available ? 1 : 0;
-        cs.setInt(1, availableInt);
-        cs.setInt(2, weight);
-        cs.setFloat(3, aerodynamicCoefficient);
-        cs.setFloat(4, frontalArea);
-        cs.setString(5, type.getSQLName());
-        cs.setString(6, description);
-        cs.setFloat(7, maxBatteryCapacity);
-        cs.setInt(8, actualBatteryCapacity);
-        cs.setInt(9, enginePower);
-
-        dh.execute(cs);
-
-        dh.commitTransaction();
+    private int registerEletricScooterNoCommit(float aerodynamicCoefficient, float frontalArea,
+                                                int weight,
+                                                ElectricScooterType type, String description,
+                                                float maxBatteryCapacity,
+                                                int actualBatteryCapacity,
+                                                int enginePower, double parkLatitude, double parkLongitude) throws SQLException {
+        CallableStatement cs = dataHandler.prepareCall(
+                "{call register_electric_scooter(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        cs.setInt(1, weight);
+        cs.setFloat(2, aerodynamicCoefficient);
+        cs.setFloat(3, frontalArea);
+        cs.setString(4, type.getSQLName());
+        cs.setString(5, description);
+        cs.setFloat(6, maxBatteryCapacity);
+        cs.setInt(7, actualBatteryCapacity);
+        cs.setInt(8, enginePower);
+        cs.setDouble(9, parkLatitude);
+        cs.setDouble(10, parkLongitude);
+        dataHandler.execute(cs);
+        return 3;
     }
 
+    public int registerBicycles(List<Float> aerodynamicCoefficient, List<Float> frontalArea,
+                                  List<Integer> weight, List<Integer> size,
+                                  List<String> description, List<Double> parkLatitude, List<Double> parkLongitude) throws SQLException {
+        int nRowsAltered = 0;
+        try {
+            for (int i = 0; i < aerodynamicCoefficient.size(); i++) {
+                nRowsAltered += registerBicycleNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
+                        size.get(i), description.get(i), parkLatitude.get(i), parkLongitude.get(i));
+            }
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            try { dataHandler.rollbackTransaction(); } catch (SQLException e2) {}
+            throw e;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("All the parameter lists must have the same size.");
+        }
+        return nRowsAltered;
+    }
+
+    public int registerElectricScooters(List<Float> aerodynamicCoefficient, List<Float> frontalArea,
+                                        List<Integer> weight,
+                                        List<ElectricScooterType> type, List<String> description,
+                                        List<Float> maxBatteryCapacity,
+                                        List<Integer> actualBatteryCapacity,
+                                        List<Integer> enginePower, List<Double> parkLatitude, List<Double> parkLongitude) throws SQLException {
+        int nRowsAltered = 0;
+        try {
+            for (int i = 0; i < aerodynamicCoefficient.size(); i++) {
+                nRowsAltered += registerEletricScooterNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
+                        type.get(i), description.get(i), maxBatteryCapacity.get(i),
+                        actualBatteryCapacity.get(i), enginePower.get(i), parkLatitude.get(i), parkLongitude.get(i));
+            }
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            try { dataHandler.rollbackTransaction(); } catch (SQLException e2) {}
+            throw e;
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("All the parameter lists must have the same size.");
+        }
+        return nRowsAltered;
+    }
 }

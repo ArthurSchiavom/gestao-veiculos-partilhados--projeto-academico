@@ -3,6 +3,7 @@ package lapr.project.utils;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ public class Utils {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!line.startsWith(lineCommentTag)) {
-                    String[] lineValues = line.split(valueSeparator);
+                    String[] lineValues = trimArrayElements(line.split(valueSeparator));
                     result.add(lineValues);
                 }
             }
@@ -35,5 +36,13 @@ public class Utils {
                 return false;
         }
         return true;
+    }
+
+    public static String[] trimArrayElements(String... elements) {
+        String[] result = new String[elements.length];
+        for (int i = 0; i < elements.length; i++) {
+            result[i] = elements[i].trim();
+        }
+        return result;
     }
 }

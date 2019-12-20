@@ -90,6 +90,7 @@ public class DataHandler {
                 }
             }
         }
+        autoCloseablesCloseQueue.clear();
     }
 
     /**

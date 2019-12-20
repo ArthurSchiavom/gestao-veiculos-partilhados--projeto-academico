@@ -1,30 +1,33 @@
 select * from vehicles where vehicle_id = 1;
 
 create or replace procedure register_bicycle(
-            p_available vehicles.available%type,
             p_weight vehicles.weight%type, 
             p_aerodynamic_coefficient vehicles.aerodynamic_coefficient%type, 
             p_frontal_area vehicles.frontal_area%type, 
             p_bicycle_size bicycles.bicycle_size%type, 
-            p_bicycle_description bicycles.BICYCLE_DESCRIPTION%type
+            p_bicycle_description bicycles.BICYCLE_DESCRIPTION%type,
+            p_park_lat parks.latitude%type,
+            p_park_lon parks.longitude%type
         )
 is
     v_vehicle_id vehicles.vehicle_id%type;
     v_vehicle_type_name vehicles.vehicle_type_name%type;
+    v_park_id park_vehicle.park_id%type;
 begin
     v_vehicle_type_name := 'bicycle';
     
     INSERT INTO vehicles(vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
-        VALUES (v_vehicle_type_name, p_available, p_weight, p_aerodynamic_coefficient, p_frontal_area) 
+        VALUES (v_vehicle_type_name, 1, p_weight, p_aerodynamic_coefficient, p_frontal_area) 
         returning vehicle_id into v_vehicle_id ;
     
     insert into bicycles(vehicle_id, bicycle_size, BICYCLE_DESCRIPTION) values(v_vehicle_id, p_bicycle_size, p_bicycle_description);
-    COMMIT;
+    
+    select park_id into v_park_id from parks where parks.latitude = p_park_lat and parks.longitude = p_park_lon;
+    insert into park_vehicle(park_id, vehicle_id) VALUES(v_park_id, v_vehicle_id);
 end;
 /
 
 create or replace procedure register_electric_scooter(
-            p_available vehicles.available%type, 
             p_weight vehicles.weight%type, 
             p_aerodynamic_coefficient vehicles.aerodynamic_coefficient%type, 
             p_frontal_area vehicles.frontal_area%type, 
@@ -32,20 +35,25 @@ create or replace procedure register_electric_scooter(
             p_electric_scooter_description electric_scooters.electric_scooter_description%type, 
             p_max_battery_capacity electric_scooters.max_battery_capacity%type, 
             p_actual_battery_capacity electric_scooters.actual_battery_capacity%type,
-			p_engine_power electric_scooters.engine_power%type
+			p_engine_power electric_scooters.engine_power%type,
+            p_park_lat parks.latitude%type,
+            p_park_lon parks.longitude%type
         )
 is
     v_vehicle_id vehicles.vehicle_id%type;
     v_vehicle_type_name vehicles.vehicle_type_name%type;
+    v_park_id park_vehicle.park_id%type;
 begin
     v_vehicle_type_name := 'electric_scooter';
     INSERT INTO vehicles(vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
-        VALUES (v_vehicle_type_name, p_available, p_weight, p_aerodynamic_coefficient, p_frontal_area) 
+        VALUES (v_vehicle_type_name, 1, p_weight, p_aerodynamic_coefficient, p_frontal_area) 
         returning vehicle_id into v_vehicle_id;
 
     insert into electric_scooters(vehicle_id, electric_scooter_type_name, electric_scooter_description, max_battery_capacity, actual_battery_capacity, engine_power) 
         values(v_vehicle_id, p_electric_scooter_type_name, p_electric_scooter_description, p_max_battery_capacity, p_actual_battery_capacity, p_engine_power);
-    COMMIT;
+        
+    select park_id into v_park_id from parks where parks.latitude = p_park_lat and parks.longitude = p_park_lon;
+    insert into park_vehicle(park_id, vehicle_id) VALUES(v_park_id, v_vehicle_id);
 end;
 /
 
@@ -68,7 +76,6 @@ begin
     insert into park_capacity values (p_park_id, 'bicycle', p_max_bicycles, 0);
 end;
 /
-
 
 
 
