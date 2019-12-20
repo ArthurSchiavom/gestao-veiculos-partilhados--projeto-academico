@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
     private final Company company = Company.getInstance();
-    private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
-    private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
+//    private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
+//    private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
     private final addUserController addUserController = new addUserController(company);
 
     private List<String[]> loadParsedData(String filePath) {
@@ -45,20 +45,22 @@ public class Facade implements Serviceable {
 
     @Override
     public int addBicycles(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return -1;
-
-        return registerBicyclesController.registerBicycles(parsedData, s);
+//        List<String[]> parsedData = loadParsedData(s);
+//        if (parsedData == null)
+//            return -1;
+//
+//        return registerBicyclesController.registerBicycles(parsedData, s);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int addEscooters(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return -1;
-
-        return registerElectricScootersController.registerElectricScooters(parsedData, s);
+//        List<String[]> parsedData = loadParsedData(s);
+////        if (parsedData == null)
+////            return -1;
+////
+////        return registerElectricScootersController.registerElectricScooters(parsedData, s);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -78,49 +80,50 @@ public class Facade implements Serviceable {
 
     @Override
     public int addUsers(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return -1;
-
-        List<String> username = new ArrayList<>();
-        List<String> email = new ArrayList<>();
-        List<Integer> height = new ArrayList<>();
-        List<Integer> weight = new ArrayList<>();
-        List<Float> cyclingAvgSpeed = new ArrayList<>();
-        List<String> visa = new ArrayList<>();
-        List<Character> gender = new ArrayList<>();
-        List<String> password = new ArrayList<>();
-
-        int i = 0;
-        try {
-            for (i = 0; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
-
-                username.add(line[USER_USERNAME]);
-                email.add(line[USER_EMAIL]);
-                height.add(Integer.parseInt(line[USER_HEIGHT]));
-                weight.add(Integer.parseInt(line[USER_WEIGHT]));
-                cyclingAvgSpeed.add(Float.parseFloat(line[USER_CYCLING_AVERAGE_SPEED]));
-                visa.add(line[USER_VISA]);
-                gender.add(line[USER_GENDER].charAt(0));
-                //password.add(line[SCOOTERS_ENGINE_POWER_INDEX]);
-                throw new UnsupportedOperationException();
-            }
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "Invalid data at line number " + i + " of the file " + s);
-            return -1;
-        } catch (IndexOutOfBoundsException e) {
-            LOGGER.log(Level.SEVERE, "Not all columns are present at line " + i + " of the file " + s);
-            return -1;
-        }
-        try {
-            return addUserController.addUsers(email, username, height, weight, gender, visa, cyclingAvgSpeed);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to register the users on the database");
-            return -1;
-        }
+//        List<String[]> parsedData = loadParsedData(s);
+//        if (parsedData == null)
+//            return -1;
+//
+//        List<String> username = new ArrayList<>();
+//        List<String> email = new ArrayList<>();
+//        List<Integer> height = new ArrayList<>();
+//        List<Integer> weight = new ArrayList<>();
+//        List<Float> cyclingAvgSpeed = new ArrayList<>();
+//        List<String> visa = new ArrayList<>();
+//        List<Character> gender = new ArrayList<>();
+//        List<String> password = new ArrayList<>();
+//
+//        int i = 0;
+//        try {
+//            for (i = 0; i < parsedData.size(); i++) {
+//                String[] line = parsedData.get(i);
+//                if (line.length == 1 && line[0].isEmpty())
+//                    continue;
+//
+//                username.add(line[USER_USERNAME]);
+//                email.add(line[USER_EMAIL]);
+//                height.add(Integer.parseInt(line[USER_HEIGHT]));
+//                weight.add(Integer.parseInt(line[USER_WEIGHT]));
+//                cyclingAvgSpeed.add(Float.parseFloat(line[USER_CYCLING_AVERAGE_SPEED]));
+//                visa.add(line[USER_VISA]);
+//                gender.add(line[USER_GENDER].charAt(0));
+//                //password.add(line[SCOOTERS_ENGINE_POWER_INDEX]);
+//                throw new UnsupportedOperationException();
+//            }
+//        } catch (NumberFormatException e) {
+//            LOGGER.log(Level.SEVERE, "Invalid data at line number " + i + " of the file " + s);
+//            return -1;
+//        } catch (IndexOutOfBoundsException e) {
+//            LOGGER.log(Level.SEVERE, "Not all columns are present at line " + i + " of the file " + s);
+//            return -1;
+//        }
+//        try {
+//            return addUserController.addUsers(email, username, height, weight, gender, visa, cyclingAvgSpeed);
+//        } catch (SQLException e) {
+//            LOGGER.log(Level.SEVERE, "Failed to register the users on the database");
+//            return -1;
+//        }
+        throw new UnsupportedOperationException();
     }
 
     @Override
