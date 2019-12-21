@@ -3,7 +3,6 @@ package lapr.project.controller;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
 import lapr.project.model.vehicles.ElectricScooterType;
-import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 
 public class RegisterElectricScootersControllerTest {
     // Set up mock objects and those that use the mock objects
@@ -37,7 +34,7 @@ public class RegisterElectricScootersControllerTest {
     }
 
     @Test
-    void registerBicyclesTest() {
+    void registerElectricScootersTest() {
         List<String[]> parsedData = null;
         try {
             parsedData = Utils.parseDataFile("s.txt", ";", "#");
@@ -56,7 +53,7 @@ public class RegisterElectricScootersControllerTest {
             verify(callableStatement).setFloat(2, 1.34f);
             verify(callableStatement).setFloat(3, 10.3f);
             verify(callableStatement).setString(4, ElectricScooterType.URBAN.getSQLName());
-            verify(callableStatement).setString(5, "Cool ass scooter");
+            verify(callableStatement).setString(5, "Cool scooter");
             verify(callableStatement).setFloat(6, 1.4f);
             verify(callableStatement).setInt(7, 55);
             verify(callableStatement).setInt(8, 10000);
@@ -73,15 +70,20 @@ public class RegisterElectricScootersControllerTest {
             verify(callableStatement).setInt(8, 10050);
             verify(callableStatement).setDouble(9, -20.222);
             verify(callableStatement).setDouble(10, 122.12);
+
+            verify(callableStatement, times(6)).setInt(anyInt(), anyInt());
+            verify(callableStatement, times(6)).setFloat(anyInt(), anyFloat());
+            verify(callableStatement, times(4)).setString(anyInt(), anyString());
+            verify(callableStatement, times(4)).setDouble(anyInt(), anyDouble());
         } catch (Exception e) {
             fail();
         }
 
         testInvalidFileDataExceptionCase("testFiles/MissingColumnScooterFile.txt");
         testInvalidFileDataExceptionCase("testFiles/MissingColumnScooterFile2.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile2.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile3.txt");
+        testInvalidFileDataExceptionCase("testFiles/WrongValueScootersFile.txt");
+        testInvalidFileDataExceptionCase("testFiles/WrongValueScootersFile2.txt");
+        testInvalidFileDataExceptionCase("testFiles/WrongValueScootersFile3.txt");
         // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
     }
 
