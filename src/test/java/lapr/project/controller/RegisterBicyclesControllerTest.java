@@ -61,7 +61,7 @@ public class RegisterBicyclesControllerTest {
         List<String[]> parsedData = null;
         try {
             parsedData = Utils.parseDataFile("b.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present");}
+        } catch (FileNotFoundException e) {fail("test file not present: b.txt");}
         assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock CallableStatement
         try {
@@ -99,16 +99,16 @@ public class RegisterBicyclesControllerTest {
         // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
     }
 
-    private void testInvalidFileDataExceptionCase(String fileName) {
+    private void testInvalidFileDataExceptionCase(String filePath) {
         List<String[]> parsedData = null;
 
         try {
-            parsedData = Utils.parseDataFile(fileName, ";", "#");
+            parsedData = Utils.parseDataFile(filePath, ";", "#");
         } catch (FileNotFoundException e) {fail("test file not present");}
         assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock CallableStatement
         try {
-            controller.registerBicycles(parsedData, "b.txt");
+            controller.registerBicycles(parsedData, filePath);
             fail();
         } catch (InvalidFileDataException e) {
             //pass

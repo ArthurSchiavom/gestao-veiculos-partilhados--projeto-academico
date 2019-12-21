@@ -5,12 +5,8 @@ import lapr.project.data.registers.Company;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RegisterBicyclesController {
-    private static final Logger LOGGER = Logger.getLogger("registerBicyclesControllerLogger");
-
     private static final int BICYCLES_BICYCLE_DESCRIPTION_INDEX = 0;
     private static final int BICYCLES_WEIGHT_INDEX = 1;
     private static final int BICYCLES_PARK_LAT_INDEX = 2;

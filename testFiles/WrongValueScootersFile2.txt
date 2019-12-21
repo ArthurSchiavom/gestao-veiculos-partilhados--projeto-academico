@@ -11,5 +11,5 @@
 #motor - scooter motor in Wh e.g. 250Wh
 #escooter description;weight;type;park latitude;park longitude;max battery capacity;actual battery capacity;aerodynamic coefficient;frontal area;motor
 
-Cool ass scooter; 40; city; -80.222; 172.12; 1.4; 55; 1.34; 10.3;10000
-Kakkoii scooter; 50; off-road; -20.222; 122.12; 1.5; 56; 1.44; 10.5;10050
+Cool ass scooter; 40; city; -80.222; 172.12; 1.4; 55; 1.34; 10.3
+Kakkoii scooter; 50; off-road; abc; 122.12; 1.4; 55; 1.34; 10.3;10000
