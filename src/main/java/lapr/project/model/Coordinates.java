@@ -16,9 +16,10 @@ public class Coordinates {
     /**
      * Creates a set of coordinates
      *
-     * @param lat      the lat parameter
-     * @param lon      the lon parameter
-     * @param altitude the altitude of the coordinates, in meters, 0 is sea level
+     * @param lat the lat parameter
+     * @param lon the lon parameter
+     * @param altitude the altitude of the coordinates, in meters, 0 is sea
+     * level
      */
     public Coordinates(double lat, double lon, int altitude) {
         if (lon > 180) {
@@ -72,8 +73,8 @@ public class Coordinates {
     }
 
     /**
-     * Calculates distance to other coords using haversine distance
-     * Calculated according with <url>https://stackoverflow.com/a/16794680</url>
+     * Calculates distance to other coords using haversine distance Calculated
+     * according with <url>https://stackoverflow.com/a/16794680</url>
      *
      * @param other secondary coords to calculate distance
      * @return the distance between the two coordinates
@@ -98,12 +99,16 @@ public class Coordinates {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Coordinates that = (Coordinates) o;
-        return Double.compare(that.lat, lat) == 0 &&
-                Double.compare(that.lon, lon) == 0 &&
-                Integer.compare(that.altitude, altitude) == 0;
+        return Double.compare(that.lat, lat) == 0
+                && Double.compare(that.lon, lon) == 0
+                && Integer.compare(that.altitude, altitude) == 0;
     }
 
     @Override
@@ -119,16 +124,16 @@ public class Coordinates {
                 + ", altitude=" + altitude
                 + '}';
     }
-    
+
     /**
-     * Calculates the distance to other coordinates not considering the curvature of the Earth.
+     * Calculates the distance to other coordinates not considering the
+     * curvature of the Earth.
+     *
      * @param other - the other coordinates
-     * @return the distance to other coordinates not considering the curvature of the Earth.
+     * @return the distance to other coordinates not considering the curvature
+     * of the Earth.
      */
     public double distanceFlat(Coordinates other) {
-        double varX = other.lat - lat;
-        double varY = other.lon - lon;
-        double varZ = other.lat - lat;
-        return Math.sqrt(Math.pow(varX, 2) + Math.pow(varY, 2) + Math.pow(varZ, 2));
+        return Math.sqrt(Math.pow(other.lat - lat, 2) + Math.pow(other.lon - lon, 2) + Math.pow(other.lat - lat, 2));
     }
 }
