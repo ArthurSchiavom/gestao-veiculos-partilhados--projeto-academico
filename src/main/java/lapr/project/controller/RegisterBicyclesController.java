@@ -25,7 +25,7 @@ public class RegisterBicyclesController {
         this.company = company;
     }
 
-    public int registerBicycles(List<String[]> parsedData, String fileName) {
+    public int registerBicycles(List<String[]> parsedData, String fileName) throws InvalidFileDataException, SQLException {
         List<Integer> weight = new ArrayList<>();
         List<Float> aerodynamicCoefficient = new ArrayList<>();
         List<Float> frontalArea = new ArrayList<>();
@@ -49,11 +49,9 @@ public class RegisterBicyclesController {
                 parkLongitude.add(Double.parseDouble(line[BICYCLES_PARK_LON_INDEX]));
             }
         } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
-            return -1;
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
         } catch (IndexOutOfBoundsException e) {
-            LOGGER.log(Level.SEVERE, "Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
-            return -1;
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
         }
 
         try {
@@ -61,8 +59,7 @@ public class RegisterBicyclesController {
                     size, description, parkLatitude, parkLongitude);
             return aerodynamicCoefficient.size();
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to register the bicycles on the database");
-            return -1;
+            throw new SQLException("Failed to write data to the database");
         }
     }
 }

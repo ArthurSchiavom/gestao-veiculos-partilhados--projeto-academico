@@ -64,7 +64,11 @@ public class RegisterBicyclesControllerTest {
         } catch (FileNotFoundException e) {fail("test file not present");}
         assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock CallableStatement
-        assertEquals(2, controller.registerBicycles(parsedData, "b.txt"));
+        try {
+            assertEquals(2, controller.registerBicycles(parsedData, "b.txt"));
+        } catch (Exception e) {
+            fail();
+        }
 
         try {
             // Check that all these methods have been called once
@@ -83,6 +87,31 @@ public class RegisterBicyclesControllerTest {
             verify(callableStatement).setString(5, "cat bike");
             verify(callableStatement).setDouble(6, -80.222);
             verify(callableStatement).setDouble(7, 172.12);
+        } catch (Exception e) {
+            fail();
+        }
+
+        testInvalidFileDataExceptionCase("testFiles\\MissingColumnBicyclesFile.txt");
+        testInvalidFileDataExceptionCase("testFiles\\MissingColumnBicyclesFile2.txt");
+        testInvalidFileDataExceptionCase("testFiles\\WrongValueBicyclesFile.txt");
+        testInvalidFileDataExceptionCase("testFiles\\WrongValueBicyclesFile2.txt");
+        testInvalidFileDataExceptionCase("testFiles\\WrongValueBicyclesFile3.txt");
+        // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
+    }
+
+    private void testInvalidFileDataExceptionCase(String fileName) {
+        List<String[]> parsedData = null;
+
+        try {
+            parsedData = Utils.parseDataFile(fileName, ";", "#");
+        } catch (FileNotFoundException e) {fail("test file not present");}
+        assertNotNull(parsedData);
+        // The controller is using the mock DataHandler, which will return the mock CallableStatement
+        try {
+            controller.registerBicycles(parsedData, "b.txt");
+            fail();
+        } catch (InvalidFileDataException e) {
+            //pass
         } catch (SQLException e) {
             fail();
         }
