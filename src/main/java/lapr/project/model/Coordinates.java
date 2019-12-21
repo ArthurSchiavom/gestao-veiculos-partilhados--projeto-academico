@@ -119,4 +119,16 @@ public class Coordinates {
                 + ", altitude=" + altitude
                 + '}';
     }
+    
+    /**
+     * Calculates the distance to other coordinates not considering the curvature of the Earth.
+     * @param other - the other coordinates
+     * @return the distance to other coordinates not considering the curvature of the Earth.
+     */
+    public double distanceFlat(Coordinates other) {
+        double varX = other.lat - lat;
+        double varY = other.lon - lon;
+        double varZ = other.lat - lat;
+        return Math.sqrt(Math.pow(varX, 2) + Math.pow(varY, 2) + Math.pow(varZ, 2));
+    }
 }
