@@ -42,6 +42,10 @@ public class Company {
         return instance;
     }
 
+    public static void reset() {
+        instance = null;
+    }
+
     public static Company getInstance() {
         return instance;
     }

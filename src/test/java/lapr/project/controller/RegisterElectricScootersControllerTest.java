@@ -18,13 +18,19 @@ import static org.mockito.Mockito.*;
 
 public class RegisterElectricScootersControllerTest {
     // Set up mock objects and those that use the mock objects
-    private static DataHandler dh = mock(DataHandler.class);
-    private static CallableStatement callableStatement = mock(CallableStatement.class);
-    private static Company company = Company.createCompany(dh);
-    private static RegisterElectricScootersController controller = new RegisterElectricScootersController(company);
+    private static DataHandler dh;
+    private static CallableStatement callableStatement;
+    private static Company company;
+    private static RegisterElectricScootersController controller;
 
     @BeforeAll
     static void prepare() {
+        dh = mock(DataHandler.class);
+        callableStatement = mock(CallableStatement.class);
+        Company.reset();
+        company = Company.createCompany(dh);
+        controller = new RegisterElectricScootersController(company);
+
         try {
             // When prepareCall is called, whatever the String is, return callableStatement, which is our other mock object
             when(dh.prepareCall(any(String.class))).thenReturn(callableStatement);
@@ -36,46 +42,47 @@ public class RegisterElectricScootersControllerTest {
     @Test
     void registerElectricScootersTest() {
         List<String[]> parsedData = null;
+        System.out.println(Company.getInstance());
         try {
-            parsedData = Utils.parseDataFile("s.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present: s.txt");}
+            parsedData = Utils.parseDataFile("testFiles/scooters.txt", ";", "#");
+        } catch (FileNotFoundException e) {fail("test file not present: testFiles/scooters.txt");}
         assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock CallableStatement
         try {
-            assertEquals(2, controller.registerElectricScooters(parsedData, "s.txt"));
+            assertEquals(2, controller.registerElectricScooters(parsedData, "testFiles/scooters.txt"));
         } catch (Exception e) {
+            e.printStackTrace();
             fail();
         }
 
         try {
             // Check that all these methods have been called once
-            // These methods fail when I run all tests together but pass when I run the test individually
-//            verify(callableStatement).setInt(1, 40);
-//            verify(callableStatement).setFloat(2, 1.34f);
-//            verify(callableStatement).setFloat(3, 10.3f);
-//            verify(callableStatement).setString(4, ElectricScooterType.URBAN.getSQLName());
-//            verify(callableStatement).setString(5, "Cool scooter");
-//            verify(callableStatement).setFloat(6, 1.4f);
-//            verify(callableStatement).setInt(7, 55);
-//            verify(callableStatement).setInt(8, 10000);
-//            verify(callableStatement).setDouble(9, -80.222);
-//            verify(callableStatement).setDouble(10, 172.12);
-//
-//            verify(callableStatement).setInt(1, 50);
-//            verify(callableStatement).setFloat(2, 1.44f);
-//            verify(callableStatement).setFloat(3, 10.5f);
-//            verify(callableStatement).setString(4, ElectricScooterType.OFFROAD.getSQLName());
-//            verify(callableStatement).setString(5, "Kakkoii scooter");
-//            verify(callableStatement).setFloat(6, 1.5f);
-//            verify(callableStatement).setInt(7, 56);
-//            verify(callableStatement).setInt(8, 10050);
-//            verify(callableStatement).setDouble(9, -20.222);
-//            verify(callableStatement).setDouble(10, 122.12);
-//
-//            verify(callableStatement, times(6)).setInt(anyInt(), anyInt());
-//            verify(callableStatement, times(6)).setFloat(anyInt(), anyFloat());
-//            verify(callableStatement, times(4)).setString(anyInt(), anyString());
-//            verify(callableStatement, times(4)).setDouble(anyInt(), anyDouble());
+            verify(callableStatement).setInt(1, 40);
+            verify(callableStatement).setFloat(2, 1.34f);
+            verify(callableStatement).setFloat(3, 10.3f);
+            verify(callableStatement).setString(4, ElectricScooterType.URBAN.getSQLName());
+            verify(callableStatement).setString(5, "Cool scooter");
+            verify(callableStatement).setFloat(6, 1.4f);
+            verify(callableStatement).setInt(7, 55);
+            verify(callableStatement).setInt(8, 10000);
+            verify(callableStatement).setDouble(9, -80.222);
+            verify(callableStatement).setDouble(10, 172.12);
+
+            verify(callableStatement).setInt(1, 50);
+            verify(callableStatement).setFloat(2, 1.44f);
+            verify(callableStatement).setFloat(3, 10.5f);
+            verify(callableStatement).setString(4, ElectricScooterType.OFFROAD.getSQLName());
+            verify(callableStatement).setString(5, "Kakkoii scooter");
+            verify(callableStatement).setFloat(6, 1.5f);
+            verify(callableStatement).setInt(7, 56);
+            verify(callableStatement).setInt(8, 10050);
+            verify(callableStatement).setDouble(9, -20.222);
+            verify(callableStatement).setDouble(10, 122.12);
+
+            verify(callableStatement, times(6)).setInt(anyInt(), anyInt());
+            verify(callableStatement, times(6)).setFloat(anyInt(), anyFloat());
+            verify(callableStatement, times(4)).setString(anyInt(), anyString());
+            verify(callableStatement, times(4)).setDouble(anyInt(), anyDouble());
         } catch (Exception e) {
             fail();
         }
