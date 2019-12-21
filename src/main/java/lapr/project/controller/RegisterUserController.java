@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RegisterUserController {
 
-    private Company company;
+    private final Company company;
 
     private static final int USER_USERNAME = 0;
     private static final int USER_EMAIL = 1;

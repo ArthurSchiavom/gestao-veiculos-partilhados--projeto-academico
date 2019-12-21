@@ -7,8 +7,6 @@ import lapr.project.model.users.CreditCard;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,18 +76,22 @@ public class UsersRegister {
             String username = resultSet.getString( "user_name");
             return new Client(email,username ,password, points, height, weight, gender,cyclingAvgSpeed, new CreditCard(creditCardNumber));
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {
             if (resultSet != null) {
                 try {
                     resultSet.close();
-                } catch (SQLException e) {}
+                } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, e.getMessage());
+                }
             }
 
             if (stm != null) {
                 try {
                     stm.close();
-                } catch (SQLException e) {}
+                } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, e.getMessage());
+                }
             }
         }
         return null;
@@ -108,7 +110,7 @@ public class UsersRegister {
      * @param creditCardNumber credit card number of the client
      * @param creditCardExpiration credit card expiration date of the client
      */
-    private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws ParseException, SQLException {
+    private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
         try {
@@ -135,7 +137,9 @@ public class UsersRegister {
             if (stm != null)
                 try {
                     stm.close(); // closes statement
-                } catch (SQLException e) {}
+                } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, e.getMessage());
+                }
         }
     }
 

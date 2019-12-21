@@ -33,14 +33,6 @@ public class Facade implements Serviceable {
         return parsedData;
     }
 
-    private static final int USER_USERNAME = 0;
-    private static final int USER_EMAIL = 1;
-    private static final int USER_HEIGHT = 2;
-    private static final int USER_WEIGHT = 3;
-    private static final int USER_CYCLING_AVERAGE_SPEED = 4;
-    private static final int USER_VISA = 5;
-    private static final int USER_GENDER = 6;
-
     @Override
     public int addBicycles(String s) {
 //        List<String[]> parsedData = loadParsedData(s);
