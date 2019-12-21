@@ -1,7 +1,6 @@
 package lapr.project.data;
 
 import com.sun.mail.smtp.SMTPTransport;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -9,6 +8,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class that takes care of sending emails
@@ -16,11 +17,14 @@ import java.util.Properties;
  * Adapted from : https://www.mkyong.com/java/java-how-to-send-email/
  */
 public class Emailer {
+    private static final Logger LOGGER = Logger.getLogger("EmailerLogger");
     private static final String SMTP_SERVER = System.getProperty("email.server");
     private static final String USERNAME = System.getProperty("email.username");
     private static final String PASSWORD = System.getProperty("email.password");
-
     private static final String EMAIL_FROM = System.getProperty("email.from");
+
+    private Emailer() {
+    }
 
     /**
      * Sends an email
@@ -68,10 +72,7 @@ public class Emailer {
             t.close();
 
         } catch (MessagingException e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
-
-
     }
-
 }

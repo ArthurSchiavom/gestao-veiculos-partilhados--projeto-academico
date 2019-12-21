@@ -10,6 +10,8 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Handles the users and its subclasses
@@ -17,6 +19,7 @@ import java.util.List;
 public class UsersRegister {
     private DataHandler dataHandler;
     private static float DEFAULT_VALUE_TO_PAY = 0;
+    private static final Logger LOGGER = Logger.getLogger("usersRegisterLogger");
 
     public UsersRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
@@ -25,16 +28,16 @@ public class UsersRegister {
     /**
      * Inserts a list of clients
      */
-    public int insertClients(List<String> email, List<String> username, List<Integer> height, List<Integer> weight, List<Character> gender, List<String> creditCardNumber, List<Float> cyclingAvgSpeed) throws SQLException {
-        if(!(email.size()==username.size() && username.size() == height.size() && height.size() == weight.size() && weight.size()== gender.size() && gender.size() == creditCardNumber.size() && creditCardNumber.size() == cyclingAvgSpeed.size())){
+    public int insertClients(List<String> email, List<String> username, List<Integer> height, List<Integer> weight, List<Character> gender, List<String> creditCardNumber, List<Float> cyclingAvgSpeed, List<String> password) throws SQLException {
+        if(!(password.size() == email.size() && email.size()==username.size() && username.size() == height.size() && height.size() == weight.size() && weight.size()== gender.size() && gender.size() == creditCardNumber.size() && creditCardNumber.size() == cyclingAvgSpeed.size())){
             throw new IllegalArgumentException("Lists have different sizes.");
         }
         int i;
         for( i = 0 ; i < email.size(); i++){
             try {
-                insertClient(email.get(i), username.get(i), height.get(i), weight.get(i), gender.get(i),  creditCardNumber.get(i), cyclingAvgSpeed.get(i));
+                insertClient(email.get(i), username.get(i), height.get(i), weight.get(i), gender.get(i),  creditCardNumber.get(i), cyclingAvgSpeed.get(i),password.get(i));
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         }
         dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
@@ -105,12 +108,12 @@ public class UsersRegister {
      * @param creditCardNumber credit card number of the client
      * @param creditCardExpiration credit card expiration date of the client
      */
-    private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed) throws ParseException, SQLException {
+    private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws ParseException, SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
         try {
             //pending registrations
-            stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, visa, height_cm, weight, gender, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,DEFAULT,?)");
+            stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, visa, height_cm, weight, gender, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,?,?)");
 
             stm.setString( 1, email.toLowerCase().trim()); // capital letters do not matter in email addresses
             stm.setFloat( 2, DEFAULT_VALUE_TO_PAY);
@@ -120,7 +123,8 @@ public class UsersRegister {
             stm.setString( 6, String.valueOf(gender)); // uses setString even
             // tho its a char
             stm.setFloat( 7, cyclingAvgSpeed);
-            stm.setString( 8, username.trim());
+            stm.setString(8,password);
+            stm.setString( 9, username.trim());
             int nrLines = dataHandler.executeUpdate(stm);
             if (nrLines == 0) {
                 throw new IllegalArgumentException("Client not inserted correctly");
