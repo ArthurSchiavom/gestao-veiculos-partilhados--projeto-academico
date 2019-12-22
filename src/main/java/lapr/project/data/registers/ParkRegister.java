@@ -63,6 +63,7 @@ public class ParkRegister {
             }
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         }
     }
@@ -81,6 +82,7 @@ public class ParkRegister {
             dataHandler.executeUpdate(ps);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         }
     }
@@ -196,6 +198,7 @@ public class ParkRegister {
 
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();
@@ -225,6 +228,7 @@ public class ParkRegister {
 
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();
@@ -240,6 +244,7 @@ public class ParkRegister {
             dataHandler.executeUpdate(ps);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();
@@ -255,6 +260,7 @@ public class ParkRegister {
             int changed = dataHandler.executeUpdate(ps);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();
@@ -271,6 +277,7 @@ public class ParkRegister {
             dataHandler.executeUpdate(ps);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();
@@ -352,6 +359,7 @@ public class ParkRegister {
             ps.executeUpdate();
             dataHandler.commitTransaction();
         } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();

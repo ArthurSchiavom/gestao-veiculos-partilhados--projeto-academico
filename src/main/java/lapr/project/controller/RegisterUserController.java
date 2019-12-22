@@ -37,7 +37,7 @@ public class RegisterUserController {
 
         int i = 0;
         try {
-            for (i = 0; i < parsedData.size(); i++) {
+            for (i = 1; i < parsedData.size(); i++) {
                 String[] line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;

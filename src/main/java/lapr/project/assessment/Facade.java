@@ -1,7 +1,6 @@
 package lapr.project.assessment;
 
-import lapr.project.controller.InvalidFileDataException;
-import lapr.project.controller.RegisterUserController;
+import lapr.project.controller.*;
 import lapr.project.data.registers.Company;
 import lapr.project.utils.Utils;
 
@@ -17,8 +16,9 @@ import java.util.logging.Logger;
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
     private final Company company = Company.getInstance();
-//    private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
-//    private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
+    private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
+    private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
+    private final RegisterParksController registerParksController = new RegisterParksController(company);
     private final RegisterUserController registerUserController = new RegisterUserController(company);
 
     private List<String[]> loadParsedData(String filePath) {
@@ -35,27 +35,44 @@ public class Facade implements Serviceable {
 
     @Override
     public int addBicycles(String s) {
-//        List<String[]> parsedData = loadParsedData(s);
-//        if (parsedData == null)
-//            return -1;
-//
-//        return registerBicyclesController.registerBicycles(parsedData, s);
-        throw new UnsupportedOperationException();
+        List<String[]> parsedData = loadParsedData(s);
+        if (parsedData == null)
+            return 0;
+
+        try {
+            return registerBicyclesController.registerBicycles(parsedData, s);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
     public int addEscooters(String s) {
-//        List<String[]> parsedData = loadParsedData(s);
-////        if (parsedData == null)
-////            return -1;
-////
-////        return registerElectricScootersController.registerElectricScooters(parsedData, s);
-        throw new UnsupportedOperationException();
+        List<String[]> parsedData = loadParsedData(s);
+        if (parsedData == null)
+            return 0;
+
+        try {
+            return registerElectricScootersController.registerElectricScooters(parsedData, s);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
     public int addParks(String s) {
-        throw new UnsupportedOperationException();
+        List<String[]> parsedData = loadParsedData(s);
+        if (parsedData == null)
+            return 0;
+
+        try {
+            return registerParksController.registerParks(parsedData, s);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
@@ -72,13 +89,14 @@ public class Facade implements Serviceable {
     public int addUsers(String s) {
         List<String[]> parsedData = loadParsedData(s);
         if (parsedData == null)
-            return -1;
+            return 0;
+
         try {
             return registerUserController.registerClients(parsedData,s);
-        } catch (SQLException | InvalidFileDataException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            return 0;
         }
-        return -1;
     }
 
     @Override

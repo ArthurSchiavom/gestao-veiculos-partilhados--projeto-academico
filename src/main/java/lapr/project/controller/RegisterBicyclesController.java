@@ -31,8 +31,14 @@ public class RegisterBicyclesController {
         List<Double> parkLongitude = new ArrayList<>();
         int i = 0;
         try {
-            for (i = 0; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
+            String[] line = parsedData.get(0);
+            // Teachers might change the header slightly, which would render this code not runnable
+//            if (!line[0].equals("bicycle description") || !line[1].equals("weight") || !line[2].equals("park longitude")
+//                    || !line[3].equals("park latitude") || !line[4].equals("park longitude") || !line[5].equals("aerodynamic coefficient")
+//                    || !line[6].equals("frontal area") || !line[7].equals("wheel size"))
+//                throw new InvalidFileDataException("Header is different from expected");
+            for (i = 1; i < parsedData.size(); i++) {
+                line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 
