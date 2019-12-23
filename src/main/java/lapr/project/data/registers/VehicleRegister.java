@@ -4,22 +4,83 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.vehicles.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleRegister {
     private final DataHandler dataHandler;
 
+    private static final String DESCRIPTION_FIELD_NAME = "description";
+    private static final String TYPE_FIELD_NAME = "vehicle_type_name";
+    private static final String AVAILABLE_FIELD_NAME = "available";
+    private static final String WEIGHT_FIELD_NAME = "weight";
+    private static final String AERO_COEFFICIENT_FIELD_NAME = "aerodynamic_coefficient";
+    private static final String FRONTAL_AREA_FIELD_NAME =  "frontal_area";
+
+    private static final String BICYCLE_SIZE_FIELD_NAME =  "bicycle_size";
+
+    private static final String ESCOOTER_TYPE_FIELD_NAME =  "electric_scooter_type_name";
+    private static final String ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME =  "actual_battery_capacity";
+    private static final String ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME =  "max_battery_capacity";
+    private static final String ESCOOTER_ENGINE_POWER_FIELD_NAME =  "engine_power";
+
     public VehicleRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
+    public List<Vehicle> fetchAllVehicles(VehicleType type) throws SQLException {
+        List<Vehicle> vehicles = new ArrayList<>();
+        PreparedStatement ps;
+        ResultSet rs;
+        PreparedStatement ps2;
+        ResultSet rs2;
+        try {
+            ps = dataHandler.prepareStatement("select * from VEHICLES where VEHICLE_TYPE_NAME = " + type.getSQLName());
+            dataHandler.queueForClose(ps);
+            rs = dataHandler.executeQuery(ps);
+            dataHandler.queueForClose(rs);
+
+            while (rs.next()) {
+                String description = rs.getString(DESCRIPTION_FIELD_NAME);
+                switch (type) {
+                    case BICYCLE:
+                        ps2 = dataHandler.prepareStatement("SELECT * from bicycles where VEHICLE_DESCRIPTION = " + description);
+                        dataHandler.queueForClose(ps2);
+                        rs2 = dataHandler.executeQuery(ps2);
+                        dataHandler.queueForClose(rs2);
+                        rs2.next();
+                        vehicles.add(new Bicycle(description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                                rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME), rs.getBoolean(AVAILABLE_FIELD_NAME),
+                                rs2.getInt(BICYCLE_SIZE_FIELD_NAME)));
+                        break;
+                    case ELECTRIC_SCOOTER:
+                        ps2 = dataHandler.prepareStatement("SELECT * from ELECTRIC_SCOOTERS where VEHICLE_DESCRIPTION = " + description);
+                        dataHandler.queueForClose(ps2);
+                        rs2 = dataHandler.executeQuery(ps2);
+                        dataHandler.queueForClose(rs2);
+                        rs2.next();
+                        vehicles.add(new ElectricScooter(description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                                rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME), rs.getBoolean(AVAILABLE_FIELD_NAME),
+                                ElectricScooterType.parseScooterType(rs2.getString(ESCOOTER_TYPE_FIELD_NAME)),
+                                rs2.getInt(ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME), rs2.getFloat(ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME),
+                                rs2.getInt(ESCOOTER_ENGINE_POWER_FIELD_NAME)));
+                }
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            dataHandler.closeQueuedAutoCloseables();
+        }
+
+        return vehicles;
+    }
+
     public Vehicle fetchVehicle(String vehicleDescription) throws SQLException {
         Vehicle vehicle = null;
-        DataHandler handler = Company.getInstance().getDataHandler();
 
-        PreparedStatement stm = handler.prepareStatement("select * from vehicles where description = ?");
+        PreparedStatement stm = dataHandler.prepareStatement("select * from vehicles where description = ?");
         stm.setString(1, vehicleDescription);
-        ResultSet rs = handler.executeQuery(stm);
+        ResultSet rs = dataHandler.executeQuery(stm);
         if (!rs.next())
             return null;
 
@@ -35,9 +96,9 @@ public class VehicleRegister {
         }
 
         @SuppressWarnings("SqlResolve")
-        PreparedStatement stm2 = handler.prepareStatement("select * from " + childTableName + " where vehicle_description = ?");
+        PreparedStatement stm2 = dataHandler.prepareStatement("select * from " + childTableName + " where vehicle_description = ?");
         stm2.setString(1, vehicleDescription);
-        ResultSet rs2 = handler.executeQuery(stm2);
+        ResultSet rs2 = dataHandler.executeQuery(stm2);
         if (!rs2.next())
             throw new SQLException("Incorrectly filled data in the database");
 
@@ -58,19 +119,6 @@ public class VehicleRegister {
         return vehicle;
     }
 
-    /**
-     * Registers a bicycle in the database.
-     *
-     * @param aerodynamicCoefficient
-     * @param frontalArea
-     * @param weight
-     * @param size
-     * @param description
-     * @param parkLatitude
-     * @param parkLongitude
-     * @return
-     * @throws SQLException
-     */
     private void registerBicycleNoCommit(float aerodynamicCoefficient, float frontalArea,
                                          int weight, int size,
                                          String description, double parkLatitude, double parkLongitude) throws SQLException {

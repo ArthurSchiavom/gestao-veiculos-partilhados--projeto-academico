@@ -257,7 +257,7 @@ public class ParkRegister {
             dataHandler.queueForClose(ps);
             ps.setFloat(1, newInputCurrent);
             ps.setString(2, parkId);
-            int changed = dataHandler.executeUpdate(ps);
+            dataHandler.executeUpdate(ps);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};

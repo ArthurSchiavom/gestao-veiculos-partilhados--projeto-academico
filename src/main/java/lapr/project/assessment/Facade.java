@@ -2,13 +2,11 @@ package lapr.project.assessment;
 
 import lapr.project.controller.*;
 import lapr.project.data.registers.Company;
+import lapr.project.model.vehicles.Vehicle;
+import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
 
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.SQLException;
+import java.io.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,17 +31,52 @@ public class Facade implements Serviceable {
         return parsedData;
     }
 
+    private String retrieveFolderPath(String filePath) {
+        String[] folders = filePath.split("/");
+        StringBuilder resultSB = new StringBuilder();
+        for (int i = 0; i < folders.length - 1; i++) {
+            resultSB.append(folders[i]).append("/");
+        }
+        return resultSB.toString();
+    }
+
     @Override
     public int addBicycles(String s) {
         List<String[]> parsedData = loadParsedData(s);
         if (parsedData == null)
             return 0;
 
+        FileWriter fileWriter = null;
+        PrintWriter printWriter = null;
         try {
-            return registerBicyclesController.registerBicycles(parsedData, s);
+            int result = registerBicyclesController.registerBicycles(parsedData, s);
+
+            String outputFile = retrieveFolderPath(s);
+            List<Vehicle> vehicles = company.getVehicleRegister().fetchAllVehicles(VehicleType.BICYCLE);
+
+            fileWriter = new FileWriter(outputFile);
+            printWriter = new PrintWriter(fileWriter);
+            printWriter.println("bicycle description");
+            for (Vehicle vehicle : vehicles) {
+                printWriter.println(vehicle.getDescription());
+            }
+            printWriter.close();
+
+            return result;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
             return 0;
+        } finally {
+            if (printWriter != null)
+                printWriter.close();
+            
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -73,6 +106,7 @@ public class Facade implements Serviceable {
             LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
             return 0;
         }
+
     }
 
     @Override

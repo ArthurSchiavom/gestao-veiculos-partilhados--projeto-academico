@@ -19,3 +19,5 @@ values('offroad');
 
 insert into electric_scooter_types(electric_scooter_type_name)
 values('urban');
+
+COMMIT;

@@ -10,5 +10,5 @@
 #park input current - the park input current measured in Amperes (A) e.g. 16A
 park identification;latitude;longitude;elevation;park description;max number of bicycles;max number of escooters;park input voltage;park input current
 
-p1; 123.0; 321.0;  ; Some desc; 12; 15; 17.4; 19.9
-p2; 1234; 4321; 30 ; Some desc2; 13; 16; 18.4; 19.8
+p1; 50.0; 180.0;  ; Some desc; 12; 15; 17.4; 19.9
+p2; 90; 150.56; 30 ; Some desc2; 13; 16; 18.4; 19.8
