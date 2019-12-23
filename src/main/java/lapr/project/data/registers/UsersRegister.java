@@ -36,6 +36,8 @@ public class UsersRegister {
                 insertClient(email.get(i), username.get(i), height.get(i), weight.get(i), gender.get(i),  creditCardNumber.get(i), cyclingAvgSpeed.get(i),password.get(i));
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
+                dataHandler.rollbackTransaction();
+                return 0;
             }
         }
         dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
