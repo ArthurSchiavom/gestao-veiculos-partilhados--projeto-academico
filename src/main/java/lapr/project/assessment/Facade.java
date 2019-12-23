@@ -18,6 +18,7 @@ public class Facade implements Serviceable {
     private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
     private final RegisterParksController registerParksController = new RegisterParksController(company);
     private final RegisterUserController registerUserController = new RegisterUserController(company);
+    private final RegisterPOIController registerPOIController = new RegisterPOIController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -116,7 +117,16 @@ public class Facade implements Serviceable {
 
     @Override
     public int addPOIs(String s) {
-        throw new UnsupportedOperationException();
+        List<String[]> parsedData = loadParsedData(s);
+        if (parsedData == null)
+            return 0;
+
+        try {
+            return registerPOIController.registerPOIs(parsedData,s);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
@@ -124,7 +134,6 @@ public class Facade implements Serviceable {
         List<String[]> parsedData = loadParsedData(s);
         if (parsedData == null)
             return 0;
-
         try {
             return registerUserController.registerClients(parsedData,s);
         } catch (Exception e) {

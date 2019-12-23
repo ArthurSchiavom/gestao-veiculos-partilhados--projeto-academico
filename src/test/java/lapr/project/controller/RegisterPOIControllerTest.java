@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
-class RegisterUserControllerTest {
+class RegisterPOIControllerTest {
 
     private static DataHandler dh;
     private static PreparedStatement preparedStatement;
     private static Company company;
-    private static RegisterUserController controller;
+    private static RegisterPOIController controller;
 
     @BeforeAll
     static void prepare() {
@@ -26,7 +26,7 @@ class RegisterUserControllerTest {
         preparedStatement = mock(PreparedStatement.class);
         Company.reset();
         company = Company.createCompany(dh);
-        controller = new RegisterUserController(company);
+        controller = new RegisterPOIController(company);
 
         try {
             // When prepareCall is called, whatever the String is, return callableStatement, which is our other mock object
@@ -38,44 +38,36 @@ class RegisterUserControllerTest {
     }
 
     @Test
-    void addUsers() {
+    void addPois() {
         List<String[]> parsedData = null;
         try {
-            parsedData = Utils.parseDataFile("testFiles/user.txt", ",", "#");
+            parsedData = Utils.parseDataFile("testFiles/poi.txt", ";", "#");
         } catch (FileNotFoundException e) {fail("test file not present");}
         assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock PreparedStatement
         try {
-            int result = controller.registerClients(parsedData, "testFiles/user.txt");
+            int result = controller.registerPOIs(parsedData, "testFiles/poi.txt");
             assertEquals(2, result,"should be 2 but was: "+result);
         } catch (Exception e) {
             fail();
         }
         try {
             // Check that all these methods have been called once
-            verify(preparedStatement).setString(9, "diogo");
-            verify(preparedStatement).setString(1, "diog@g.g");
-            verify(preparedStatement).setInt(4, 301);
-            verify(preparedStatement).setInt(5, 75);
-            verify(preparedStatement).setFloat(7,98);
-            verify(preparedStatement).setString(3, "1234567812345678");
-            verify(preparedStatement).setString(6, "M");
-            verify(preparedStatement).setString(8, "passe");
+            verify(preparedStatement).setDouble(1, 3.31);
+            verify(preparedStatement).setDouble(2, 3.14);
+            verify(preparedStatement).setInt(3, 18);
+            verify(preparedStatement).setString(4, "description1");
 
-            verify(preparedStatement).setString(9, "josefina");
-            verify(preparedStatement).setString(1, "ola@g.g");
-            verify(preparedStatement).setInt(4, 160);
-            verify(preparedStatement).setInt(5, 76);
-            verify(preparedStatement).setFloat(7,99);
-            verify(preparedStatement).setString(3, "1234567812345670");
-            verify(preparedStatement).setString(6, "F");
-            verify(preparedStatement).setString(8, "passe1");
 
-            verify(preparedStatement, times(2)).setFloat(2, 0);
+            verify(preparedStatement).setDouble(1, 85.13);
+            verify(preparedStatement).setDouble(2, -15.14);
+            verify(preparedStatement).setInt(3, 180);
+            verify(preparedStatement).setString(4, "description2");
 
-            verify(preparedStatement, times(4)).setInt(anyInt(), anyInt());
-            verify(preparedStatement, times(4)).setFloat(anyInt(), anyFloat());
-            verify(preparedStatement, times(10)).setString(anyInt(), anyString());
+
+            verify(preparedStatement, times(2)).setInt(anyInt(), anyInt());
+            verify(preparedStatement, times(4)).setDouble(anyInt(), anyDouble());
+            verify(preparedStatement, times(2)).setString(anyInt(), anyString());
         } catch (Exception e) {
             fail();
         }

@@ -8,6 +8,10 @@ package lapr.project.data.registers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.PointOfInterest;
@@ -18,15 +22,35 @@ import lapr.project.model.point.of.interest.PointOfInterest;
  */
 public class PoiRegister {
     private final DataHandler dataHandler;
+    private static final Logger LOGGER = Logger.getLogger("poiRegisterLogger");
 
     /**
      * Instantiates a poi register
-     * @param dataHandler 
      */
     public PoiRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
+    /**
+     * Inserts a list of clients
+     */
+    public int insertPOIs(List<Double> lat, List<Double> lon, List<Integer> elev, List<String> desc) throws SQLException {
+        if(!(lat.size()==lon.size() && lon.size() == elev.size() && elev.size() == desc.size())){
+            throw new IllegalArgumentException("Lists have different sizes.");
+        }
+        int i;
+        for( i = 0 ; i < lat.size(); i++){
+            try {
+                insertPoi(desc.get(i),lat.get(i),lon.get(i),elev.get(i));
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
+                dataHandler.rollbackTransaction();
+                return 0;
+            }
+        }
+        dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
+        return i;
+    }
     /**
      * Fetches a Poi object from the oracle sql table
      *
@@ -52,7 +76,7 @@ public class PoiRegister {
             Coordinates coordinates = new Coordinates(lat, lon, alt);
             return new PointOfInterest(desc, coordinates);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {
             dataHandler.closeQueuedAutoCloseables();
         }
@@ -68,7 +92,7 @@ public class PoiRegister {
      * @param altitude - the altitude of the point of interest
      * @return
      */
-    public boolean insertPoi(String description, Double latitude, Double longitude, Integer altitude) {
+    private void insertPoi(String description, Double latitude, Double longitude, Integer altitude) throws SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
         try {
@@ -84,14 +108,16 @@ public class PoiRegister {
 
             dataHandler.executeUpdate(stm);
 
-            dataHandler.commitTransaction();
-            stm.close(); // closes statement
-
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
+            throw e;
+        }finally {
+            if (stm != null)
+                try {
+                    stm.close(); // closes statement
+                } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, e.getMessage());
+                }
         }
-        return true;
     }
 
     /**
