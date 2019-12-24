@@ -16,7 +16,7 @@ public class Utils {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!line.startsWith(lineCommentTag)) {
-                    String[] lineValues = trimArrayElements(line.split(valueSeparator));
+                    String[] lineValues = trimArrayElements(line.split(valueSeparator,-1));
                     result.add(lineValues);
                 }
             }

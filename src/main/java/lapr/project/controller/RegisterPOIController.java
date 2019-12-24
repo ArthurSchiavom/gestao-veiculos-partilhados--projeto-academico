@@ -34,10 +34,17 @@ public class RegisterPOIController {
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 
-                lat.add(Double.parseDouble(line[POI_LATITUDE]));
-                lon.add(Double.parseDouble(line[POI_LONGITUDE]));
-                elev.add(Integer.parseInt(line[POI_ELEVATION]));
-                desc.add(line[POI_DESCRIPTION]);
+                if(line[POI_ELEVATION].isEmpty()){
+                    lat.add(Double.parseDouble(line[POI_LATITUDE]));
+                    lon.add(Double.parseDouble(line[POI_LONGITUDE]));
+                    elev.add(0); // in the input folder it says if there's no elevation, to assume that it is 0
+                    desc.add(line[POI_DESCRIPTION]);
+                }else {
+                    lat.add(Double.parseDouble(line[POI_LATITUDE]));
+                    lon.add(Double.parseDouble(line[POI_LONGITUDE]));
+                    elev.add(Integer.parseInt(line[POI_ELEVATION]));
+                    desc.add(line[POI_DESCRIPTION]);
+                }
 
             }
         } catch (NumberFormatException e) {
