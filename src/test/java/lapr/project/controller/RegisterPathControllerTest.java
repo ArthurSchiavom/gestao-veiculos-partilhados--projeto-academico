@@ -13,12 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
-class RegisterPOIControllerTest {
+
+class RegisterPathControllerTest {
 
     private static DataHandler dh;
     private static PreparedStatement preparedStatement;
     private static Company company;
-    private static RegisterPOIController controller;
+    private static RegisterPathController controller;
 
     @BeforeAll
     static void prepare() {
@@ -26,7 +27,7 @@ class RegisterPOIControllerTest {
         preparedStatement = mock(PreparedStatement.class);
         Company.reset();
         company = Company.createCompany(dh);
-        controller = new RegisterPOIController(company);
+        controller = new RegisterPathController(company);
 
         try {
             // When prepareCall is called, whatever the String is, return callableStatement, which is our other mock object
@@ -38,36 +39,42 @@ class RegisterPOIControllerTest {
     }
 
     @Test
-    void addPoisTest() {
+    void registerPathsTest() {
         List<String[]> parsedData = null;
         try {
-            parsedData = Utils.parseDataFile("testFiles/poi.txt", ";", "#");
+            parsedData = Utils.parseDataFile("testFiles/path.txt", ";", "#");
         } catch (FileNotFoundException e) {fail("test file not present");}
         assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock PreparedStatement
         try {
-            int result = controller.registerPOIs(parsedData, "testFiles/poi.txt");
+            int result = controller.registerPaths(parsedData, "testFiles/path.txt");
             assertEquals(2, result,"should be 2 but was: "+result);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             fail();
         }
         try {
             // Check that all these methods have been called once
-            verify(preparedStatement).setDouble(1, 3.31);
-            verify(preparedStatement).setDouble(2, 3.14);
-            verify(preparedStatement).setInt(3, 18);
-            verify(preparedStatement).setString(4, "description1");
+            verify(preparedStatement).setDouble(1, 30);
+            verify(preparedStatement).setDouble(2, 33);
+            verify(preparedStatement).setDouble(3, 25);
+            verify(preparedStatement).setDouble(4, 26);
+            verify(preparedStatement).setDouble(5, 7);
+            verify(preparedStatement).setInt(6, 0);
+            verify(preparedStatement).setDouble(7, 4);
 
 
-            verify(preparedStatement).setDouble(1, 85.13);
-            verify(preparedStatement).setDouble(2, -15.14);
-            verify(preparedStatement).setInt(3, 0);
-            verify(preparedStatement).setString(4, "description2");
+            verify(preparedStatement).setDouble(1, 31);
+            verify(preparedStatement).setDouble(2, 32);
+            verify(preparedStatement).setDouble(3, 24);
+            verify(preparedStatement).setDouble(4, 27);
+            verify(preparedStatement).setDouble(5, 1);
+            verify(preparedStatement).setInt(6, 2);
+            verify(preparedStatement).setDouble(7, 0);
 
 
             verify(preparedStatement, times(2)).setInt(anyInt(), anyInt());
-            verify(preparedStatement, times(4)).setDouble(anyInt(), anyDouble());
-            verify(preparedStatement, times(2)).setString(anyInt(), anyString());
+            verify(preparedStatement, times(12)).setDouble(anyInt(), anyDouble());
         } catch (Exception e) {
             fail();
         }

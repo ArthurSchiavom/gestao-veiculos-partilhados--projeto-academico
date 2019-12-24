@@ -8,12 +8,16 @@ package lapr.project.data.registers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
 
 /**
- * Class that regists paths
+ * Class that registers paths
  *
  */
 public class PathRegister {
@@ -22,11 +26,32 @@ public class PathRegister {
 
     /**
      * Instantiates a pathRegister
-     *
-     * @param dataHandler
      */
     public PathRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
+    }
+
+    private static final Logger LOGGER = Logger.getLogger("pathRegisterLogger");
+
+    /**
+     * Inserts a list of clients
+     */
+    public int insertPaths(List<Double> latA, List<Double> lonA, List<Double> latB, List<Double> lonB, List<Double> kineticCoef, List<Integer> windDirection, List<Double> windSpeed) throws SQLException {
+        if(!(latA.size()==lonA.size() && lonA.size() == latB.size() && latB.size() == lonB.size() && lonB.size()== kineticCoef.size() && kineticCoef.size() == windDirection.size() && windDirection.size() == windSpeed.size())){
+            throw new IllegalArgumentException("Lists have different sizes.");
+        }
+        int i;
+        for( i = 0 ; i < latA.size(); i++){
+            try {
+                insertPath(latA.get(i), lonA.get(i), latB.get(i), lonB.get(i), kineticCoef.get(i),  windDirection.get(i), windSpeed.get(i));
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
+                dataHandler.rollbackTransaction();
+                return 0;
+            }
+        }
+        dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
+        return i;
     }
 
     /**
@@ -35,7 +60,7 @@ public class PathRegister {
      * point (primary keys)
      * @return a path from the data base
      */
-    public Path fetchPath(Double startLatitude, Double startLongitude, Double endLatitude, Double endLongitude) {
+    public Path fetchPath(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
         PreparedStatement stm = null;
         PreparedStatement stmStartAltitude = null;
         PreparedStatement stmEndAltitude = null;
@@ -81,7 +106,7 @@ public class PathRegister {
             Coordinates endingPoint = new Coordinates(lat2, lon2, endAltitude);
             return new Path(startingPoint,endingPoint,kinetic,windDirectionDegrees,windSpeed);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {
             dataHandler.closeQueuedAutoCloseables();
         }
@@ -97,22 +122,12 @@ public class PathRegister {
      * @param longitude2 - longitude of the ending point
      * @param kineticCoefficient - kinetic coefficient of the path
      * @param windSpeed - wind speed in the path
-     * @return
      */
-    public boolean insertPath(Double latitude1, Double longitude1, Double latitude2, Double longitude2, Double kineticCoefficient, Integer windDirectionDegree, Double windSpeed) {
+    private void insertPath(double latitude1, double longitude1, double latitude2, double longitude2, double kineticCoefficient, int windDirectionDegree, double windSpeed) throws SQLException {
         PreparedStatement stm = null;
 
         try {
-            if (kineticCoefficient == null) {
-                kineticCoefficient = 0.0;
-            }
-            if (windDirectionDegree == null) {
-                windDirectionDegree = 0;
-            }
-            if (windSpeed == null) {
-                windSpeed = 0.0;
-            }
-            stm = dataHandler.prepareStatement("INSERT INTO paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coefficient, wind_direction_degrees, wind_speed) " + "VALUES(?,?,?,?,?,?,?)");
+            stm = dataHandler.prepareStatement("INSERT INTO paths(latitudeA, longitudeA, latitudeB, longitudeB, kinetic_coefficient, wind_direction_degrees, wind_speed) VALUES(?,?,?,?,?,?,?)");
             stm.setDouble(1, latitude1);
             stm.setDouble(2, longitude1);
             stm.setDouble(3, latitude2);
@@ -120,18 +135,11 @@ public class PathRegister {
             stm.setDouble(5, kineticCoefficient);
             stm.setInt(6, windDirectionDegree);
             stm.setDouble(7, windSpeed);
-            int nrLines = dataHandler.executeUpdate(stm);
-            if (nrLines == 0) {
-                return false;
-            }
-
-            dataHandler.commitTransaction();
+            dataHandler.executeUpdate(stm);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
+            throw e;
         } finally {
             dataHandler.closeQueuedAutoCloseables();
         }
-        return true;
     }
 }
