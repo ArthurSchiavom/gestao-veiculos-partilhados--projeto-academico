@@ -7,18 +7,21 @@ import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
+
     private final Company company = Company.getInstance();
     private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
     private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
     private final RegisterParksController registerParksController = new RegisterParksController(company);
     private final RegisterUserController registerUserController = new RegisterUserController(company);
     private final RegisterPOIController registerPOIController = new RegisterPOIController(company);
+    private final RemoveParkController removeParkController = new RemoveParkController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -32,15 +35,6 @@ public class Facade implements Serviceable {
         return parsedData;
     }
 
-    private String retrieveFolderPath(String filePath) {
-        String[] folders = filePath.split("/");
-        StringBuilder resultSB = new StringBuilder();
-        for (int i = 0; i < folders.length - 1; i++) {
-            resultSB.append(folders[i]).append("/");
-        }
-        return resultSB.toString();
-    }
-
     @Override
     public int addBicycles(String s) {
         List<String[]> parsedData = loadParsedData(s);
@@ -50,20 +44,7 @@ public class Facade implements Serviceable {
         FileWriter fileWriter = null;
         PrintWriter printWriter = null;
         try {
-            int result = registerBicyclesController.registerBicycles(parsedData, s);
-
-            String outputFile = retrieveFolderPath(s);
-            List<Vehicle> vehicles = company.getVehicleRegister().fetchAllVehicles(VehicleType.BICYCLE);
-
-            fileWriter = new FileWriter(outputFile);
-            printWriter = new PrintWriter(fileWriter);
-            printWriter.println("bicycle description");
-            for (Vehicle vehicle : vehicles) {
-                printWriter.println(vehicle.getDescription());
-            }
-            printWriter.close();
-
-            return result;
+            return registerBicyclesController.registerBicycles(parsedData, s);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
             return 0;
@@ -112,6 +93,12 @@ public class Facade implements Serviceable {
 
     @Override
     public int removePark(String s) {
+        try {
+            removeParkController.removePark(s);
+            return 1;
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "Failed to remove park: \n" + e.getMessage());
+        }
         return 0;
     }
 
