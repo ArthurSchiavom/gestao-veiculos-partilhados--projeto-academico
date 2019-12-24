@@ -1,5 +1,6 @@
 package lapr.project.data.registers;
 
+import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Trip;
 
@@ -27,12 +28,15 @@ public class TripRegister {
      */
     public Trip fetchTrip(String clientEmail, LocalDateTime startTime) {
         PreparedStatement prepStat = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
                     "SELECT * FROM trip where start_time=? AND user_email=?");
+            autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setTimestamp( 1, Timestamp.valueOf(startTime));
             prepStat.setString( 2, clientEmail);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
+            autoCloseableManager.addAutoCloseable(resultSet);
             if (resultSet == null || !resultSet.next()) {
                 return null;
             }
@@ -46,6 +50,8 @@ public class TripRegister {
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
         }
     }
 
@@ -57,12 +63,14 @@ public class TripRegister {
 
     public Trip fetchUnfinishedTrip (String email){
         PreparedStatement prepStat = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            prepStat = dataHandler.prepareStatement(
-                    "SELECT * FROM trip where user_email=? AND end_time=? ");
+            prepStat = dataHandler.prepareStatement("SELECT * FROM trip where user_email=? AND end_time=?");
+            autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setString( 1, email);
             prepStat.setTimestamp(2, null);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
+            autoCloseableManager.addAutoCloseable(resultSet);
             if (resultSet == null || !resultSet.next() ) {
                 return null;
             }
@@ -76,6 +84,8 @@ public class TripRegister {
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
         }
     }
 
@@ -88,9 +98,11 @@ public class TripRegister {
         PreparedStatement prepStat = null;
         Trip trip = fetchUnfinishedTrip (email);
         updateEndTrip(trip);
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
                     "INSERT INTO park_vehicle  park_id =?,vehicle_id=?" + "VALUES(?,?)");
+            autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setString(1,trip.getEndParkId());
             prepStat.setInt(2,trip.getVehicleId());
 
@@ -99,6 +111,8 @@ public class TripRegister {
         }catch (SQLException ex){
             ex.printStackTrace();
             return false;
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
         }
     }
 
@@ -110,9 +124,11 @@ public class TripRegister {
 
     public boolean updateEndTrip(Trip trip){
         PreparedStatement prepStat = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
                     "UPDATE TRIP SET start_time =? ,user_email=?,vehicle_id =?,start_park_id=?,end_park_id=?,end_time=?");
+            autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setTimestamp(1,Timestamp.valueOf(trip.getStartTime()));
             prepStat.setString(2,trip.getClientEmail());
             prepStat.setInt(3,trip.getVehicleId());
@@ -124,6 +140,8 @@ public class TripRegister {
         }catch (SQLException ex){
             ex.printStackTrace();
             return false;
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
         }
 
     }
@@ -183,9 +201,10 @@ public class TripRegister {
 
     public List<Trip> getListOfVehiclesNotAvailable(LocalDateTime startTime,LocalDateTime endTime) {
         List<Trip> dispVehicles  = new ArrayList<>();
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from trips  WHERE (? >= start_time AND ? < nvl(end_time, sysdate)) OR (? > start_time AND ? <= nvl(end_time, sysdate) ) OR (? >= nvl(end_time, sysdate) AND ? <= start_time)");
-            dataHandler.queueForClose(statement);
+            autoCloseableManager.addAutoCloseable(statement);
             statement.setTimestamp(1,Timestamp.valueOf(startTime));
             statement.setTimestamp(2,Timestamp.valueOf(startTime));
             statement.setTimestamp(3,Timestamp.valueOf(endTime));
@@ -193,7 +212,7 @@ public class TripRegister {
             statement.setTimestamp(5,Timestamp.valueOf(endTime));
             statement.setTimestamp(6,Timestamp.valueOf(startTime));
             ResultSet resultVehicles = dataHandler.executeQuery(statement);
-            dataHandler.queueForClose(resultVehicles);
+            autoCloseableManager.addAutoCloseable(resultVehicles);
             if (resultVehicles == null) {
                 return dispVehicles;
             }
@@ -211,7 +230,7 @@ public class TripRegister {
         } catch (SQLException e) {
             return dispVehicles;
         } finally {
-             dataHandler.closeQueuedAutoCloseables();
+            autoCloseableManager.closeAutoCloseables();
         }
         return dispVehicles;
     }

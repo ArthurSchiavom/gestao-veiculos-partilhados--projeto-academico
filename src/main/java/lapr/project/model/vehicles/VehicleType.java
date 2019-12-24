@@ -23,4 +23,14 @@ public enum VehicleType {
         }
         return null;
     }
+
+    public static <T extends Vehicle> VehicleType findType(Class<T> classType) {
+        if (classType == Bicycle.class)
+            return VehicleType.BICYCLE;
+
+        if (classType == ElectricScooter.class)
+            return VehicleType.ELECTRIC_SCOOTER;
+
+        return null;
+    }
 }

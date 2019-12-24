@@ -1,5 +1,6 @@
 package lapr.project.data.registers;
 
+import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Path;
 import lapr.project.model.users.Client;
@@ -37,7 +38,7 @@ public class UsersRegister {
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
                 dataHandler.rollbackTransaction();
-                return 0;
+                throw e;
             }
         }
         dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
@@ -53,10 +54,13 @@ public class UsersRegister {
     public Client fetchClient(String email) {
         PreparedStatement stm = null;
         ResultSet resultSet = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             stm = dataHandler.prepareStatement("SELECT * FROM clients where lower(user_email) like ?"); // capital letters do not matter in emails
+            autoCloseableManager.addAutoCloseable(stm);
             stm.setString( 1, email);
             resultSet = dataHandler.executeQuery(stm);
+            autoCloseableManager.addAutoCloseable(resultSet);
             if (resultSet == null || !resultSet.next()) {
                 return null;
             }
@@ -69,8 +73,11 @@ public class UsersRegister {
 
             // get password of client
             stm = dataHandler.prepareStatement("SELECT * FROM registered_users where user_email=?");
+            autoCloseableManager.addAutoCloseable(stm);
+
             stm.setString( 1, email);
             resultSet = dataHandler.executeQuery(stm);
+            autoCloseableManager.addAutoCloseable(resultSet);
             if (resultSet == null || !resultSet.next())
                 return null;
 
@@ -80,21 +87,7 @@ public class UsersRegister {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, e.getMessage());
-                }
-            }
-
-            if (stm != null) {
-                try {
-                    stm.close();
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, e.getMessage());
-                }
-            }
+            autoCloseableManager.closeAutoCloseables();
         }
         return null;
     }
@@ -115,9 +108,11 @@ public class UsersRegister {
     private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             //pending registrations
             stm = dataHandler.prepareStatement("INSERT INTO pending_registrations(email, amount_left_to_pay, visa, height_cm, weight, gender, cycling_average_speed, user_password, user_name) VALUES(?,?,?,?,?,?,?,?,?)");
+            autoCloseableManager.addAutoCloseable(stm);
 
             stm.setString( 1, email.toLowerCase().trim()); // capital letters do not matter in email addresses
             stm.setFloat( 2, DEFAULT_VALUE_TO_PAY);
@@ -136,12 +131,7 @@ public class UsersRegister {
         } catch (SQLException e) {
             throw e; // throws the exception it catches, because it needs the finally clause to close the statement
         } finally {
-            if (stm != null)
-                try {
-                    stm.close(); // closes statement
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, e.getMessage());
-                }
+            autoCloseableManager.closeAutoCloseables();
         }
     }
 

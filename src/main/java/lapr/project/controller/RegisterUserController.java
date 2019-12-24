@@ -59,7 +59,7 @@ public class RegisterUserController {
         try {
             return company.getUsersRegister().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed,password);
         } catch (SQLException e) {
-            throw new SQLException("Failed to write data to the database");
+            throw new SQLException("Failed to write data to the database: \n" + e.getMessage());
         }
     }
 }

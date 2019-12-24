@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.PointOfInterest;
@@ -60,11 +61,14 @@ public class PoiRegister {
      */
     public PointOfInterest fetchPoi(Double latitude, Double longitude) {
         PreparedStatement stm = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             stm = dataHandler.prepareStatement("SELECT * FROM points_of_interest where latitude=? AND longitude =?");
+            autoCloseableManager.addAutoCloseable(stm);
             stm.setDouble(1, latitude);
             stm.setDouble(2, longitude);
             ResultSet resultSet = dataHandler.executeQuery(stm);
+            autoCloseableManager.addAutoCloseable(resultSet);
             if (resultSet == null || !resultSet.next()) {
                 return null;
             }
@@ -78,7 +82,7 @@ public class PoiRegister {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            autoCloseableManager.closeAutoCloseables();
         }
         return null;
     }
@@ -95,11 +99,13 @@ public class PoiRegister {
     private void insertPoi(String description, Double latitude, Double longitude, Integer altitude) throws SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             if (altitude == null) {
                 altitude = 0;
             }
             stm = dataHandler.prepareStatement("Insert into points_of_interest(latitude, longitude, altitude_m, poi_description) values (?,?,?,?)");
+            autoCloseableManager.addAutoCloseable(stm);
 
             stm.setDouble(1, latitude);
             stm.setDouble(2, longitude);
@@ -111,12 +117,7 @@ public class PoiRegister {
         } catch (SQLException e) {
             throw e;
         }finally {
-            if (stm != null)
-                try {
-                    stm.close(); // closes statement
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, e.getMessage());
-                }
+            autoCloseableManager.closeAutoCloseables();
         }
     }
 

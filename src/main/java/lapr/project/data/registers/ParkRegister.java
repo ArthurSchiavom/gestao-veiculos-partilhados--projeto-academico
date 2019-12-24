@@ -7,10 +7,12 @@ package lapr.project.data.registers;
 import java.sql.*;
 import java.util.*;
 
+import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.park.Capacity;
 import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
 
 /**
@@ -100,12 +102,13 @@ public class ParkRegister {
         int altitude;
         float parkInputVoltage;
         float parkInputCorrent;
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement("Select * from parks p, points_of_interest poi where park_id=? AND p.latitude = poi.latitude AND p.longitude = poi.longitude");
-            dataHandler.queueForClose(ps);
+            closeableManager.addAutoCloseable(ps);
             ps.setString(1, id);
             ResultSet rs = dataHandler.executeQuery(ps);
-            dataHandler.queueForClose(rs);
+            closeableManager.addAutoCloseable(rs);
             if (rs == null || !rs.next()) {
                 return null;
             }
@@ -119,7 +122,7 @@ public class ParkRegister {
         } catch (SQLException e) {
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
     }
 
@@ -134,12 +137,13 @@ public class ParkRegister {
         int amountOccupied;
         ResultSet rs = null;
         PreparedStatement ps = null;
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             ps = dataHandler.prepareStatement("Select * from park_capacity where park_id=?");
-            dataHandler.queueForClose(ps);
+            closeableManager.addAutoCloseable(ps);
             ps.setString(1, parkId);
             rs = dataHandler.executeQuery(ps);
-            dataHandler.queueForClose(rs);
+            closeableManager.addAutoCloseable(rs);
             if (rs == null) {
                 return null;
             }
@@ -153,12 +157,13 @@ public class ParkRegister {
         } catch (SQLException e) {
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
         return capacity;
     }
 
     public void updateParkId(String currentId, String newId) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement psParks;
             PreparedStatement psParkCapacity;
@@ -167,31 +172,31 @@ public class ParkRegister {
             PreparedStatement psParkVehicle;
 
             psParks = dataHandler.prepareStatement("UPDATE parks SET park_id = ? where park_id = ?");
-            dataHandler.queueForClose(psParks);
+            closeableManager.addAutoCloseable(psParks);
             psParks.setString(1, newId);
             psParks.setString(2, currentId);
             dataHandler.executeUpdate(psParks);
 
             psParkCapacity = dataHandler.prepareStatement("UPDATE park_capacity SET park_id = ? where park_id = ?");
-            dataHandler.queueForClose(psParkCapacity);
+            closeableManager.addAutoCloseable(psParkCapacity);
             psParkCapacity.setString(1, newId);
             psParkCapacity.setString(2, currentId);
             dataHandler.executeUpdate(psParkCapacity);
 
             psTripsStart = dataHandler.prepareStatement("UPDATE trips SET start_park_id = ? where start_park_id = ?");
-            dataHandler.queueForClose(psTripsStart);
+            closeableManager.addAutoCloseable(psTripsStart);
             psTripsStart.setString(1, newId);
             psTripsStart.setString(2, currentId);
             dataHandler.executeUpdate(psTripsStart);
 
             psTripsEnd = dataHandler.prepareStatement("UPDATE trips SET end_park_id = ? where end_park_id = ?");
-            dataHandler.queueForClose(psTripsEnd);
+            closeableManager.addAutoCloseable(psTripsEnd);
             psTripsEnd.setString(1, newId);
             psTripsEnd.setString(2, currentId);
             dataHandler.executeUpdate(psTripsEnd);
 
             psParkVehicle = dataHandler.prepareStatement("UPDATE park_vehicle SET park_id = ? where park_id = ?");
-            dataHandler.queueForClose(psParkVehicle);
+            closeableManager.addAutoCloseable(psParkVehicle);
             psParkVehicle.setString(1, newId);
             psParkVehicle.setString(2, currentId);
             dataHandler.executeUpdate(psParkVehicle);
@@ -201,26 +206,27 @@ public class ParkRegister {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
     }
 
     public void updateParkDescription(String parkId, String newDescription) throws SQLException {
         double longitude;
         double latitude;
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement getLatLonPS = dataHandler.prepareStatement("SELECT latitude, longitude from parks where park_id = ?");
-            dataHandler.queueForClose(getLatLonPS);
+            closeableManager.addAutoCloseable(getLatLonPS);
             getLatLonPS.setString(1, parkId);
             ResultSet latLonRS = dataHandler.executeQuery(getLatLonPS);
             if (!latLonRS.next())
                 throw new SQLException("No such park");
-            dataHandler.queueForClose(latLonRS);
+            closeableManager.addAutoCloseable(latLonRS);
             latitude = latLonRS.getDouble("latitude");
             longitude = latLonRS.getDouble("longitude");
 
             PreparedStatement updateDescriptionPS = dataHandler.prepareStatement("UPDATE points_of_interest SET poi_description = ? WHERE latitude = ? AND longitude = ?");
-            dataHandler.queueForClose(updateDescriptionPS);
+            closeableManager.addAutoCloseable(updateDescriptionPS);
             updateDescriptionPS.setString(1, newDescription);
             updateDescriptionPS.setDouble(2, latitude);
             updateDescriptionPS.setDouble(3, longitude);
@@ -231,14 +237,15 @@ public class ParkRegister {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
     }
 
     public void updateParkInputVoltage(String parkId, float newInputVoltage) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement("UPDATE parks SET park_input_voltage = ? where park_id = ?");
-            dataHandler.queueForClose(ps);
+            closeableManager.addAutoCloseable(ps);
             ps.setFloat(1, newInputVoltage);
             ps.setString(2, parkId);
             dataHandler.executeUpdate(ps);
@@ -247,14 +254,15 @@ public class ParkRegister {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
     }
 
     public void updateParkInputCurrent(String parkId, float newInputCurrent) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement("UPDATE parks SET park_input_current = ? where park_id = ?");
-            dataHandler.queueForClose(ps);
+            closeableManager.addAutoCloseable(ps);
             ps.setFloat(1, newInputCurrent);
             ps.setString(2, parkId);
             dataHandler.executeUpdate(ps);
@@ -263,14 +271,15 @@ public class ParkRegister {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
     }
 
     public void updateParkCapacity(String parkId, VehicleType vehicleType, int newCapacity) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement("UPDATE park_capacity SET park_capacity = ? where park_id = ? AND vehicle_type_name = ?");
-            dataHandler.queueForClose(ps);
+            closeableManager.addAutoCloseable(ps);
             ps.setInt(1, newCapacity);
             ps.setString(2, parkId);
             ps.setString(3, vehicleType.getSQLName());
@@ -280,7 +289,7 @@ public class ParkRegister {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
     }
 
@@ -290,6 +299,7 @@ public class ParkRegister {
      * @return list of all parks that exist in sql table 'Parks'
      */
     private List<Park> fetchAllParks() throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         List<Park> parkList = new ArrayList<>();
         double latitude;
         double longitude;
@@ -300,9 +310,9 @@ public class ParkRegister {
         String parkId;
         try {
             PreparedStatement stm = dataHandler.prepareStatement("Select p.park_id, p.latitude, p.longitude, p.park_input_voltage, p.park_input_current, p.available, poi.altitude_m, poi.poi_description from parks p, points_of_interest poi WHERE p.latitude = poi.latitude AND p.longitude = poi.longitude");
-            dataHandler.queueForClose(stm);
+            closeableManager.addAutoCloseable(stm);
             ResultSet rs = dataHandler.executeQuery(stm);
-            dataHandler.queueForClose(rs);
+            closeableManager.addAutoCloseable(rs);
 
             while (rs.next()) {
                 parkId = rs.getString("park_id");
@@ -317,7 +327,7 @@ public class ParkRegister {
         } catch (SQLException e) {
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
         return parkList;
     }
@@ -351,9 +361,10 @@ public class ParkRegister {
      * @return
      */
     public void returnVehicleToPark(String parkId, int vehicleId) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id,vehicle_id) values (?,?)");
-            dataHandler.queueForClose(ps);
+            closeableManager.addAutoCloseable(ps);
             ps.setString(1, parkId);
             ps.setInt(2, vehicleId);
             ps.executeUpdate();
@@ -362,7 +373,37 @@ public class ParkRegister {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw e;
         } finally {
-            dataHandler.closeQueuedAutoCloseables();
+            closeableManager.closeAutoCloseables();
         }
+    }
+
+    public <T extends Vehicle> List<T> fetchVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
+        List<T> result = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("Select * from PARK_VEHICLE where PARK_ID = ?");
+            ps.setString(1, parkId);
+            closeableManager.addAutoCloseable(ps);
+            ResultSet rs = dataHandler.executeQuery(ps);
+            closeableManager.addAutoCloseable(rs);
+
+            VehicleRegister vehicleRegister = Company.getInstance().getVehicleRegister();
+            while (rs.next()) {
+                Vehicle vehicle = vehicleRegister.fetchVehicle(rs.getString("vehicle_description"));
+                if (vehicle.getClass() == vehicleClassType) {
+                    result.add(vehicleClassType.cast(vehicle));
+                }
+            }
+
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
+            throw e;
+        } finally {
+            closeableManager.closeAutoCloseables();
+        }
+
+        return result;
     }
 }

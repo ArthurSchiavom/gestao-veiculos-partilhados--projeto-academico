@@ -57,8 +57,6 @@ public class DataHandler {
      */
     private ResultSet rSet = null;
 
-    private List<AutoCloseable> autoCloseablesCloseQueue = new ArrayList<>();
-
     /**
      * <b>Only one instance allowed at all times</b>
      * Use connection properties set on file application.properties
@@ -74,23 +72,6 @@ public class DataHandler {
         this.username = System.getProperty("database.username");
         this.password = System.getProperty("database.password");
         openConnection();
-    }
-
-    public void queueForClose(AutoCloseable autoCloseable) {
-        autoCloseablesCloseQueue.add(autoCloseable);
-    }
-
-    public void closeQueuedAutoCloseables() {
-        for (AutoCloseable obj : autoCloseablesCloseQueue) {
-            if (obj != null) {
-                try {
-                    obj.close();
-                } catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Failed to close an open AutoCloseable object: \n" + ex.getMessage());
-                }
-            }
-        }
-        autoCloseablesCloseQueue.clear();
     }
 
     /**
@@ -138,8 +119,6 @@ public class DataHandler {
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, "Failed to rollback transaction: \n" + e.getMessage());
         }
-
-        closeQueuedAutoCloseables();
 
         if (rSet != null) {
             try {
