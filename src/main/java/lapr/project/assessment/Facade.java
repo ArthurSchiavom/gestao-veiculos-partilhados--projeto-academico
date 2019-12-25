@@ -2,10 +2,8 @@ package lapr.project.assessment;
 
 import lapr.project.controller.*;
 import lapr.project.data.registers.Company;
-import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
-
 import java.io.*;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,6 +20,8 @@ public class Facade implements Serviceable {
     private final RegisterUserController registerUserController = new RegisterUserController(company);
     private final RegisterPOIController registerPOIController = new RegisterPOIController(company);
     private final RemoveParkController removeParkController = new RemoveParkController(company);
+    private final GetFreeSlotsByTypeController getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
+    private final RegisterPathController registerPathController = new RegisterPathController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -131,7 +131,15 @@ public class Facade implements Serviceable {
 
     @Override
     public int addPaths(String s) {
-        return 0;
+        List<String[]> parsedData = loadParsedData(s);
+        if (parsedData == null)
+            return 0;
+        try {
+            return registerPathController.registerPaths(parsedData,s);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
@@ -170,12 +178,22 @@ public class Facade implements Serviceable {
 
     @Override
     public int getFreeBicycleSlotsAtPark(String s, String s1) {
-        return 0;
+        try {
+            return getFreeSlotsByTypeController.getFreeSlotsByType(s,s1, VehicleType.BICYCLE);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            return 0;
+        }
     }
 
     @Override
     public int getFreeEscooterSlotsAtPark(String s, String s1) {
-        return 0;
+        try {
+            return getFreeSlotsByTypeController.getFreeSlotsByType(s,s1, VehicleType.ELECTRIC_SCOOTER);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            return 0;
+        }
     }
 
     @Override
