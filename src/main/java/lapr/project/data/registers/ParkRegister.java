@@ -399,7 +399,7 @@ public class ParkRegister {
         }
     }
 
-    public <T extends Vehicle> List<T> fetchVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
+    public <T> List<T> fetchVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
         List<T> result = new ArrayList<>();
 

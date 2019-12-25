@@ -33,4 +33,15 @@ public enum VehicleType {
 
         return null;
     }
+
+    public Class<?> getActualClass() {
+        switch (this) {
+            case BICYCLE:
+                return Bicycle.class;
+            case ELECTRIC_SCOOTER:
+                return ElectricScooter.class;
+            default:
+                return null;
+        }
+    }
 }

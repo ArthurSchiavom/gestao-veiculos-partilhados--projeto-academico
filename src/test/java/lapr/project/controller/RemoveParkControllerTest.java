@@ -10,8 +10,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class RemoveParkControllerTest {
 
@@ -41,6 +40,9 @@ public class RemoveParkControllerTest {
     void removeParkTest() {
         try {
             controller.removePark("test");
+
+            verify(preparedStatement).setInt(1, 0);
+            verify(preparedStatement).setString(2, "test");
         } catch (SQLException e) {
             fail();
         }

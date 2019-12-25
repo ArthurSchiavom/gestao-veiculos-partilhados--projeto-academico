@@ -1,6 +1,5 @@
 package lapr.project.model.vehicles;
 
-import lapr.project.model.point.of.interest.park.Park;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,5 +36,11 @@ public class VehicleTypeTest {
         assertEquals(type, VehicleType.ELECTRIC_SCOOTER);
         type = VehicleType.findType(Vehicle.class);
         assertNull(type);
+    }
+
+    @Test
+    void getTypeClassTest() {
+        assertEquals(VehicleType.BICYCLE.getActualClass(), Bicycle.class);
+        assertEquals(VehicleType.ELECTRIC_SCOOTER.getActualClass(), ElectricScooter.class);
     }
 }

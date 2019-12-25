@@ -2,6 +2,7 @@ package lapr.project.assessment;
 
 import lapr.project.controller.*;
 import lapr.project.data.registers.Company;
+import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
 import java.io.*;
@@ -22,6 +23,7 @@ public class Facade implements Serviceable {
     private final RemoveParkController removeParkController = new RemoveParkController(company);
     private final GetFreeSlotsByTypeController getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
     private final RegisterPathController registerPathController = new RegisterPathController(company);
+    private final GetNumberOfVehiclesAtParkController getNumberOfVehiclesAtParkController = new GetNumberOfVehiclesAtParkController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -144,12 +146,36 @@ public class Facade implements Serviceable {
 
     @Override
     public int getNumberOfBicyclesAtPark(double v, double v1, String s) {
-        throw new UnsupportedOperationException();
+        List<Bicycle> bicycles;
+        int result = -1;
+        try {
+            bicycles = getNumberOfVehiclesAtParkController.getNumberOfVehiclesAtPark(v, v1, Bicycle.class);
+            result = bicycles.size();
+            getNumberOfVehiclesAtParkController.writeOutputFile(bicycles, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            return -1;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to write output file");
+        }
+        return result;
     }
 
     @Override
     public int getNumberOfBicyclesAtPark(String s, String s1) {
-        throw new UnsupportedOperationException();
+        List<Bicycle> bicycles;
+        int result = -1;
+        try {
+            bicycles = getNumberOfVehiclesAtParkController.getNumberOfVehiclesAtPark(s, Bicycle.class);
+            result = bicycles.size();
+            getNumberOfVehiclesAtParkController.writeOutputFile(bicycles, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            return -1;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to write output file");
+        }
+        return result;
     }
 
     /**

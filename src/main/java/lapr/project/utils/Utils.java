@@ -1,13 +1,16 @@
 package lapr.project.utils;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Utils {
+    private static final Logger LOGGER = Logger.getLogger("UtilsLog");
+
+
     private Utils() {}
 
     public static List<String[]> parseDataFile(String filePath, String valueSeparator, String lineCommentTag) throws FileNotFoundException {
@@ -44,5 +47,30 @@ public class Utils {
             result[i] = elements[i].trim();
         }
         return result;
+    }
+
+    public static void writeToFile(List<String> lines, String fileName) throws IOException {
+        FileWriter fileWriter = null;
+        PrintWriter printWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+            printWriter = new PrintWriter(fileWriter);
+            for (String line : lines) {
+                printWriter.println(line);
+            }
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            if (printWriter != null)
+                printWriter.close();
+
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    LOGGER.log(Level.WARNING, "Failed to close fileWriter.");
+                }
+            }
+        }
     }
 }
