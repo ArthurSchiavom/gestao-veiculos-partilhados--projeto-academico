@@ -22,6 +22,9 @@ CREATE TABLE vehicles (
   description varchar2(50) constraint nn_vehicles_description NOT NULL
                         CONSTRAINT pk_vehicles_description PRIMARY KEY,
   vehicle_type_name varchar2(50) constraint nn_vehicles_vehicle_type_name NOT NULL,
+  unique_number number(5) GENERATED AS IDENTITY 
+						constraint nn_vehicles_unique_number NOT NULL
+						constraint uk_vehicles_unique_number UNIQUE,
   available         number(1)    constraint nn_vehicles_available NOT NULL
                                  CONSTRAINT ck_vehicles_available CHECK (available = 0 OR available = 1),
   weight			number(3)    constraint nn_vehicles_weight NOT NULL
@@ -105,7 +108,8 @@ CREATE TABLE pending_registrations (
                                  CONSTRAINT ck_pending_registrations_gender CHECK(REGEXP_LIKE(gender, 'M|F', 'i')),
   cycling_average_speed number(4,2) constraint nn_pending_registrations_cycling_average_speed NOT NULL,
   user_password  varchar2(20) DEFAULT 'qwerty' CONSTRAINT nn_pending_registrations_user_password NOT NULL,
-  user_name      varchar2(50) CONSTRAINT nn_pending_registrations_user_name NOT NULL,
+  user_name      varchar2(50) CONSTRAINT nn_pending_registrations_user_name NOT NULL
+				CONSTRAINT uk_pending_registrations_user_name UNIQUE,
   Constraint ck_pending_registrations_email CHECK (REGEXP_LIKE(email, '^.*@.*$'))
 );
 
@@ -166,7 +170,8 @@ CREATE TABLE registered_users (
   user_email     varchar2(50) CONSTRAINT pk_registered_users_user_email PRIMARY KEY, 
   user_type_name varchar2(50), 
   user_password  varchar2(20) CONSTRAINT nn_registered_users_user_password NOT NULL,
-  user_name      varchar2(50) CONSTRAINT nn_registered_users_user_name NOT NULL,
+  user_name      varchar2(50) CONSTRAINT nn_registered_users_username NOT NULL
+				CONSTRAINT uk_registered_users_username UNIQUE,
   Constraint ck_registered_users_user_email CHECK (REGEXP_LIKE(user_email, '^.*@.*$'))
 );
 

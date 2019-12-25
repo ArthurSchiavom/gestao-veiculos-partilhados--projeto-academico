@@ -13,7 +13,7 @@ class ElectricScooterTest {
     ElectricScooter instance;
     @BeforeEach
     void beforeEach() {
-        instance = new ElectricScooter("PT001",2.3F,2.4F,
+        instance = new ElectricScooter(123, "PT001",2.3F,2.4F,
                 35,true,ElectricScooterType.URBAN,15,
                 1f, 500);
     }

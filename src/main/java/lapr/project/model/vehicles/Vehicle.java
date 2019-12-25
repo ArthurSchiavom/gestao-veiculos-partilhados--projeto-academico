@@ -7,6 +7,7 @@ import java.util.Objects;
  */
 public abstract class Vehicle {
 
+    private final int uniqueNumber;
     private final String description;
     private final float aerodynamicCoefficient;
     private final float frontalArea;
@@ -14,13 +15,20 @@ public abstract class Vehicle {
     private final boolean available;
     private final VehicleType type;
 
-    public Vehicle(String description, float aerodynamicCoefficient, float frontalArea, int weight, boolean available, VehicleType type) {
+    public Vehicle(int uniqueNumber, String description, float aerodynamicCoefficient, float frontalArea, int weight, boolean available, VehicleType type) {
+        if (description == null || type == null)
+            throw new IllegalArgumentException("Null elements are not allowed");
+        this.uniqueNumber = uniqueNumber;
         this.description = description;
         this.aerodynamicCoefficient = aerodynamicCoefficient;
         this.frontalArea = frontalArea;
         this.weight = weight;
         this.available = available;
         this.type = type;
+    }
+
+    public int getUniqueNumber() {
+        return uniqueNumber;
     }
 
     public String getDescription() {

@@ -8,7 +8,7 @@ class BicycleTest {
     Bicycle instance;
     @BeforeEach
     void beforeEach() {
-        instance = new Bicycle("PT001",2.4f,
+        instance = new Bicycle(123, "PT001",2.4f,
                 2.3F,30,true,
                 15);
     }

@@ -50,7 +50,7 @@ public class ParkRegister {
             cs.setInt(9, maxBicycles);
             dataHandler.execute(cs);
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to add park (no commit).");
         }
     }
 
@@ -66,7 +66,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to batch register parks.", e.getSQLState(), e.getErrorCode());
         }
     }
 
@@ -85,7 +85,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to change park's availability", e.getSQLState(), e.getErrorCode());
         }
     }
 
@@ -120,7 +120,29 @@ public class ParkRegister {
             parkInputCorrent = rs.getFloat("park_input_current");
             return new Park(id, parkInputVoltage, parkInputCorrent, getListOfCapacities(id), rs.getString("poi_description"), coord);
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to fetch park by id.", e.getSQLState(), e.getErrorCode());
+        } finally {
+            closeableManager.closeAutoCloseables();
+        }
+    }
+
+    public Park fetchParkByCoordinates(double lat, double lon) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("select * from PARKS p, points_of_interest poi where p.LATITUDE = ? AND p.LONGITUDE = ? " +
+                    "AND p.latitude = poi.latitude AND p.longitude = poi.longitude");
+            ps.setDouble(1, lat);
+            ps.setDouble(2, lon);
+            closeableManager.addAutoCloseable(ps);
+            ResultSet rs = dataHandler.executeQuery(ps);
+            closeableManager.addAutoCloseable(rs);
+
+            rs.next();
+            String parkId = rs.getString("park_id");
+            return new Park(parkId, rs.getFloat("park_input_voltage"), rs.getFloat("park_input_current"),
+                    getListOfCapacities(parkId), rs.getString("poi_description"), new Coordinates(lat, lon, rs.getInt("altitude_m")));
+        } catch (SQLException e) {
+            throw new SQLException("Failed to fetch park by coordinates.", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -155,7 +177,7 @@ public class ParkRegister {
                 capacity.add(new Capacity(parkCapacity, amountOccupied, vehicleType));
             }
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to get park capacities.", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -204,7 +226,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to update park's ID", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -235,7 +257,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to update park's description");
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -252,7 +274,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to update park's description");
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -269,7 +291,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to update park's input current", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -287,7 +309,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to update park's capacity", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -325,7 +347,7 @@ public class ParkRegister {
                 parkList.add(new Park(parkId, parkInputVoltage, parkInputCorrent, getListOfCapacities(parkId), rs.getString("poi_description"), coord));
             }
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to fetch all parks", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -357,21 +379,21 @@ public class ParkRegister {
      * Return True if returned the vehicle to the park with sucess, false otherwise
      *
      * @param parkId    Park id
-     * @param vehicleId Vehicle id
+     * @param vehicleDescription Vehicle id
      * @return
      */
-    public void returnVehicleToPark(String parkId, int vehicleId) throws SQLException {
+    public void putVehicleInPark(String parkId, String vehicleDescription) throws SQLException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
         try {
-            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id,vehicle_id) values (?,?)");
+            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
             closeableManager.addAutoCloseable(ps);
             ps.setString(1, parkId);
-            ps.setInt(2, vehicleId);
+            ps.setString(2, vehicleDescription);
             ps.executeUpdate();
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }
@@ -399,7 +421,7 @@ public class ParkRegister {
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw e;
+            throw new SQLException("Failed to fetch vehicles at park", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
         }

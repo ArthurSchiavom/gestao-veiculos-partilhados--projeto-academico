@@ -21,6 +21,8 @@ public class Park extends PointOfInterest {
 
     public Park(String id, float parkInputVoltage, float parkInputCurrent, List<Capacity> vehicleCapacities, String description, Coordinates coordinates) {
         super(description, coordinates);
+        if (id == null || vehicleCapacities == null)
+            throw new IllegalArgumentException("Null elements are not allowed");
         this.id = id;
         this.parkInputVoltage = parkInputVoltage;
         this.parkInputCurrent = parkInputCurrent;

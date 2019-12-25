@@ -36,13 +36,13 @@ class TripRegisterTest {
 
     @Test
     void testCreateNewTrip() {
-        Trip expResult = new Trip(startCalendar, endCalendar, "email@email.com", "0", "0", 0);
-        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, endCalendar, "email@email.com", "0", "0", 0));
+        Trip expResult = new Trip(startCalendar, endCalendar, "email@email.com", "0", "0", "0");
+        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, endCalendar, "email@email.com", "0", "0", "0"));
 
-        expResult = new Trip(startCalendar, "email@email.com", "0", 0);
-        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, "email@email.com", "0", 0));
+        expResult = new Trip(startCalendar, "email@email.com", "0", "1");
+        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, "email@email.com", "0", "0"));
 
-        expResult = new Trip(startCalendar, "email@email.com", "0", 0);
-        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, "email@email.com", "0", null, 0));
+        expResult = new Trip(startCalendar, "email@email.com", "0", "0");
+        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, "email@email.com", "0", null, "0"));
     }
 }

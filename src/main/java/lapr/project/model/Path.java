@@ -27,6 +27,8 @@ public class Path {
      * @param windSpeed - wind speed
      */
     public Path(Coordinates startPoint, Coordinates endPoint, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
+        if (startPoint == null || endPoint == null || kineticCoefficient == null || windSpeed == null)
+            throw new IllegalArgumentException("Null elements are not allowed");
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.kineticCoefficient = kineticCoefficient;

@@ -31,7 +31,7 @@ public class TripRegister {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
-                    "SELECT * FROM trip where start_time=? AND user_email=?");
+                    "SELECT * FROM TRIPS where start_time=? AND user_email=?");
             autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setTimestamp( 1, Timestamp.valueOf(startTime));
             prepStat.setString( 2, clientEmail);
@@ -40,13 +40,13 @@ public class TripRegister {
             if (resultSet == null || !resultSet.next()) {
                 return null;
             }
-            int vehicleId = resultSet.getInt(3);
+            String vehicleDescription = resultSet.getString(3);
             String startParkId = resultSet.getString(4);
             String endParkId = resultSet.getString(5);
             Timestamp endTimeTimeStamp = resultSet.getTimestamp(6);
             LocalDateTime endTime = endTimeTimeStamp.toLocalDateTime();
 
-            return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+            return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleDescription);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -65,7 +65,7 @@ public class TripRegister {
         PreparedStatement prepStat = null;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            prepStat = dataHandler.prepareStatement("SELECT * FROM trip where user_email=? AND end_time=?");
+            prepStat = dataHandler.prepareStatement("SELECT * FROM trips where user_email=? AND end_time=?");
             autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setString( 1, email);
             prepStat.setTimestamp(2, null);
@@ -78,7 +78,7 @@ public class TripRegister {
             LocalDateTime startTime = startTimeTimeStamp.toLocalDateTime();
             String startParkId = resultSet.getString(4);
             String endParkId = resultSet.getString(5);
-            int vehicleId = resultSet.getInt(3);
+            String vehicleId = resultSet.getString(3);
             LocalDateTime endDate = LocalDateTime.now();
             return new Trip(startTime,endDate,email,startParkId,endParkId,vehicleId);
         } catch (SQLException ex) {
@@ -101,10 +101,10 @@ public class TripRegister {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
-                    "INSERT INTO park_vehicle  park_id =?,vehicle_id=?" + "VALUES(?,?)");
+                    "INSERT INTO park_vehicle (PARK_ID, VEHICLE_DESCRIPTION) VALUES(?,?)");
             autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setString(1,trip.getEndParkId());
-            prepStat.setInt(2,trip.getVehicleId());
+            prepStat.setString(2,trip.getVehicleDescription());
 
             dataHandler.commitTransaction();
             return true;
@@ -127,11 +127,11 @@ public class TripRegister {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
-                    "UPDATE TRIP SET start_time =? ,user_email=?,vehicle_id =?,start_park_id=?,end_park_id=?,end_time=?");
+                    "UPDATE TRIPS SET start_time =? ,user_email=?,VEHICLE_DESCRIPTION =?,start_park_id=?,end_park_id=?,end_time=?");
             autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setTimestamp(1,Timestamp.valueOf(trip.getStartTime()));
             prepStat.setString(2,trip.getClientEmail());
-            prepStat.setInt(3,trip.getVehicleId());
+            prepStat.setString(3,trip.getVehicleDescription());
             prepStat.setString(4,trip.getStartParkId());
             prepStat.setString(5,trip.getEndParkId());
             prepStat.setTimestamp(6,Timestamp.valueOf(trip.getEndTime()));
@@ -157,7 +157,7 @@ public class TripRegister {
      * @return a trip with all the arguments
      */
     public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId,
-            String endParkId, int vehicleId) {
+            String endParkId, String vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, endParkId, vehicleId);
     }
 
@@ -171,7 +171,7 @@ public class TripRegister {
      * @param vehicleId   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId, int vehicleId) {
+    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId, String vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, vehicleId);
     }
 
@@ -184,12 +184,12 @@ public class TripRegister {
      * @param clientEmail the end time of the trip
      * @param startParkId the id of the start park
      * @param endParkId   the id of the end park
-     * @param vehicleId   the id of the vehicle
+     * @param vehicleDescription   the id of the vehicle
      * @return a trip with all the arguments
      */
     public Trip createNewTrip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail,
-            String startParkId, String endParkId, int vehicleId) {
-        return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+            String startParkId, String endParkId, String vehicleDescription) {
+        return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleDescription);
     }
 
     /**
@@ -220,10 +220,10 @@ public class TripRegister {
                 Timestamp startT = resultVehicles.getTimestamp("start_time");
                 LocalDateTime start_time = startT.toLocalDateTime();
                 String userEmail = resultVehicles.getString("user_email");
-                int vehicleId = resultVehicles.getInt("vehicle_id");
+                String vehicleDescription = resultVehicles.getString("VEHICLE_DESCRIPTION");
                 String startParkId = resultVehicles.getString("start_park_id");
 
-                Trip trip = new Trip(start_time,null,userEmail,startParkId,null,vehicleId);
+                Trip trip = new Trip(start_time,null,userEmail,startParkId,null,vehicleDescription);
 
                dispVehicles.add(trip);
             }

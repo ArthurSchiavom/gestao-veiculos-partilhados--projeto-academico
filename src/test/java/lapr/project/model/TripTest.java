@@ -28,7 +28,7 @@ public class TripTest {
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
@@ -51,7 +51,7 @@ public class TripTest {
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
@@ -69,7 +69,7 @@ public class TripTest {
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, clientEmail, startParkId, vehicleId);
 
         LocalDateTime result = instance.getEndTime();
@@ -88,7 +88,7 @@ public class TripTest {
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         String expResult = "email@email.com";
@@ -108,7 +108,7 @@ public class TripTest {
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         String expResult = "1";
@@ -128,7 +128,7 @@ public class TripTest {
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
         String expResult = "2";
@@ -143,7 +143,7 @@ public class TripTest {
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, clientEmail, startParkId, vehicleId);
 
         assertNull(instance.getEndParkId());
@@ -153,19 +153,19 @@ public class TripTest {
      * Test of getVehicle method, of class Trip.
      */
     @Test
-    public void testGetVehicleId() {
+    public void testGetVehicleDescription() {
         LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
         LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
         String endParkId = "2";
-        int vehicleId = 1;
+        String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
-        int expResult = 1;
+        String expResult = "1";
 
-        int result = instance.getVehicleId();
+        String result = instance.getVehicleDescription();
         assertEquals(expResult, result);
     }
 
@@ -173,13 +173,13 @@ public class TripTest {
     void testEquals() {
         LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Object trip1 = new Trip(startTime, "email@email.com", "0",0);
+        Object trip1 = new Trip(startTime, "email@email.com", "0","1");
         assertEquals(trip1, trip1);
 
-        Trip trip2 = new Trip(startTime, "email@email.com", "0",0);
+        Trip trip2 = new Trip(startTime, "email@email.com", "0","1");
         assertEquals(trip1, trip2);
 
-        trip1 = new Trip(startTime, "email2@email.com", "0",0);
+        trip1 = new Trip(startTime, "email2@email.com", "0","1");
         assertNotEquals(trip1, trip2);
 
         trip1 = null;
@@ -190,12 +190,12 @@ public class TripTest {
     void testHashCode() {
         LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
 
-        Trip trip1 = new Trip(startTime, "email@email.com", "0",0);
-        Trip trip2 = new Trip(startTime, "email@email.com","0",0);
+        Trip trip1 = new Trip(startTime, "email@email.com", "0","1");
+        Trip trip2 = new Trip(startTime, "email@email.com","0","1");
         int expResult = trip1.hashCode();
         assertEquals(expResult, trip2.hashCode());
 
-        trip1 = new Trip(startTime, "email2@email.com", "0",0);
+        trip1 = new Trip(startTime, "email2@email.com", "0","1");
         assertNotEquals(expResult, trip1.hashCode());
     }
 }

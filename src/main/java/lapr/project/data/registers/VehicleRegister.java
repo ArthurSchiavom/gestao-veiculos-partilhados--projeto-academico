@@ -2,6 +2,7 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
+import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.*;
 
 import java.sql.*;
@@ -51,7 +52,7 @@ public class VehicleRegister {
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
                         rs2.next();
-                        vehicles.add(new Bicycle(description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                        vehicles.add(new Bicycle(rs.getInt("unique_number"), description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
                                 rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME), rs.getBoolean(AVAILABLE_FIELD_NAME),
                                 rs2.getInt(BICYCLE_SIZE_FIELD_NAME)));
                         break;
@@ -61,7 +62,7 @@ public class VehicleRegister {
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
                         rs2.next();
-                        vehicles.add(new ElectricScooter(description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                        vehicles.add(new ElectricScooter(rs.getInt("unique_number"), description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
                                 rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME), rs.getBoolean(AVAILABLE_FIELD_NAME),
                                 ElectricScooterType.parseScooterType(rs2.getString(ESCOOTER_TYPE_FIELD_NAME)),
                                 rs2.getInt(ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME), rs2.getFloat(ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME),
@@ -112,12 +113,14 @@ public class VehicleRegister {
 
             switch (vehicleType) {
                 case BICYCLE:
-                    vehicle = new Bicycle(rs.getString("description"), rs.getFloat("aerodynamic_coefficient"),
+                    vehicle = new Bicycle(rs.getInt("unique_number"), rs.getString("description"),
+                            rs.getFloat("aerodynamic_coefficient"),
                             rs.getFloat("frontal_area"), rs.getInt("weight"),
                             rs.getBoolean("available"), rs2.getInt("bicycle_size"));
                     break;
                 case ELECTRIC_SCOOTER:
-                    vehicle = new ElectricScooter(rs.getString("description"), rs.getFloat("aerodynamic_coefficient"),
+                    vehicle = new ElectricScooter(rs.getInt("unique_number"), rs.getString("description"),
+                            rs.getFloat("aerodynamic_coefficient"),
                             rs.getFloat("frontal_area"), rs.getInt("weight"),
                             rs.getBoolean("available"), ElectricScooterType.parseScooterType(
                             rs2.getString("electric_scooter_type_name")),
@@ -125,7 +128,7 @@ public class VehicleRegister {
                             rs2.getInt("engine_power"));
             }
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to fetch vehicle from the database.", e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -149,7 +152,7 @@ public class VehicleRegister {
             cs.setDouble(7, parkLongitude);
             dataHandler.execute(cs);
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to register bicycle into the database.", e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -163,22 +166,34 @@ public class VehicleRegister {
                                                 int enginePower, double parkLatitude, double parkLongitude) throws SQLException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            CallableStatement cs = dataHandler.prepareCall(
-                    "{call register_electric_scooter(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-            autoCloseableManager.addAutoCloseable(cs);
-            cs.setInt(1, weight);
-            cs.setFloat(2, aerodynamicCoefficient);
-            cs.setFloat(3, frontalArea);
-            cs.setString(4, type.getSQLName());
-            cs.setString(5, description);
-            cs.setFloat(6, maxBatteryCapacity);
-            cs.setInt(7, actualBatteryCapacity);
-            cs.setInt(8, enginePower);
-            cs.setDouble(9, parkLatitude);
-            cs.setDouble(10, parkLongitude);
-            dataHandler.execute(cs);
+            PreparedStatement vehiclesInsert = dataHandler.prepareStatement("INSERT INTO vehicles(description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)");
+            autoCloseableManager.addAutoCloseable(vehiclesInsert);
+            vehiclesInsert.setString(1, description);
+            vehiclesInsert.setString(2, VehicleType.ELECTRIC_SCOOTER.getSQLName());
+            vehiclesInsert.setInt(3, 1);
+            vehiclesInsert.setInt(4, weight);
+            vehiclesInsert.setFloat(5, aerodynamicCoefficient);
+            vehiclesInsert.setFloat(6, frontalArea);
+            dataHandler.execute(vehiclesInsert);
+
+            PreparedStatement eScootersInsert = dataHandler.prepareStatement(
+                    "insert into electric_scooters(vehicle_description, electric_scooter_type_name, max_battery_capacity, " +
+                            "actual_battery_capacity, engine_power) " +
+                            "values(?, ?, ?, ?, ?)");
+            autoCloseableManager.addAutoCloseable(eScootersInsert);
+            eScootersInsert.setString(1, description);
+            eScootersInsert.setString(2, type.getSQLName());
+            eScootersInsert.setFloat(3, maxBatteryCapacity);
+            eScootersInsert.setInt(4, actualBatteryCapacity);
+            eScootersInsert.setInt(5, enginePower);
+            dataHandler.execute(eScootersInsert);
+
+            ParkRegister parkRegister = Company.getInstance().getParkRegister();
+            Park park = parkRegister.fetchParkByCoordinates(parkLatitude, parkLongitude);
+            parkRegister.putVehicleInPark(park.getId(), description);
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -198,7 +213,7 @@ public class VehicleRegister {
                 dataHandler.rollbackTransaction();
             } catch (SQLException e2) {
             }
-            throw e;
+            throw new SQLException("failed to batch register bicycles.", e.getSQLState(), e.getErrorCode());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }
@@ -222,7 +237,7 @@ public class VehicleRegister {
                 dataHandler.rollbackTransaction();
             } catch (SQLException e2) {
             }
-            throw e;
+            throw new SQLException("Failed to batch register electric scooters.", e.getSQLState(), e.getErrorCode());
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }

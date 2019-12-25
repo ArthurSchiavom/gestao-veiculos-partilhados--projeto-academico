@@ -29,12 +29,14 @@ public class ElectricScooter extends Vehicle {
      * @param maxBatteryCapacity the maximum battery capacity
      * @param enginePower the power of the engine
      */
-    public ElectricScooter(String description, float aerodynamicCoefficient,
+    public ElectricScooter(int uniqueNumber, String description, float aerodynamicCoefficient,
             float frontalArea, int weight, boolean available,
             ElectricScooterType electricScooterType,
             int actualBatteryCapacity, float maxBatteryCapacity, int enginePower) {
-        super(description, aerodynamicCoefficient, frontalArea, weight, available,
+        super(uniqueNumber, description, aerodynamicCoefficient, frontalArea, weight, available,
                 VehicleType.ELECTRIC_SCOOTER);
+        if (electricScooterType == null)
+            throw new IllegalArgumentException("Null elements are not allowed");
         this.electricScooterType = electricScooterType;
         this.actualBatteryCapacity = actualBatteryCapacity;
         this.maxBatteryCapacity = maxBatteryCapacity;

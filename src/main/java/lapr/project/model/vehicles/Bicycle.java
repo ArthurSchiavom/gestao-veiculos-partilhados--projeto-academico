@@ -6,9 +6,9 @@ package lapr.project.model.vehicles;
 public class Bicycle extends Vehicle {
     private final int size;
 
-    public Bicycle(String description, float aerodynamicCoefficient, float frontalArea,
+    public Bicycle(int uniqueNumber, String description, float aerodynamicCoefficient, float frontalArea,
                    int weight, boolean available, int size) {
-        super(description, aerodynamicCoefficient, frontalArea, weight, available,
+        super(uniqueNumber, description, aerodynamicCoefficient, frontalArea, weight, available,
                 VehicleType.BICYCLE);
         this.size = size;
     }

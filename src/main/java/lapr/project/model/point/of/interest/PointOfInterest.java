@@ -25,7 +25,7 @@ public class PointOfInterest {
      */
     public PointOfInterest(String description, Coordinates coordinates) {
         if (description == null || coordinates == null) {
-            throw new IllegalArgumentException("Invalid Parameters");
+            throw new IllegalArgumentException("Null elements are not allowed");
         }
         this.description = description;
         this.coordinates = coordinates;

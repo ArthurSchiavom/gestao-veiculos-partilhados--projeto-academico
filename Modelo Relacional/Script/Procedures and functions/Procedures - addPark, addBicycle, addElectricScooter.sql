@@ -47,9 +47,10 @@ begin
 
     insert into electric_scooters(vehicle_description, electric_scooter_type_name, max_battery_capacity, actual_battery_capacity, engine_power) 
         values(p_description, p_electric_scooter_type_name, p_max_battery_capacity, p_actual_battery_capacity, p_engine_power);
-        
+    
     select park_id into v_park_id from parks where parks.latitude = p_park_lat and parks.longitude = p_park_lon;
     insert into park_vehicle(park_id, vehicle_description) VALUES(v_park_id, p_description);
+dbms_output.put_line('hello');
 end;
 /
 
@@ -82,10 +83,5 @@ end;
 
 begin
     register_bicycle(1, 10, 10, 1, 'whateverrsr', 10.2, 10.5);
-end;
-/
-
-begin
-    register_electric_scooter(1, 10, 10, 'offroad', 'whateverrrsr', 1.1, 10, 1000, 10.2, 10.5);
 end;
 /

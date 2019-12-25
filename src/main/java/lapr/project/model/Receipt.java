@@ -22,6 +22,8 @@ public class Receipt {
         if(amountPaidCash < 0) {
             throw new IllegalArgumentException("Can't pay negative amount of money");
         }
+        if (paymentDate == null)
+            throw new IllegalArgumentException("Null elements are not allowed");
         this.paymentDate = paymentDate;
         this.pointsUsed = pointsUsed;
         this.amountPaidCash = amountPaidCash;

@@ -18,7 +18,7 @@ public class Trip {
     private String clientEmail;
     private String startParkId;
     private String endParkId = null;
-    private int vehicleId;
+    private String vehicleDescription;
 
     /**
      * Constructor that instantiates a trip
@@ -28,15 +28,17 @@ public class Trip {
      * @param clientEmail - the email of the client that is taking the trip
      * @param startParkId - the starting point (park) for the trip
      * @param endParkId - the ending point (park) for the trip
-     * @param vehicle - the vehicle being used
+     * @param vehicleDescription description of the vehicle in use
      */
-    public Trip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail, String startParkId, String endParkId, int vehicle) {
+    public Trip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
+        if (startTime == null || endTime == null || clientEmail == null || clientEmail.isEmpty() || startParkId == null || startParkId.isEmpty() || endParkId == null)
+            throw new IllegalArgumentException("Null or empty elements are not allowed");
         this.startTime = startTime;
         this.endTime = endTime;
         this.clientEmail = clientEmail;
         this.startParkId = startParkId;
         this.endParkId = endParkId;
-        this.vehicleId = vehicle;
+        this.vehicleDescription = vehicleDescription;
     }
 
     /**
@@ -48,11 +50,11 @@ public class Trip {
      * @param startParkId - the starting point (park) for the trip
      * @param vehicle - the vehicle being used
      */
-    public Trip(LocalDateTime startTime, String clientEmail, String startParkId, int vehicle) {
+    public Trip(LocalDateTime startTime, String clientEmail, String startParkId, String vehicleDescription) {
         this.startTime = startTime;
         this.clientEmail = clientEmail;
         this.startParkId = startParkId;
-        this.vehicleId = vehicle;
+        this.vehicleDescription = vehicleDescription;
     }
 
     /**
@@ -64,12 +66,12 @@ public class Trip {
      * @param endParkId - the ending point (park) for the trip
      * @param vehicle - the vehicle being used
      */
-    public Trip(LocalDateTime startTime, String clientEmail, String startParkId, String endParkId, int vehicle) {
+    public Trip(LocalDateTime startTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
         this.startTime = startTime;
         this.clientEmail = clientEmail;
         this.startParkId = startParkId;
         this.endParkId = endParkId;
-        this.vehicleId = vehicle;
+        this.vehicleDescription = vehicleDescription;
     }
 
     /**
@@ -117,13 +119,8 @@ public class Trip {
         return this.endParkId;
     }
 
-    /**
-     * Returns the vehicle being used o the current trip.
-     *
-     * @return the vehicle being used on the trip
-     */
-    public int getVehicleId() {
-        return this.vehicleId;
+    public String getVehicleDescription() {
+        return vehicleDescription;
     }
 
     @Override

@@ -34,8 +34,10 @@ public class Invoice {
      */
     public Invoice(int clientId, LocalDate paymentStartDate, double usageCost, double penalizationCost) {
         if(clientId<0) {
-            throw new IllegalArgumentException("clientId can't be less than 0");
+            throw new IllegalArgumentException("client ID can't be less than 0");
         }
+        if (paymentStartDate == null)
+            throw new IllegalArgumentException("Null elements are not allowed");
         this.clientId = clientId;
         this.paymentStartDate = paymentStartDate;
         this.penalizationCost = penalizationCost;

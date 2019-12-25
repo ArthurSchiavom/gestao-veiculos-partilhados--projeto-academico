@@ -141,8 +141,9 @@ public class ParkTest {
 
     @Test
     void testGetVehicleCapacities() {
+        List<Capacity> capacities = new ArrayList<>();
         Park park = new Park("novo park", 10.2f, 10.1f,
-                null, "descricao",
+                capacities, "descricao",
                 new Coordinates(45, 45, 0));
         List<Capacity> expResult = new ArrayList<>();
         assertEquals(expResult, park.getVehicleCapacities());

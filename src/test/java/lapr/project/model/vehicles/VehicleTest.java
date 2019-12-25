@@ -10,9 +10,14 @@ class VehicleTest {
     private Vehicle instance;
     @BeforeEach
     void beforeEach() {
-        instance = new Bicycle("PT001",2.3F,
+        instance = new Bicycle(123,"PT001",2.3F,
                 2.4F,35,true,
                 15);
+    }
+
+    @Test
+    void getUniqueNumberTest() {
+        assertEquals(123, instance.getUniqueNumber());
     }
 
     @Test
@@ -47,15 +52,15 @@ class VehicleTest {
 
     @Test
     void testEquals() {
-        Object bike = new Bicycle("PT002", 10f, 10f, 50,
+        Object bike = new Bicycle(123, "PT002", 10f, 10f, 50,
                 true, 15);
         assertEquals(bike, bike);
 
-        Vehicle bike2 = new Bicycle("PT002", 12f, 10f, 50,
+        Vehicle bike2 = new Bicycle(123, "PT002", 12f, 10f, 50,
                 true, 15);
         assertEquals(bike, bike2);
 
-        bike = new Bicycle("PT004", 10f, 10f, 50,
+        bike = new Bicycle(123, "PT004", 10f, 10f, 50,
                 true, 15);
         assertNotEquals(bike, bike2);
 
@@ -68,14 +73,14 @@ class VehicleTest {
 
     @Test
     void testHashCode() {
-        Vehicle bike1 = new Bicycle("PT002", 10f, 10f, 50,
+        Vehicle bike1 = new Bicycle(123,"PT002", 10f, 10f, 50,
                 true, 15);
-        Vehicle bike2 = new Bicycle("PT002", 10f, 10f, 50,
+        Vehicle bike2 = new Bicycle(123, "PT002", 10f, 10f, 50,
                 true, 15);
         int expResult = bike2.hashCode();
         assertEquals(expResult, bike1.hashCode());
 
-        bike1 = new Bicycle("PT003", 10f, 10f, 50,
+        bike1 = new Bicycle(123, "PT003", 10f, 10f, 50,
                 true, 15);
         assertNotEquals(expResult, bike1.hashCode());
     }
