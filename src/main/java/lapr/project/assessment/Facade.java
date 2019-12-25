@@ -43,24 +43,11 @@ public class Facade implements Serviceable {
         if (parsedData == null)
             return 0;
 
-        FileWriter fileWriter = null;
-        PrintWriter printWriter = null;
         try {
             return registerBicyclesController.registerBicycles(parsedData, s);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
             return 0;
-        } finally {
-            if (printWriter != null)
-                printWriter.close();
-            
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
