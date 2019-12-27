@@ -18,13 +18,13 @@ public class GetNumberOfVehiclesAtParkController {
         this.company = company;
     }
 
-    public <T extends Vehicle> List<T> getNumberOfVehiclesAtPark(String parkId, Class<T> classType) throws SQLException {
+    public <T extends Vehicle> List<T> getVehiclesAtPark(String parkId, Class<T> classType) throws SQLException {
         return company.getParkRegister().fetchVehiclesAtPark(parkId, classType);
     }
 
-    public <T extends Vehicle> List<T> getNumberOfVehiclesAtPark(double lat, double lon, Class<T> classType) throws SQLException {
+    public <T extends Vehicle> List<T> getVehiclesAtPark(double lat, double lon, Class<T> classType) throws SQLException {
         ParkRegister parkRegister = company.getParkRegister();
-        return getNumberOfVehiclesAtPark(parkRegister.fetchParkByCoordinates(lat, lon).getId(), classType);
+        return getVehiclesAtPark(parkRegister.fetchParkByCoordinates(lat, lon).getId(), classType);
     }
 
     public <T extends Vehicle> void writeOutputFile(List<T> vehicles, String filePath) throws IOException {

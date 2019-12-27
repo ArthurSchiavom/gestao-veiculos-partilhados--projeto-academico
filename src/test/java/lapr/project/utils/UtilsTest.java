@@ -3,8 +3,12 @@ package lapr.project.utils;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,5 +69,53 @@ public class UtilsTest {
         String[] result = Utils.trimArrayElements("a a a   a   ", "bbbb", " ccc ccc   ");
         String[] expected = {"a a a   a", "bbbb", "ccc ccc"};
         assertTrue(Utils.areArraysEqual(result, expected));
+    }
+
+    @Test
+    void writeToFileTest() {
+        String filePath = "testFiles/temp/UtilsWriteToFileTest.data";
+        List<String> lines = new ArrayList<>();
+
+        // #1
+        try {
+            Utils.writeToFile(lines, filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try (Scanner scanner = new Scanner(new FileReader(filePath))) {
+            if (scanner.hasNext() && !scanner.nextLine().isEmpty())
+                fail();
+            //else pass
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
+        // #2
+        lines.add("abc");
+        lines.add("");
+        lines.add("   ");
+        lines.add(" avb as sadkdjoaisn   idsajodijsao jdsaoijdoas jo");
+
+        try {
+            Utils.writeToFile(lines, filePath);
+        } catch (IOException e) {
+            fail();
+        }
+
+        try (Scanner scanner = new Scanner(new FileReader(filePath))) {
+            int count = 0;
+            while (scanner.hasNext()) {
+                assertEquals(lines.get(count), scanner.nextLine());
+                count++;
+            }
+            if (count != lines.size())
+                fail();
+        } catch (FileNotFoundException e) {
+            fail();
+        }
     }
 }

@@ -136,7 +136,7 @@ public class Facade implements Serviceable {
         List<Bicycle> bicycles;
         int result = -1;
         try {
-            bicycles = getNumberOfVehiclesAtParkController.getNumberOfVehiclesAtPark(v, v1, Bicycle.class);
+            bicycles = getNumberOfVehiclesAtParkController.getVehiclesAtPark(v, v1, Bicycle.class);
             result = bicycles.size();
             getNumberOfVehiclesAtParkController.writeOutputFile(bicycles, s);
         } catch (SQLException e) {
@@ -153,7 +153,7 @@ public class Facade implements Serviceable {
         List<Bicycle> bicycles;
         int result = -1;
         try {
-            bicycles = getNumberOfVehiclesAtParkController.getNumberOfVehiclesAtPark(s, Bicycle.class);
+            bicycles = getNumberOfVehiclesAtParkController.getVehiclesAtPark(s, Bicycle.class);
             result = bicycles.size();
             getNumberOfVehiclesAtParkController.writeOutputFile(bicycles, s);
         } catch (SQLException e) {
