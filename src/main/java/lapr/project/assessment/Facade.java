@@ -23,7 +23,7 @@ public class Facade implements Serviceable {
     private final RemoveParkController removeParkController = new RemoveParkController(company);
     private final GetFreeSlotsByTypeController getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
     private final RegisterPathController registerPathController = new RegisterPathController(company);
-    private final GetNumberOfVehiclesAtParkController getNumberOfVehiclesAtParkController = new GetNumberOfVehiclesAtParkController(company);
+    private final VisualizeVehiclesAtParkController visualizeVehiclesAtParkController = new VisualizeVehiclesAtParkController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -136,9 +136,9 @@ public class Facade implements Serviceable {
         List<Bicycle> bicycles;
         int result = -1;
         try {
-            bicycles = getNumberOfVehiclesAtParkController.getVehiclesAtPark(v, v1, Bicycle.class);
+            bicycles = visualizeVehiclesAtParkController.getVehiclesAtPark(v, v1, Bicycle.class);
             result = bicycles.size();
-            getNumberOfVehiclesAtParkController.writeOutputFile(bicycles, s);
+            visualizeVehiclesAtParkController.writeOutputFile(bicycles, s);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
             return -1;
@@ -153,9 +153,9 @@ public class Facade implements Serviceable {
         List<Bicycle> bicycles;
         int result = -1;
         try {
-            bicycles = getNumberOfVehiclesAtParkController.getVehiclesAtPark(s, Bicycle.class);
+            bicycles = visualizeVehiclesAtParkController.getVehiclesAtPark(s, Bicycle.class);
             result = bicycles.size();
-            getNumberOfVehiclesAtParkController.writeOutputFile(bicycles, s);
+            visualizeVehiclesAtParkController.writeOutputFile(bicycles, s);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
             return -1;

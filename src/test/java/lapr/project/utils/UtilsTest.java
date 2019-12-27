@@ -73,7 +73,7 @@ public class UtilsTest {
 
     @Test
     void writeToFileTest() {
-        String filePath = "testFiles/temp/UtilsWriteToFileTest.data";
+        String filePath = "testFiles/temp/UtilsWriteToFileTest.output";
         List<String> lines = new ArrayList<>();
 
         // #1
@@ -115,6 +115,10 @@ public class UtilsTest {
             if (count != lines.size())
                 fail();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
             fail();
         }
     }

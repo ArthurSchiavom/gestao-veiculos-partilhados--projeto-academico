@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GetNumberOfVehiclesAtParkController {
+public class VisualizeVehiclesAtParkController {
     private final Company company;
 
-    public GetNumberOfVehiclesAtParkController(Company company) {
+    public VisualizeVehiclesAtParkController(Company company) {
         this.company = company;
     }
 

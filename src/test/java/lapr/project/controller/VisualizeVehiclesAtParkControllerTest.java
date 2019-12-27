@@ -2,17 +2,19 @@ package lapr.project.controller;
 
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import lapr.project.model.vehicles.Bicycle;
-import lapr.project.model.vehicles.ElectricScooter;
-import lapr.project.model.vehicles.ElectricScooterType;
-import lapr.project.model.vehicles.VehicleType;
+import lapr.project.model.vehicles.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -23,7 +25,7 @@ public class VisualizeVehiclesAtParkControllerTest {
     // Set up mock objects and those that use the mock objects
     private DataHandler dataHandler;
     private Company company;
-    private GetNumberOfVehiclesAtParkController controller;
+    private VisualizeVehiclesAtParkController controller;
     private PreparedStatement stm1 = mock(PreparedStatement.class);
     private PreparedStatement stm2 = mock(PreparedStatement.class);
     private PreparedStatement stm3 = mock(PreparedStatement.class);
@@ -40,7 +42,7 @@ public class VisualizeVehiclesAtParkControllerTest {
         dataHandler = mock(DataHandler.class);
         Company.reset();
         company = Company.createCompany(dataHandler);
-        controller = new GetNumberOfVehiclesAtParkController(company);
+        controller = new VisualizeVehiclesAtParkController(company);
     }
 
     private void prepareGetVehicles(String vehicleDescription, VehicleType vehicleType) {
@@ -182,7 +184,6 @@ public class VisualizeVehiclesAtParkControllerTest {
     @Test
     void getVehiclesAtParkCoordinatesTest() {
         List<Bicycle> bicycles = null;
-        List<ElectricScooter> electricScooters = null;
         String parkId = "parkId";
         String vehicleDescription = "vehicleDesc";
         double lat = 123;
@@ -191,6 +192,7 @@ public class VisualizeVehiclesAtParkControllerTest {
         prepareGetVehiclesWithParkCoordinates(vehicleDescription, parkId, VehicleType.BICYCLE);
         try {
             bicycles = controller.getVehiclesAtPark(lat, lon, Bicycle.class);
+            assertEquals(2, bicycles.size());
         } catch (SQLException e) {
             e.printStackTrace();
             fail();
@@ -201,6 +203,57 @@ public class VisualizeVehiclesAtParkControllerTest {
 
     @Test
     void writeOutputFileTest() {
+        String filePath = "testFiles/temp/VisualizeVehiclesAtParkControllerTest.writeOutputFileTest.output";
+        String header = "bicycle description";
+        String desc1 = "abc";
+        String desc2 = "aac";
+        String desc3 = "zyw";
+        String desc4 = "xxy";
+        List<Bicycle> bicycles = new ArrayList<>();
 
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add(header);
+
+        try {
+            controller.writeOutputFile(bicycles, filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+        verifyOutputFile(expectedResult, filePath);
+
+        bicycles.add(new Bicycle(1, desc1, 2f, 2f, 2, true, 10));
+        bicycles.add(new Bicycle(1, desc2, 2f, 2f, 2, true, 10));
+        bicycles.add(new Bicycle(1, desc3, 2f, 2f, 2, true, 10));
+        bicycles.add(new Bicycle(1, desc4, 2f, 2f, 2, true, 10));
+        expectedResult.add(desc2);
+        expectedResult.add(desc1);
+        expectedResult.add(desc4);
+        expectedResult.add(desc3);
+        try {
+            controller.writeOutputFile(bicycles, filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+        verifyOutputFile(expectedResult, filePath);
+    }
+
+    void verifyOutputFile(List<String> expectedContent, String filePath) {
+        try (Scanner scanner = new Scanner(new FileReader(filePath))) {
+            int count = 0;
+            while (scanner.hasNext()) {
+                assertEquals(expectedContent.get(count), scanner.nextLine());
+                count++;
+            }
+            if (count != expectedContent.size())
+                fail();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 }
