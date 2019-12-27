@@ -25,6 +25,12 @@ public class RegisterPathController {
      * @return the number of users added
      */
     public int registerPaths(List<String[]> parsedData, String fileName) throws SQLException, InvalidFileDataException {
+        String[] line = parsedData.get(0);
+        if (line.length != 7 || !line[0].equals("latitudeA") || !line[1].equals("longitudeA") || !line[2].equals("latitudeB")
+                || !line[3].equals("longitudeB") || !line[4].equals("kinetic coefficient") || !line[5].equals("wind direction")
+                || !line[6].equals("wind speed"))
+            throw new InvalidFileDataException("Header is different from expected");
+
         List<Double> latA = new ArrayList<>();
         List<Double> lonA = new ArrayList<>();
         List<Double> latB = new ArrayList<>();
@@ -36,7 +42,7 @@ public class RegisterPathController {
         int i = 0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
+                line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 

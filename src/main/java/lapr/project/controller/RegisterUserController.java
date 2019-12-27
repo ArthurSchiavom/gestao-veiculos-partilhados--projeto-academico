@@ -26,19 +26,25 @@ public class RegisterUserController {
      * @return the number of users added
      */
     public int registerClients(List<String[]> parsedData, String fileName) throws SQLException, InvalidFileDataException {
+        String[] line = parsedData.get(0);
+        if (line.length != 8 || !line[0].equals("username") || !line[1].equals("email") || !line[2].equals("height")
+                || !line[3].equals("weight") || !line[4].equals("cycling average speed") || !line[5].equals("visa")
+                || !line[6].equals("gender") || !line[7].equals("password"))
+            throw new InvalidFileDataException("Header is different from expected");
+
         List<String> username = new ArrayList<>();
         List<String> email = new ArrayList<>();
         List<Integer> height = new ArrayList<>();
         List<Integer> weight = new ArrayList<>();
         List<Float> cyclingAvgSpeed = new ArrayList<>();
-        List<String> visa = new ArrayList<>();
         List<Character> gender = new ArrayList<>();
+        List<String> visa = new ArrayList<>();
         List<String> password = new ArrayList<>();
 
         int i = 0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
+                line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 

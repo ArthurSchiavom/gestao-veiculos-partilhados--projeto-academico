@@ -25,6 +25,13 @@ public class RegisterParksController {
     }
 
     public int registerParks(List<String[]> parsedData, String fileName) throws InvalidFileDataException, SQLException {
+        String[] line = parsedData.get(0);
+        if (line.length != 9 || !line[0].equals("park identification") || !line[1].equals("latitude") || !line[2].equals("longitude")
+                || !line[3].equals("elevation") || !line[4].equals("park description") || !line[5].equals("max number of bicycles")
+                || !line[6].equals("max number of escooters") || !line[7].equals("park input voltage")
+                || !line[8].equals("park input current"))
+            throw new InvalidFileDataException("Header is different from expected");
+
         List<String> id = new ArrayList<>();
         List<Coordinates> coordinates = new ArrayList<>();
         List<Integer> maxNumBikes = new ArrayList<>();
@@ -35,7 +42,7 @@ public class RegisterParksController {
         int i = 0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
+                line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 

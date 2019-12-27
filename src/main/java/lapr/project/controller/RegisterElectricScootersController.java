@@ -26,6 +26,13 @@ public class RegisterElectricScootersController {
     }
 
     public int registerElectricScooters(List<String[]> parsedData, String fileName) throws InvalidFileDataException, SQLException {
+        String[] line = parsedData.get(0);
+        if (line.length != 10 || !line[0].equals("escooter description") || !line[1].equals("weight") || !line[2].equals("type")
+                || !line[3].equals("park latitude") || !line[4].equals("park longitude") || !line[5].equals("max battery capacity")
+                || !line[6].equals("actual battery capacity") || !line[7].equals("aerodynamic coefficient")
+                || !line[8].equals("frontal area") || !line[9].equals("motor"))
+            throw new InvalidFileDataException("Header is different from expected");
+
         List<Float> aerodynamicCoefficient = new ArrayList<>();
         List<Float> frontalArea = new ArrayList<>();
         List<Integer> weight = new ArrayList<>();
@@ -40,7 +47,7 @@ public class RegisterElectricScootersController {
         int i = 0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
+                line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 

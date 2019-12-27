@@ -22,6 +22,11 @@ public class RegisterPOIController {
      * @return the number of users added
      */
     public int registerPOIs(List<String[]> parsedData, String fileName) throws SQLException, InvalidFileDataException {
+        String[] line = parsedData.get(0);
+        if (line.length != 4 || !line[0].equals("latitude") || !line[1].equals("longitude") || !line[2].equals("elevation")
+                || !line[3].equals("poi description"))
+            throw new InvalidFileDataException("Header is different from expected");
+
         List<Double> lat = new ArrayList<>();
         List<Double> lon = new ArrayList<>();
         List<Integer> elev = new ArrayList<>();
@@ -30,7 +35,7 @@ public class RegisterPOIController {
         int i = 0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
-                String[] line = parsedData.get(i);
+                line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())
                     continue;
 
