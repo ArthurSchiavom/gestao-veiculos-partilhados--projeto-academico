@@ -234,4 +234,67 @@ class CoordinatesTest {
         assertEquals(expResult, coords1.distance(coords2), 0.01);
 
     }
+
+    /**
+     * Test of getCoordinateX method, of class Coordinates.
+     */
+    @Test
+    public void testGetCoordinateX() {
+        Coordinates instance = new Coordinates(0, 0, 0);
+        double expResult = 6371000;
+        double result = instance.getCoordinateX();
+        assertEquals(expResult, result, 0.0001);
+
+        Coordinates instance2 = new Coordinates(1, 1, 1);
+        double expResult2 = 1859864.2521791;
+        double result2 = instance2.getCoordinateX();
+        assertEquals(expResult2, result2, 0.0001);
+
+        Coordinates instance3 = new Coordinates(-1, -1, -1);
+        double expResult3 = 1859864.2521791;
+        double result3 = instance3.getCoordinateX();
+        assertEquals(expResult3, result3, 0.0001);
+    }
+
+    /**
+     * Test of getCoordinateY method, of class Coordinates.
+     */
+    @Test
+    public void testGetCoordinateY() {
+        Coordinates instance = new Coordinates(0, 0, 0);
+        double expResult = 0.0;
+        double result = instance.getCoordinateY();
+        assertEquals(expResult, result, 0.0001);
+
+        Coordinates instance2 = new Coordinates(1, 1, 1);
+        double expResult2 = 2896566.9531532;
+        double result2 = instance2.getCoordinateY();
+        assertEquals(expResult2, result2, 0.0001);
+
+        Coordinates instance3 = new Coordinates(-1, -1, -1);
+        double expResult3 = -2896566.9531532;
+        double result3 = instance3.getCoordinateY();
+        assertEquals(expResult3, result3, 0.0001);
+    }
+
+    /**
+     * Test of getCoordinateZ method, of class Coordinates.
+     */
+    @Test
+    public void testGetCoordinateZ() {
+        Coordinates instance = new Coordinates(0, 0, 0);
+        double expResult = 0.0;
+        double result = instance.getCoordinateZ();
+        assertEquals(expResult, result, 0.0001);
+
+        Coordinates instance2 = new Coordinates(1, 1, 1);
+        double expResult2 = 5361011.6442111;
+        double result2 = instance2.getCoordinateZ();
+        assertEquals(expResult2, result2, 0.0001);
+
+        Coordinates instance3 = new Coordinates(-1, -1, -1);
+        double expResult3 = -5361011.6442111;
+        double result3 = instance3.getCoordinateZ();
+        assertEquals(expResult3, result3, 0.0001);
+    }
 }

@@ -151,4 +151,35 @@ public class Coordinates {
     public double distanceFlat(Coordinates other) {
         return Math.sqrt(Math.pow(other.lat - lat, 2) + Math.pow(other.lon - lon, 2) + Math.pow(other.lat - lat, 2));
     }
+    
+       /**
+     * Returns the corresponding cartesian value of x to this coordinate in m
+     *
+     * @return the corresponding cartesian value of x to this coordinate in m
+     */
+    public double getCoordinateX() {
+        final int R = 6371; // Radius of the earth
+        return R * Math.cos(lat) * Math.cos(lon) * 1000;
+    }
+
+    /**
+     * Returns the corresponding cartesian value of y to this coordinate in m
+     *
+     * @return the corresponding cartesian value of y to this coordinate in m
+     */
+    public double getCoordinateY() {
+        final int R = 6371; // Radius of the earth
+        return R * Math.cos(lat) * Math.sin(lon) * 1000;
+    }
+
+    /**
+     * Returns the corresponding cartesian value of z to this coordinate in m
+     *
+     * @return the corresponding cartesian value of z to this coordinate in m
+     */
+    public double getCoordinateZ() {
+        final int R = 6371; // Radius of the earth
+        return R * Math.sin(lat) * 1000;
+    }
+
 }

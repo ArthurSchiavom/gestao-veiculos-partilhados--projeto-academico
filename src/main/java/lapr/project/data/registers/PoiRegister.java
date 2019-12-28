@@ -33,7 +33,7 @@ public class PoiRegister {
     }
 
     /**
-     * Inserts a list of clients
+     * Inserts a list of points of interest
      */
     public int insertPOIs(List<Double> lat, List<Double> lon, List<Integer> elev, List<String> desc) throws SQLException {
         if(!(lat.size()==lon.size() && lon.size() == elev.size() && elev.size() == desc.size())){
