@@ -36,7 +36,7 @@ public class RegisterBicyclesController {
                     || !line[3].equals("park longitude") || !line[4].equals("aerodynamic coefficient") || !line[5].equals("frontal area")
                     || !line[6].equals("wheel size"))
                 throw new InvalidFileDataException("Header is different from expected");
-            
+
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
                 if (line.length == 1 && line[0].isEmpty())

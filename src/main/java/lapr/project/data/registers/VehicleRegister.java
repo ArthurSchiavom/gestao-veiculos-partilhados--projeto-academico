@@ -13,7 +13,8 @@ public class VehicleRegister {
     private final DataHandler dataHandler;
 
     private static final String DESCRIPTION_FIELD_NAME = "description";
-    private static final String TYPE_FIELD_NAME = "vehicle_type_name";
+    private static final String UNIQUE_NUMBER_FIELD_NAME = "unique_number";
+    private static final String VEHICLE_TYPE_FIELD_NAME = "vehicle_type_name";
     private static final String AVAILABLE_FIELD_NAME = "available";
     private static final String WEIGHT_FIELD_NAME = "weight";
     private static final String AERO_COEFFICIENT_FIELD_NAME = "aerodynamic_coefficient";
@@ -52,7 +53,7 @@ public class VehicleRegister {
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
                         rs2.next();
-                        vehicles.add(new Bicycle(rs.getInt("unique_number"), description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                        vehicles.add(new Bicycle(rs.getInt(UNIQUE_NUMBER_FIELD_NAME), description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
                                 rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME), rs.getBoolean(AVAILABLE_FIELD_NAME),
                                 rs2.getInt(BICYCLE_SIZE_FIELD_NAME)));
                         break;
@@ -62,7 +63,7 @@ public class VehicleRegister {
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
                         rs2.next();
-                        vehicles.add(new ElectricScooter(rs.getInt("unique_number"), description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                        vehicles.add(new ElectricScooter(rs.getInt(UNIQUE_NUMBER_FIELD_NAME), description, rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
                                 rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME), rs.getBoolean(AVAILABLE_FIELD_NAME),
                                 ElectricScooterType.parseScooterType(rs2.getString(ESCOOTER_TYPE_FIELD_NAME)),
                                 rs2.getInt(ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME), rs2.getFloat(ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME),
@@ -91,7 +92,7 @@ public class VehicleRegister {
             if (!rs.next())
                 return null;
 
-            VehicleType vehicleType = VehicleType.parseVehicleType(rs.getString("vehicle_type_name"));
+            VehicleType vehicleType = VehicleType.parseVehicleType(rs.getString(VEHICLE_TYPE_FIELD_NAME));
             String childTableName = null;
             assert vehicleType != null;
             switch (vehicleType) {
@@ -113,19 +114,19 @@ public class VehicleRegister {
 
             switch (vehicleType) {
                 case BICYCLE:
-                    vehicle = new Bicycle(rs.getInt("unique_number"), rs.getString("description"),
-                            rs.getFloat("aerodynamic_coefficient"),
-                            rs.getFloat("frontal_area"), rs.getInt("weight"),
-                            rs.getBoolean("available"), rs2.getInt("bicycle_size"));
+                    vehicle = new Bicycle(rs.getInt(UNIQUE_NUMBER_FIELD_NAME), rs.getString(DESCRIPTION_FIELD_NAME),
+                            rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                            rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME),
+                            rs.getBoolean(AVAILABLE_FIELD_NAME), rs2.getInt(BICYCLE_SIZE_FIELD_NAME));
                     break;
                 case ELECTRIC_SCOOTER:
-                    vehicle = new ElectricScooter(rs.getInt("unique_number"), rs.getString("description"),
-                            rs.getFloat("aerodynamic_coefficient"),
-                            rs.getFloat("frontal_area"), rs.getInt("weight"),
-                            rs.getBoolean("available"), ElectricScooterType.parseScooterType(
-                            rs2.getString("electric_scooter_type_name")),
-                            rs2.getInt("actual_battery_capacity"), rs2.getFloat("max_battery_capacity"),
-                            rs2.getInt("engine_power"));
+                    vehicle = new ElectricScooter(rs.getInt(UNIQUE_NUMBER_FIELD_NAME), rs.getString(DESCRIPTION_FIELD_NAME),
+                            rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                            rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME),
+                            rs.getBoolean(AVAILABLE_FIELD_NAME), ElectricScooterType.parseScooterType(
+                            rs2.getString(ESCOOTER_TYPE_FIELD_NAME)),
+                            rs2.getInt(ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME), rs2.getFloat(ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME),
+                            rs2.getInt(ESCOOTER_ENGINE_POWER_FIELD_NAME));
             }
         } catch (SQLException e) {
             throw new SQLException("Failed to fetch vehicle from the database.", e.getSQLState(), e.getErrorCode());

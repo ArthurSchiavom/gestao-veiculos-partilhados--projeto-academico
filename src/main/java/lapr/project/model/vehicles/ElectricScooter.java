@@ -66,7 +66,7 @@ public class ElectricScooter extends Vehicle {
     /**
      * Returns true if a scooter has the necessary autonomy to make a trip
      *
-     * @param trip - the trip
+     * @param trip trip
      * @return true if a scooter has the necessary autonomy to make a trip
      */
     public boolean hasAutonomy(List<Path> trip) {

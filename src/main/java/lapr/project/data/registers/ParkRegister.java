@@ -20,6 +20,7 @@ import lapr.project.model.vehicles.VehicleType;
  */
 public class ParkRegister {
     private final DataHandler dataHandler;
+    private static final double DEFAULT_NEAREST_PARKS_RADIUS_KM = 1;
 
     public ParkRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
@@ -355,24 +356,51 @@ public class ParkRegister {
     }
 
     /**
-     * Gets the nearest parks from a certain coordinate and returns their availability
+     * Retrieves the parks within a certain distance from a given point along with their vehicleAvailibility.
      *
-     * <h1></h1>We are running through every park in the sql table instead of parsing it to a tree because, it has a smaller complexity initially
+     * <h1></h1><b>Important: </b>We are running through every park in the sql table instead of parsing it to a tree because, it has a smaller complexity initially
      * and if we were to need the tree again, it could be outdated by then, so we would have to again load the tree with all the information
      * in the table, making it higher complexity than simply iterating all of them</h1>
      *
-     * @param coords
-     * @param radius
+     * @param coords coordinates of the point
+     * @param radius the max distance from the point to a park, use 0 for the default value
      * @return hashmap containing parks and their corresponding capacities
+     * @throws SQLException in case a database access error occurs
      */
-    public HashMap<Park, List<Capacity>> getNearestParksAndAvailability(Coordinates coords, double radius) throws SQLException {
-        HashMap<Park, List<Capacity>> nearestParksAvailability = new HashMap<>();
+    public HashMap<Park, List<Capacity>> retrieveParksInRadiusAndAvailability(Coordinates coords, double radius) throws SQLException {
+        HashMap<Park, List<Capacity>> parksInRadius = new HashMap<>();
+        if (radius == 0)
+            radius = DEFAULT_NEAREST_PARKS_RADIUS_KM;
         for (Park park : fetchAllParks()) {
-            if (coords.distance(park.getCoordinates()) <= radius) {
-                nearestParksAvailability.put(park, getListOfCapacities(park.getId()));
+            if (coords.distanceIgnoringHeight(park.getCoordinates()) <= radius) {
+                parksInRadius.put(park, getListOfCapacities(park.getId()));
             }
         }
-        return nearestParksAvailability;
+        return parksInRadius;
+    }
+
+    /**
+     * Retrieves the parks within a certain distance from a given point.
+     *
+     * <h1></h1><b>Important: </b>We are running through every park in the sql table instead of parsing it to a tree because, it has a smaller complexity initially
+     * and if we were to need the tree again, it could be outdated by then, so we would have to again load the tree with all the information
+     * in the table, making it higher complexity than simply iterating all of them</h1>
+     *
+     * @param coords coordinates of the point
+     * @param radius the max distance from the point to a park, use 0 for the default value
+     * @return parks within the given radius
+     * @throws SQLException in case a database access error occurs
+     */
+    public List<Park> retrieveParksInRadius(Coordinates coords, double radius) throws SQLException {
+        List<Park> parksInRadius = new ArrayList<>();
+        if (radius == 0)
+            radius = DEFAULT_NEAREST_PARKS_RADIUS_KM;
+        for (Park park : fetchAllParks()) {
+            if (coords.distanceIgnoringHeight(park.getCoordinates()) <= radius) {
+                parksInRadius.add(park);
+            }
+        }
+        return parksInRadius;
     }
 
     /**
@@ -399,6 +427,15 @@ public class ParkRegister {
         }
     }
 
+    /**
+     * Fetches vehicles at a park.
+     *
+     * @param parkId ID of the park
+     * @param vehicleClassType type of target search vehicle, use Vehicle.class for any type
+     * @param <T> type of target search vehicle
+     * @return vehicles of the given type at the given park
+     * @throws SQLException if a database access error occurs
+     */
     public <T> List<T> fetchVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
         List<T> result = new ArrayList<>();
@@ -413,12 +450,12 @@ public class ParkRegister {
             VehicleRegister vehicleRegister = Company.getInstance().getVehicleRegister();
             while (rs.next()) {
                 Vehicle vehicle = vehicleRegister.fetchVehicle(rs.getString("vehicle_description"));
-                if (vehicle.getClass() == vehicleClassType) {
+                if (vehicleClassType == Vehicle.class)
+                    result.add(vehicleClassType.cast(vehicle));
+                else if (vehicle.getClass() == vehicleClassType) {
                     result.add(vehicleClassType.cast(vehicle));
                 }
             }
-
-            dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
             throw new SQLException("Failed to fetch vehicles at park", e.getSQLState(), e.getErrorCode());

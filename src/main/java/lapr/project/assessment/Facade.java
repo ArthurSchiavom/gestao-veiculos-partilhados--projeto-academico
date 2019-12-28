@@ -2,11 +2,14 @@ package lapr.project.assessment;
 
 import lapr.project.controller.*;
 import lapr.project.data.registers.Company;
+import lapr.project.model.Coordinates;
+import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
 import java.io.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +27,7 @@ public class Facade implements Serviceable {
     private final GetFreeSlotsByTypeController getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
     private final RegisterPathController registerPathController = new RegisterPathController(company);
     private final VisualizeVehiclesAtParkController visualizeVehiclesAtParkController = new VisualizeVehiclesAtParkController(company);
+    private final FindParksNearbyController findParksNearbyController = new FindParksNearbyController(company);
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -165,28 +169,29 @@ public class Facade implements Serviceable {
         return result;
     }
 
-    /**
-     * Distance is returns in metres, rounded to the unit e.g. (281,58 rounds
-     * to 282);
-     *
-     * @param v  Latitude in degrees.
-     * @param v1 Longitude in degrees.
-     * @param s  Filename for output.
-     */
     @Override
     public void getNearestParks(double v, double v1, String s) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(s))) {
-            writer.write("41.152712,-8.609297,494");
-            writer.newLine();
-            writer.write("41.145883,-8.610680,282");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        getNearestParks(v, v1, s, 0);
     }
 
     @Override
     public void getNearestParks(double v, double v1, String s, int i) {
-
+        Coordinates location = new Coordinates(v, v1, 0);
+        List<Park> parks = new ArrayList<>();
+        List<String> outputLines = new ArrayList<>();
+        outputLines.add("latitude;longitude;distance in meters");
+        try {
+            parks = findParksNearbyController.findParksNearby(v, v1, i);
+            for (Park park : parks) {
+                Coordinates parkCoord = park.getCoordinates();
+                outputLines.add(String.format("%f; %f; %.0f", parkCoord.getLatitude(), parkCoord.getLongitude(), parkCoord.distanceIgnoringHeight(location)));
+            }
+            Utils.writeToFile(outputLines, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to access the database when attempting to find nearby parks.");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to write the output file.");
+        }
     }
 
     @Override

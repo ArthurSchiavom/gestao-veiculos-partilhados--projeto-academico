@@ -1,5 +1,7 @@
 package lapr.project.utils;
 
+import lapr.project.data.AutoCloseableManager;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,27 +52,19 @@ public class Utils {
     }
 
     public static void writeToFile(List<String> lines, String fileName) throws IOException {
-        FileWriter fileWriter = null;
-        PrintWriter printWriter = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            fileWriter = new FileWriter(fileName);
-            printWriter = new PrintWriter(fileWriter);
+            FileWriter fileWriter = new FileWriter(fileName);
+            autoCloseableManager.addAutoCloseable(fileWriter);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            autoCloseableManager.addAutoCloseable(printWriter);
             for (String line : lines) {
                 printWriter.println(line);
             }
         } catch (IOException e) {
             throw e;
         } finally {
-            if (printWriter != null)
-                printWriter.close();
-
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (IOException e) {
-                    LOGGER.log(Level.WARNING, "Failed to close fileWriter.");
-                }
-            }
+            autoCloseableManager.closeAutoCloseables();
         }
     }
 }
