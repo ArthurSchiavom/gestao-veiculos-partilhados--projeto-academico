@@ -5,7 +5,10 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.*;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

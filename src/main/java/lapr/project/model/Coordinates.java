@@ -77,7 +77,7 @@ public class Coordinates {
      * according with <url>https://stackoverflow.com/a/16794680</url>
      *
      * @param other secondary coords to calculate distance
-     * @return the distance between the two coordinates in meters
+     * @return the distance between the two coordinates in kilometers
      */
     public double distanceIgnoringHeight(Coordinates other) {
         if ((lat == other.getLatitude()) && (lon == other.getLongitude())) {
@@ -100,7 +100,7 @@ public class Coordinates {
      * according with <url>https://stackoverflow.com/a/16794680</url>
      *
      * @param other secondary coords to calculate distance
-     * @return the distance between the two coordinates in meters
+     * @return the distance between the two coordinates in kilometers
      */
     public double distance(Coordinates other) {
         if ((lat == other.getLatitude()) && (lon == other.getLongitude()) && (altitude == other.getAltitude())) {

@@ -7,7 +7,9 @@ import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
-import java.io.*;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

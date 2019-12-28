@@ -4,9 +4,6 @@
  */
 package lapr.project.data.registers;
 
-import java.sql.*;
-import java.util.*;
-
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
@@ -15,12 +12,20 @@ import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * This class registers and manipulates the data of all parks in data base
  */
 public class ParkRegister {
     private final DataHandler dataHandler;
-    private static final double DEFAULT_NEAREST_PARKS_RADIUS_KM = 1;
+    private static final double DEFAULT_NEAREST_PARKS_RADIUS_KILOMETERS = 1;
 
     public ParkRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
@@ -363,14 +368,14 @@ public class ParkRegister {
      * in the table, making it higher complexity than simply iterating all of them</h1>
      *
      * @param coords coordinates of the point
-     * @param radius the max distance from the point to a park, use 0 for the default value
-     * @return hashmap containing parks and their corresponding capacities
+     * @param radius the max distance from the point to a park in kilometers, use 0 for the default value
+     * @return never-null hashmap containing parks and their corresponding capacities
      * @throws SQLException in case a database access error occurs
      */
     public HashMap<Park, List<Capacity>> retrieveParksInRadiusAndAvailability(Coordinates coords, double radius) throws SQLException {
         HashMap<Park, List<Capacity>> parksInRadius = new HashMap<>();
         if (radius == 0)
-            radius = DEFAULT_NEAREST_PARKS_RADIUS_KM;
+            radius = DEFAULT_NEAREST_PARKS_RADIUS_KILOMETERS;
         for (Park park : fetchAllParks()) {
             if (coords.distanceIgnoringHeight(park.getCoordinates()) <= radius) {
                 parksInRadius.put(park, getListOfCapacities(park.getId()));
@@ -387,14 +392,14 @@ public class ParkRegister {
      * in the table, making it higher complexity than simply iterating all of them</h1>
      *
      * @param coords coordinates of the point
-     * @param radius the max distance from the point to a park, use 0 for the default value
-     * @return parks within the given radius
+     * @param radius the max distance from the point to a park in kilometers, use 0 for the default value
+     * @return never-null list containing the parks within the given radius
      * @throws SQLException in case a database access error occurs
      */
     public List<Park> retrieveParksInRadius(Coordinates coords, double radius) throws SQLException {
         List<Park> parksInRadius = new ArrayList<>();
         if (radius == 0)
-            radius = DEFAULT_NEAREST_PARKS_RADIUS_KM;
+            radius = DEFAULT_NEAREST_PARKS_RADIUS_KILOMETERS;
         for (Park park : fetchAllParks()) {
             if (coords.distanceIgnoringHeight(park.getCoordinates()) <= radius) {
                 parksInRadius.add(park);

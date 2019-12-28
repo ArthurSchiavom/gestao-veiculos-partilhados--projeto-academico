@@ -1,9 +1,10 @@
 package lapr.project.model.vehicles;
 
 
-import java.util.List;
 import lapr.project.model.Path;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
+
+import java.util.List;
 
 /**
  * Represents an eletric scooter
