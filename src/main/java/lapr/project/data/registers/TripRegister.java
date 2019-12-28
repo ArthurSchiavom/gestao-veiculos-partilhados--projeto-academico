@@ -2,7 +2,9 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
+import lapr.project.model.Path;
 import lapr.project.model.Trip;
+import lapr.project.model.vehicles.ElectricScooter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -233,5 +235,22 @@ public class TripRegister {
             autoCloseableManager.closeAutoCloseables();
         }
         return dispVehicles;
+    }
+
+    /**
+     *
+     * @param listScooters all the scooters in the company
+     * @param trip the path of the trip
+     * @return a list of scooters which are able to comply the trip and keep 10% of the battery capacity
+     */
+
+    private static List<ElectricScooter> filterScootersWithAutonomy (List<ElectricScooter> listScooters, List<Path> trip){
+        List<ElectricScooter> scooters = new ArrayList<>();
+        for(ElectricScooter electricScooter : listScooters){
+            if(electricScooter.hasAutonomy(trip) == true){
+                scooters.add(electricScooter);
+            }
+        }
+        return scooters;
     }
 }

@@ -6,10 +6,8 @@ import lapr.project.model.Path;
 import lapr.project.model.users.Client;
 import lapr.project.model.users.CreditCard;
 import lapr.project.model.vehicles.Bicycle;
-import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -146,22 +144,5 @@ public class UsersRegister {
             totalCaloryLoss+= PhysicsMethods.calculateCaloriesBurnt(cli.getCyclingAverageSpeed(),path.getWindSpeed(),path.getKineticCoefficient(),bicycle.getAerodynamicCoefficient(),bicycle.getFrontalArea(),1.2f,cli.getWeight(),bicycle.getWeight(),0,0);
         }
         return totalCaloryLoss;
-    }
-
-    /**
-     *
-     * @param listScooters all the scooters in the company
-     * @param trip the path of the trip
-     * @return a list of scooters which are able to comply the trip and keep 10% of the battery capacity
-     */
-
-    private List<ElectricScooter> getScootersEnoughBatteryMore10 (List<ElectricScooter> listScooters, List<Path> trip){
-        List<ElectricScooter> scooters = new ArrayList<>();
-        for(ElectricScooter electricScooter : listScooters){
-            if(electricScooter.hasAutonomy(trip) == true){
-                scooters.add(electricScooter);
-            }
-        }
-        return scooters;
     }
 }
