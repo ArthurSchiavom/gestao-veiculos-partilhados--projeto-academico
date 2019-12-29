@@ -18,10 +18,10 @@
       ><path d="M-7 -7 L71 -7 L71 321 L-7 321 L-7 -7 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath5"
-      ><path d="M-85 -15 L170 -15 L170 30 L-85 30 L-85 -15 Z"
+      ><path d="M-76 -15 L152 -15 L152 30 L-76 30 L-76 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath6"
-      ><path d="M-76 -15 L152 -15 L152 30 L-76 30 L-76 -15 Z"
+      ><path d="M-85 -15 L170 -15 L170 30 L-85 30 L-85 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath7"
       ><path d="M0 0 L439 0 L439 104 L0 104 L0 0 Z"
@@ -36,10 +36,10 @@
       ><path d="M294 29 L294 44 L140 44 L140 29 ZM287 59 L287 74 L149 74 L149 59 ZM0 0 L0 104 L439 104 L439 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath11"
-      ><path d="M287 29 L287 44 L149 44 L149 29 ZM327 77 L327 92 L104 92 L104 77 ZM0 0 L0 104 L439 104 L439 0 L294 0 L294 14 L140 14 L140 0 Z"
+      ><path d="M287 29 L287 44 L149 44 L149 29 ZM315 77 L315 92 L115 92 L115 77 ZM0 0 L0 104 L439 104 L439 0 L294 0 L294 14 L140 14 L140 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath12"
-      ><path d="M327 29 L327 44 L104 44 L104 29 ZM323 77 L323 92 L110 92 L110 77 ZM0 0 L0 104 L439 104 L439 0 Z"
+      ><path d="M315 29 L315 44 L115 44 L115 29 ZM323 77 L323 92 L110 92 L110 77 ZM0 0 L0 104 L439 104 L439 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath13"
       ><path d="M323 29 L323 44 L110 44 L110 29 ZM0 0 L0 104 L439 104 L439 0 Z"
@@ -48,7 +48,7 @@
       ><path d="M-213 -15 L426 -15 L426 30 L-213 30 L-213 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath15"
-      ><path d="M-223 -15 L446 -15 L446 30 L-223 30 L-223 -15 Z"
+      ><path d="M-200 -15 L400 -15 L400 30 L-200 30 L-200 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath16"
       ><path d="M-138 -15 L276 -15 L276 30 L-138 30 L-138 -15 Z"
@@ -100,13 +100,13 @@
       /><line y2="36" fill="none" x1="30" clip-path="url(#clipPath4)" x2="39" y1="25"
       /><line y2="16" fill="none" x1="21" clip-path="url(#clipPath4)" x2="39" y1="16"
     /></g
-    ><g font-size="11px" transform="translate(2,37)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath5)" stroke="none"
-      >Administrator</text
-    ></g
     ><g font-size="11px" transform="translate(349,2)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="18" xml:space="preserve" y="12" clip-path="url(#clipPath6)" stroke="none"
+    ><text x="18" xml:space="preserve" y="12" clip-path="url(#clipPath5)" stroke="none"
       >System:</text
+    ></g
+    ><g font-size="11px" transform="translate(2,37)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath6)" stroke="none"
+      >Administrator</text
     ></g
     ><g stroke-linecap="butt" font-size="11px" transform="translate(-2,31)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke-linejoin="round" stroke="black" stroke-opacity="1"
     ><line y2="50" fill="none" x1="50" clip-path="url(#clipPath8)" x2="385" y1="50"
@@ -143,10 +143,10 @@
       /><text fill="black" x="10" xml:space="preserve" y="12" clip-path="url(#clipPath14)" stroke="none"
       >3.1: inform the success of the operation</text
     ></g
-    ><g font-size="11px" transform="translate(102,211)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
-    ><rect x="0" width="223" height="15" y="0" clip-path="url(#clipPath15)" stroke="none"
+    ><g font-size="11px" transform="translate(113,211)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
+    ><rect x="0" width="200" height="15" y="0" clip-path="url(#clipPath15)" stroke="none"
       /><text fill="black" x="9" xml:space="preserve" y="12" clip-path="url(#clipPath15)" stroke="none"
-      >3: confirm the information of the new park</text
+      >3: confirm the information of the park</text
     ></g
     ><g font-size="11px" transform="translate(147,163)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
     ><rect x="0" width="138" height="15" y="0" clip-path="url(#clipPath16)" stroke="none"
