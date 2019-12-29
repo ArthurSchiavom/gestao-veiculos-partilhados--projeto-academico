@@ -236,21 +236,4 @@ public class TripRegister {
         }
         return dispVehicles;
     }
-
-    /**
-     *
-     * @param listScooters all the scooters in the company
-     * @param trip the path of the trip
-     * @return a list of scooters which are able to comply the trip and keep 10% of the battery capacity
-     */
-
-    private static List<ElectricScooter> filterScootersWithAutonomy (List<ElectricScooter> listScooters, List<Path> trip){
-        List<ElectricScooter> scooters = new ArrayList<>();
-        for(ElectricScooter electricScooter : listScooters){
-            if(electricScooter.hasAutonomy(trip) == true){
-                scooters.add(electricScooter);
-            }
-        }
-        return scooters;
-    }
 }

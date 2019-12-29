@@ -5,7 +5,11 @@
  */
 package lapr.project.model;
 
+import lapr.project.model.vehicles.ElectricScooter;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -139,5 +143,22 @@ public class Trip {
     @Override
     public int hashCode() {
         return Objects.hash(startTime, clientEmail);
+    }
+
+    /**
+     *
+     * @param listScooters all the scooters in the company
+     * @param trip the path of the trip
+     * @return a list of scooters which are able to comply the trip and keep 10% of the battery capacity
+     */
+
+    private static List<ElectricScooter> filterScootersWithAutonomy (List<ElectricScooter> listScooters, List<Path> trip){
+        List<ElectricScooter> scooters = new ArrayList<>();
+        for(ElectricScooter electricScooter : listScooters){
+            if(electricScooter.hasAutonomy(trip)){
+                scooters.add(electricScooter);
+            }
+        }
+        return scooters;
     }
 }
