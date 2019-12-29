@@ -152,7 +152,7 @@ public class Trip {
      * @return a list of scooters which are able to comply the trip and keep 10% of the battery capacity
      */
 
-    private static List<ElectricScooter> filterScootersWithAutonomy (List<ElectricScooter> listScooters, List<Path> trip){
+    public static List<ElectricScooter> filterScootersWithAutonomy (List<ElectricScooter> listScooters, List<Path> trip){
         List<ElectricScooter> scooters = new ArrayList<>();
         for(ElectricScooter electricScooter : listScooters){
             if(electricScooter.hasAutonomy(trip)){
