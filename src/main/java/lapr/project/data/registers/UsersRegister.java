@@ -135,14 +135,14 @@ public class UsersRegister {
         }
     }
 
-    /**
-     * Calculates the prediction for calory loss of the route choosen by the client
-     */
-    private double predictBurntCalories(Client cli, Bicycle bicycle, List<Path> route){
-        double totalCaloryLoss = 0;
-        for(Path path : route){
-            totalCaloryLoss+= PhysicsMethods.calculateCaloriesBurnt(cli.getCyclingAverageSpeed(),path.getWindSpeed(),path.getKineticCoefficient(),bicycle.getAerodynamicCoefficient(),bicycle.getFrontalArea(),1.2f,cli.getWeight(),bicycle.getWeight(),0,0);
-        }
-        return totalCaloryLoss;
-    }
+//    /**
+//     * Calculates the prediction for calory loss of the route choosen by the client
+//     */
+//    private double predictBurntCalories(Client cli, Bicycle bicycle, List<Path> route){
+//        double totalCaloryLoss = 0;
+//        for(Path path : route){
+//            totalCaloryLoss+= PhysicsMethods.calculateCaloriesBurnt(cli.getCyclingAverageSpeed(),path.getWindSpeed(),path.getKineticCoefficient(),bicycle.getAerodynamicCoefficient(),bicycle.getFrontalArea(),1.2f,cli.getWeight(),bicycle.getWeight(),0,0);
+//        }
+//        return totalCaloryLoss;
+//    }
 }
