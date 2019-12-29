@@ -225,4 +225,23 @@ public class PhysicsMethodsTest {
 
     }
 
+    /**
+     * Test of convertDegreesToRadian method, of class PhysicsMethods.
+     */
+    @Test
+    public void testConvertDegreesToRadian() {
+
+        int angle = 90;
+        Double expResult = 1.57;
+        Double result = PhysicsMethods.convertDegreesToRadian(angle);
+        assertEquals(expResult, result, 0.001);
+        
+        int angle2 = 180;
+        Double expResult2 = Math.PI;
+        Double result2 = PhysicsMethods.convertDegreesToRadian(angle2);
+        assertEquals(expResult2, result2, 0.001);
+
+
+    }
+
 }
