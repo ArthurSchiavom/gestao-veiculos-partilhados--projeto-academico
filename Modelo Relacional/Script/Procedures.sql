@@ -76,12 +76,12 @@ end;
 COMMIT;
 
 
-begin
-    register_park('doggo park', 10.2, 10.5, 1, 'cute place', 2, 2, 10, 20);
-end;
-/
+-- begin
+--     register_park('doggo park', 10.2, 10.5, 1, 'cute place', 2, 2, 10, 20);
+-- end;
+-- /
 
-begin
-    register_bicycle(1, 10, 10, 1, 'whateverrsr', 10.2, 10.5);
-end;
-/
+-- begin
+--     register_bicycle(1, 10, 10, 1, 'whateverrsr', 10.2, 10.5);
+-- end;
+-- /

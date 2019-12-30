@@ -33,7 +33,7 @@ public class ReconnectorRunnable implements Runnable {
     public void run() {
         int nAttempt = 1;
         boolean connected = false;
-        while (!connected && nAttempt <= maxReconnectionAttempts && !Shutdown.wasShutdownIssued()) {
+        while (!connected && nAttempt <= maxReconnectionAttempts && Bootstrap.isAppBootedUp()) {
             nAttempt++;
             connected = true;
             try {

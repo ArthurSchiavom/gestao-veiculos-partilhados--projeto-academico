@@ -28,16 +28,16 @@ begin
 end;
 /
 
-Alter trigger verify_if_email_is_registered enable;
-set serveroutput on;
+-- Alter trigger verify_if_email_is_registered enable;
+-- set serveroutput on;
 
 --teste 
 
-Insert into user_type(user_type_name)
-values ('ADMINA');
+-- Insert into user_type(user_type_name)
+-- values ('ADMINA');
 
-Insert into registered_users(user_email,user_type_name,user_password)
-values ('francisca.moutas@gmail.com','ADMINA','reifranciscao');
+-- Insert into registered_users(user_email,user_type_name,user_password)
+-- values ('francisca.moutas@gmail.com','ADMINA','reifranciscao');
 
-Insert into pending_registrations(email,paid,amount_left_to_pay,credit_card_number,credit_card_expiration,credit_card_secret,height,weight,gender,age)
-values ('francisca.moutas@gmail.com',0,20,1234567891234567, TO_DATE('11-10-2022','dd/mm/yyyy'), 123,70,30,'m',21);
+-- Insert into pending_registrations(email,paid,amount_left_to_pay,credit_card_number,credit_card_expiration,credit_card_secret,height,weight,gender,age)
+-- values ('francisca.moutas@gmail.com',0,20,1234567891234567, TO_DATE('11-10-2022','dd/mm/yyyy'), 123,70,30,'m',21);

@@ -3,6 +3,7 @@ package lapr.project.data;
 
 import lapr.project.utils.Updateable;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,8 +23,7 @@ public class DataHandler {
     private static final int QUERY_TIMEOUT_SECONDS = 10;
     private static final String NOT_CONNECTED_ERROR_MSG = "Not connected to the database";
 
-    private static Updateable<Boolean> created = new Updateable<>(false);
-
+    private static DataHandler instance;
 
     /**
      * O URL da BD.
@@ -59,17 +59,18 @@ public class DataHandler {
      * <b>Only one instance allowed at all times</b>
      * Use connection properties set on file application.properties
      */
-    public DataHandler() throws IllegalAccessException, SQLException {
-        synchronized (created) { // Ensure that at no time the application can have 2 instances
-            if (created.getValue())
-                throw new IllegalAccessException("Only a single DataHandler instance is allowed");
-            else
-                created.setValue(true);
-        }
+    private DataHandler() throws IllegalAccessException, SQLException {
         this.jdbcUrl = System.getProperty("database.url");
         this.username = System.getProperty("database.username");
         this.password = System.getProperty("database.password");
         openConnection();
+    }
+
+    public static synchronized DataHandler createDataHandler() throws SQLException, IllegalAccessException {
+        if (instance == null || instance.connection == null || instance.connection.isClosed())
+            instance = new DataHandler();
+
+        return instance;
     }
 
     /**
@@ -79,7 +80,7 @@ public class DataHandler {
      * @throws IOException
      * @throws SQLException
      */
-    public void scriptRunner(String fileName) throws IOException, SQLException {
+    public void runSQLScriptNoCommit(String fileName) throws IOException, SQLException {
         openConnection();
 
         if (connection == null)
@@ -87,9 +88,6 @@ public class DataHandler {
         ScriptRunner runner = new ScriptRunner(connection, false, false);
 
         runner.runScript(new BufferedReader(new FileReader(fileName)));
-
-        closeAll();
-
     }
 
     /**
@@ -115,7 +113,7 @@ public class DataHandler {
         try {
             rollbackTransaction();
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, "Failed to rollback transaction: \n" + e.getMessage());
+            // Might fail if the connection is lost/closed but when the connection is closed, it automatically performs a rollback
         }
 
         if (rSet != null) {
@@ -166,7 +164,7 @@ public class DataHandler {
             try {
                 return operation.executeOperation();
             } catch (SQLException e) {
-                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS_RECOVERABLE && !Shutdown.wasShutdownIssued()) {
+                if (e.getErrorCode() == CONNECTION_FAILURE_ORA_CODE && nAttempt < MAX_RECONNECTION_ATTEMPTS_RECOVERABLE && Bootstrap.isAppBootedUp()) {
                     try {
                         synchronized (this) {
                             this.wait(RECONNECTION_INTERVAL_MILLIS);

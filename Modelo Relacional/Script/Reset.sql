@@ -1,0 +1,15 @@
+DELETE FROM pending_registrations;
+DELETE FROM receipts;
+DELETE FROM invoices;
+DELETE FROM trip_paths;
+DELETE FROM trips;
+DELETE FROM clients;
+DELETE FROM registered_users;
+DELETE FROM paths;
+DELETE FROM electric_scooters;
+DELETE FROM bicycles;
+DELETE FROM park_vehicle;
+DELETE FROM vehicles;
+DELETE FROM park_capacity;
+DELETE FROM parks;
+DELETE FROM points_of_interest;

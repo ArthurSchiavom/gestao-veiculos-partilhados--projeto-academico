@@ -245,5 +245,5 @@ public class VehicleRegister {
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }
-    }
+    }//-- Create new trip in java, where the user is known
 }
