@@ -1,6 +1,8 @@
 package lapr.project.assessment;
 
 import lapr.project.controller.*;
+import lapr.project.data.Bootstrap;
+import lapr.project.data.Shutdown;
 import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.park.Park;
@@ -10,6 +12,8 @@ import lapr.project.utils.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +23,46 @@ import java.util.logging.Logger;
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
 
-    private final Company company = Company.getInstance();
-    private final RegisterBicyclesController registerBicyclesController = new RegisterBicyclesController(company);
-    private final RegisterElectricScootersController registerElectricScootersController = new RegisterElectricScootersController(company);
-    private final RegisterParksController registerParksController = new RegisterParksController(company);
-    private final RegisterUserController registerUserController = new RegisterUserController(company);
-    private final RegisterPOIController registerPOIController = new RegisterPOIController(company);
-    private final RemoveParkController removeParkController = new RemoveParkController(company);
-    private final GetFreeSlotsByTypeController getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
-    private final RegisterPathController registerPathController = new RegisterPathController(company);
-    private final VisualizeVehiclesAtParkController visualizeVehiclesAtParkController = new VisualizeVehiclesAtParkController(company);
-    private final FindParksNearbyController findParksNearbyController = new FindParksNearbyController(company);
+    private Company company;
+    private RegisterBicyclesController registerBicyclesController;
+    private RegisterElectricScootersController registerElectricScootersController;
+    private RegisterParksController registerParksController;
+    private RegisterUserController registerUserController;
+    private RegisterPOIController registerPOIController;
+    private RemoveParkController removeParkController;
+    private GetFreeSlotsByTypeController getFreeSlotsByTypeController;
+    private RegisterPathController registerPathController;
+    private VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
+    private FindParksNearbyController findParksNearbyController;
+
+    /**
+     * Prepares facade by booting up the application and Facade variables.
+     *
+     * @return if the boot-up was successful
+     */
+    private boolean prepare(boolean resetDatabase) {
+        try {
+            Bootstrap.boot();
+            if (resetDatabase)
+                Bootstrap.resetDatabase();
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to boot up: " + e.getMessage());
+            return false;
+        }
+
+        company = Company.getInstance();
+        registerBicyclesController = new RegisterBicyclesController(company);
+        registerElectricScootersController = new RegisterElectricScootersController(company);
+        registerParksController = new RegisterParksController(company);
+        registerUserController = new RegisterUserController(company);
+        registerPOIController = new RegisterPOIController(company);
+        removeParkController = new RemoveParkController(company);
+        getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
+        registerPathController = new RegisterPathController(company);
+        visualizeVehiclesAtParkController = new VisualizeVehiclesAtParkController(company);
+        findParksNearbyController = new FindParksNearbyController(company);
+        return true;
+    }
 
     private List<String[]> loadParsedData(String filePath) {
         List<String[]> parsedData;
@@ -43,6 +76,10 @@ public class Facade implements Serviceable {
         return parsedData;
     }
 
+    private String formatInputCoordinate(double coordinate) {
+        return new BigDecimal(coordinate).setScale(10, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
+    }
+
     @Override
     public int addBicycles(String s) {
         List<String[]> parsedData = loadParsedData(s);
@@ -52,8 +89,10 @@ public class Facade implements Serviceable {
         try {
             return registerBicyclesController.registerBicycles(parsedData, s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
+        } finally {
+            Shutdown.shutdown();
         }
     }
 
@@ -66,7 +105,7 @@ public class Facade implements Serviceable {
         try {
             return registerElectricScootersController.registerElectricScooters(parsedData, s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -74,16 +113,21 @@ public class Facade implements Serviceable {
     @Override
     public int addParks(String s) {
         List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return 0;
-
-        try {
-            return registerParksController.registerParks(parsedData, s);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+        if (parsedData == null) {
             return 0;
         }
+        LOGGER.log(Level.INFO, "FILE LOADED");
 
+        prepare(true);
+        try {
+            int result = registerParksController.registerParks(parsedData, s);
+            Shutdown.shutdown();
+            return result;
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, "\nFailed to addParks:\n" + e.getMessage());
+            Shutdown.shutdown();
+            return 0;
+        }
     }
 
     @Override
@@ -106,7 +150,7 @@ public class Facade implements Serviceable {
         try {
             return registerPOIController.registerPOIs(parsedData,s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -119,7 +163,7 @@ public class Facade implements Serviceable {
         try {
             return registerUserController.registerClients(parsedData,s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -132,7 +176,7 @@ public class Facade implements Serviceable {
         try {
             return registerPathController.registerPaths(parsedData,s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "File with incorrect data.\n" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -174,10 +218,12 @@ public class Facade implements Serviceable {
     @Override
     public void getNearestParks(double v, double v1, String s) {
         getNearestParks(v, v1, s, 0);
+        Shutdown.shutdown();
     }
 
     @Override
     public void getNearestParks(double v, double v1, String s, int i) {
+        prepare(false);
         Coordinates location = new Coordinates(v, v1, 0);
         List<Park> parks = new ArrayList<>();
         List<String> outputLines = new ArrayList<>();
@@ -186,14 +232,16 @@ public class Facade implements Serviceable {
             parks = findParksNearbyController.findParksNearby(v, v1, i);
             for (Park park : parks) {
                 Coordinates parkCoord = park.getCoordinates();
-                outputLines.add(String.format("%f; %f; %.0f", parkCoord.getLatitude(), parkCoord.getLongitude(), parkCoord.distanceIgnoringHeight(location)));
+                outputLines.add(String.format("%s;%s;%.0f", formatInputCoordinate(parkCoord.getLatitude()), formatInputCoordinate(parkCoord.getLongitude()), parkCoord.distanceIgnoringHeight(location) * 1000));
             }
             Utils.writeToFile(outputLines, s);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to access the database when attempting to find nearby parks.");
+            e.printStackTrace();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to write the output file.");
         }
+        Shutdown.shutdown();
     }
 
     @Override
@@ -223,66 +271,66 @@ public class Facade implements Serviceable {
 
     @Override
     public int linearDistanceTo(double v, double v1, double v2, double v3) {
-        return 0;
+        return (int) new Coordinates(v, v1, 0).distanceIgnoringHeight(new Coordinates(v2, v3, 0));
     }
 
     @Override
     public int pathDistanceTo(double v, double v1, double v2, double v3) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long unlockBicycle(String s, String s1) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long unlockEscooter(String s, String s1) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long lockBicycle(String s, double v, double v1, String s1) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long lockBicycle(String s, String s1, String s2) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long lockEscooter(String s, double v, double v1, String s1) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long lockEscooter(String s, String s1, String s2) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int registerUser(String s, String s1, String s2, int i, int i1, String s3) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long unlockAnyEscootereAtPark(String s, String s1, String s2) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long unlockAnyEscootereAtParkForDestination(String s, String s1, double v, double v1, String s2) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int suggestEscootersToGoFromOneParkToAnother(String s, String s1, double v, double v1, String s2) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public long mostEnergyEfficientRouteBetweenTwoParks(String s, String s1, String s2, String s3, String s4, String s5) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 }

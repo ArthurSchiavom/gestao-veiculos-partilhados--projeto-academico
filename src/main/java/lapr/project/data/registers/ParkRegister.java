@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class ParkRegister {
     private final DataHandler dataHandler;
-    private static final double DEFAULT_NEAREST_PARKS_RADIUS_KILOMETERS = 1;
+    private static final double DEFAULT_NEAREST_PARKS_RADIUS_METERS = 1;
 
     public ParkRegister(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
@@ -375,7 +375,7 @@ public class ParkRegister {
     public HashMap<Park, List<Capacity>> retrieveParksInRadiusAndAvailability(Coordinates coords, double radius) throws SQLException {
         HashMap<Park, List<Capacity>> parksInRadius = new HashMap<>();
         if (radius == 0)
-            radius = DEFAULT_NEAREST_PARKS_RADIUS_KILOMETERS;
+            radius = DEFAULT_NEAREST_PARKS_RADIUS_METERS;
         for (Park park : fetchAllParks()) {
             if (coords.distanceIgnoringHeight(park.getCoordinates()) <= radius) {
                 parksInRadius.put(park, getListOfCapacities(park.getId()));
@@ -399,7 +399,7 @@ public class ParkRegister {
     public List<Park> retrieveParksInRadius(Coordinates coords, double radius) throws SQLException {
         List<Park> parksInRadius = new ArrayList<>();
         if (radius == 0)
-            radius = DEFAULT_NEAREST_PARKS_RADIUS_KILOMETERS;
+            radius = DEFAULT_NEAREST_PARKS_RADIUS_METERS;
         for (Park park : fetchAllParks()) {
             if (coords.distanceIgnoringHeight(park.getCoordinates()) <= radius) {
                 parksInRadius.add(park);

@@ -2,17 +2,18 @@ package lapr.project.data;
 
 import lapr.project.data.registers.Company;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Shutdown {
+    private static final Logger LOGGER = Logger.getLogger("ShutdownLog");
     private Shutdown() {}
-    private static boolean wasShutdownIssued = false;
 
-    public static void shutdown() {
-        wasShutdownIssued = true;
-        DataHandler dh = Company.getInstance().getDataHandler();
-        dh.closeAll();
-    }
-
-    public static boolean wasShutdownIssued() {
-        return wasShutdownIssued;
+    public static synchronized void shutdown() {
+        if (!Bootstrap.isAppBootedUp())
+            return;
+        Company.getInstance().getDataHandler().closeAll();
+        Bootstrap.setIsAppBootedUp(false);
+        LOGGER.log(Level.INFO, "Shutdown complete");
     }
 }
