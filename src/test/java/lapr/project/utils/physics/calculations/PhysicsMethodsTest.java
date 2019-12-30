@@ -96,7 +96,7 @@ public class PhysicsMethodsTest {
     }
 
     /**
-     * Test of calculateCaloriesBurnt method, of class PhysicsMethods.
+     * Test of calculateEnergySpent method, of class PhysicsMethods.
      */
     @Test
     public void calculateCaloriesBurntTest() {
@@ -108,8 +108,8 @@ public class PhysicsMethodsTest {
         double distanceMade = 300.0;
         double personMass = 75.0;
         double bicycleMass = 20.0;
-        Double expResult = 59558.65;
-        Double result = PhysicsMethods.calculateCaloriesBurnt(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, bicycleMass, new Coordinates(0.0, 0.0, 100), new Coordinates(1.0, 1.0, 300), 90);
+        Double expResult = 249193.13;
+        Double result = PhysicsMethods.calculateEnergySpent(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, bicycleMass, new Coordinates(0.0, 0.0, 100), new Coordinates(1.0, 1.0, 300), 90);
         assertEquals(expResult, result);
         Double notExpResult = 50000.0;
         assertNotEquals(notExpResult, result);
@@ -242,6 +242,17 @@ public class PhysicsMethodsTest {
         assertEquals(expResult2, result2, 0.001);
 
 
+    }
+
+    /**
+     * Test of convertJouleToCal method, of class PhysicsMethods.
+     */
+    @Test
+    public void testConvertJouleToCal() {
+        double energyJoule = 249193.12;
+        Double expResult = 59558.65;
+        Double result = PhysicsMethods.convertJouleToCal(energyJoule);
+        assertEquals(expResult, result);
     }
 
 }

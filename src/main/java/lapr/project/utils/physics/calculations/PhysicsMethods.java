@@ -157,7 +157,7 @@ public class PhysicsMethods {
      * @param windAngle - the angle made between the wind speed and the north pole
      * @return the ammount of calories burnt between two points
      */
-    public static Double calculateCaloriesBurnt(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, double personMass, double bicycleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
+    public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, double personMass, double bicycleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
 
         double time = calculateTimeSpent(velocity, distanceMade);
         double totalMass = personMass + bicycleMass;
@@ -175,9 +175,8 @@ public class PhysicsMethods {
         double totalPower = powerRollingResistance + powerClimbing + powerAirDrag;
 
         double energySpent = totalPower * time;
-        double energySpentCal = energySpent * CONVERT_JOULE_CAL;
 
-        return Math.round(energySpentCal * 100.0) / 100.0;
+        return Math.round(energySpent * 100.0) / 100.0;
     }
 
     /**
@@ -221,8 +220,23 @@ public class PhysicsMethods {
         return Math.round(realAutonomy * 100.0) / 100.0;
     }
     
+    /**
+     * Converts an angle in degrees to radians
+     * 
+     * @param angle - the angle in degrees
+     * @return an angle in radians
+     */
     public static Double convertDegreesToRadian(int angle) {
         return (angle*Math.PI)/180;
     }
 
+    /**
+     * Converts the value of the energy in joule to calories
+     * 
+     * @param energyJoule - the energy in joules
+     * @return the value of the energy in joule to calories
+     */
+    public static Double convertJouleToCal(double energyJoule) {
+        return Math.round(energyJoule * CONVERT_JOULE_CAL * 100.0) /100.0;
+    }
 }
