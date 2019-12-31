@@ -32,11 +32,11 @@ public class CreditCard {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ccNumber);
+        return Objects.hashCode(ccNumber);
     }
 
     @Override
     public String toString() {
-        return "ccNumber='" + ccNumber+"'";
+        return ccNumber;
     }
 }

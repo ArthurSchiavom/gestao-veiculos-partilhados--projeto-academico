@@ -42,7 +42,7 @@ class CreditCardTest {
     @Test
     void testToString() {
         System.out.println(cc.toString());
-        assertEquals("ccNumber='00000000000000'",cc.toString(),"toString");
+        assertEquals("00000000000000",cc.toString(),"toString");
     }
 
     @Test

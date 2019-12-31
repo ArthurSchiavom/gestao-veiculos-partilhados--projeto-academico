@@ -29,6 +29,6 @@ public class FindParksNearbyController {
      */
     public List<Park> findParksNearby(double lat, double lon, double radius) throws SQLException {
         // Note: the height is not used for distance calculations between parks
-        return company.getParkRegister().retrieveParksInRadius(new Coordinates(lat, lon, 0), radius);
+        return company.getParkAPI().retrieveParksInRadius(new Coordinates(lat, lon, 0), radius);
     }
 }

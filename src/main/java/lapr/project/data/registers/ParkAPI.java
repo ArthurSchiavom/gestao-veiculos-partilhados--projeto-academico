@@ -4,6 +4,7 @@
  */
 package lapr.project.data.registers;
 
+import com.sun.istack.internal.Nullable;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
@@ -23,11 +24,11 @@ import java.util.List;
 /**
  * This class registers and manipulates the data of all parks in data base
  */
-public class ParkRegister {
+public class ParkAPI {
     private final DataHandler dataHandler;
     private static final double DEFAULT_NEAREST_PARKS_RADIUS_METERS = 1;
 
-    public ParkRegister(DataHandler dataHandler) {
+    public ParkAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
@@ -409,30 +410,6 @@ public class ParkRegister {
     }
 
     /**
-     * Return True if returned the vehicle to the park with sucess, false otherwise
-     *
-     * @param parkId    Park id
-     * @param vehicleDescription Vehicle id
-     * @return
-     */
-    public void putVehicleInPark(String parkId, String vehicleDescription) throws SQLException {
-        AutoCloseableManager closeableManager = new AutoCloseableManager();
-        try {
-            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
-            closeableManager.addAutoCloseable(ps);
-            ps.setString(1, parkId);
-            ps.setString(2, vehicleDescription);
-            ps.executeUpdate();
-            dataHandler.commitTransaction();
-        } catch (SQLException e) {
-            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
-        } finally {
-            closeableManager.closeAutoCloseables();
-        }
-    }
-
-    /**
      * Fetches vehicles at a park.
      *
      * @param parkId ID of the park
@@ -452,9 +429,9 @@ public class ParkRegister {
             ResultSet rs = dataHandler.executeQuery(ps);
             closeableManager.addAutoCloseable(rs);
 
-            VehicleRegister vehicleRegister = Company.getInstance().getVehicleRegister();
+            VehicleAPI vehicleAPI = Company.getInstance().getVehicleAPI();
             while (rs.next()) {
-                Vehicle vehicle = vehicleRegister.fetchVehicle(rs.getString("vehicle_description"));
+                Vehicle vehicle = vehicleAPI.fetchVehicle(rs.getString("vehicle_description"));
                 if (vehicleClassType == Vehicle.class)
                     result.add(vehicleClassType.cast(vehicle));
                 else if (vehicle.getClass() == vehicleClassType) {
@@ -469,5 +446,52 @@ public class ParkRegister {
         }
 
         return result;
+    }
+
+    void unlockVehicleNoCommit(String vehicleDescription) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        int nLinesChanged = -1;
+        try {
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("DELETE FROM PARK_VEHICLE WHERE VEHICLE_DESCRIPTION = ?");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setString(1, vehicleDescription);
+            nLinesChanged = dataHandler.executeUpdate(preparedStatement);
+            if (nLinesChanged == 0)
+                throw new SQLException("Could not unlock vehicle because it is not locked");
+        } catch (SQLException e) {
+            if (nLinesChanged == 0)
+                throw e;
+
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
+
+    /**
+     * Find the park that a vehicle is locked in.
+     *
+     * @param vehicleDescription description of the vehicle to find
+     * @return (1) id of the park that the vehicle is in or (2) null if the vehicle is not in a park
+     * @throws SQLException if a database access error occurs.
+     */
+    @Nullable
+    public String fetchParkIdVehicleIsIn(String vehicleDescription) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement query = dataHandler.prepareStatement("select PARK_ID from PARK_VEHICLE where VEHICLE_DESCRIPTION = ?");
+            autoCloseableManager.addAutoCloseable(query);
+            query.setString(1, vehicleDescription);
+            ResultSet rs = dataHandler.executeQuery(query);
+            autoCloseableManager.addAutoCloseable(rs);
+            if (!rs.next())
+                return null;
+
+            return rs.getString("park_id");
+        } catch (SQLException e) {
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
     }
 }

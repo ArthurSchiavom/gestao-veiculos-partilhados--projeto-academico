@@ -4,6 +4,7 @@ import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Path;
 import lapr.project.model.Trip;
+import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
 
 import java.sql.PreparedStatement;
@@ -235,5 +236,55 @@ public class TripRegister {
             autoCloseableManager.closeAutoCloseables();
         }
         return dispVehicles;
+    }
+
+    private int registerNewTripNoCommit(String userEmail, String vehicleDescription, String startParkId) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("INSERT INTO TRIPS(start_time, user_email, vehicle_description, start_park_id)" +
+                    "VALUES(current_timestamp, ?, ?, ?)");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setString(1, userEmail);
+            preparedStatement.setString(2, vehicleDescription);
+            preparedStatement.setString(3, startParkId);
+
+            return dataHandler.executeUpdate(preparedStatement);
+        } catch (SQLException e) {
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
+
+    /**
+     * Unlocks a vehicle and starts a new trip for the user.
+     *
+     * @param username user unlocking the vehicle
+     * @param vehicleDescription vehicle being unlocked
+     */
+    public void startTrip(String username, String vehicleDescription) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        String parkId = null;
+        try {
+            Company company = Company.getInstance();
+            ParkAPI parkAPI = company.getParkAPI();
+            parkId = parkAPI.fetchParkIdVehicleIsIn(vehicleDescription);
+            if (parkId == null)
+                throw new SQLException("Vehicle is not in any park.");
+            Client client = company.getUsersAPI().fetchClientByUsername(username);
+
+            // 1. unlock
+            parkAPI.unlockVehicleNoCommit(vehicleDescription);
+            // 2. create trip
+            registerNewTripNoCommit(client.getEmail(), vehicleDescription, parkId);
+            // 3. set user status to is riding
+            company.getUsersAPI().updateClientIsRidingNoCommit(username, true);
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction();} catch (SQLException e2) {};
+            throw new SQLException("Failed to start a new trip: " + e.getMessage(), e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
     }
 }

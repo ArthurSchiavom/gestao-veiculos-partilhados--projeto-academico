@@ -69,7 +69,7 @@ public class RegisterParksController {
         }
 
         try {
-            company.getParkRegister().registerParks(id, description, coordinates, inputVoltage, inputCurrent, maxNumScooters, maxNumBikes);
+            company.getParkAPI().registerParks(id, description, coordinates, inputVoltage, inputCurrent, maxNumScooters, maxNumBikes);
             return id.size();
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database: \n" + e.getMessage());

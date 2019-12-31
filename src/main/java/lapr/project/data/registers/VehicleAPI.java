@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VehicleRegister {
+public class VehicleAPI {
     private final DataHandler dataHandler;
 
     private static final String DESCRIPTION_FIELD_NAME = "description";
@@ -30,7 +30,7 @@ public class VehicleRegister {
     private static final String ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME = "max_battery_capacity";
     private static final String ESCOOTER_ENGINE_POWER_FIELD_NAME = "engine_power";
 
-    public VehicleRegister(DataHandler dataHandler) {
+    public VehicleAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
@@ -193,9 +193,9 @@ public class VehicleRegister {
             eScootersInsert.setInt(5, enginePower);
             dataHandler.execute(eScootersInsert);
 
-            ParkRegister parkRegister = Company.getInstance().getParkRegister();
-            Park park = parkRegister.fetchParkByCoordinates(parkLatitude, parkLongitude);
-            parkRegister.putVehicleInPark(park.getId(), description);
+            ParkAPI parkAPI = Company.getInstance().getParkAPI();
+            Park park = parkAPI.fetchParkByCoordinates(parkLatitude, parkLongitude);
+            lockVehicle(park.getId(), description);
         } catch (SQLException e) {
             throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
         } finally {
@@ -245,5 +245,31 @@ public class VehicleRegister {
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }
-    }//-- Create new trip in java, where the user is known
+    }
+
+
+    /**
+     * Return True if returned the vehicle to the park with sucess, false otherwise
+     *
+     * @param parkId    Park id
+     * @param vehicleDescription Vehicle id
+     * @return
+     */
+    public void lockVehicle(String parkId, String vehicleDescription) throws SQLException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
+            closeableManager.addAutoCloseable(ps);
+            ps.setString(1, parkId);
+            ps.setString(2, vehicleDescription);
+            ps.executeUpdate();
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
+            throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
+        } finally {
+            closeableManager.closeAutoCloseables();
+        }
+    }
+
 }

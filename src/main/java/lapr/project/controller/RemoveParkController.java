@@ -12,6 +12,6 @@ public class RemoveParkController {
     }
 
     public void removePark(String parkId) throws SQLException {
-        company.getParkRegister().setAvailability(parkId, false);
+        company.getParkAPI().setAvailability(parkId, false);
     }
 }

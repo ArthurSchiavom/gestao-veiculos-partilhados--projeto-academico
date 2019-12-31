@@ -8,10 +8,10 @@ import lapr.project.data.DataHandler;
 public class Company {
     private static Company instance = null;
     private final DataHandler dataHandler;
-    private final ParkRegister parkRegister;
-    private final UsersRegister usersRegister;
+    private final ParkAPI parkAPI;
+    private final UsersAPI usersAPI;
     private final TripRegister tripRegister;
-    private final VehicleRegister vehicleRegister;
+    private final VehicleAPI vehicleAPI;
     private final PathRegister pathRegister;
     private final PoiRegister poiRegister;
 
@@ -22,10 +22,10 @@ public class Company {
         instance = this;
         this.dataHandler = dataHandler;
 
-        this.parkRegister =new ParkRegister(dataHandler);
-        this.usersRegister = new UsersRegister(dataHandler);
+        this.parkAPI =new ParkAPI(dataHandler);
+        this.usersAPI = new UsersAPI(dataHandler);
         this.tripRegister = new TripRegister(dataHandler);
-        this.vehicleRegister = new VehicleRegister(dataHandler);
+        this.vehicleAPI = new VehicleAPI(dataHandler);
         this.pathRegister = new PathRegister(dataHandler);
         this.poiRegister = new PoiRegister(dataHandler);
     }
@@ -53,20 +53,20 @@ public class Company {
         return dataHandler;
     }
 
-    public ParkRegister getParkRegister() {
-        return parkRegister;
+    public ParkAPI getParkAPI() {
+        return parkAPI;
     }
 
-    public UsersRegister getUsersRegister() {
-        return usersRegister;
+    public UsersAPI getUsersAPI() {
+        return usersAPI;
     }
 
     public TripRegister getTripRegister() {
         return tripRegister;
     }
 
-    public VehicleRegister getVehicleRegister() {
-        return vehicleRegister;
+    public VehicleAPI getVehicleAPI() {
+        return vehicleAPI;
     }
     
     public PathRegister getPathRegister() {

@@ -57,7 +57,7 @@ public class RegisterBicyclesController {
         }
 
         try {
-            company.getVehicleRegister().registerBicycles(aerodynamicCoefficient, frontalArea, weight,
+            company.getVehicleAPI().registerBicycles(aerodynamicCoefficient, frontalArea, weight,
                     size, description, parkLatitude, parkLongitude);
             return aerodynamicCoefficient.size();
         } catch (SQLException e) {

@@ -2,11 +2,9 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
-import lapr.project.model.Path;
 import lapr.project.model.users.Client;
 import lapr.project.model.users.CreditCard;
-import lapr.project.model.vehicles.Bicycle;
-import lapr.project.utils.physics.calculations.PhysicsMethods;
+
 import java.sql.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,12 +13,12 @@ import java.util.logging.Logger;
 /**
  * Handles the users and its subclasses
  */
-public class UsersRegister {
+public class UsersAPI {
     private DataHandler dataHandler;
     private static float DEFAULT_VALUE_TO_PAY = 0;
     private static final Logger LOGGER = Logger.getLogger("usersRegisterLogger");
 
-    public UsersRegister(DataHandler dataHandler) {
+    public UsersAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
@@ -46,44 +44,46 @@ public class UsersRegister {
     }
 
     /**
-     * Fetches a client object from the oracle sql table
+     * Fetches a client from the database.
      *
-     * @param email email of the client
-     * @return client object
+     * @param username client's username
+     * @return (1) client object or (2) null if no such client
      */
-    public Client fetchClient(String email) {
+    public Client fetchClientByUsername(String username) {
         PreparedStatement stm = null;
         ResultSet resultSet = null;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            stm = dataHandler.prepareStatement("SELECT * FROM clients where lower(user_email) like ?"); // capital letters do not matter in emails
+            stm = dataHandler.prepareStatement("SELECT * FROM registered_users where USER_NAME = ?");
             autoCloseableManager.addAutoCloseable(stm);
-            stm.setString( 1, email);
+
+            stm.setString( 1, username);
             resultSet = dataHandler.executeQuery(stm);
             autoCloseableManager.addAutoCloseable(resultSet);
-            if (resultSet == null || !resultSet.next()) {
+            if (!resultSet.next())
+                return null;
+
+            String password = resultSet.getString( "user_password");
+            String email = resultSet.getString("user_email");
+
+            stm = dataHandler.prepareStatement("SELECT * FROM clients where USER_EMAIL like ?"); // capital letters do not matter in emails
+            autoCloseableManager.addAutoCloseable(stm);
+            stm.setString( 1, email);
+
+            resultSet = dataHandler.executeQuery(stm);
+            autoCloseableManager.addAutoCloseable(resultSet);
+            if (!resultSet.next()) {
                 return null;
             }
+
             int points = resultSet.getInt( "points");
             String creditCardNumber = resultSet.getString( "visa");
             int height =  resultSet.getInt( "height_cm");
             int weight =  resultSet.getInt( "weight_kg");
             char gender = resultSet.getString( "gender").charAt(0);
             float cyclingAvgSpeed = resultSet.getFloat( "cycling_average_speed");
-
-            // get password of client
-            stm = dataHandler.prepareStatement("SELECT * FROM registered_users where user_email=?");
-            autoCloseableManager.addAutoCloseable(stm);
-
-            stm.setString( 1, email);
-            resultSet = dataHandler.executeQuery(stm);
-            autoCloseableManager.addAutoCloseable(resultSet);
-            if (resultSet == null || !resultSet.next())
-                return null;
-
-            String password = resultSet.getString( "user_password");
-            String username = resultSet.getString( "user_name");
-            return new Client(email,username ,password, points, height, weight, gender,cyclingAvgSpeed, new CreditCard(creditCardNumber));
+            boolean isRiding = resultSet.getBoolean("is_riding");
+            return new Client(email, username, password, points, height, weight, gender, cyclingAvgSpeed, isRiding, new CreditCard(creditCardNumber));
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {
@@ -92,19 +92,6 @@ public class UsersRegister {
         return null;
     }
 
-    /**
-     * Inserts a client user into the sql database
-     *
-     * @param email email of the user
-     * @param amountLeftToPay total amount left to pay
-     * @param creditCardSecret 3 last digits of the credit card
-     * @param age age of the client
-     * @param height height of the client
-     * @param weight weight of the client
-     * @param gender gender of the client
-     * @param creditCardNumber credit card number of the client
-     * @param creditCardExpiration credit card expiration date of the client
-     */
     private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
@@ -145,4 +132,29 @@ public class UsersRegister {
 //        }
 //        return totalCaloryLoss;
 //    }
+
+    int updateClientIsRidingNoCommit(String username, boolean newValue) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        int isRidingInt = newValue ? 1 : 0;
+        Client client = null;
+        try {
+            client = fetchClientByUsername(username);
+            if (client == null)
+                throw new SQLException("No such client");
+
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("update clients set is_riding = ? where user_email = ?");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setInt(1, isRidingInt);
+            preparedStatement.setString(2, client.getEmail());
+
+            return dataHandler.executeUpdate(preparedStatement);
+        } catch (SQLException e) {
+            if (client == null)
+                throw e;
+
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
 }

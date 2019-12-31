@@ -70,7 +70,7 @@ public class RegisterElectricScootersController {
         }
 
         try {
-            company.getVehicleRegister().registerElectricScooters(aerodynamicCoefficient, frontalArea, weight, type, description, maxBatteryCapacity, actualBatteryCapacity, enginePower, parkLatitude, parkLongitude);
+            company.getVehicleAPI().registerElectricScooters(aerodynamicCoefficient, frontalArea, weight, type, description, maxBatteryCapacity, actualBatteryCapacity, enginePower, parkLatitude, parkLongitude);
             return aerodynamicCoefficient.size();
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database");
