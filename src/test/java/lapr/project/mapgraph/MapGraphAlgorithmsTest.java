@@ -4,8 +4,6 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import lapr.project.mapgraph.MapGraphAlgorithms;
-import lapr.project.mapgraph.Graph;
 
 /**
  *
@@ -61,19 +59,19 @@ public class MapGraphAlgorithmsTest {
     public void testBreadthFirstSearch() {
         System.out.println("Test BreadthFirstSearch");
 
-        assertEquals(true, MapGraphAlgorithms.BreadthFirstSearch(completeMap, "LX")==null);
+        assertEquals(true, MapGraphAlgorithms.breadthFirstSearch(completeMap, "LX")==null);
 
-        LinkedList<String> path = MapGraphAlgorithms.BreadthFirstSearch(incompleteMap, "Faro");
+        LinkedList<String> path = MapGraphAlgorithms.breadthFirstSearch(incompleteMap, "Faro");
 
         assertEquals(true, path.size()==1);
 
         Iterator<String> it = path.iterator();
         assertEquals(true, it.next().compareTo("Faro")==0);
 
-        path = MapGraphAlgorithms.BreadthFirstSearch(incompleteMap, "Porto");
+        path = MapGraphAlgorithms.breadthFirstSearch(incompleteMap, "Porto");
         assertEquals(true, path.size()==7);
 
-        path = MapGraphAlgorithms.BreadthFirstSearch(incompleteMap, "Viseu");
+        path = MapGraphAlgorithms.breadthFirstSearch(incompleteMap, "Viseu");
         assertEquals(true, path.size()==3);
     }
 
@@ -86,18 +84,18 @@ public class MapGraphAlgorithmsTest {
 
         LinkedList<String> path;
 
-        assertEquals(true, MapGraphAlgorithms.DepthFirstSearch(completeMap, "LX")==null);
+        assertEquals(true, MapGraphAlgorithms.depthFirstSearch(completeMap, "LX")==null);
 
-        path = MapGraphAlgorithms.DepthFirstSearch(incompleteMap, "Faro");
+        path = MapGraphAlgorithms.depthFirstSearch(incompleteMap, "Faro");
         assertEquals(true, path.size()==1);
 
         Iterator<String> it = path.iterator();
         assertEquals(true, it.next().compareTo("Faro")==0);
 
-        path = MapGraphAlgorithms.DepthFirstSearch(incompleteMap, "Porto");
+        path = MapGraphAlgorithms.depthFirstSearch(incompleteMap, "Porto");
         assertEquals(true, path.size()==7);
 
-        path = MapGraphAlgorithms.DepthFirstSearch(incompleteMap, "Viseu");
+        path = MapGraphAlgorithms.depthFirstSearch(incompleteMap, "Viseu");
         assertEquals(true, path.size()==3);
 
         it = path.iterator();

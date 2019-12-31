@@ -10,6 +10,10 @@ import java.util.*;
  * @author DEI-ESINF
  */
 public class MapGraphAlgorithms {
+
+    private MapGraphAlgorithms() {
+    }
+
     /**
      * Performs breadth-first search of a Graph starting in a Vertex
      *
@@ -18,7 +22,7 @@ public class MapGraphAlgorithms {
      * search
      * @return qbfs a queue with the vertices of breadth-first search
      */
-    public static <V, E> LinkedList<V> BreadthFirstSearch(Graph<V, E> g, V vert) {
+    public static <V, E> LinkedList<V> breadthFirstSearch(Graph<V, E> g, V vert) {
         LinkedList<V> result = new LinkedList<>();
         LinkedList<V> aux = new LinkedList<>();
         result.add(vert);
@@ -47,11 +51,11 @@ public class MapGraphAlgorithms {
      * @param vOrig Vertex of graph g that will be the source of the search
      * @param qdfs queue with vertices of depth-first search
      */
-    private static <V, E> void DepthFirstSearch(Graph<V, E> g, V vOrig, LinkedList<V> qdfs) {
+    private static <V, E> void depthFirstSearch(Graph<V, E> g, V vOrig, LinkedList<V> qdfs) {
         qdfs.add(vOrig);
         for (V adj : g.adjVertices(vOrig)) {
             if (!qdfs.contains(adj)) {
-                DepthFirstSearch(g, adj, qdfs);
+                depthFirstSearch(g, adj, qdfs);
             }
         }
     }
@@ -62,10 +66,10 @@ public class MapGraphAlgorithms {
      * search
      * @return qdfs a queue with the vertices of depth-first search
      */
-    public static <V, E> LinkedList<V> DepthFirstSearch(Graph<V, E> g, V vert) {
+    public static <V, E> LinkedList<V> depthFirstSearch(Graph<V, E> g, V vert) {
         LinkedList<V> result = new LinkedList<>();
         try {
-            DepthFirstSearch(g, vert, result);
+            depthFirstSearch(g, vert, result);
         } catch (NullPointerException exception) {
             return null;
         }
