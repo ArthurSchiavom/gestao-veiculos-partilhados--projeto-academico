@@ -131,8 +131,6 @@
                             <value>org.sonar.java.jacoco.JUnitListener</value>
                         </property>
                     </properties>
-                    <!-- Added this line cause according to https://stackoverflow.com/questions/55632614/maven-surefire-plugin-crahsing-jvm-on-java-11-corrupted-stdout-by-directly-writ it crashes -->
-                    <forkCount>0</forkCount>
                 </configuration>
             </plugin>
 
