@@ -2,17 +2,14 @@ package lapr.project.controller;
 
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import lapr.project.model.Coordinates;
-import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.model.vehicles.VehicleType;
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
-import oracle.jdbc.proxy.annotation.Pre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

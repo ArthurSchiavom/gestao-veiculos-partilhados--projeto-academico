@@ -3,6 +3,7 @@ package lapr.project.controller;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

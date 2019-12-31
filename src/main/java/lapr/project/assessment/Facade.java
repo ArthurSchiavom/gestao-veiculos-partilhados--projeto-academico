@@ -82,12 +82,8 @@ public class Facade implements Serviceable {
 
     @Override
     public int addBicycles(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return 0;
-
         try {
-            return registerBicyclesController.registerBicycles(parsedData, s);
+            return registerBicyclesController.registerBicycles(s);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;

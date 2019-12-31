@@ -1,7 +1,10 @@
 package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
+import lapr.project.utils.InvalidFileDataException;
+import lapr.project.utils.Utils;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +24,19 @@ public class RegisterBicyclesController {
         this.company = company;
     }
 
-    public int registerBicycles(List<String[]> parsedData, String fileName) throws InvalidFileDataException, SQLException {
-        List<Integer> weight = new ArrayList<>();
-        List<Float> aerodynamicCoefficient = new ArrayList<>();
+    public int registerBicycles(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException {
         List<Float> frontalArea = new ArrayList<>();
         List<Integer> size = new ArrayList<>();
-        List<String> description = new ArrayList<>();
+        List<Integer> weight = new ArrayList<>();
         List<Double> parkLatitude = new ArrayList<>();
+        List<Float> aerodynamicCoefficient = new ArrayList<>();
+        List<String> description = new ArrayList<>();
         List<Double> parkLongitude = new ArrayList<>();
         int i = 0;
         try {
-            String[] line = parsedData.get(0);
-            if (line.length != 7 || !line[0].equals("bicycle description") || !line[1].equals("weight") || !line[2].equals("park latitude")
-                    || !line[3].equals("park longitude") || !line[4].equals("aerodynamic coefficient") || !line[5].equals("frontal area")
-                    || !line[6].equals("wheel size"))
-                throw new InvalidFileDataException("Header is different from expected");
+            List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
+                    , "bicycle description;weight;park latitude;park longitude;aerodynamic coefficient;frontal area;wheel size");
+            String[] line;
 
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
@@ -51,9 +52,11 @@ public class RegisterBicyclesController {
                 parkLongitude.add(Double.parseDouble(line[BICYCLES_PARK_LON_INDEX]));
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("File not found - " + filePath);
         }
 
         try {

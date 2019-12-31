@@ -2,6 +2,7 @@ package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
+import lapr.project.utils.InvalidFileDataException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
