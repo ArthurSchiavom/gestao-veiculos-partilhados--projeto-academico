@@ -28,11 +28,11 @@ public class UtilsTest {
             fail();
         }
 
-        try{
+        try {
             List<String[]> result = Utils.parseDataFile("lol", ";", "#");
             fail("File not found exception not thrown");
         } catch (FileNotFoundException e) {
-            assertTrue(true,"File not found exception thrown");
+            assertTrue(true, "File not found exception thrown");
         }
     }
 
@@ -120,6 +120,42 @@ public class UtilsTest {
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             fail();
+        }
+    }
+
+    @Test
+    void parseDataFileAndValidateHeaderTest() {
+        try {
+            List<String[]> result = null;
+            try {
+                result = Utils.parseDataFileAndValidateHeader("testFiles/parseDataFileAndValidateHeaderTest.txt", ";", "#", "someHeader");
+            } catch (InvalidFileDataException e) {
+                fail();
+            }
+            String[] line = {"Data1", "asoudhwData2", "Data3"};
+            String[] line2 = {"Data4", "asoudhwData5", "Data6"};
+            String[] line3 = {"Data7", "asoudhwData8", "Data9"};
+            Utils.areArraysEqual(line, result.get(0));
+            Utils.areArraysEqual(line2, result.get(1));
+            Utils.areArraysEqual(line3, result.get(2));
+        } catch (FileNotFoundException e) {
+            fail();
+        }
+
+        try {
+            Utils.parseDataFileAndValidateHeader("testFiles/parseDataFileAndValidateHeaderTestInvalid.txt", ";", "#", "someHeader");
+            fail();
+        } catch (InvalidFileDataException e) {
+            // pass;
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            List<String[]> result = Utils.parseDataFile("fail", ";", "#");
+            fail("File not found exception not thrown");
+        } catch (FileNotFoundException e) {
+            // pass
         }
     }
 }
