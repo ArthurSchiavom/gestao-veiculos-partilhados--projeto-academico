@@ -475,7 +475,6 @@ public class ParkAPI {
      * @return (1) id of the park that the vehicle is in or (2) null if the vehicle is not in a park
      * @throws SQLException if a database access error occurs.
      */
-    @Nullable
     public String fetchParkIdVehicleIsIn(String vehicleDescription) throws SQLException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
