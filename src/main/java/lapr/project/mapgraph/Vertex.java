@@ -48,7 +48,6 @@ public class Vertex<V, E> {
         
         return null;
     }
-    
     public void remAdjVert(V vAdj){ outVerts.remove(vAdj); }
     
     public Edge<V,E> getEdge(V vAdj){ return outVerts.get(vAdj); }
