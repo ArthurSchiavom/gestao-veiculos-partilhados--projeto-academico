@@ -20,7 +20,7 @@ public class VertexTest {
      * Test of getKey method, of class Vertex.
      */
     @Test
-    public void testGetKey() {
+    public void GetKeyTest() {
         System.out.println("getKey");
 
         int expResult = -1;
@@ -35,7 +35,7 @@ public class VertexTest {
      * Test of setKey method, of class Vertex.
      */
     @Test
-    public void testSetKey() {
+    public void SetKeyTest() {
         System.out.println("setKey");
         int k = 2;
         instance.setKey(k);
@@ -47,7 +47,7 @@ public class VertexTest {
      * Test of getElement method, of class Vertex.
      */
     @Test
-    public void testGetElement() {
+    public void GetElementTest() {
         System.out.println("getElement");
 
         String expResult = null;
@@ -63,7 +63,7 @@ public class VertexTest {
      * Test of setElement method, of class Vertex.
      */
     @Test
-    public void testSetElement() {
+    public void SetElementTest() {
         System.out.println("setElement");
         String vInf = "Vertex1";
         instance.setElement(vInf);
@@ -74,7 +74,7 @@ public class VertexTest {
      * Test of addAdjVert method, of class Vertex.
      */
     @Test
-    public void testAddAdjVert() {
+    public void AddAdjVertTest() {
         System.out.println("addAdjVert");
 
         assertEquals(true, (instance.numAdjVerts()==0));
@@ -94,7 +94,7 @@ public class VertexTest {
      * Test of getAdjVert method, of class Vertex.
      */
     @Test
-    public void testGetAdjVert() {
+    public void GetAdjVertTest() {
         System.out.println("getAdjVert");
 
         Edge<String,Integer> edge = new Edge<>();
@@ -110,7 +110,7 @@ public class VertexTest {
      * Test of remAdjVert method, of class Vertex.
      */
     @Test
-    public void testRemAdjVert() {
+    public void RemAdjVertTest() {
         System.out.println("remAdjVert");
 
         Edge<String,Integer> edge1 = new Edge<>();
@@ -133,7 +133,7 @@ public class VertexTest {
      * Test of getEdge method, of class Vertex.
      */
     @Test
-    public void testGetEdge() {
+    public void GetEdgeTest() {
         System.out.println("getEdge");
 
         Edge<String,Integer> edge1 = new Edge<>();
@@ -153,7 +153,7 @@ public class VertexTest {
      * Test of numAdjVerts method, of class Vertex.
      */
     @Test
-    public void testNumAdjVerts() {
+    public void NumAdjVertsTest() {
         System.out.println("numAdjVerts");
 
         Edge<String,Integer> edge1 = new Edge<>();
@@ -181,7 +181,7 @@ public class VertexTest {
      * Test of getAllAdjVerts method, of class Vertex.
      */
     @Test
-    public void testGetAllAdjVerts() {
+    public void GetAllAdjVertsTest() {
         System.out.println("getAllAdjVerts");
 
         Iterator<String> itVerts = instance.getAllAdjVerts().iterator();
@@ -216,7 +216,7 @@ public class VertexTest {
      * Test of getAllOutEdges method, of class Vertex.
      */
     @Test
-    public void testGetAllOutEdges() {
+    public void GetAllOutEdgesTest() {
         System.out.println("getAllOutEdges");
 
         Iterator<Edge<String,Integer>> itEdges = instance.getAllOutEdges().iterator();
@@ -251,7 +251,7 @@ public class VertexTest {
      * Test of equals method, of class Vertex.
      */
     @Test
-    public void testEquals() {
+    public void EqualsTest() {
         System.out.println("equals");
 
         instance.setKey(1);
@@ -285,7 +285,7 @@ public class VertexTest {
      * Test of clone method, of class Vertex.
      */
     @Test
-    public void testClone() {
+    public void CloneTest() {
         System.out.println("clone");
 
         Edge<String,Integer> edge1 = new Edge<>();
@@ -323,7 +323,7 @@ public class VertexTest {
      * Test of toString method, of class Vertex.
      */
     @Test
-    public void testToString() {
+    public void ToStringTest() {
         System.out.println("toString");
 
         instance.setKey(1);

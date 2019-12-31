@@ -17,7 +17,7 @@ public class GraphTest {
     }
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEachTest() {
 
     }
 
@@ -25,7 +25,7 @@ public class GraphTest {
      * Test of numVertices method, of class Graph.
      */
     @Test
-    public void testNumVertices() {
+    public void NumVerticesTest() {
         System.out.println("Test numVertices");
 
         assertEquals(true, (instance.numVertices()==0));
@@ -47,7 +47,7 @@ public class GraphTest {
      * Test of vertices method, of class Graph.
      */
     @Test
-    public void testVertices() {
+    public void VerticesTest() {
         System.out.println("Test vertices");
 
         Iterator<String> itVerts = instance.vertices().iterator();
@@ -77,7 +77,7 @@ public class GraphTest {
      * Test of numEdges method, of class Graph.
      */
     @Test
-    public void testNumEdges() {
+    public void NumEdgesTest() {
         System.out.println("Test numEdges");
 
         assertEquals(true, (instance.numEdges()==0));
@@ -99,7 +99,7 @@ public class GraphTest {
      * Test of edges method, of class Graph.
      */
     @Test
-    public void testEdges() {
+    public void EdgesTest() {
         System.out.println("Test Edges");
 
         Iterator<Edge<String,String>> itEdge = instance.edges().iterator();
@@ -140,7 +140,7 @@ public class GraphTest {
      * Test of getEdge method, of class Graph.
      */
     @Test
-    public void testGetEdge() {
+    public void GetEdgeTest() {
         System.out.println("Test getEdge");
 
         instance.insertEdge("A","B","Edge1",6);
@@ -167,7 +167,7 @@ public class GraphTest {
      * Test of endVertices method, of class Graph.
      */
     @Test
-    public void testEndVertices() {
+    public void EndVerticesTest() {
         System.out.println("Test endVertices");
 
         instance.insertEdge("A","B","Edge1",6);
@@ -195,7 +195,7 @@ public class GraphTest {
      * Test of opposite method, of class Graph.
      */
     @Test
-    public void testOpposite() {
+    public void OppositeTest() {
         System.out.println("Test opposite");
 
         instance.insertVertex("A");
@@ -230,7 +230,7 @@ public class GraphTest {
      * Test of outDegree method, of class Graph.
      */
     @Test
-    public void testOutDegree() {
+    public void OutDegreeTest() {
         System.out.println("Test outDegree");
 
         instance.insertVertex("A");
@@ -265,7 +265,7 @@ public class GraphTest {
      * Test of inDegree method, of class Graph.
      */
     @Test
-    public void testInDegree() {
+    public void InDegreeTest() {
         System.out.println("Test inDegree");
 
         instance.insertVertex("A");
@@ -300,7 +300,7 @@ public class GraphTest {
      * Test of outgoingEdges method, of class Graph.
      */
     @Test
-    public void testOutgoingEdges() {
+    public void OutgoingEdgesTest() {
         System.out.println(" Test outgoingEdges");
 
         instance.insertVertex("A");
@@ -340,7 +340,7 @@ public class GraphTest {
      * Test of incomingEdges method, of class Graph.
      */
     @Test
-    public void testIncomingEdges() {
+    public void IncomingEdgesTest() {
 
         instance.insertVertex("A");
         instance.insertVertex("B");
@@ -384,7 +384,7 @@ public class GraphTest {
      * Test of insertVertex method, of class Graph.
      */
     @Test
-    public void testInsertVertex() {
+    public void InsertVertexTest() {
         System.out.println("Test insertVertex");
 
         instance.insertVertex("A");
@@ -406,7 +406,7 @@ public class GraphTest {
      * Test of insertEdge method, of class Graph.
      */
     @Test
-    public void testInsertEdge() {
+    public void InsertEdgeTest() {
         System.out.println("Test insertEdge");
 
         assertEquals(true, (instance.numEdges()==0));
@@ -447,7 +447,7 @@ public class GraphTest {
      * Test of removeVertex method, of class Graph.
      */
     @Test
-    public void testRemoveVertex() {
+    public void RemoveVertexTest() {
         System.out.println("Test removeVertex");
 
         instance.insertVertex("A");
@@ -489,7 +489,7 @@ public class GraphTest {
      * Test of removeEdge method, of class Graph.
      */
     @Test
-    public void testRemoveEdge() {
+    public void RemoveEdgeTest() {
         System.out.println("Test removeEdge");
 
         assertEquals(true, (instance.numEdges()==0));
@@ -530,7 +530,7 @@ public class GraphTest {
      * Test of toString method, of class Graph.
      */
     @Test
-    public void testClone() {
+    public void CloneTest() {
         System.out.println("Test Clone");
 
         instance.insertEdge("A","B","Edge1",6);
@@ -555,7 +555,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testEquals() {
+    public void EqualsTest() {
         System.out.println("Test Equals");
 
         instance.insertEdge("A","B","Edge1",6);
@@ -588,7 +588,7 @@ public class GraphTest {
      * Test of toString method, of class Graph.
      */
     @Test
-    public void testToString() {
+    public void ToStringTest() {
 
         System.out.println(instance);
     }

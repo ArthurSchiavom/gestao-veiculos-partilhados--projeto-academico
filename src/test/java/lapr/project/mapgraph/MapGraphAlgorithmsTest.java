@@ -15,7 +15,7 @@ public class MapGraphAlgorithmsTest {
     Graph<String,String> incompleteMap = new Graph<>(false);
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEachTest() {
         completeMap.insertVertex("Porto");
         completeMap.insertVertex("Braga");
         completeMap.insertVertex("Vila Real");
@@ -56,7 +56,7 @@ public class MapGraphAlgorithmsTest {
      * Test of BreadthFirstSearch method, of class MapGraphAlgorithms.
      */
     @Test
-    public void testBreadthFirstSearch() {
+    public void BreadthFirstSearchTest() {
         System.out.println("Test BreadthFirstSearch");
 
         assertEquals(true, MapGraphAlgorithms.breadthFirstSearch(completeMap, "LX")==null);
@@ -79,7 +79,7 @@ public class MapGraphAlgorithmsTest {
      * Test of DepthFirstSearch method, of class MapGraphAlgorithms.
      */
     @Test
-    public void testDepthFirstSearch() {
+    public void DepthFirstSearchTest() {
         System.out.println("Test of DepthFirstSearch");
 
         LinkedList<String> path;
@@ -108,7 +108,7 @@ public class MapGraphAlgorithmsTest {
      * Test of allPaths method, of class MapGraphAlgorithms.
      */
     @Test
-    public void testAllPaths() {
+    public void AllPathsTest() {
         System.out.println("Test of all paths");
 
         ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
@@ -127,7 +127,7 @@ public class MapGraphAlgorithmsTest {
      * Test of shortestPath method, of class MapGraphAlgorithms.
      */
     @Test
-    public void testShortestPath() {
+    public void ShortestPathTest() {
         System.out.println("Test of shortest path");
 
         LinkedList<String> shortPath = new LinkedList<String>();
@@ -197,7 +197,7 @@ public class MapGraphAlgorithmsTest {
      * Test of shortestPaths method, of class MapGraphAlgorithms.
      */
     @Test
-    public void testShortestPaths() {
+    public void ShortestPathsTest() {
         System.out.println("Test of shortest path");
 
         ArrayList <LinkedList<String>> paths = new ArrayList<>();
@@ -233,7 +233,7 @@ public class MapGraphAlgorithmsTest {
     }
 
     @Test
-    public void shortestPathWithConstraintGreedy() {
+    public void shortestPathWithConstraintGreedyTest() {
         System.out.println("Test of shortest path with constraints (greedy method)");
 
         LinkedList<String> shortPath = new LinkedList<>();
@@ -245,7 +245,7 @@ public class MapGraphAlgorithmsTest {
     }
 
     @Test
-    public void shortestPathWithConstraint() {
+    public void shortestPathWithConstraintTest() {
         System.out.println("Test of shortest path with constraints");
 
         LinkedList<String> shortPath = new LinkedList<>();
