@@ -63,7 +63,7 @@ public class RegisterParksController {
                 inputCurrent.add(Float.parseFloat(parsedData.get(i)[INPUT_CURRENT_INDEX]));
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
+            ;throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
         }
