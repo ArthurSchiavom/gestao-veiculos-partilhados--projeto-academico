@@ -101,6 +101,7 @@ public class RegisterParksControllerTest {
         testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile.txt");
         testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile2.txt");
         testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile3.txt");
+        testInvalidFileDataExceptionCase("testFiles/parksBadHeader.txt");
         // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
     }
 
