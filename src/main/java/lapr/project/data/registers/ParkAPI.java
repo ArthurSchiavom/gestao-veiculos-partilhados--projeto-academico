@@ -4,7 +4,6 @@
  */
 package lapr.project.data.registers;
 
-import com.sun.istack.internal.Nullable;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
