@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UtilsTest {
+public class TestUtilsTest {
 
     @Test
     void parseDataFileTest() {
