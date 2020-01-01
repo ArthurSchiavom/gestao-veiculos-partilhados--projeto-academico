@@ -40,15 +40,9 @@ class RegisterPathControllerTest {
 
     @Test
     void registerPathsTest() {
-        List<String[]> parsedData = null;
         try {
-            parsedData = Utils.parseDataFile("testFiles/path.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present");}
-        assertNotNull(parsedData);
-        // The controller is using the mock DataHandler, which will return the mock PreparedStatement
-        try {
-            int result = controller.registerPaths(parsedData, "testFiles/path.txt");
-            assertEquals(2, result,"should be 2 but was: "+result);
+            int result = controller.registerPaths("testFiles/path.txt");
+            assertEquals(2, result,"should be 2 but was: " + result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             fail();

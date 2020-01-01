@@ -40,8 +40,6 @@ public class RegisterBicyclesController {
 
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
 
                 aerodynamicCoefficient.add(Float.parseFloat(line[BICYCLES_AERODYNAMIC_COEFFICIENT_INDEX]));
                 weight.add(Integer.parseInt(line[BICYCLES_WEIGHT_INDEX]));

@@ -104,15 +104,9 @@ public class Facade implements Serviceable {
 
     @Override
     public int addParks(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null) {
-            return 0;
-        }
-        LOGGER.log(Level.INFO, "FILE LOADED");
-
         prepare(true);
         try {
-            int result = registerParksController.registerParks(parsedData, s);
+            int result = registerParksController.registerParks(s);
             Shutdown.shutdown();
             return result;
         } catch (Exception e) {
@@ -135,12 +129,8 @@ public class Facade implements Serviceable {
 
     @Override
     public int addPOIs(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return 0;
-
         try {
-            return registerPOIController.registerPOIs(parsedData,s);
+            return registerPOIController.registerPOIs(s);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
@@ -149,11 +139,8 @@ public class Facade implements Serviceable {
 
     @Override
     public int addUsers(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return 0;
         try {
-            return registerUserController.registerClients(parsedData,s);
+            return registerUserController.registerClients(s);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
@@ -162,11 +149,8 @@ public class Facade implements Serviceable {
 
     @Override
     public int addPaths(String s) {
-        List<String[]> parsedData = loadParsedData(s);
-        if (parsedData == null)
-            return 0;
         try {
-            return registerPathController.registerPaths(parsedData,s);
+            return registerPathController.registerPaths(s);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
             return 0;

@@ -48,8 +48,6 @@ public class RegisterElectricScootersController {
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
 
                 weight.add(Integer.parseInt(line[SCOOTERS_WEIGHT_INDEX]));
                 aerodynamicCoefficient.add(Float.parseFloat(line[SCOOTERS_AERODYNAMIC_COEFFICIENT_INDEX]));

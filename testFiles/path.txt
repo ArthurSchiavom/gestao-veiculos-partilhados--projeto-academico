@@ -6,5 +6,4 @@
 #wind speed - the wind speed in m/s with one decimal place e.g. 1. When not given, consider 0
 latitudeA;longitudeA;latitudeB;longitudeB;kinetic coefficient;wind direction;wind speed
 30;33;25;26;7;;4
-
 31;32;24;27;1;2;

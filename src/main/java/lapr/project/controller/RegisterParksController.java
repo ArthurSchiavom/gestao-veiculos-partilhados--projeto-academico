@@ -3,7 +3,9 @@ package lapr.project.controller;
 import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.utils.InvalidFileDataException;
+import lapr.project.utils.Utils;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +27,10 @@ public class RegisterParksController {
         this.company = company;
     }
 
-    public int registerParks(List<String[]> parsedData, String fileName) throws InvalidFileDataException, SQLException {
-        String[] line = parsedData.get(0);
-        if (line.length != 9 || !line[0].equals("park identification") || !line[1].equals("latitude") || !line[2].equals("longitude")
-                || !line[3].equals("elevation") || !line[4].equals("park description") || !line[5].equals("max number of bicycles")
-                || !line[6].equals("max number of escooters") || !line[7].equals("park input voltage")
-                || !line[8].equals("park input current"))
-            throw new InvalidFileDataException("Header is different from expected");
+    public int registerParks(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException {
+        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
+                , "park identification;latitude;longitude;elevation;park description;max number of bicycles;max number of escooters;park input voltage;park input current");
+        String[] line;
 
         List<String> id = new ArrayList<>();
         List<Coordinates> coordinates = new ArrayList<>();
@@ -44,8 +43,6 @@ public class RegisterParksController {
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
 
                 id.add(parsedData.get(i)[ID_INDEX]);
                 description.add(parsedData.get(i)[DESCRIPTION_INDEX]);
@@ -64,9 +61,9 @@ public class RegisterParksController {
                 inputCurrent.add(Float.parseFloat(parsedData.get(i)[INPUT_CURRENT_INDEX]));
             }
         } catch (NumberFormatException e) {
-            ;throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
+            ;throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
 
         try {

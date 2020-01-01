@@ -9,6 +9,5 @@
 #gender - user gender
 #password - user password
 username;email;height;weight;cycling average speed;visa;gender;password
-
 diogo;diog@g.g;301;75;98;1234567812345678;M;passe
 josefina;ola@g.g;160;76;99;1234567812345670;F;passe1

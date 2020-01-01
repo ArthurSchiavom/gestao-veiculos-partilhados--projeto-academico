@@ -39,14 +39,8 @@ class RegisterPOIControllerTest {
 
     @Test
     void addPoisTest() {
-        List<String[]> parsedData = null;
         try {
-            parsedData = Utils.parseDataFile("testFiles/poi.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present");}
-        assertNotNull(parsedData);
-        // The controller is using the mock DataHandler, which will return the mock PreparedStatement
-        try {
-            int result = controller.registerPOIs(parsedData, "testFiles/poi.txt");
+            int result = controller.registerPOIs("testFiles/poi.txt");
             assertEquals(2, result,"should be 2 but was: "+result);
         } catch (Exception e) {
             fail();

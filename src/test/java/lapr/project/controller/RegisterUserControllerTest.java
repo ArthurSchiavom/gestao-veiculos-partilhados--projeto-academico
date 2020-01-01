@@ -39,14 +39,8 @@ class RegisterUserControllerTest {
 
     @Test
     void addUsers() {
-        List<String[]> parsedData = null;
         try {
-            parsedData = Utils.parseDataFile("testFiles/user.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present");}
-        assertNotNull(parsedData);
-        // The controller is using the mock DataHandler, which will return the mock PreparedStatement
-        try {
-            int result = controller.registerClients(parsedData, "testFiles/user.txt");
+            int result = controller.registerClients("testFiles/user.txt");
             assertEquals(2, result,"should be 2 but was: "+result);
         } catch (Exception e) {
             e.printStackTrace();
