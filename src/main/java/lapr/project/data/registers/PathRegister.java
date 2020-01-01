@@ -8,15 +8,15 @@ package lapr.project.data.registers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
-
 /**
  * Class that registers paths
  *
@@ -54,6 +54,61 @@ public class PathRegister {
         return i;
     }
 
+    /**
+     * Fetches all paths from the sql oracle table
+     * @return a list containing all paths
+     */
+    public List<Path> fetchAllPaths(){
+        PreparedStatement stm = null;
+        PreparedStatement stmStartAltitude = null;
+        PreparedStatement stmEndAltitude = null;
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
+        List<Path> paths = new ArrayList<>();
+        try {
+            stm = dataHandler.prepareStatement("SELECT * FROM paths");
+            ResultSet resultSet = dataHandler.executeQuery(stm);
+            while(resultSet.next()) { // for each path in the sql table
+                double lon1 = resultSet.getDouble("longitudeA");
+                double lat1 = resultSet.getDouble("latitudeA");
+                double lat2 = resultSet.getDouble("latitudeB");
+                double lon2 = resultSet.getDouble("longitudeB");
+                double kinetic = resultSet.getDouble("kinetic_coefficient");
+                int windDirectionDegrees = resultSet.getInt("wind_direction_degrees");
+                double windSpeed = resultSet.getDouble("wind_speed");
+
+                stmStartAltitude = dataHandler.prepareStatement("SELECT altitude_m FROM points_of_interest WHERE latitude =? and longitude =?");
+                closeableManager.addAutoCloseable(stmStartAltitude);
+                stmStartAltitude.setDouble(1, lat1);
+                stmStartAltitude.setDouble(2, lon1);
+                ResultSet resultSetAltitudeSP = dataHandler.executeQuery(stmStartAltitude);
+                closeableManager.addAutoCloseable(resultSetAltitudeSP);
+                if (resultSetAltitudeSP == null || !resultSetAltitudeSP.next()) {
+                    return null;
+                }
+                int startAltitude = resultSetAltitudeSP.getInt("altitude_m");
+
+                stmEndAltitude = dataHandler.prepareStatement("SELECT altitude_m FROM points_of_interest WHERE latitude =? and longitude =?");
+                closeableManager.addAutoCloseable(stmEndAltitude);
+                stmEndAltitude.setDouble(1, lat2);
+                stmEndAltitude.setDouble(2, lon2);
+                ResultSet resultSetAltitudeEP = dataHandler.executeQuery(stmEndAltitude);
+                closeableManager.addAutoCloseable(resultSetAltitudeEP);
+                if (resultSetAltitudeEP == null || !resultSetAltitudeEP.next()) {
+                    return null;
+                }
+                int endAltitude = resultSetAltitudeEP.getInt("altitude_m");
+
+                Coordinates startingPoint = new Coordinates(lat1, lon1, startAltitude);
+                Coordinates endingPoint = new Coordinates(lat2, lon2, endAltitude);
+                paths.add(new Path(startingPoint, endingPoint, kinetic, windDirectionDegrees, windSpeed));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+        } finally {
+            closeableManager.closeAutoCloseables();
+        }
+        return paths;
+    }
     /**
      * Fetches a path from the data base
      *

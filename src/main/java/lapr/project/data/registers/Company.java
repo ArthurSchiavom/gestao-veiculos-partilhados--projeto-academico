@@ -1,6 +1,9 @@
 package lapr.project.data.registers;
 
 import lapr.project.data.DataHandler;
+import lapr.project.mapgraph.Graph;
+import lapr.project.model.Path;
+import lapr.project.model.point.of.interest.PointOfInterest;
 
 /**
  * Represents a company
@@ -14,6 +17,7 @@ public class Company {
     private final VehicleAPI vehicleAPI;
     private final PathRegister pathRegister;
     private final PoiRegister poiRegister;
+    private Graph<PointOfInterest, Path> mapGraph;
 
     /**
      * Represents a Singleton of the class Company
@@ -28,6 +32,7 @@ public class Company {
         this.vehicleAPI = new VehicleAPI(dataHandler);
         this.pathRegister = new PathRegister(dataHandler);
         this.poiRegister = new PoiRegister(dataHandler);
+        mapGraph = null;
     }
 
     /**
@@ -75,5 +80,21 @@ public class Company {
     
     public PoiRegister getPoiRegister() {
         return poiRegister;
+    }
+
+    /**
+     * Initializes a graph with the information about poi's and path's
+     * @return a map graph
+     */
+    public Graph<PointOfInterest,Path> initializeGraph(){
+        mapGraph = new Graph<>(true);
+        for(PointOfInterest poi : poiRegister.fetchAllPois()){
+            mapGraph.insertVertex(poi);
+        }
+
+//        for(Path path : pathRegister.fetchAllPaths()){
+//            mapGraph.insertEdge(path.getStartingPoint(),path.getEndingPoint(),0);
+//        }
+        return null;
     }
 }
