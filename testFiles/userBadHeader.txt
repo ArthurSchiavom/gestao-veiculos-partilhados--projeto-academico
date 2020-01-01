@@ -1,0 +1,13 @@
+#lines starting with # should be ignored
+#Column description
+#username for the app - e.g. "john"
+#user email - e.g. "john@my.email.server.com"
+#height - the user height in cm with no decimal places - e.g. 150
+#weight - the user mass in Kg with no decimal places - e.g. 60
+#cycling average speed - the user average speed in m/s with two decimal places e.g 4.17
+#visa card number - the visa card number
+#gender - user gender
+#password - user password
+username;emaisl;height;weight;cycling average speed;visa;gender;password
+diogo;diog@g.g;301;75;98;1234567812345678;M;passe
+josefina;ola@g.g;160;76;99;1234567812345670;F;passe1

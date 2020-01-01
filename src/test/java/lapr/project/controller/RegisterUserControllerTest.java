@@ -1,5 +1,6 @@
 package lapr.project.controller;
 
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import org.junit.jupiter.api.Test;
 import lapr.project.data.DataHandler;
@@ -73,6 +74,21 @@ class RegisterUserControllerTest {
             verify(preparedStatement, times(10)).setString(anyInt(), anyString());
         } catch (Exception e) {
             fail();
+        }
+
+        testExceptionCase("testFiles/userBadHeader.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/userMissingColumn.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/userWrongValues.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/inexistent.txt", FileNotFoundException.class);
+    }
+
+    private <T extends Exception> void testExceptionCase(String filePath, Class<T> exceptionClass) {
+        try {
+            controller.registerClients(filePath);
+            fail();
+        } catch (Exception e) {
+            if (e.getClass() != exceptionClass)
+                fail();
         }
     }
 }

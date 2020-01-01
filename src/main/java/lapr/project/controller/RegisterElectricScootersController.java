@@ -5,6 +5,7 @@ import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class RegisterElectricScootersController {
         this.company = company;
     }
 
-    public int registerElectricScooters(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException {
+    public int registerElectricScooters(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException, MessagingException {
         List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
                 , "escooter description;weight;type;park latitude;park longitude;max battery capacity;actual battery capacity;aerodynamic coefficient;frontal area;motor");
         String[] line;
