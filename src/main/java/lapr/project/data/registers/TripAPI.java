@@ -3,10 +3,8 @@ package lapr.project.data.registers;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.data.Emailer;
-import lapr.project.model.Path;
 import lapr.project.model.Trip;
 import lapr.project.model.users.Client;
-import lapr.project.model.vehicles.ElectricScooter;
 
 import javax.mail.MessagingException;
 import java.sql.*;
@@ -14,10 +12,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripRegister {
+public class TripAPI {
     private DataHandler dataHandler;
 
-    public TripRegister(DataHandler dataHandler) {
+    public TripAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
@@ -270,14 +268,14 @@ public class TripRegister {
             parkId = parkAPI.fetchParkIdVehicleIsIn(vehicleDescription);
             if (parkId == null)
                 throw new SQLException("Vehicle is not in any park.");
-            Client client = company.getUsersAPI().fetchClientByUsername(username);
+            Client client = company.getUserAPI().fetchClientByUsername(username);
 
             // 1. unlock
             parkAPI.unlockVehicleNoCommit(vehicleDescription);
             // 2. create trip
             registerNewTripNoCommit(client.getEmail(), vehicleDescription, parkId);
             // 3. set user status to is riding
-            company.getUsersAPI().updateClientIsRidingNoCommit(username, true);
+            company.getUserAPI().updateClientIsRidingNoCommit(username, true);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {dataHandler.rollbackTransaction();} catch (SQLException e2) {};

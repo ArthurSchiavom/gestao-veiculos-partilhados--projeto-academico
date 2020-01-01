@@ -2,7 +2,6 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
-import lapr.project.data.Emailer;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.*;
 
@@ -197,7 +196,7 @@ public class VehicleAPI {
 
             Company company = Company.getInstance();
             Park park = company.getParkAPI().fetchParkByCoordinates(parkLatitude, parkLongitude);
-            company.getTripRegister().lockVehicle(park.getId(), description);
+            company.getTripAPI().lockVehicle(park.getId(), description);
         } catch (SQLException e) {
             throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
         } finally {

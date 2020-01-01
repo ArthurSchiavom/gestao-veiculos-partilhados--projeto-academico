@@ -21,14 +21,14 @@ import lapr.project.model.Path;
  * Class that registers paths
  *
  */
-public class PathRegister {
+public class PathAPI {
 
     private final DataHandler dataHandler;
 
     /**
      * Instantiates a pathRegister
      */
-    public PathRegister(DataHandler dataHandler) {
+    public PathAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 

@@ -11,6 +11,6 @@ public class GetListOfVehiclesNotAvailableController {
     public GetListOfVehiclesNotAvailableController(Company company){this.company = company;}
 
     public void getListOfVehiclesNotAvailable(LocalDateTime startTime, LocalDateTime endTime) throws SQLException {
-        company.getTripRegister().getListOfVehiclesNotAvailable(startTime,endTime);
+        company.getTripAPI().getListOfVehiclesNotAvailable(startTime,endTime);
     }
 }

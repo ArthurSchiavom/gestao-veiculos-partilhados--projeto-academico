@@ -72,7 +72,7 @@ public class RegisterPathController {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
         try {
-            return company.getPathRegister().insertPaths(latA,lonA,latB,lonB,kineticCoefficient,windDirection,windSpeed);
+            return company.getPathAPI().insertPaths(latA,lonA,latB,lonB,kineticCoefficient,windDirection,windSpeed);
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database");
         }
