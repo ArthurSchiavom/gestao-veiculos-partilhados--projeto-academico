@@ -1,5 +1,6 @@
 package lapr.project.controller;
 
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import org.junit.jupiter.api.Test;
 import lapr.project.data.DataHandler;
@@ -39,14 +40,8 @@ class RegisterUserControllerTest {
 
     @Test
     void addUsers() {
-        List<String[]> parsedData = null;
         try {
-            parsedData = Utils.parseDataFile("testFiles/user.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present");}
-        assertNotNull(parsedData);
-        // The controller is using the mock DataHandler, which will return the mock PreparedStatement
-        try {
-            int result = controller.registerClients(parsedData, "testFiles/user.txt");
+            int result = controller.registerClients("testFiles/user.txt");
             assertEquals(2, result,"should be 2 but was: "+result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,6 +74,21 @@ class RegisterUserControllerTest {
             verify(preparedStatement, times(10)).setString(anyInt(), anyString());
         } catch (Exception e) {
             fail();
+        }
+
+        testExceptionCase("testFiles/userBadHeader.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/userMissingColumn.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/userWrongValues.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/inexistent.txt", FileNotFoundException.class);
+    }
+
+    private <T extends Exception> void testExceptionCase(String filePath, Class<T> exceptionClass) {
+        try {
+            controller.registerClients(filePath);
+            fail();
+        } catch (Exception e) {
+            if (e.getClass() != exceptionClass)
+                fail();
         }
     }
 }

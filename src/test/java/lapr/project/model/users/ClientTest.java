@@ -8,8 +8,6 @@ package lapr.project.model.users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -23,7 +21,7 @@ public class ClientTest {
     @BeforeEach
     void beforeEach() {
         instance = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',2.3F,
-                new CreditCard("12341234123412"));
+                true, new CreditCard("12341234123412"));
     }
 
     @Test
@@ -34,7 +32,7 @@ public class ClientTest {
         assertEquals(expResult, result);
 
         Client client = new Client("email@email.com", "username", "password", 50, 150, 60, 'M',
-                10.4f, new CreditCard("12341234123412"));
+                10.4f, true, new CreditCard("12341234123412"));
         assertEquals(50, client.getPoints());
     }
 
@@ -50,8 +48,7 @@ public class ClientTest {
 
     @Test
     void testToString() {
-        System.out.println(instance.toString());
-        assertEquals("Client{points=22, height=180, weight=60, gender=m, cyclingAverageSpeed=2.3, cc=ccNumber='12341234123412'}", instance.toString());
+        assertEquals("Client{points=22, height=180, weight=60, gender=m, cyclingAverageSpeed=2.3, cc=12341234123412}", instance.toString());
     }
 
     @Test

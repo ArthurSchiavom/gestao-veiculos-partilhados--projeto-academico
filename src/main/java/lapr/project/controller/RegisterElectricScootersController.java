@@ -2,7 +2,11 @@ package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
 import lapr.project.model.vehicles.ElectricScooterType;
+import lapr.project.utils.InvalidFileDataException;
+import lapr.project.utils.Utils;
 
+import javax.mail.MessagingException;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +29,10 @@ public class RegisterElectricScootersController {
         this.company = company;
     }
 
-    public int registerElectricScooters(List<String[]> parsedData, String fileName) throws InvalidFileDataException, SQLException {
-        String[] line = parsedData.get(0);
-        if (line.length != 10 || !line[0].equals("escooter description") || !line[1].equals("weight") || !line[2].equals("type")
-                || !line[3].equals("park latitude") || !line[4].equals("park longitude") || !line[5].equals("max battery capacity")
-                || !line[6].equals("actual battery capacity") || !line[7].equals("aerodynamic coefficient")
-                || !line[8].equals("frontal area") || !line[9].equals("motor"))
-            throw new InvalidFileDataException("Header is different from expected");
+    public int registerElectricScooters(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException, MessagingException {
+        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
+                , "escooter description;weight;type;park latitude;park longitude;max battery capacity;actual battery capacity;aerodynamic coefficient;frontal area;motor");
+        String[] line;
 
         List<Float> aerodynamicCoefficient = new ArrayList<>();
         List<Float> frontalArea = new ArrayList<>();
@@ -48,8 +49,6 @@ public class RegisterElectricScootersController {
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
 
                 weight.add(Integer.parseInt(line[SCOOTERS_WEIGHT_INDEX]));
                 aerodynamicCoefficient.add(Float.parseFloat(line[SCOOTERS_AERODYNAMIC_COEFFICIENT_INDEX]));
@@ -64,13 +63,13 @@ public class RegisterElectricScootersController {
                 parkLongitude.add(Double.parseDouble(line[SCOOTERS_PARK_LON_INDEX]));
             }
         }  catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
 
         try {
-            company.getVehicleRegister().registerElectricScooters(aerodynamicCoefficient, frontalArea, weight, type, description, maxBatteryCapacity, actualBatteryCapacity, enginePower, parkLatitude, parkLongitude);
+            company.getVehicleAPI().registerElectricScooters(aerodynamicCoefficient, frontalArea, weight, type, description, maxBatteryCapacity, actualBatteryCapacity, enginePower, parkLatitude, parkLongitude);
             return aerodynamicCoefficient.size();
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database");

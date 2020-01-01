@@ -22,6 +22,7 @@ public class DataHandler {
     private static final int RECONNECTION_INTERVAL_MILLIS = 3000;
     private static final int QUERY_TIMEOUT_SECONDS = 10;
     private static final String NOT_CONNECTED_ERROR_MSG = "Not connected to the database";
+    public static final int ORA_ERROR_CODE_NO_DATA_FOUND = 1403;
 
     private static DataHandler instance;
 

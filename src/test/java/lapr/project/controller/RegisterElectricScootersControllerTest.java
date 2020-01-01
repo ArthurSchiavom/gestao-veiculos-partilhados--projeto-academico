@@ -2,20 +2,15 @@ package lapr.project.controller;
 
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import lapr.project.model.Coordinates;
-import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.model.vehicles.VehicleType;
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
-import oracle.jdbc.proxy.annotation.Pre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +37,7 @@ public class RegisterElectricScootersControllerTest {
         PreparedStatement mockPS1 = mock(PreparedStatement.class);
         PreparedStatement mockPS2 = mock(PreparedStatement.class);
         PreparedStatement mockPS3 = mock(PreparedStatement.class);
+        CallableStatement mockCS1 = mock(CallableStatement.class);
         ResultSet mockRS1 = mock(ResultSet.class);
         ResultSet mockRS2 = mock(ResultSet.class);
         ResultSet mockRS3 = mock(ResultSet.class);
@@ -74,34 +70,25 @@ public class RegisterElectricScootersControllerTest {
             when(dataHandler.executeQuery(mockPS1)).thenReturn(mockRS1);
             when(dataHandler.executeQuery(mockPS2)).thenReturn(mockRS2);
             when(dataHandler.executeQuery(mockPS3)).thenReturn(mockRS3);
+
+            when(dataHandler.executeUpdate(anyObject())).thenReturn(1);
+            when(dataHandler.prepareCall(anyString())).thenReturn(mockCS1);
+            when(mockCS1.getString(anyInt())).thenReturn(null);
         } catch (SQLException e) {
             fail();
         }
 
-        List<String[]> parsedData = null;
-        System.out.println(Company.getInstance());
-        try {
-            parsedData = Utils.parseDataFile("testFiles/scooters.txt", ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present: testFiles/scooters.txt");}
-        assertNotNull(parsedData);
+
         // The controller is using the mock DataHandler, which will return the mock CallableStatement
         try {
-            assertEquals(2, controller.registerElectricScooters(parsedData, "testFiles/scooters.txt"));
+            assertEquals(2, controller.registerElectricScooters("testFiles/scooters.txt"));
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
 
         try {
-            // Check that all these methods have been called once
-
-//            FIX BELOW ACCORDING TO NEW VALUES
-//            vehiclesInsert.setString(1, description);
-//            vehiclesInsert.setString(2, VehicleType.ELECTRIC_SCOOTER.getSQLName());
-//            vehiclesInsert.setInt(3, 1);
-//            vehiclesInsert.setInt(4, weight);
-//            vehiclesInsert.setFloat(5, aerodynamicCoefficient);
-//            vehiclesInsert.setFloat(6, frontalArea);
+            // Check that all these methods have been called
 
             // #all
             verify(mockPS1, times(2)).setString(2, VehicleType.ELECTRIC_SCOOTER.getSQLName());
@@ -151,29 +138,23 @@ public class RegisterElectricScootersControllerTest {
             fail();
         }
 
-        testInvalidFileDataExceptionCase("testFiles/MissingColumnScooterFile.txt");
-        testInvalidFileDataExceptionCase("testFiles/MissingColumnScooterFile2.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueScootersFile.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueScootersFile2.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueScootersFile3.txt");
+        testExceptionCase("testFiles/MissingColumnScooterFile.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/MissingColumnScooterFile2.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/WrongValueScootersFile.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/WrongValueScootersFile2.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/WrongValueScootersFile3.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/scootersBadHeader.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/fail.txt", FileNotFoundException.class);
         // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
     }
 
-    private void testInvalidFileDataExceptionCase(String filePath) {
-        List<String[]> parsedData = null;
-
+    private <T extends Exception> void testExceptionCase(String filePath, Class<T> exceptionClass) {
         try {
-            parsedData = Utils.parseDataFile(filePath, ";", "#");
-        } catch (FileNotFoundException e) {fail("test file not present: "+ filePath);}
-        assertNotNull(parsedData);
-        // The controller is using the mock DataHandler, which will return the mock CallableStatement
-        try {
-            controller.registerElectricScooters(parsedData, filePath);
+            controller.registerElectricScooters(filePath);
             fail();
-        } catch (InvalidFileDataException e) {
-            //pass
-        } catch (SQLException e) {
-            fail();
+        } catch (Exception e) {
+            if (e.getClass() != exceptionClass)
+                fail();
         }
     }
 }

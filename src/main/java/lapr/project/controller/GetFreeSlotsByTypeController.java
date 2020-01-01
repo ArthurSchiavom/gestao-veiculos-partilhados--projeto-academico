@@ -21,6 +21,6 @@ public class GetFreeSlotsByTypeController {
      * @return the amount of free slots for the specified vehicle type
      */
     public int getFreeSlotsByType(String parkIdentification, String username, VehicleType vehicleType) throws SQLException {
-        return company.getParkRegister().fetchParkById(parkIdentification).getAmountSlotsFreeByType(vehicleType);
+        return company.getParkAPI().fetchParkById(parkIdentification).getAmountSlotsFreeByType(vehicleType);
     }
 }

@@ -1,7 +1,10 @@
 package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
+import lapr.project.utils.InvalidFileDataException;
+import lapr.project.utils.Utils;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +28,10 @@ public class RegisterPathController {
     /**
      * @return the number of users added
      */
-    public int registerPaths(List<String[]> parsedData, String fileName) throws SQLException, InvalidFileDataException {
-        String[] line = parsedData.get(0);
-        if (line.length != 7 || !line[0].equals("latitudeA") || !line[1].equals("longitudeA") || !line[2].equals("latitudeB")
-                || !line[3].equals("longitudeB") || !line[4].equals("kinetic coefficient") || !line[5].equals("wind direction")
-                || !line[6].equals("wind speed"))
-            throw new InvalidFileDataException("Header is different from expected");
+    public int registerPaths(String filePath) throws SQLException, InvalidFileDataException, FileNotFoundException {
+        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
+                , "latitudeA;longitudeA;latitudeB;longitudeB;kinetic coefficient;wind direction;wind speed");
+        String[] line;
 
         List<Double> latA = new ArrayList<>();
         List<Double> lonA = new ArrayList<>();
@@ -44,8 +45,6 @@ public class RegisterPathController {
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
 
                 latA.add(Double.parseDouble(line[PATH_LAT_A]));
                 lonA.add(Double.parseDouble(line[PATH_LON_A]));
@@ -68,9 +67,9 @@ public class RegisterPathController {
                 }
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
         try {
             return company.getPathRegister().insertPaths(latA,lonA,latB,lonB,kineticCoefficient,windDirection,windSpeed);

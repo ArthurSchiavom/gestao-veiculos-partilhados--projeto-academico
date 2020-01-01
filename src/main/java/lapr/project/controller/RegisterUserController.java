@@ -1,7 +1,10 @@
 package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
+import lapr.project.utils.InvalidFileDataException;
+import lapr.project.utils.Utils;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +29,10 @@ public class RegisterUserController {
     /**
      * @return the number of users added
      */
-    public int registerClients(List<String[]> parsedData, String fileName) throws SQLException, InvalidFileDataException {
-        String[] line = parsedData.get(0);
-        if (line.length != 8 || !line[0].equals("username") || !line[1].equals("email") || !line[2].equals("height")
-                || !line[3].equals("weight") || !line[4].equals("cycling average speed") || !line[5].equals("visa")
-                || !line[6].equals("gender") || !line[7].equals("password"))
-            throw new InvalidFileDataException("Header is different from expected");
+    public int registerClients(String filePath) throws SQLException, InvalidFileDataException, FileNotFoundException {
+        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
+                , "username;email;height;weight;cycling average speed;visa;gender;password");
+        String[] line;
 
         List<String> username = new ArrayList<>();
         List<String> email = new ArrayList<>();
@@ -46,8 +47,6 @@ public class RegisterUserController {
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-                if (line.length == 1 && line[0].isEmpty())
-                    continue;
 
                 username.add(line[USER_USERNAME]);
                 email.add(line[USER_EMAIL]);
@@ -59,12 +58,12 @@ public class RegisterUserController {
                 password.add(line[USER_PASS_WORD]);
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + fileName);
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
         try {
-            return company.getUsersRegister().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed,password);
+            return company.getUsersAPI().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed,password);
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database: \n" + e.getMessage());
         }

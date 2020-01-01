@@ -2,9 +2,11 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
+import lapr.project.data.Emailer;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.*;
 
+import javax.mail.MessagingException;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VehicleRegister {
+public class VehicleAPI {
     private final DataHandler dataHandler;
 
     private static final String DESCRIPTION_FIELD_NAME = "description";
@@ -30,7 +32,7 @@ public class VehicleRegister {
     private static final String ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME = "max_battery_capacity";
     private static final String ESCOOTER_ENGINE_POWER_FIELD_NAME = "engine_power";
 
-    public VehicleRegister(DataHandler dataHandler) {
+    public VehicleAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 
@@ -167,7 +169,7 @@ public class VehicleRegister {
                                                 ElectricScooterType type, String description,
                                                 float maxBatteryCapacity,
                                                 int actualBatteryCapacity,
-                                                int enginePower, double parkLatitude, double parkLongitude) throws SQLException {
+                                                int enginePower, double parkLatitude, double parkLongitude) throws SQLException, MessagingException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement vehiclesInsert = dataHandler.prepareStatement("INSERT INTO vehicles(description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) " +
@@ -193,9 +195,9 @@ public class VehicleRegister {
             eScootersInsert.setInt(5, enginePower);
             dataHandler.execute(eScootersInsert);
 
-            ParkRegister parkRegister = Company.getInstance().getParkRegister();
-            Park park = parkRegister.fetchParkByCoordinates(parkLatitude, parkLongitude);
-            parkRegister.putVehicleInPark(park.getId(), description);
+            Company company = Company.getInstance();
+            Park park = company.getParkAPI().fetchParkByCoordinates(parkLatitude, parkLongitude);
+            company.getTripRegister().lockVehicle(park.getId(), description);
         } catch (SQLException e) {
             throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
         } finally {
@@ -228,7 +230,8 @@ public class VehicleRegister {
                                          List<ElectricScooterType> type, List<String> description,
                                          List<Float> maxBatteryCapacity,
                                          List<Integer> actualBatteryCapacity,
-                                         List<Integer> enginePower, List<Double> parkLatitude, List<Double> parkLongitude) throws SQLException {
+                                         List<Integer> enginePower, List<Double> parkLatitude, List<Double> parkLongitude)
+                                        throws SQLException, MessagingException {
         try {
             for (int i = 0; i < aerodynamicCoefficient.size(); i++) {
                 registerEletricScooterNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
@@ -245,5 +248,6 @@ public class VehicleRegister {
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }
-    }//-- Create new trip in java, where the user is known
+    }
+
 }

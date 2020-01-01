@@ -32,7 +32,7 @@ public class Emailer {
      * @param subject title of the email
      * @param text main text of the email
      */
-    public static void sendEmail(String recipient, String subject, String text) {
+    public static void sendEmail(String recipient, String subject, String text) throws MessagingException {
 
         Properties prop = System.getProperties();
         prop.put("mail.smtp.host", SMTP_SERVER); //optional, defined in SMTPTransport
@@ -43,7 +43,7 @@ public class Emailer {
         Session session = Session.getInstance(prop, null);
         Message msg = new MimeMessage(session);
 
-        try {
+        try (SMTPTransport t = (SMTPTransport) session.getTransport("smtp")) {
 
             // from
             msg.setFrom(new InternetAddress(EMAIL_FROM));
@@ -57,22 +57,14 @@ public class Emailer {
 
             // content
             msg.setText(text);
-
             msg.setSentDate(new Date());
-
-            // Get SMTPTransport
-            SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
 
             // connect
             t.connect(SMTP_SERVER, USERNAME, PASSWORD);
-
             // send
             t.sendMessage(msg, msg.getAllRecipients());
-
-            t.close();
-
         } catch (MessagingException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            throw new MessagingException("Failed to send email to " + recipient);
         }
     }
 }

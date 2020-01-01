@@ -6,6 +6,11 @@
 package lapr.project.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.ElectricScooterType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -197,5 +202,35 @@ public class TripTest {
 
         trip1 = new Trip(startTime, "email2@email.com", "0","1");
         assertNotEquals(expResult, trip1.hashCode());
+    }
+
+    @Test
+    void getListOfVehiclesNotAvailable(){
+        Path path1 = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(0.0001, 0.0001, 1), 0.002, 1, 0.3); // 1
+        Path path2 = new Path(new Coordinates(0.0001, 0.0001, 1), new Coordinates(0.0002, 0.0002, 2), 0.002, 1, 0.3); // 1
+        Path path3 = new Path(new Coordinates(0.0002, 0.0002, 2), new Coordinates(0.0003, 0.0003, 3), 0.002, 1, 0.3); // 1
+        List<Path> trip = new ArrayList<>();
+        trip.add(path1);
+        trip.add(path2);
+        trip.add(path3);
+
+        ElectricScooter instance = new ElectricScooter(123, "PT001",2.3F,2.4F,
+                35,true, ElectricScooterType.URBAN,15,
+                1f, 500);
+
+        ElectricScooter instance1 = new ElectricScooter(456, "PT002",2.3F,2.4F,
+                33,true,ElectricScooterType.URBAN,15,
+                1f, 500);
+
+        List<ElectricScooter> listElectricScooters = new ArrayList<>();
+        listElectricScooters.add(instance);
+        listElectricScooters.add(instance1);
+
+        List<ElectricScooter> expected = new ArrayList<>();
+        expected.add(instance);
+        expected.add(instance1);
+
+        List <ElectricScooter> result = lapr.project.model.Trip.filterScootersWithAutonomy(listElectricScooters,trip);
+        assertEquals(expected,result);
     }
 }

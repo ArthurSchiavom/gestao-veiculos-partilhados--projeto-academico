@@ -3,6 +3,7 @@ package lapr.project.controller;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -46,16 +47,9 @@ public class RegisterParksControllerTest {
 
     @Test
     void registerParksTest() {
-        List<String[]> parsedData = null;
-        try {
-            parsedData = Utils.parseDataFile("testFiles/parks.txt", ";", "#");
-        } catch (FileNotFoundException e) {
-            fail("test file not present: testFiles/parks.txt");
-        }
-        assertNotNull(parsedData);
         // The controller is using the mock DataHandler, which will return the mock CallableStatement
         try {
-            assertEquals(2, controller.registerParks(parsedData, "testFiles/parks.txt"));
+            assertEquals(2, controller.registerParks("testFiles/parks.txt"));
         } catch (Exception e) {
             fail();
         }
@@ -96,31 +90,23 @@ public class RegisterParksControllerTest {
         }
 
         // Testing files with invalid data, should throw exceptions
-        testInvalidFileDataExceptionCase("testFiles/MissingColumnBicyclesFile.txt");
-        testInvalidFileDataExceptionCase("testFiles/MissingColumnBicyclesFile2.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile2.txt");
-        testInvalidFileDataExceptionCase("testFiles/WrongValueBicyclesFile3.txt");
+        testExceptionCase("testFiles/MissingColumnBicyclesFile.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/MissingColumnBicyclesFile2.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/WrongValueBicyclesFile.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/WrongValueBicyclesFile2.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/WrongValueBicyclesFile3.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/parksBadHeader.txt", InvalidFileDataException.class);
+        testExceptionCase("testFiles/inv.txt", FileNotFoundException.class);
         // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
     }
 
-    private void testInvalidFileDataExceptionCase(String filePath) {
-        List<String[]> parsedData = null;
-
+    private <T extends Exception> void testExceptionCase(String filePath, Class<T> exceptionClass) {
         try {
-            parsedData = Utils.parseDataFile(filePath, ";", "#");
-        } catch (FileNotFoundException e) {
-            fail("test file not present");
-        }
-        assertNotNull(parsedData);
-        // The controller is using the mock DataHandler, which will return the mock CallableStatement
-        try {
-            controller.registerParks(parsedData, filePath);
+            controller.registerParks(filePath);
             fail();
-        } catch (InvalidFileDataException e) {
-            //pass
-        } catch (SQLException e) {
-            fail();
+        } catch (Exception e) {
+            if (e.getClass() != exceptionClass)
+                fail();
         }
     }
 }

@@ -1,0 +1,14 @@
+#lines starting with # should be ignored
+#Column description
+#park identification is an identifier for the park
+#latitude, longitude are given in decimal degrees e.g. 41.152712, -8.609297
+#elevation is given in metres (m) with no decimal places. When not given, consider 0
+#park description is a descriptive name for the park e.g. "Trindade"
+#max number of bicycles - maximum park capability for bicycles e.g. 10
+#max number of escooters - maximum park capability for escooters e.g. 20
+#park input voltage - the park input voltage measured in Volts (V) e.g. 220V
+#park input current - the park input current measured in Amperes (A) e.g. 16A
+park identificatio;latitude;longitude;elevation;park description;max number of bicycles;max number of escooters;park input voltage;park input current
+
+p1; 50.0; 180.0;  ; Some desc; 12; 15; 17.4; 19.9
+p2; 90; 150.56; 30 ; Some desc2; 13; 16; 18.4; 19.8

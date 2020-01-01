@@ -2,14 +2,14 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
+import lapr.project.data.Emailer;
 import lapr.project.model.Path;
 import lapr.project.model.Trip;
+import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import javax.mail.MessagingException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,5 +235,118 @@ public class TripRegister {
             autoCloseableManager.closeAutoCloseables();
         }
         return dispVehicles;
+    }
+
+    private int registerNewTripNoCommit(String userEmail, String vehicleDescription, String startParkId) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("INSERT INTO TRIPS(start_time, user_email, vehicle_description, start_park_id)" +
+                    "VALUES(current_timestamp, ?, ?, ?)");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setString(1, userEmail);
+            preparedStatement.setString(2, vehicleDescription);
+            preparedStatement.setString(3, startParkId);
+
+            return dataHandler.executeUpdate(preparedStatement);
+        } catch (SQLException e) {
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
+
+    /**
+     * Unlocks a vehicle and starts a new trip for the user.
+     *
+     * @param username user unlocking the vehicle
+     * @param vehicleDescription vehicle being unlocked
+     */
+    public void startTrip(String username, String vehicleDescription) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        String parkId = null;
+        try {
+            Company company = Company.getInstance();
+            ParkAPI parkAPI = company.getParkAPI();
+            parkId = parkAPI.fetchParkIdVehicleIsIn(vehicleDescription);
+            if (parkId == null)
+                throw new SQLException("Vehicle is not in any park.");
+            Client client = company.getUsersAPI().fetchClientByUsername(username);
+
+            // 1. unlock
+            parkAPI.unlockVehicleNoCommit(vehicleDescription);
+            // 2. create trip
+            registerNewTripNoCommit(client.getEmail(), vehicleDescription, parkId);
+            // 3. set user status to is riding
+            company.getUsersAPI().updateClientIsRidingNoCommit(username, true);
+            dataHandler.commitTransaction();
+        } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction();} catch (SQLException e2) {};
+            throw new SQLException("Failed to start a new trip: " + e.getMessage(), e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
+
+    /**
+     * Finds the user that is currently riding a given vehicle.
+     *
+     * @param vehicleDescription vehicle to search for
+     * @return (1) email of the user riding the given vehicle or (2) null if no one is riding that vehicle
+     * @throws SQLException if a database access error occurs
+     */
+    public String fetchUserEmailRiding(String vehicleDescription) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        CallableStatement cs = null;
+        try {
+            cs = dataHandler.prepareCall("{? = call find_user_email_riding(?)}");
+            autoCloseableManager.addAutoCloseable(cs);
+            cs.registerOutParameter(1, Types.VARCHAR);
+            cs.setString(2, vehicleDescription);
+            dataHandler.executeUpdate(cs);
+            return cs.getString(1);
+        } catch (SQLException e) {
+            if (e.getErrorCode() != DataHandler.ORA_ERROR_CODE_NO_DATA_FOUND)
+                throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+        return null;
+    }
+
+    /**
+     * Locks a vehicle and ends a trip if there is one by setting the user status to not riding,
+     * updating the trip information, updating user points, updating user debt and emailing the user.
+     *
+     * @param parkId id of the park where the vehicle is inserted
+     * @param vehicleDescription vehicle0s description
+     * @throws SQLException if a database access error occurs
+     * @throws MessagingException if there is an on-going trip with the vehicle and the system fails to email the user
+     */
+    public void lockVehicle(String parkId, String vehicleDescription) throws SQLException, MessagingException {
+        AutoCloseableManager closeableManager = new AutoCloseableManager();
+        int nLinesChanged = -1;
+        try {
+            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
+            closeableManager.addAutoCloseable(ps);
+            ps.setString(1, parkId);
+            ps.setString(2, vehicleDescription);
+            nLinesChanged = dataHandler.executeUpdate(ps);
+            if (nLinesChanged == 0)
+                throw new SQLException("Impossible to associate the given park and vehicle");
+
+            dataHandler.commitTransaction();
+
+            String clientEmail = fetchUserEmailRiding(vehicleDescription);
+            if (clientEmail != null)
+                Emailer.sendEmail(clientEmail, "Trip end", "Your vehicle was successfully locked!");
+        } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
+
+            if (nLinesChanged == 0)
+                throw e;
+            throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
+        } finally {
+            closeableManager.closeAutoCloseables();
+        }
     }
 }
