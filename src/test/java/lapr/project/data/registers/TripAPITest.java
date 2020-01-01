@@ -7,17 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.any;
 
-class TripRegisterTest {
+class TripAPITest {
     private LocalDateTime startCalendar;
     private LocalDateTime endCalendar;
-    private static TripRegister tripRegister;
+    private static TripAPI tripAPI;
     private static DataHandler dataHandler;
     private static ResultSet resultSet;
 
@@ -25,7 +24,7 @@ class TripRegisterTest {
     static void beforeAll() {
         dataHandler = Mockito.mock(DataHandler.class);
         resultSet = Mockito.mock(ResultSet.class);
-        tripRegister = new TripRegister(dataHandler);
+        tripAPI = new TripAPI(dataHandler);
     }
 
     @BeforeEach
@@ -37,12 +36,12 @@ class TripRegisterTest {
     @Test
     void testCreateNewTrip() {
         Trip expResult = new Trip(startCalendar, endCalendar, "email@email.com", "0", "0", "0");
-        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, endCalendar, "email@email.com", "0", "0", "0"));
+        assertEquals(expResult, tripAPI.createNewTrip(startCalendar, endCalendar, "email@email.com", "0", "0", "0"));
 
         expResult = new Trip(startCalendar, "email@email.com", "0", "1");
-        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, "email@email.com", "0", "0"));
+        assertEquals(expResult, tripAPI.createNewTrip(startCalendar, "email@email.com", "0", "0"));
 
         expResult = new Trip(startCalendar, "email@email.com", "0", "0");
-        assertEquals(expResult, tripRegister.createNewTrip(startCalendar, "email@email.com", "0", null, "0"));
+        assertEquals(expResult, tripAPI.createNewTrip(startCalendar, "email@email.com", "0", null, "0"));
     }
 }

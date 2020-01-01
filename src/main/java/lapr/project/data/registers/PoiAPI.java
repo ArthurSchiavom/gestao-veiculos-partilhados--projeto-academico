@@ -21,14 +21,14 @@ import lapr.project.model.point.of.interest.PointOfInterest;
  *
  * 
  */
-public class PoiRegister {
+public class PoiAPI {
     private final DataHandler dataHandler;
     private static final Logger LOGGER = Logger.getLogger("poiRegisterLogger");
 
     /**
      * Instantiates a poi register
      */
-    public PoiRegister(DataHandler dataHandler) {
+    public PoiAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 

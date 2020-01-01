@@ -58,7 +58,7 @@ public class RegisterPOIController {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
         try {
-            return company.getPoiRegister().insertPOIs(lat,lon,elev,desc);
+            return company.getPoiAPI().insertPOIs(lat,lon,elev,desc);
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database");
         }

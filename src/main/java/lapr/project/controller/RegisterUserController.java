@@ -63,7 +63,7 @@ public class RegisterUserController {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
         try {
-            return company.getUsersAPI().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed,password);
+            return company.getUserAPI().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed,password);
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database: \n" + e.getMessage());
         }
