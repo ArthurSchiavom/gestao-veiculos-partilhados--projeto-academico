@@ -332,7 +332,7 @@ public class TripRegister {
             ps.setString(2, vehicleDescription);
             nLinesChanged = dataHandler.executeUpdate(ps);
             if (nLinesChanged == 0)
-                throw new SQLException("Impossible to associated the given park and vehicle");
+                throw new SQLException("Impossible to associate the given park and vehicle");
 
             dataHandler.commitTransaction();
 
