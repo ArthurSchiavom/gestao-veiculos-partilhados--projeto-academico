@@ -244,7 +244,7 @@ public class PhysicsMethodsTest {
         Double expResult = 1.57;
         Double result = PhysicsMethods.convertDegreesToRadian(angle);
         assertEquals(expResult, result, 0.001);
-        
+
         int angle2 = 180;
         Double expResult2 = Math.PI;
         Double result2 = PhysicsMethods.convertDegreesToRadian(angle2);
@@ -275,19 +275,16 @@ public class PhysicsMethodsTest {
         double expResult = 251309.92;
         double result = PhysicsMethods.predictEnergySpent(client, trip, vehicle);
         assertEquals(expResult, result, 0.0);
-        
-          Vehicle vehicle2 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.URBAN, 75, 1, 1000);
-          expResult = 251312.95;
-          result = PhysicsMethods.predictEnergySpent(client, trip, vehicle2);
-          assertEquals(expResult, result, 0.0);
+
+        Vehicle vehicle2 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.URBAN, 75, 1, 1000);
+        expResult = 251312.95;
+        result = PhysicsMethods.predictEnergySpent(client, trip, vehicle2);
+        assertEquals(expResult, result, 0.0);
+
+        Vehicle vehicle3 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.OFFROAD, 75, 1, 1000);
+        expResult = 251312.95;
+        result = PhysicsMethods.predictEnergySpent(client, trip, vehicle3);
+        assertEquals(expResult, result, 0.0);
     }
 
-//      double velocity = 3.0;
-//        double windSpeed = 1.0;
-//        double kineticCoefficient = 0.002;
-//        double aerodynamicCoefficient = 1.10;
-//        double frontalArea = 0.3;
-//        double distanceMade = 300.0;
-//        int personMass = 75;
-//        int vehicleMass = 20;
 }
