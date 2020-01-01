@@ -13,12 +13,12 @@ import java.util.logging.Logger;
 /**
  * Handles the users and its subclasses
  */
-public class UsersAPI {
+public class UserAPI {
     private DataHandler dataHandler;
     private static float DEFAULT_VALUE_TO_PAY = 0;
     private static final Logger LOGGER = Logger.getLogger("usersRegisterLogger");
 
-    public UsersAPI(DataHandler dataHandler) {
+    public UserAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
     }
 

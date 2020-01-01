@@ -147,7 +147,7 @@ public class Trip {
 
     /**
      *
-     * @param listScooters all the scooters in the company
+     * @param listScooters all the scooters in the park
      * @param trip the path of the trip
      * @return a list of scooters which are able to comply the trip and keep 10% of the battery capacity
      */

@@ -5,6 +5,7 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.*;
 
+import javax.mail.MessagingException;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -167,7 +168,7 @@ public class VehicleAPI {
                                                 ElectricScooterType type, String description,
                                                 float maxBatteryCapacity,
                                                 int actualBatteryCapacity,
-                                                int enginePower, double parkLatitude, double parkLongitude) throws SQLException {
+                                                int enginePower, double parkLatitude, double parkLongitude) throws SQLException, MessagingException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement vehiclesInsert = dataHandler.prepareStatement("INSERT INTO vehicles(description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) " +
@@ -193,9 +194,9 @@ public class VehicleAPI {
             eScootersInsert.setInt(5, enginePower);
             dataHandler.execute(eScootersInsert);
 
-            ParkAPI parkAPI = Company.getInstance().getParkAPI();
-            Park park = parkAPI.fetchParkByCoordinates(parkLatitude, parkLongitude);
-            lockVehicle(park.getId(), description);
+            Company company = Company.getInstance();
+            Park park = company.getParkAPI().fetchParkByCoordinates(parkLatitude, parkLongitude);
+            company.getTripAPI().lockVehicle(park.getId(), description);
         } catch (SQLException e) {
             throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
         } finally {
@@ -228,7 +229,8 @@ public class VehicleAPI {
                                          List<ElectricScooterType> type, List<String> description,
                                          List<Float> maxBatteryCapacity,
                                          List<Integer> actualBatteryCapacity,
-                                         List<Integer> enginePower, List<Double> parkLatitude, List<Double> parkLongitude) throws SQLException {
+                                         List<Integer> enginePower, List<Double> parkLatitude, List<Double> parkLongitude)
+                                        throws SQLException, MessagingException {
         try {
             for (int i = 0; i < aerodynamicCoefficient.size(); i++) {
                 registerEletricScooterNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
@@ -244,31 +246,6 @@ public class VehicleAPI {
             throw new SQLException("Failed to batch register electric scooters.", e.getSQLState(), e.getErrorCode());
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
-        }
-    }
-
-
-    /**
-     * Return True if returned the vehicle to the park with sucess, false otherwise
-     *
-     * @param parkId    Park id
-     * @param vehicleDescription Vehicle id
-     * @return
-     */
-    public void lockVehicle(String parkId, String vehicleDescription) throws SQLException {
-        AutoCloseableManager closeableManager = new AutoCloseableManager();
-        try {
-            PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
-            closeableManager.addAutoCloseable(ps);
-            ps.setString(1, parkId);
-            ps.setString(2, vehicleDescription);
-            ps.executeUpdate();
-            dataHandler.commitTransaction();
-        } catch (SQLException e) {
-            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
-            throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
-        } finally {
-            closeableManager.closeAutoCloseables();
         }
     }
 

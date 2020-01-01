@@ -5,7 +5,15 @@
  */
 package lapr.project.utils.physics.calculations;
 
+import java.util.List;
 import lapr.project.model.Coordinates;
+import lapr.project.model.Path;
+import lapr.project.model.users.Client;
+import lapr.project.model.vehicles.Bicycle;
+import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.Vehicle;
+import lapr.project.model.vehicles.VehicleType;
+import static lapr.project.model.vehicles.VehicleType.BICYCLE;
 
 /**
  * Class that has the methods to calculate the calories burnt between two points
@@ -35,7 +43,7 @@ public class PhysicsMethods {
      * Returns the power rolling resistance
      *
      * @param velocity - average speed
-     * @param mass - mass of the person + bicycle
+     * @param mass - mass of the person + vehicle
      * @param kineticCoefficient - kinetic coefficient
      * @return the power rolling resistance
      */
@@ -47,7 +55,7 @@ public class PhysicsMethods {
      * Returns the power that is need to climb
      *
      * @param velocity - average speed
-     * @param mass - mass of the person + bicycle
+     * @param mass - mass of the person + vehicle
      * @param slope - slope between the starting and ending points
      * @return the power that is need to climb
      */
@@ -148,19 +156,19 @@ public class PhysicsMethods {
      * @param windSpeed - wind speed (m/s)
      * @param kineticCoefficient - kinetic coefficient between two points
      * @param aerodynamicCoefficient - aerodynamic coefficient
-     * @param frontalArea - frontal area of the bicycle (m^2)
+     * @param frontalArea - frontal area of the vehicle (m^2)
      * @param distanceMade - distance between the two points (m)
-     * @param personMass - mass of the person (m)
-     * @param bicycleMass - mass of the bicycle (m)
+     * @param personMass - mass of the person (kg)
+     * @param vehicleMass - mass of the vehicle (kg)
      * @param startPoint - the starting point of the path that the rider is going
      * @param endPoint - the ending point of the path that the rider is going
      * @param windAngle - the angle made between the wind speed and the north pole
      * @return the ammount of calories burnt between two points
      */
-    public static Double calculateCaloriesBurnt(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, double personMass, double bicycleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
+    public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
 
         double time = calculateTimeSpent(velocity, distanceMade);
-        double totalMass = personMass + bicycleMass;
+        double totalMass = personMass + vehicleMass;
         int heightDifference = endPoint.getAltitude() - startPoint.getAltitude();
         double slope = calculateSlope(heightDifference, distanceMade);
         double windAngleRad = convertDegreesToRadian(windAngle);
@@ -175,9 +183,8 @@ public class PhysicsMethods {
         double totalPower = powerRollingResistance + powerClimbing + powerAirDrag;
 
         double energySpent = totalPower * time;
-        double energySpentCal = energySpent * CONVERT_JOULE_CAL;
 
-        return Math.round(energySpentCal * 100.0) / 100.0;
+        return Math.round(energySpent * 100.0) / 100.0;
     }
 
     /**
@@ -221,8 +228,48 @@ public class PhysicsMethods {
         return Math.round(realAutonomy * 100.0) / 100.0;
     }
     
+    /**
+     * Converts an angle in degrees to radians
+     * 
+     * @param angle - the angle in degrees
+     * @return an angle in radians
+     */
     public static Double convertDegreesToRadian(int angle) {
         return (angle*Math.PI)/180;
     }
 
+    /**
+     * Converts the value of the energy in joule to calories
+     * 
+     * @param energyJoule - the energy in joules
+     * @return the value of the energy in joule to calories
+     */
+    public static Double convertJouleToCal(double energyJoule) {
+        return Math.round(energyJoule * CONVERT_JOULE_CAL * 100.0) /100.0;
+    }
+    
+    
+    /**
+     * Predicts the energy spent in a trip between two parks
+     * 
+     * @param client - the client 
+     * @param trip - the trip
+     * @param vehicle - the vehicle in use
+     * @return  - the energy spent in a trip between two parks
+     */
+    public static double predictEnergySpent(Client client, List<Path> trip, Vehicle vehicle) {
+           double energySpent = 0.0;
+           double averageSpeed = 0.0;
+           double distanceMade = 0.0;
+           if (vehicle.getType() == VehicleType.BICYCLE) {
+               averageSpeed = (double) client.getCyclingAverageSpeed();
+           } else if (vehicle.getType() == VehicleType.ELECTRIC_SCOOTER) {
+               averageSpeed = SCOOTER_MAX_SPEED;
+           }
+           for (Path path : trip) {
+               distanceMade = path.getStartingPoint().distance(path.getEndingPoint()) * 1000;
+               energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint(), path.getEndingPoint(), path.getWindDirectionDegrees());
+           } 
+           return energySpent;
+       }
 }

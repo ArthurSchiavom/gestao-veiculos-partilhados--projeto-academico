@@ -10,9 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +37,7 @@ public class RegisterElectricScootersControllerTest {
         PreparedStatement mockPS1 = mock(PreparedStatement.class);
         PreparedStatement mockPS2 = mock(PreparedStatement.class);
         PreparedStatement mockPS3 = mock(PreparedStatement.class);
+        CallableStatement mockCS1 = mock(CallableStatement.class);
         ResultSet mockRS1 = mock(ResultSet.class);
         ResultSet mockRS2 = mock(ResultSet.class);
         ResultSet mockRS3 = mock(ResultSet.class);
@@ -71,6 +70,10 @@ public class RegisterElectricScootersControllerTest {
             when(dataHandler.executeQuery(mockPS1)).thenReturn(mockRS1);
             when(dataHandler.executeQuery(mockPS2)).thenReturn(mockRS2);
             when(dataHandler.executeQuery(mockPS3)).thenReturn(mockRS3);
+
+            when(dataHandler.executeUpdate(anyObject())).thenReturn(1);
+            when(dataHandler.prepareCall(anyString())).thenReturn(mockCS1);
+            when(mockCS1.getString(anyInt())).thenReturn(null);
         } catch (SQLException e) {
             fail();
         }

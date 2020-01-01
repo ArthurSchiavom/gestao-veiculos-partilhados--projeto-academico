@@ -12,12 +12,12 @@ public class Company {
     private static Company instance = null;
     private final DataHandler dataHandler;
     private final ParkAPI parkAPI;
-    private final UsersAPI usersAPI;
-    private final TripRegister tripRegister;
+    private final UserAPI userAPI;
+    private final TripAPI tripAPI;
     private final VehicleAPI vehicleAPI;
-    private final PathRegister pathRegister;
-    private final PoiRegister poiRegister;
     private Graph<PointOfInterest, Path> mapGraph;
+    private final PathAPI pathAPI;
+    private final PoiAPI poiAPI;
 
     /**
      * Represents a Singleton of the class Company
@@ -25,14 +25,13 @@ public class Company {
     private Company(DataHandler dataHandler) {
         instance = this;
         this.dataHandler = dataHandler;
-
         this.parkAPI =new ParkAPI(dataHandler);
-        this.usersAPI = new UsersAPI(dataHandler);
-        this.tripRegister = new TripRegister(dataHandler);
+        this.userAPI = new UserAPI(dataHandler);
+        this.tripAPI = new TripAPI(dataHandler);
         this.vehicleAPI = new VehicleAPI(dataHandler);
-        this.pathRegister = new PathRegister(dataHandler);
-        this.poiRegister = new PoiRegister(dataHandler);
         mapGraph = null;
+        this.pathAPI = new PathAPI(dataHandler);
+        this.poiAPI = new PoiAPI(dataHandler);
     }
 
     /**
@@ -62,24 +61,24 @@ public class Company {
         return parkAPI;
     }
 
-    public UsersAPI getUsersAPI() {
-        return usersAPI;
+    public UserAPI getUserAPI() {
+        return userAPI;
     }
 
-    public TripRegister getTripRegister() {
-        return tripRegister;
+    public TripAPI getTripAPI() {
+        return tripAPI;
     }
 
     public VehicleAPI getVehicleAPI() {
         return vehicleAPI;
     }
     
-    public PathRegister getPathRegister() {
-        return pathRegister;
+    public PathAPI getPathAPI() {
+        return pathAPI;
     }
     
-    public PoiRegister getPoiRegister() {
-        return poiRegister;
+    public PoiAPI getPoiAPI() {
+        return poiAPI;
     }
 
     /**
@@ -88,7 +87,7 @@ public class Company {
      */
     public Graph<PointOfInterest,Path> initializeGraph(){
         mapGraph = new Graph<>(true);
-        for(PointOfInterest poi : poiRegister.fetchAllPois()){
+        for(PointOfInterest poi : poiAPI.fetchAllPois()){
             mapGraph.insertVertex(poi);
         }
 

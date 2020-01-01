@@ -5,7 +5,16 @@
  */
 package lapr.project.utils.physics.calculations;
 
+import java.util.ArrayList;
+import java.util.List;
 import lapr.project.model.Coordinates;
+import lapr.project.model.Path;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.CreditCard;
+import lapr.project.model.vehicles.Bicycle;
+import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.ElectricScooterType;
+import lapr.project.model.vehicles.Vehicle;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,20 +105,20 @@ public class PhysicsMethodsTest {
     }
 
     /**
-     * Test of calculateCaloriesBurnt method, of class PhysicsMethods.
+     * Test of calculateEnergySpent method, of class PhysicsMethods.
      */
     @Test
-    public void calculateCaloriesBurntTest() {
+    public void testCalculateEnergySpent() {
         double velocity = 3.0;
         double windSpeed = 1.0;
         double kineticCoefficient = 0.002;
         double aerodynamicCoefficient = 1.10;
         double frontalArea = 0.3;
         double distanceMade = 300.0;
-        double personMass = 75.0;
-        double bicycleMass = 20.0;
-        Double expResult = 59558.65;
-        Double result = PhysicsMethods.calculateCaloriesBurnt(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, bicycleMass, new Coordinates(0.0, 0.0, 100), new Coordinates(1.0, 1.0, 300), 90);
+        int personMass = 75;
+        int vehicleMass = 20;
+        Double expResult = 249193.13;
+        Double result = PhysicsMethods.calculateEnergySpent(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, vehicleMass, new Coordinates(0.0, 0.0, 100), new Coordinates(1.0, 1.0, 300), 90);
         assertEquals(expResult, result);
         Double notExpResult = 50000.0;
         assertNotEquals(notExpResult, result);
@@ -235,13 +244,47 @@ public class PhysicsMethodsTest {
         Double expResult = 1.57;
         Double result = PhysicsMethods.convertDegreesToRadian(angle);
         assertEquals(expResult, result, 0.001);
-        
+
         int angle2 = 180;
         Double expResult2 = Math.PI;
         Double result2 = PhysicsMethods.convertDegreesToRadian(angle2);
         assertEquals(expResult2, result2, 0.001);
+    }
 
+    /**
+     * Test of convertJouleToCal method, of class PhysicsMethods.
+     */
+    @Test
+    public void testConvertJouleToCal() {
+        double energyJoule = 249193.12;
+        Double expResult = 59558.65;
+        Double result = PhysicsMethods.convertJouleToCal(energyJoule);
+        assertEquals(expResult, result);
+    }
 
+    /**
+     * Test of predictEnergySpent method, of class PhysicsMethods.
+     */
+    @Test
+    public void testPredictEnergySpent() {
+        Client client = new Client("a@a.a", "peleila", "password", 170, 75, 'M', 3.0f, false, new CreditCard("1111111111111111"));
+        Path path1 = new Path(new Coordinates(0.0, 0.0, 100), new Coordinates(0.0018, 0.002, 300), 0.002, 90, 1.0);
+        List<Path> trip = new ArrayList<>();
+        trip.add(path1);
+        Vehicle vehicle = new Bicycle(1, "PT001", 1.10f, 0.3f, 20, true, 15);
+        double expResult = 251309.92;
+        double result = PhysicsMethods.predictEnergySpent(client, trip, vehicle);
+        assertEquals(expResult, result, 0.0);
+
+        Vehicle vehicle2 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.URBAN, 75, 1, 1000);
+        expResult = 251312.95;
+        result = PhysicsMethods.predictEnergySpent(client, trip, vehicle2);
+        assertEquals(expResult, result, 0.0);
+
+        Vehicle vehicle3 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.OFFROAD, 75, 1, 1000);
+        expResult = 251312.95;
+        result = PhysicsMethods.predictEnergySpent(client, trip, vehicle3);
+        assertEquals(expResult, result, 0.0);
     }
 
 }
