@@ -106,7 +106,8 @@ public class Coordinates {
         if ((lat == other.getLatitude()) && (lon == other.getLongitude()) && (altitude == other.getAltitude())) {
             return 0;
         } else {
-            int height = altitude - other.getAltitude();
+            double height = (altitude - other.getAltitude()) / 1000;
+          
             double distance = Math.pow(distanceIgnoringHeight(other), 2) + Math.pow(height, 2);
             return Math.sqrt(distance);
         }
@@ -140,17 +141,6 @@ public class Coordinates {
                 + '}';
     }
 
-    /**
-     * Calculates the distance to other coordinates not considering the
-     * curvature of the Earth.
-     *
-     * @param other - the other coordinates
-     * @return the distance to other coordinates not considering the curvature
-     * of the Earth.
-     */
-    public double distanceFlat(Coordinates other) {
-        return Math.sqrt(Math.pow(other.lat - lat, 2) + Math.pow(other.lon - lon, 2) + Math.pow(other.lat - lat, 2));
-    }
     
        /**
      * Returns the corresponding cartesian value of x to this coordinate in m

@@ -95,9 +95,9 @@ class CoordinatesTest {
         double expResult = 0;
         assertEquals(expResult, coords1.distance(coords2), 0);
 
-        coords2 = new Coordinates(0, 0, 50);
-        expResult = 50;
-        assertEquals(expResult, coords1.distance(coords2), 0);
+        coords2 = new Coordinates(0.0, 0.0, 5000);
+        expResult = 5;
+        assertEquals(expResult, coords1.distance(coords2));
 
         coords2 = new Coordinates(0, 50, 0);
         expResult = 5559.74;
@@ -114,8 +114,14 @@ class CoordinatesTest {
 
         coords1 = new Coordinates(38.7071631, -9.135517, 50);
         coords2 = new Coordinates(40.4166909, -3.7003454, 500);
-        expResult = 674.986;
+        expResult = 503.097;
         assertEquals(expResult, coords1.distance(coords2), 0.01);
+
+        coords1 = new Coordinates(0.0, 0.0, 100);
+        coords2 = new Coordinates(0.0, 0.0001, 300);
+        expResult = 0.01;
+        assertEquals(expResult, coords1.distance(coords2), 0.01);
+
     }
 
     @Test
@@ -156,83 +162,6 @@ class CoordinatesTest {
         coord = new Coordinates(10, 10, 10);
         expResult = coord.hashCode();
         assertNotEquals(expResult, coord1.hashCode());
-    }
-
-    @Test
-    public void testDistanceFlat() {
-        Coordinates coords1 = new Coordinates(0, 0, 0);
-        Coordinates coords2 = new Coordinates(0, 0, 0);
-        double expResult = 0;
-        assertEquals(expResult, coords1.distance(coords2), 0);
-
-        coords2 = new Coordinates(0, 0, 50);
-        expResult = 50;
-        assertEquals(expResult, coords1.distance(coords2), 0);
-
-        coords2 = new Coordinates(0, 50, 0);
-        expResult = 5559.74;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords2 = new Coordinates(50, 0, 0);
-        expResult = 5559.74;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords1 = new Coordinates(38.7071631, -9.135517, 0);
-        coords2 = new Coordinates(40.4166909, -3.7003454, 0);
-        expResult = 503.096;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords1 = new Coordinates(38.7071631, -9.135517, 50);
-        coords2 = new Coordinates(40.4166909, -3.7003454, 500);
-        expResult = 674.986;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords1 = new Coordinates(0, 0, 0);
-        coords2 = new Coordinates(0, 0, -50);
-        expResult = 50;
-        assertEquals(expResult, coords1.distance(coords2), 0);
-
-        coords2 = new Coordinates(0, -50, 0);
-        expResult = 5559.74;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords2 = new Coordinates(-50, 0, 0);
-        expResult = 5559.74;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords1 = new Coordinates(38.7071631, -9.135517, 0);
-        coords2 = new Coordinates(-40.4166909, 3.7003454, 0);
-        expResult = 8894.351;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords1 = new Coordinates(38.7071631, -9.135517, 50);
-        coords2 = new Coordinates(-40.4166909, 3.7003454, -500);
-        expResult = 8911.343;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-        coords2 = new Coordinates(0, 0, 0);
-
-        coords1 = new Coordinates(0, 0, 50);
-        expResult = 50;
-        assertEquals(expResult, coords1.distance(coords2), 0);
-
-        coords1 = new Coordinates(0, 50, 0);
-        expResult = 5559.74;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords1 = new Coordinates(50, 0, 0);
-        expResult = 5559.74;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords2 = new Coordinates(38.7071631, -9.135517, 0);
-        coords1 = new Coordinates(40.4166909, -3.7003454, 0);
-        expResult = 503.096;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
-        coords2 = new Coordinates(38.7071631, -9.135517, 50);
-        coords1 = new Coordinates(40.4166909, -3.7003454, 500);
-        expResult = 674.986;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
-
     }
 
     /**
