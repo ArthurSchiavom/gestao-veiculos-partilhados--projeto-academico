@@ -269,6 +269,8 @@ public class TripAPI {
             if (parkId == null)
                 throw new SQLException("Vehicle is not in any park.");
             Client client = company.getUserAPI().fetchClientByUsername(username);
+            if (client == null)
+                throw new SQLException("Client doesn't exist.");
 
             // 1. unlock
             parkAPI.unlockVehicleNoCommit(vehicleDescription); // done
