@@ -66,7 +66,7 @@ public class UserAPI {
             String password = resultSet.getString( "user_password");
             String email = resultSet.getString("user_email");
 
-            stm = dataHandler.prepareStatement("SELECT * FROM clients where USER_EMAIL like ?"); // capital letters do not matter in emails
+            stm = dataHandler.prepareStatement("SELECT * FROM clients where USER_EMAIL like ?");
             autoCloseableManager.addAutoCloseable(stm);
             stm.setString( 1, email);
 

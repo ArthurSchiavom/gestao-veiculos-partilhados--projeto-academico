@@ -14,22 +14,22 @@ import static org.mockito.Mockito.*;
 
 public class RemoveParkControllerTest {
 
-    private static DataHandler dh;
+    private static DataHandler dataHandler;
     private static PreparedStatement preparedStatement;
     private static Company company;
     private static RemoveParkController controller;
 
     @BeforeAll
     static void prepare() {
-        dh = mock(DataHandler.class);
+        dataHandler = mock(DataHandler.class);
         preparedStatement = mock(PreparedStatement.class);
         Company.reset();
-        company = Company.createCompany(dh);
+        company = Company.createCompany(dataHandler);
         controller = new RemoveParkController(company);
 
         try {
             // When prepareCall is called, whatever the String is, return callableStatement, which is our other mock object
-            when(dh.prepareStatement(any(String.class))).thenReturn(preparedStatement);
+            when(dataHandler.prepareStatement(any(String.class))).thenReturn(preparedStatement);
         } catch (SQLException e) {
             e.printStackTrace();
         }

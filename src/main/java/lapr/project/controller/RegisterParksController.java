@@ -30,7 +30,6 @@ public class RegisterParksController {
     public int registerParks(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException {
         List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(filePath, ";", "#"
                 , "park identification;latitude;longitude;elevation;park description;max number of bicycles;max number of escooters;park input voltage;park input current");
-        String[] line;
 
         List<String> id = new ArrayList<>();
         List<Coordinates> coordinates = new ArrayList<>();
@@ -42,8 +41,6 @@ public class RegisterParksController {
         int i = 0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
-                line = parsedData.get(i);
-
                 id.add(parsedData.get(i)[ID_INDEX]);
                 description.add(parsedData.get(i)[DESCRIPTION_INDEX]);
                 double latitude = Double.parseDouble(parsedData.get(i)[LATITUDE_INDEX]);
