@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
+import lapr.project.model.point.of.interest.PointOfInterest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,11 +51,11 @@ class ElectricScooterTest {
      */
     @Test
     public void testHasAutonomy() {
-        Path path1 = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(0.0001, 0.0001, 1), 0.002, 1, 0.3); // 1
-        Path path2 = new Path(new Coordinates(0.0001, 0.0001, 1), new Coordinates(0.0002, 0.0002, 2), 0.002, 1, 0.3); // 1
-        Path path3 = new Path(new Coordinates(0.0002, 0.0002, 2), new Coordinates(0.0003, 0.0003, 3), 0.002, 1, 0.3); // 1
-        Path path4 = new Path(new Coordinates(0.0003, 0.0003, 3), new Coordinates(0.0004, 0.0004, 4), 0.002, 1, 0.3); // 1
-        Path path5 = new Path(new Coordinates(4.0, 4.0, 4), new Coordinates(-90.0, 90.0, 4), 0.002, 1, 0.3); 
+        Path path1 = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)),new PointOfInterest("desc2", new Coordinates(0.0001, 0.0001, 1)), 0.002, 1, 0.3); // 1
+        Path path2 = new Path(new PointOfInterest("desc1",new Coordinates(0.0001, 0.0001, 1)), new PointOfInterest("desc2",new Coordinates(0.0002, 0.0002, 2)), 0.002, 1, 0.3); // 1
+        Path path3 = new Path(new PointOfInterest("desc1",new Coordinates(0.0002, 0.0002, 2)), new PointOfInterest("desc2",new Coordinates(0.0003, 0.0003, 3)), 0.002, 1, 0.3); // 1
+        Path path4 = new Path(new PointOfInterest("desc1",new Coordinates(0.0003, 0.0003, 3)), new PointOfInterest("desc2",new Coordinates(0.0004, 0.0004, 4)), 0.002, 1, 0.3); // 1
+        Path path5 = new Path(new PointOfInterest("desc1",new Coordinates(4.0, 4.0, 4)), new PointOfInterest("desc2",new Coordinates(-90.0, 90.0, 4)), 0.002, 1, 0.3);
        
         List<Path> trip = new ArrayList<>();
         trip.add(path1);

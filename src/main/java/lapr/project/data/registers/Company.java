@@ -45,6 +45,25 @@ public class Company {
         return instance;
     }
 
+    /**
+     * Initializes a graph with the information about poi's and path's
+     * @return a map graph
+     */
+    public Graph<PointOfInterest,Path> initializeGraph(){
+        mapGraph = new Graph<>(true);
+        for(PointOfInterest poi : poiAPI.fetchAllPois()){
+            mapGraph.insertVertex(poi);
+        }
+        PointOfInterest startingPoint;
+        PointOfInterest endingPoint;
+        for(Path path : pathAPI.fetchAllPaths()){
+            startingPoint = path.getStartingPoint();
+            endingPoint = path.getEndingPoint();
+            mapGraph.insertEdge(startingPoint,endingPoint,path,startingPoint.getCoordinates().distance(endingPoint.getCoordinates()));
+        }
+        return mapGraph;
+    }
+
     public static void reset() {
         instance = null;
     }
@@ -55,6 +74,13 @@ public class Company {
 
     public DataHandler getDataHandler() {
         return dataHandler;
+    }
+
+    /**
+     * @return Returns the map graph that contains the information about parks and poi's
+     */
+    public Graph<PointOfInterest,Path> getMapGraph(){
+        return mapGraph;
     }
 
     public ParkAPI getParkAPI() {
@@ -79,21 +105,5 @@ public class Company {
     
     public PoiAPI getPoiAPI() {
         return poiAPI;
-    }
-
-    /**
-     * Initializes a graph with the information about poi's and path's
-     * @return a map graph
-     */
-    public Graph<PointOfInterest,Path> initializeGraph(){
-        mapGraph = new Graph<>(true);
-        for(PointOfInterest poi : poiAPI.fetchAllPois()){
-            mapGraph.insertVertex(poi);
-        }
-
-//        for(Path path : pathRegister.fetchAllPaths()){
-//            mapGraph.insertEdge(path.getStartingPoint(),path.getEndingPoint(),0);
-//        }
-        return null;
     }
 }

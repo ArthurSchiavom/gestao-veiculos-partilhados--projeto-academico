@@ -17,6 +17,8 @@ import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
+import lapr.project.model.point.of.interest.PointOfInterest;
+
 /**
  * Class that registers paths
  *
@@ -76,7 +78,7 @@ public class PathAPI {
                 int windDirectionDegrees = resultSet.getInt("wind_direction_degrees");
                 double windSpeed = resultSet.getDouble("wind_speed");
 
-                stmStartAltitude = dataHandler.prepareStatement("SELECT altitude_m FROM points_of_interest WHERE latitude =? and longitude =?");
+                stmStartAltitude = dataHandler.prepareStatement("SELECT * FROM points_of_interest WHERE latitude =? and longitude =?");
                 closeableManager.addAutoCloseable(stmStartAltitude);
                 stmStartAltitude.setDouble(1, lat1);
                 stmStartAltitude.setDouble(2, lon1);
@@ -86,8 +88,9 @@ public class PathAPI {
                     return null;
                 }
                 int startAltitude = resultSetAltitudeSP.getInt("altitude_m");
+                String descriptionStart = resultSetAltitudeSP.getString("poi_description");
 
-                stmEndAltitude = dataHandler.prepareStatement("SELECT altitude_m FROM points_of_interest WHERE latitude =? and longitude =?");
+                stmEndAltitude = dataHandler.prepareStatement("SELECT * FROM points_of_interest WHERE latitude =? and longitude =?");
                 closeableManager.addAutoCloseable(stmEndAltitude);
                 stmEndAltitude.setDouble(1, lat2);
                 stmEndAltitude.setDouble(2, lon2);
@@ -97,10 +100,11 @@ public class PathAPI {
                     return null;
                 }
                 int endAltitude = resultSetAltitudeEP.getInt("altitude_m");
+                String descriptionEnd = resultSetAltitudeEP.getString("poi_description");
 
                 Coordinates startingPoint = new Coordinates(lat1, lon1, startAltitude);
                 Coordinates endingPoint = new Coordinates(lat2, lon2, endAltitude);
-                paths.add(new Path(startingPoint, endingPoint, kinetic, windDirectionDegrees, windSpeed));
+                paths.add(new Path(new PointOfInterest(descriptionStart,startingPoint), new PointOfInterest(descriptionEnd,endingPoint), kinetic, windDirectionDegrees, windSpeed));
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
@@ -138,7 +142,7 @@ public class PathAPI {
             int windDirectionDegrees = resultSet.getInt("wind_direction_degrees");
             double windSpeed = resultSet.getDouble("wind_speed");
 
-            stmStartAltitude = dataHandler.prepareStatement("SELECT altitude_m FROM points_of_interest WHERE latitude =? and longitude =?");
+            stmStartAltitude = dataHandler.prepareStatement("SELECT * FROM points_of_interest WHERE latitude =? and longitude =?");
             closeableManager.addAutoCloseable(stmStartAltitude);
             stmStartAltitude.setDouble(1, startLatitude);
             stmStartAltitude.setDouble(2, startLongitude);
@@ -148,8 +152,9 @@ public class PathAPI {
                 return null;
             }
             int startAltitude = resultSetAltitudeSP.getInt("altitude_m");
+            String descriptionStart = resultSetAltitudeSP.getString("poi_description");
 
-            stmEndAltitude = dataHandler.prepareStatement("SELECT altitude_m FROM points_of_interest WHERE latitude =? and longitude =?");
+            stmEndAltitude = dataHandler.prepareStatement("SELECT * FROM points_of_interest WHERE latitude =? and longitude =?");
             closeableManager.addAutoCloseable(stmEndAltitude);
             stmEndAltitude.setDouble(1, endLatitude);
             stmEndAltitude.setDouble(2, endLongitude);
@@ -159,10 +164,12 @@ public class PathAPI {
                 return null;
             }
             int endAltitude = resultSetAltitudeEP.getInt("altitude_m");
+            String descriptionEnd = resultSetAltitudeEP.getString("poi_description");
+
 
             Coordinates startingPoint = new Coordinates(lat1, lon1, startAltitude);
             Coordinates endingPoint = new Coordinates(lat2, lon2, endAltitude);
-            return new Path(startingPoint,endingPoint,kinetic,windDirectionDegrees,windSpeed);
+            return new Path(new PointOfInterest(descriptionStart,startingPoint),new PointOfInterest(descriptionEnd,endingPoint),kinetic,windDirectionDegrees,windSpeed);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         } finally {

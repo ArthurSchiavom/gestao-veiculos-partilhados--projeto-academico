@@ -73,7 +73,7 @@ public class ElectricScooter extends Vehicle {
     public boolean hasAutonomy(List<Path> trip) {
         double distance = 0;
         for (Path path : trip) {
-            distance += path.getStartingPoint().distance(path.getEndingPoint());
+            distance += path.getStartingPoint().getCoordinates().distance(path.getEndingPoint().getCoordinates());
         }
         if (getScooterAutonomy() > (distance + distance * 0.10)) {
             return true;

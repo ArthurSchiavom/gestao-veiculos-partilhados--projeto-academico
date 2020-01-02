@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.ElectricScooterType;
 import org.junit.jupiter.api.Test;
@@ -206,9 +207,9 @@ public class TripTest {
 
     @Test
     void getListOfVehiclesNotAvailable(){
-        Path path1 = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(0.0001, 0.0001, 1), 0.002, 1, 0.3); // 1
-        Path path2 = new Path(new Coordinates(0.0001, 0.0001, 1), new Coordinates(0.0002, 0.0002, 2), 0.002, 1, 0.3); // 1
-        Path path3 = new Path(new Coordinates(0.0002, 0.0002, 2), new Coordinates(0.0003, 0.0003, 3), 0.002, 1, 0.3); // 1
+        Path path1 = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), new PointOfInterest("desc2",new Coordinates(0.0001, 0.0001, 1)), 0.002, 1, 0.3); // 1
+        Path path2 = new Path(new PointOfInterest("desc1",new Coordinates(0.0001, 0.0001, 1)), new PointOfInterest("desc2",new Coordinates(0.0002, 0.0002, 2)), 0.002, 1, 0.3); // 1
+        Path path3 = new Path(new PointOfInterest("desc1",new Coordinates(0.0002, 0.0002, 2)), new PointOfInterest("desc2",new Coordinates(0.0003, 0.0003, 3)), 0.002, 1, 0.3); // 1
         List<Path> trip = new ArrayList<>();
         trip.add(path1);
         trip.add(path2);

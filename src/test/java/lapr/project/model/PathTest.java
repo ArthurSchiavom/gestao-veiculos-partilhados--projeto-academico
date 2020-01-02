@@ -6,26 +6,38 @@
 package lapr.project.model;
 
 import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.CreditCard;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Jose
  */
 public class PathTest {
 
     public PathTest() {
     }
 
+    Path instance;
+    Object path1;
+    Path path3;
+
+    @BeforeEach
+    void beforeEach() {
+        instance = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), new PointOfInterest("desc1", new Coordinates (1.0, 1.0, 1)), 1.20, 20, 3.4);
+
+        path1 = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), new PointOfInterest("desc1",new Coordinates(1.0, 1.0, 1)), 1.20, 20, 3.4);
+
+        path3 = new Path(new PointOfInterest("desc1",new Coordinates(1.0, 1.0, 0)), new PointOfInterest("desc2",new Coordinates(2.0, 2.0, 1)), 1.20, 20, 3.4);;
+    }
     /**
      * Test of getKineticCoefficient method, of class Path.
      */
     @Test
     public void testGetKineticCoefficient() {
-
-        Path instance = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
         double expResult = 1.20;
         double result = instance.getKineticCoefficient();
         assertEquals(expResult, result);
@@ -36,7 +48,6 @@ public class PathTest {
      */
     @Test
     public void testGetWindDirectionDegrees() {
-        Path instance = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
         int expResult = 20;
         int result = instance.getWindDirectionDegrees();
         assertEquals(expResult, result);
@@ -47,7 +58,6 @@ public class PathTest {
      */
     @Test
     public void testGetWindSpeed() {
-        Path instance = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
         double expResult = 3.4;
         double result = instance.getWindSpeed();
         assertEquals(expResult, result);
@@ -59,17 +69,14 @@ public class PathTest {
     @Test
     public void testEquals() {
 
-        Object path1 = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
         assertEquals(path1, path1);
 
-        Path path2 = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);;
-        assertEquals(path1, path2);
+        assertEquals(path1, instance);
 
         path1 = null;
-        assertNotEquals(path2, path1);
+        assertNotEquals(instance, path1);
 
-        Path path3 = new Path(new Coordinates(1.0, 1.0, 0), new Coordinates(2.0, 2.0, 1), 1.20, 20, 3.4);;
-        assertNotEquals(path3, path2);
+        assertNotEquals(path3, instance);
     }
 
     /**
@@ -77,14 +84,9 @@ public class PathTest {
      */
     @Test
     public void testHashCode() {
-
-        Path instance = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
         int expResult = instance.hashCode();
-        Path path1 = new Path(new Coordinates(0.0, 0.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
         assertEquals(expResult, path1.hashCode());
-
-        Path path2 = new Path(new Coordinates(1.0, 10.0, 0), new Coordinates(1.0, 1.0, 1), 1.20, 20, 3.4);
-        expResult = path2.hashCode();
+        expResult = path3.hashCode();
         assertNotEquals(expResult, path1.hashCode());
     }
 
@@ -93,11 +95,8 @@ public class PathTest {
      */
     @Test
     public void testGetStartingPoint() {
-        Coordinates cor1 = new Coordinates(0.0, 0.0, 0);
-        Coordinates cor2 = new Coordinates(1.0, 1.0, 1);
-        Path instance = new Path(cor1, cor2, 1.20, 20, 3.4);
-        Coordinates expResult = cor1;
-        Coordinates result = instance.getStartingPoint();
+        PointOfInterest expResult = new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0));
+        PointOfInterest result = instance.getStartingPoint();
         assertEquals(expResult, result);
 
     }
@@ -107,11 +106,8 @@ public class PathTest {
      */
     @Test
     public void testGetEndingPoint() {
-        Coordinates cor1 = new Coordinates(0.0, 0.0, 0);
-        Coordinates cor2 = new Coordinates(1.0, 1.0, 1);
-        Path instance = new Path(cor1, cor2, 1.20, 20, 3.4);;
-        Coordinates expResult = cor2;
-        Coordinates result = instance.getEndingPoint();
+        PointOfInterest expResult = new PointOfInterest("desc2" ,new Coordinates(1.0, 1.0, 1));
+        PointOfInterest result = instance.getEndingPoint();
         assertEquals(expResult, result);
     }
 

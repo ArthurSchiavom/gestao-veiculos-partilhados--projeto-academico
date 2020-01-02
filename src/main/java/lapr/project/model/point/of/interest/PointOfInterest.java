@@ -33,7 +33,7 @@ public class PointOfInterest {
     
     /**
      * Returns the description of the point of interest.
-     * @return 
+     * @return description
      */
     public String getDescription() {
         return this.description;
