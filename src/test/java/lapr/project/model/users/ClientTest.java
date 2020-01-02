@@ -53,7 +53,6 @@ public class ClientTest {
 
     @Test
     void testGetHeight() {
-        System.out.println("getHeight");
         float expResult = 180;
         float result = instance.getHeight();
         assertEquals(expResult, result, 0.0);
@@ -61,7 +60,6 @@ public class ClientTest {
 
     @Test
     void testGetWeight() {
-        System.out.println("getWeight");
         float expResult = 60F;
         float result = instance.getWeight();
         assertEquals(expResult, result, 0.0);
@@ -69,7 +67,6 @@ public class ClientTest {
 
     @Test
     void testGetGender() {
-        System.out.println("getGender");
         char expResult = 'm';
         char result = instance.getGender();
         assertEquals(expResult, result);
@@ -77,10 +74,15 @@ public class ClientTest {
 
     @Test
     void testGetCreditCardNumber() {
-        System.out.println("getCreditCardNumber");
         String expResult = "12341234123412";
         String result = instance.getCreditCard().getCcNumber();
         assertEquals(expResult, result);
+    }
+
+    @Test
+    void testIsRiding() {
+        boolean result = instance.isRiding();
+        assertEquals(true, result);
     }
 
 }

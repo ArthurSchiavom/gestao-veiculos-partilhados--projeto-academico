@@ -286,6 +286,7 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    //TODO - TEST (database was down)
     @Override
     public long lockBicycle(String s, double v, double v1, String s1) {
         try {
@@ -298,6 +299,7 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    //TODO - TEST (database was down)
     @Override
     public long lockBicycle(String s, String s1, String s2) {
         try {
@@ -310,6 +312,7 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    //TODO - TEST (database was down)
     @Override
     public long lockEscooter(String s, double v, double v1, String s1) {
         try {
@@ -322,6 +325,7 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    //TODO - TEST (database was down)
     @Override
     public long lockEscooter(String s, String s1, String s2) {
         try {
@@ -336,7 +340,13 @@ public class Facade implements Serviceable {
 
     @Override
     public int registerUser(String s, String s1, String s2, int i, int i1, String s3) {
-        throw new UnsupportedOperationException();
+        try {
+            registerUserController.registerClient(s, s1, s2, i, i1, s3);
+            return 1;
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
