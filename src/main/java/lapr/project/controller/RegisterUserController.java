@@ -4,7 +4,6 @@ import lapr.project.data.registers.Company;
 import lapr.project.model.users.Client;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
-import sun.usagetracker.UsageTrackerClient;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
