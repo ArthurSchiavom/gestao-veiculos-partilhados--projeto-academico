@@ -271,7 +271,7 @@ public class TripAPI {
             Client client = company.getUserAPI().fetchClientByUsername(username);
 
             // 1. unlock
-            parkAPI.unlockVehicleNoCommit(vehicleDescription);
+            parkAPI.unlockVehicleNoCommit(vehicleDescription); // done
             // 2. create trip
             registerNewTripNoCommit(client.getEmail(), vehicleDescription, parkId);
             // 3. set user status to is riding

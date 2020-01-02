@@ -8,6 +8,7 @@ package lapr.project.data.registers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +52,40 @@ public class PoiAPI {
         }
         dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
         return i;
+    }
+
+    /**
+     * Fetches all Poi objects from the oracle sql table
+     * @return list containing all poi's
+     */
+    public List<PointOfInterest> fetchAllPois(){
+        PreparedStatement stm = null;
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        List<PointOfInterest> pois = new ArrayList<>();
+        try {
+            stm = dataHandler.prepareStatement("SELECT * FROM points_of_interest");
+            autoCloseableManager.addAutoCloseable(stm);
+            ResultSet resultSet = dataHandler.executeQuery(stm);
+            autoCloseableManager.addAutoCloseable(resultSet);
+            int alt;
+            double lon;
+            String desc;
+            double lat;
+            Coordinates coordinates;
+            while(resultSet.next()){
+                alt = resultSet.getInt("altitude_m");
+                lon = resultSet.getDouble("longitude");
+                desc = resultSet.getString("poi_description");
+                lat = resultSet.getDouble("latitude");
+                coordinates = new Coordinates(lat, lon, alt);
+                pois.add(new PointOfInterest(desc, coordinates));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+        return pois;
     }
     /**
      * Fetches a Poi object from the oracle sql table

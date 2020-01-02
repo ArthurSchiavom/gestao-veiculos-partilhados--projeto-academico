@@ -71,7 +71,7 @@ public class PhysicsMethods {
      * @param pathInitY - initial y value of the path
      * @param pathFinX - final x value of the path
      * @param pathFinY - final y value of the path
-     * @param windAngle - the angle made between the wind speed direction and
+     * @param windAngleRad - the angle made between the wind speed direction and
      * the North pole
      * @param windSpeed - the value of the wind speed
      * @return the value of the angle made between the vector of the wind speed
@@ -94,7 +94,7 @@ public class PhysicsMethods {
     /**
      * Returns the value of the apparent wind speed
      *
-     * @param windAngle - the angle made between the wind speed direction and
+     * @param windAngleRad - the angle made between the wind speed direction and
      * the North pole
      * @param riderSpeed - the rider average speed
      * @param windSpeed - the wind speed
@@ -111,7 +111,7 @@ public class PhysicsMethods {
      * @param riderSpeed - the rider average speed
      * @param windSpeed - the wind speed
      * @param apparentWindSpeed - the apparent wind speed
-     * @param angleWind - the angle made between the wind speed direction and
+     * @param windAngleRad - the angle made between the wind speed direction and
      * the North pole
      * @return
      */
@@ -127,7 +127,7 @@ public class PhysicsMethods {
      * @param windSpeed - wind speed
      * @param aerodynamicCoefficient - aerodynamic coefficient
      * @param frontalArea - frontal area of the vehicle
-     * @param windAngle - the angle that the wind makes with the North pole
+     * @param cosApparentWindAngle - the angle that the wind makes with the North pole
      * @return the power that needs to surpasse the air drag
      */
     public static Double calculatePowerAirDrag(double velocity, double windSpeed, double aerodynamicCoefficient, double frontalArea, double cosApparentWindAngle) {
@@ -138,7 +138,7 @@ public class PhysicsMethods {
      * The slop between the starting and ending points
      *
      * @param height - height difference between the points
-     * @param DistanceTraveled - distance between the points
+     * @param distanceTraveled - distance between the points
      * @return the slop between the starting and ending point
      */
     public static Double calculateSlope(int height, double distanceTraveled) {
@@ -267,8 +267,8 @@ public class PhysicsMethods {
                averageSpeed = SCOOTER_MAX_SPEED;
            }
            for (Path path : trip) {
-               distanceMade = path.getStartingPoint().distance(path.getEndingPoint()) * 1000;
-               energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint(), path.getEndingPoint(), path.getWindDirectionDegrees());
+               distanceMade = path.getStartingPoint().getCoordinates().distance(path.getEndingPoint().getCoordinates()) * 1000;
+               energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(), path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
            } 
            return energySpent;
        }

@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,7 @@ public class Facade implements Serviceable {
     private RegisterPathController registerPathController;
     private VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
     private FindParksNearbyController findParksNearbyController;
+    private UnlockVehicleController unlockVehicleController;
 
     /**
      * Prepares facade by booting up the application and Facade variables.
@@ -257,12 +259,22 @@ public class Facade implements Serviceable {
 
     @Override
     public long unlockBicycle(String s, String s1) {
-        throw new UnsupportedOperationException();
+        try {
+            unlockVehicleController.startTrip(s1, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to unlock bicycle:\n" + e.getMessage());
+        }
+        return Calendar.getInstance().getTimeInMillis();
     }
 
     @Override
     public long unlockEscooter(String s, String s1) {
-        throw new UnsupportedOperationException();
+        try {
+            unlockVehicleController.startTrip(s1, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to unlock scooter:\n" + e.getMessage());
+        }
+        return Calendar.getInstance().getTimeInMillis();
     }
 
     @Override

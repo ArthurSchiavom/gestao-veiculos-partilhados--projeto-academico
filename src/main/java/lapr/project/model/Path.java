@@ -5,6 +5,8 @@
  */
 package lapr.project.model;
 
+import lapr.project.model.point.of.interest.PointOfInterest;
+
 import java.util.Objects;
 
 /**
@@ -13,8 +15,8 @@ import java.util.Objects;
  */
 public class Path {
 
-    private Coordinates startPoint;
-    private Coordinates endPoint;
+    private PointOfInterest startPoint;
+    private PointOfInterest endPoint;
     private Double kineticCoefficient;
     private int windDirectionDegrees;
     private Double windSpeed;
@@ -26,7 +28,7 @@ public class Path {
      * @param windDirectionDegrees - wind direction in degrees
      * @param windSpeed - wind speed
      */
-    public Path(Coordinates startPoint, Coordinates endPoint, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
+    public Path(PointOfInterest startPoint, PointOfInterest endPoint, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
         if (startPoint == null || endPoint == null || kineticCoefficient == null || windSpeed == null)
             throw new IllegalArgumentException("Null elements are not allowed");
         this.startPoint = startPoint;
@@ -41,7 +43,7 @@ public class Path {
      * 
      * @return the starting point of the path 
      */
-    public Coordinates getStartingPoint() {
+    public PointOfInterest getStartingPoint() {
         return this.startPoint;
     }
     
@@ -50,7 +52,7 @@ public class Path {
      * 
      * @return the ending point of the path
      */
-    public Coordinates getEndingPoint() {
+    public PointOfInterest getEndingPoint() {
         return this.endPoint;
     }
     

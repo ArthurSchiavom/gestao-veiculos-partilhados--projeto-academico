@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
+import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.users.Client;
 import lapr.project.model.users.CreditCard;
 import lapr.project.model.vehicles.Bicycle;
@@ -268,7 +269,7 @@ public class PhysicsMethodsTest {
     @Test
     public void testPredictEnergySpent() {
         Client client = new Client("a@a.a", "peleila", "password", 170, 75, 'M', 3.0f, false, new CreditCard("1111111111111111"));
-        Path path1 = new Path(new Coordinates(0.0, 0.0, 100), new Coordinates(0.0018, 0.002, 300), 0.002, 90, 1.0);
+        Path path1 = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 100)),new PointOfInterest("desc2", new Coordinates(0.0018, 0.002, 300)), 0.002, 90, 1.0);
         List<Path> trip = new ArrayList<>();
         trip.add(path1);
         Vehicle vehicle = new Bicycle(1, "PT001", 1.10f, 0.3f, 20, true, 15);
