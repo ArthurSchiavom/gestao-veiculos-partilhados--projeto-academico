@@ -1,6 +1,5 @@
 package lapr.project.model.vehicles;
 
-
 import lapr.project.model.Path;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 
@@ -36,8 +35,9 @@ public class ElectricScooter extends Vehicle {
             int actualBatteryCapacity, float maxBatteryCapacity, int enginePower) {
         super(uniqueNumber, description, aerodynamicCoefficient, frontalArea, weight, available,
                 VehicleType.ELECTRIC_SCOOTER);
-        if (electricScooterType == null)
+        if (electricScooterType == null) {
             throw new IllegalArgumentException("Null elements are not allowed");
+        }
         this.electricScooterType = electricScooterType;
         this.actualBatteryCapacity = actualBatteryCapacity;
         this.maxBatteryCapacity = maxBatteryCapacity;
@@ -81,4 +81,15 @@ public class ElectricScooter extends Vehicle {
         return false;
     }
 
+    /**
+     * Returns true if a scooter has the necessary autonomy to make a trip of X
+     * km over a flat road
+     *
+     * @param trip - the trip
+     * @return true if a scooter has the necessary autonomy to make a trim of X
+     * km over a flat road
+     */
+    public boolean hasAutonomyFlat(int km) {
+        return Math.round(getScooterAutonomy()) >= km;
+    }
 }

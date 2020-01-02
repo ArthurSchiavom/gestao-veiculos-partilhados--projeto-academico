@@ -75,4 +75,21 @@ class ElectricScooterTest {
         assertEquals (expResult2, result2);
 
     }
+
+
+    /**
+     * Test of hasAutonomyFlat method, of class ElectricScooter.
+     */
+    @Test
+    public void testHasAutonomyFlat() {
+        int km = 3;
+        boolean expResult = true;
+        boolean result = instance.hasAutonomyFlat(km);
+        assertEquals(expResult, result);
+        
+        km = 5;
+        expResult = false;
+        result = instance.hasAutonomyFlat(km);
+        assertEquals(expResult, result);
+    }
 }
