@@ -264,7 +264,7 @@ public class Facade implements Serviceable {
 
     @Override
     public int linearDistanceTo(double v, double v1, double v2, double v3) {
-        return (int) new Coordinates(v, v1, 0).distanceIgnoringHeight(new Coordinates(v2, v3, 0));
+        return (int) (new Coordinates(v, v1, 0).distanceIgnoringHeight(new Coordinates(v2, v3, 0)) * 1000);
     }
 
     @Override

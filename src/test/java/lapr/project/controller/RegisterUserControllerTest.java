@@ -107,11 +107,11 @@ class RegisterUserControllerTest {
 
         try {
             // Check that all these methods have been called once
-            verify(preparedStatement).setString(9, "1000100");
+            verify(preparedStatement).setString(9, username);
             verify(preparedStatement).setString(1, email);
             verify(preparedStatement).setInt(4, heightCm);
             verify(preparedStatement).setInt(5, weightKg);
-            verify(preparedStatement).setFloat(7,1f);
+            verify(preparedStatement).setFloat(7,cyclingAverageSpeed);
             verify(preparedStatement).setString(3, visa);
             verify(preparedStatement).setString(6, gender);
             verify(preparedStatement).setString(8, password);
