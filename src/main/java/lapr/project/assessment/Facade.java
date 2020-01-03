@@ -199,6 +199,16 @@ public class Facade implements Serviceable {
     }
 
     @Override
+    public int getNumberOfEscootersAtPark(double v, double v1, String s) {
+        return 0;
+    }
+
+    @Override
+    public int getNumberOfEScootersAtPark(String s, String s1) {
+        return 0;
+    }
+
+    @Override
     public void getNearestParks(double v, double v1, String s) {
         getNearestParks(v, v1, s, 0);
         Shutdown.shutdown();
@@ -248,7 +258,7 @@ public class Facade implements Serviceable {
     }
 
     @Override
-    public int getFreeSlotsAtParkForMyLoanedVehicle(String s) {
+    public int getFreeSlotsAtParkForMyLoanedVehicle(String s, String s1) {
         return 0;
     }
 
@@ -339,7 +349,7 @@ public class Facade implements Serviceable {
     }
 
     @Override
-    public int registerUser(String s, String s1, String s2, int i, int i1, String s3) {
+    public int registerUser(String s, String s1, String s2, String s3, int i, int i1, String s4) {
         try {
             registerUserController.registerClient(s, s1, s2, i, i1, s3);
             return 1;
@@ -350,13 +360,13 @@ public class Facade implements Serviceable {
     }
 
     @Override
-    public long unlockAnyEscootereAtPark(String s, String s1, String s2) {
-        throw new UnsupportedOperationException();
+    public long unlockAnyEscooterAtPark(String s, String s1, String s2) {
+        return 0;
     }
 
     @Override
-    public long unlockAnyEscootereAtParkForDestination(String s, String s1, double v, double v1, String s2) {
-        throw new UnsupportedOperationException();
+    public long unlockAnyEscooterAtParkForDestination(String s, String s1, double v, double v1, String s2) {
+        return 0;
     }
 
     @Override
@@ -367,5 +377,60 @@ public class Facade implements Serviceable {
     @Override
     public long mostEnergyEfficientRouteBetweenTwoParks(String s, String s1, String s2, String s3, String s4, String s5) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public double getUserCurrentDebt(String s, String s1) {
+        return 0;
+    }
+
+    @Override
+    public double getUserCurrentPoints(String s, String s1) {
+        return 0;
+    }
+
+    @Override
+    public double calculateElectricalEnergyToTravelFromOneLocationToAnother(double v, double v1, double v2, double v3, String s) {
+        return 0;
+    }
+
+    @Override
+    public long forHowLongAVehicleIsUnlocked(String s) {
+        return 0;
+    }
+
+    @Override
+    public long shortestRouteBetweenTwoParks(double v, double v1, double v2, double v3, String s) {
+        return 0;
+    }
+
+    @Override
+    public long shortestRouteBetweenTwoParks(String s, String s1, String s2) {
+        return 0;
+    }
+
+    @Override
+    public long shortestRouteBetweenTwoParksForGivenPOIs(String s, String s1, String s2, String s3) {
+        return 0;
+    }
+
+    @Override
+    public long shortestRouteBetweenTwoParksForGivenPOIs(double v, double v1, double v2, double v3, String s, String s1) {
+        return 0;
+    }
+
+    @Override
+    public long getParkChargingReport(String s, String s1) {
+        return 0;
+    }
+
+    @Override
+    public int suggestRoutesBetweenTwoLocations(String s, String s1, String s2, String s3, String s4, int i, boolean b, String s5, String s6, String s7) {
+        return 0;
+    }
+
+    @Override
+    public double getInvoiceForMonth(int i, String s, String s1) {
+        return 0;
     }
 }
