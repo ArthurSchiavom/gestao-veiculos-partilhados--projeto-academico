@@ -2,6 +2,7 @@ package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
 import lapr.project.data.registers.ParkAPI;
+import lapr.project.model.VehicleDescriptionComparator;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.Utils;
 

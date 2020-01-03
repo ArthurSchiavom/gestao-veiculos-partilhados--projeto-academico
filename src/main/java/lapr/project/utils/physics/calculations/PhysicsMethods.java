@@ -148,7 +148,7 @@ public class PhysicsMethods {
     }
 
     /**
-     * Method that calculates the ammount of calories burnt between two points
+     * Method that calculates the amount of calories burnt between two points
      * <url> https://en.wikipedia.org/wiki/Bicycle_performance </url>
      *
      *
@@ -163,7 +163,7 @@ public class PhysicsMethods {
      * @param startPoint - the starting point of the path that the rider is going
      * @param endPoint - the ending point of the path that the rider is going
      * @param windAngle - the angle made between the wind speed and the north pole
-     * @return the ammount of calories burnt between two points
+     * @return the amount of calories burnt between two points
      */
     public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
 
