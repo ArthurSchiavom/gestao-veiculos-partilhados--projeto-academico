@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class RegisterUserController {
     private static final int USER_USERNAME = 0;
@@ -20,8 +19,6 @@ public class RegisterUserController {
     private static final int USER_VISA = 5;
     private static final int USER_GENDER = 6;
     private static final int USER_PASS_WORD = 7;
-
-    private static long randomUsername = ThreadLocalRandom.current().nextLong(1000000L, Long.MAX_VALUE);
 
     private final Company company;
 
@@ -71,7 +68,7 @@ public class RegisterUserController {
         return username.size();
     }
 
-    public void registerClient(String email, String password, String visa, int heightCm, int weightKg, String gender) throws SQLException {
+    public void registerClient(String username, String email, String password, String visa, int heightCm, int weightKg, String gender, float cyclingAvgSpeed) throws SQLException {
         List<String> usernames = new ArrayList<>();
         List<String> emails = new ArrayList<>();
         List<Integer> heights = new ArrayList<>();
@@ -87,11 +84,11 @@ public class RegisterUserController {
         else
             actualGender = Client.GENDER_MALE;
 
-        usernames.add(Long.toString(randomUsername++));
+        usernames.add(username);
         emails.add(email);
         heights.add(heightCm);
         weights.add(weightKg);
-        cyclingAvgSpeeds.add(1f);
+        cyclingAvgSpeeds.add(cyclingAvgSpeed);
         genders.add(actualGender);
         visas.add(visa);
         passwords.add(password);

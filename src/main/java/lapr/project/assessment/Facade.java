@@ -267,7 +267,7 @@ public class Facade implements Serviceable {
 
     @Override
     public int linearDistanceTo(double v, double v1, double v2, double v3) {
-        return (int) new Coordinates(v, v1, 0).distanceIgnoringHeight(new Coordinates(v2, v3, 0));
+        return (int) (new Coordinates(v, v1, 0).distanceIgnoringHeight(new Coordinates(v2, v3, 0)) * 1000);
     }
 
     @Override
@@ -299,9 +299,9 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
-    //TODO - TEST (database was down)
     @Override
     public long lockBicycle(String s, double v, double v1, String s1) {
+        prepare(false);
         try {
             lockVehicleController.lockVehicle(v, v1, s);
         } catch (SQLException e) {
@@ -312,9 +312,9 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
-    //TODO - TEST (database was down)
     @Override
     public long lockBicycle(String s, String s1, String s2) {
+        prepare(false);
         try {
             lockVehicleController.lockVehicle(s1, s);
         } catch (SQLException e) {
@@ -325,9 +325,9 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
-    //TODO - TEST (database was down)
     @Override
     public long lockEscooter(String s, double v, double v1, String s1) {
+        prepare(false);
         try {
             lockVehicleController.lockVehicle(v, v1, s);
         } catch (SQLException e) {
@@ -338,9 +338,9 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
-    //TODO - TEST (database was down)
     @Override
     public long lockEscooter(String s, String s1, String s2) {
+        prepare(false);
         try {
             lockVehicleController.lockVehicle(s1, s);
         } catch (SQLException e) {
@@ -353,8 +353,9 @@ public class Facade implements Serviceable {
 
     @Override
     public int registerUser(String s, String s1, String s2, String s3, int i, int i1, String s4) {
+        prepare(false);
         try {
-            registerUserController.registerClient(s, s1, s2, i, i1, s3);
+            registerUserController.registerClient(s, s1, s2, s3, i, i1, s4, 10f);
             return 1;
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());

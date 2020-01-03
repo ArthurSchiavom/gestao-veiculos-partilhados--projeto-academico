@@ -89,15 +89,17 @@ class RegisterUserControllerTest {
 
     @Test
     void registerClientTest() {
+        String username = "userNaMe";
         String email = "email@";
         String password = "pwd";
         String visa = "1234567890";
         int heightCm = 180;
         int weightKg = 60;
         String gender = Character.toString(Client.GENDER_FEMALE);
+        float cyclingAverageSpeed = 10;
 
         try {
-            controller.registerClient(email, password, visa, heightCm, weightKg, gender);
+            controller.registerClient(username, email, password, visa, heightCm, weightKg, gender, cyclingAverageSpeed);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -105,11 +107,11 @@ class RegisterUserControllerTest {
 
         try {
             // Check that all these methods have been called once
-            verify(preparedStatement).setString(Matchers.eq(9), anyString());
+            verify(preparedStatement).setString(9, username);
             verify(preparedStatement).setString(1, email);
             verify(preparedStatement).setInt(4, heightCm);
             verify(preparedStatement).setInt(5, weightKg);
-            verify(preparedStatement).setFloat(7,1f);
+            verify(preparedStatement).setFloat(7,cyclingAverageSpeed);
             verify(preparedStatement).setString(3, visa);
             verify(preparedStatement).setString(6, gender);
             verify(preparedStatement).setString(8, password);
@@ -119,6 +121,16 @@ class RegisterUserControllerTest {
             verify(preparedStatement, times(2)).setInt(anyInt(), anyInt());
             verify(preparedStatement, times(2)).setFloat(anyInt(), anyFloat());
             verify(preparedStatement, times(5)).setString(anyInt(), anyString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            gender = Character.toString(Client.GENDER_MALE);
+            controller.registerClient(username, email, password, visa, heightCm, weightKg, gender, cyclingAverageSpeed);
+            gender = "f";
+            controller.registerClient(username, email, password, visa, heightCm, weightKg, gender, cyclingAverageSpeed);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
