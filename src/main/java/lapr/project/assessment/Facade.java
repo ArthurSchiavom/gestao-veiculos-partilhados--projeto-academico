@@ -7,6 +7,7 @@ import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.Bicycle;
+import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
@@ -203,12 +204,36 @@ public class Facade implements Serviceable {
 
     @Override
     public int getNumberOfEscootersAtPark(double v, double v1, String s) {
-        return 0;
+        List<ElectricScooter> electricScooters;
+        int result = -1;
+        try {
+            electricScooters = visualizeVehiclesAtParkController.getVehiclesAtPark(v, v1, ElectricScooter.class);
+            result = electricScooters.size();
+            visualizeVehiclesAtParkController.writeOutputFile(electricScooters, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            return -1;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to write output file");
+        }
+        return result;
     }
 
     @Override
     public int getNumberOfEScootersAtPark(String s, String s1) {
-        return 0;
+        List<ElectricScooter> electricScooters;
+        int result = -1;
+        try {
+            electricScooters = visualizeVehiclesAtParkController.getVehiclesAtPark(s, ElectricScooter.class);
+            result = electricScooters.size();
+            visualizeVehiclesAtParkController.writeOutputFile(electricScooters, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            return -1;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to write output file");
+        }
+        return result;
     }
 
     @Override
