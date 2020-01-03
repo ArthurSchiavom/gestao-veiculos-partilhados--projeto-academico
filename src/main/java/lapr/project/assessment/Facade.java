@@ -8,6 +8,7 @@ import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.VehicleType;
+import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 
 import javax.mail.MessagingException;
@@ -38,6 +39,7 @@ public class Facade implements Serviceable {
     private FindParksNearbyController findParksNearbyController;
     private UnlockVehicleController unlockVehicleController;
     private LockVehicleController lockVehicleController;
+    private ShortestRouteBetweenParksController shortestRouteBetweenParksController;
 
     /**
      * Prepares facade by booting up the application and Facade variables.
@@ -67,6 +69,7 @@ public class Facade implements Serviceable {
         findParksNearbyController = new FindParksNearbyController(company);
         unlockVehicleController = new UnlockVehicleController(company);
         lockVehicleController = new LockVehicleController(company);
+        shortestRouteBetweenParksController = new ShortestRouteBetweenParksController(company);
 
         return true;
     }
@@ -399,19 +402,38 @@ public class Facade implements Serviceable {
         return 0;
     }
 
+    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParks(double v, double v1, double v2, double v3, String s) {
-        return 0;
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v,v1,v2,v3,s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0; // doesn't say what to return in the documentation
+        }
     }
 
+
+    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParks(String s, String s1, String s2) {
-        return 0;
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchById(s,s1,s2);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0; // doesn't say what to return in the documentation
+        }
     }
 
+    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParksForGivenPOIs(String s, String s1, String s2, String s3) {
-        return 0;
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksAndGivenPoisFetchById(s,s1,s2,s3);
+        } catch (SQLException | FileNotFoundException | InvalidFileDataException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0; // doesn't say what to return in the documentation
+        }
     }
 
     @Override
