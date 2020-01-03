@@ -90,18 +90,18 @@ public class PhysicsMethods {
 
         return Math.acos(cosAngle);
     }
+    
 
     /**
      * Returns the value of the apparent wind speed
      *
-     * @param windAngleRad - the angle made between the wind speed direction and
-     * the North pole
+     * @param windAndVehicleAngleRad - - the angle made between the wind speed direction and the vehicle
      * @param riderSpeed - the rider average speed
      * @param windSpeed - the wind speed
      * @return the value of the apparent wind speed
      */
-    public static Double calculateApparentWindSpeed(double windAngleRad, double riderSpeed, double windSpeed) {
-        return Math.sqrt(Math.pow(riderSpeed + (windSpeed * Math.cos(windAngleRad)), 2) + Math.pow((windSpeed * Math.sin(windAngleRad)), 2));
+    public static Double calculateApparentWindSpeed(double windAndVehicleAngleRad, double riderSpeed, double windSpeed) {
+        return Math.sqrt(Math.pow(riderSpeed + (windSpeed * Math.cos(windAndVehicleAngleRad)), 2) + Math.pow((windSpeed * Math.sin(windAndVehicleAngleRad)), 2));
     }
 
     /**
@@ -111,12 +111,13 @@ public class PhysicsMethods {
      * @param riderSpeed - the rider average speed
      * @param windSpeed - the wind speed
      * @param apparentWindSpeed - the apparent wind speed
-     * @param windAngleRad - the angle made between the wind speed direction and
-     * the North pole
-     * @return
+     * @param windAndRiderAngleRad - the angle made between the wind speed direction and the vehicle
+     * 
+     * @return the cosine of the angle made between the apparent wind speed and
+     * the speed of the rider
      */
-    public static Double calculateCosApparentWindAngle(double riderSpeed, double windSpeed, double apparentWindSpeed, double windAngleRad) {
-        return (riderSpeed + (windSpeed * Math.cos(windAngleRad))) / apparentWindSpeed;
+    public static Double calculateCosApparentWindAngle(double riderSpeed, double windSpeed, double apparentWindSpeed, double windAndRiderAngleRad) {
+        return (riderSpeed + (windSpeed * Math.cos(windAndRiderAngleRad))) / apparentWindSpeed;
     }
 
     /**
@@ -173,8 +174,8 @@ public class PhysicsMethods {
         double slope = calculateSlope(heightDifference, distanceMade);
         double windAngleRad = convertDegreesToRadian(windAngle);
         double angleWindSpeedRiderSpeed = calculateAngleWindSpeedRiderSpeed(startPoint.getCoordinateX(), startPoint.getCoordinateY(), endPoint.getCoordinateX(), endPoint.getCoordinateY(), windAngleRad, windSpeed);
-        double apparentWindSpeed = calculateApparentWindSpeed(windAngleRad, velocity, windSpeed);
-        double cosineApparentWind = calculateCosApparentWindAngle(velocity, windSpeed, apparentWindSpeed, windAngleRad);
+        double apparentWindSpeed = calculateApparentWindSpeed(angleWindSpeedRiderSpeed, velocity, windSpeed);
+        double cosineApparentWind = calculateCosApparentWindAngle(velocity, windSpeed, apparentWindSpeed, angleWindSpeedRiderSpeed);
 
         double powerRollingResistance = calculatePowerRollingResistance(velocity, totalMass, kineticCoefficient);
         double powerClimbing = calculateClimbingPower(velocity, totalMass, slope);
