@@ -414,7 +414,7 @@ public class ParkAPI {
      * @return vehicles of the given type at the given park
      * @throws SQLException if a database access error occurs
      */
-    public <T> List<T> fetchVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
+    public <T extends Vehicle> List<T> fetchVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
         List<T> result = new ArrayList<>();
 
@@ -442,6 +442,25 @@ public class ParkAPI {
         }
 
         return result;
+    }
+
+    /**
+     * Fetches the available vehicles at a park.
+     *
+     * @param parkId ID of the park
+     * @param vehicleClassType type of target search vehicle, use Vehicle.class for any type
+     * @param <T> type of target search vehicle
+     * @return vehicles of the given type at the given park
+     * @throws SQLException if a database access error occurs
+     */
+    public <T extends Vehicle> List<T> fetchAvailableVehiclesAtPark(String parkId, Class<T> vehicleClassType) throws SQLException {
+        List<T> vehiclesAtPark = fetchVehiclesAtPark(parkId, vehicleClassType);
+        List<T> availableVehicles = new ArrayList<>();
+        for (T vehicle : vehiclesAtPark) {
+            if (vehicle.isAvailable())
+                availableVehicles.add(vehicle);
+        }
+        return availableVehicles;
     }
 
     void unlockVehicleNoCommit(String vehicleDescription) throws SQLException {

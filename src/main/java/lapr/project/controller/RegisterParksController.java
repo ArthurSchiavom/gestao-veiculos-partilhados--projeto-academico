@@ -70,4 +70,26 @@ public class RegisterParksController {
             throw new SQLException("Failed to write data to the database: \n" + e.getMessage());
         }
     }
+
+    public void registerPark(String id, double latitude, double longitude, int altitude, int maxNumBikes, int maxNumScooters,
+                             float inputVoltage, float inputCurrent, String description)
+            throws SQLException {
+        List<String> idList = new ArrayList<>();
+        List<Coordinates> coordinatesList = new ArrayList<>();
+        List<Integer> maxNumScootersList = new ArrayList<>();
+        List<Integer> maxNumBikesList = new ArrayList<>();
+        List<String> descriptionList = new ArrayList<>();
+        List<Float> inputVoltageList = new ArrayList<>();
+        List<Float> inputCurrentList = new ArrayList<>();
+
+        idList.add(id);
+        coordinatesList.add(new Coordinates(latitude, longitude, altitude));
+        maxNumBikesList.add(maxNumBikes);
+        maxNumScootersList.add(maxNumScooters);
+        inputVoltageList.add(inputVoltage);
+        inputCurrentList.add(inputCurrent);
+        descriptionList.add(description);
+
+        company.getParkAPI().registerParks(idList, descriptionList, coordinatesList, inputVoltageList, inputCurrentList, maxNumScootersList, maxNumBikesList);
+    }
 }
