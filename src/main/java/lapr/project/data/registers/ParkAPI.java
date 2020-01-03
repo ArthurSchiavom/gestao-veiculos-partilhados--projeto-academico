@@ -115,7 +115,7 @@ public class ParkAPI {
             ps.setString(1, id);
             ResultSet rs = dataHandler.executeQuery(ps);
             closeableManager.addAutoCloseable(rs);
-            if (rs == null || !rs.next()) {
+            if (!rs.next()) {
                 return null;
             }
             latitude = rs.getDouble("latitude");
@@ -172,9 +172,6 @@ public class ParkAPI {
             ps.setString(1, parkId);
             rs = dataHandler.executeQuery(ps);
             closeableManager.addAutoCloseable(rs);
-            if (rs == null) {
-                return null;
-            }
             while (rs.next()) {
                 String vehicleTypeName = rs.getString("vehicle_type_name");
                 parkCapacity = rs.getInt("park_capacity");
