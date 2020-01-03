@@ -1,4 +1,4 @@
-package lapr.project.controller;
+package lapr.project.model;
 
 import lapr.project.model.vehicles.Vehicle;
 

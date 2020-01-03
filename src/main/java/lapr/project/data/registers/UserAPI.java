@@ -25,22 +25,20 @@ public class UserAPI {
     /**
      * Inserts a list of clients
      */
-    public int insertClients(List<String> email, List<String> username, List<Integer> height, List<Integer> weight, List<Character> gender, List<String> creditCardNumber, List<Float> cyclingAvgSpeed, List<String> password) throws SQLException {
+    public void insertClients(List<String> email, List<String> username, List<Integer> height, List<Integer> weight, List<Character> gender, List<String> creditCardNumber, List<Float> cyclingAvgSpeed, List<String> password) throws SQLException {
         if(!(password.size() == email.size() && email.size()==username.size() && username.size() == height.size() && height.size() == weight.size() && weight.size()== gender.size() && gender.size() == creditCardNumber.size() && creditCardNumber.size() == cyclingAvgSpeed.size())){
             throw new IllegalArgumentException("Lists have different sizes.");
         }
         int i;
-        for( i = 0 ; i < email.size(); i++){
+        for(i = 0 ; i < email.size(); i++){
             try {
                 insertClient(email.get(i), username.get(i), height.get(i), weight.get(i), gender.get(i),  creditCardNumber.get(i), cyclingAvgSpeed.get(i),password.get(i));
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
+            } catch (SQLException e) {
                 dataHandler.rollbackTransaction();
                 throw e;
             }
         }
         dataHandler.commitTransaction(); // commits all the clients at once contained in the current transaction
-        return i;
     }
 
     /**
@@ -116,7 +114,7 @@ public class UserAPI {
                 throw new IllegalArgumentException("Client not inserted correctly");
             }
         } catch (SQLException e) {
-            throw e; // throws the exception it catches, because it needs the finally clause to close the statement
+            throw new SQLException("Failed to add client of email " + email, e.getSQLState(), e.getErrorCode()); // throws the exception it catches, because it needs the finally clause to close the statement
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }

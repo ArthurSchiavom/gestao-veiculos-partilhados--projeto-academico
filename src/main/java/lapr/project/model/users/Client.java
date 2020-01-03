@@ -4,6 +4,8 @@ package lapr.project.model.users;
  * Represents a client of the application, which is an user
  */
 public class Client extends User {
+    public static final char GENDER_MALE = 'M';
+    public static final char GENDER_FEMALE = 'F';
 
     private final int points;
     private final int height;
@@ -79,6 +81,10 @@ public class Client extends User {
 
     public float getCyclingAverageSpeed() {
         return cyclingAverageSpeed;
+    }
+
+    public boolean isRiding() {
+        return isRiding;
     }
 
     @Override

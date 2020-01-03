@@ -1,6 +1,7 @@
 package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
+import lapr.project.model.users.Client;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 
@@ -8,11 +9,9 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RegisterUserController {
-
-    private final Company company;
-
     private static final int USER_USERNAME = 0;
     private static final int USER_EMAIL = 1;
     private static final int USER_HEIGHT = 2;
@@ -21,6 +20,11 @@ public class RegisterUserController {
     private static final int USER_VISA = 5;
     private static final int USER_GENDER = 6;
     private static final int USER_PASS_WORD = 7;
+
+    private static long randomUsername = ThreadLocalRandom.current().nextLong(1000000L, Long.MAX_VALUE);
+
+    private final Company company;
+
 
     public RegisterUserController(Company company) {
         this.company = company;
@@ -62,10 +66,36 @@ public class RegisterUserController {
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
-        try {
-            return company.getUserAPI().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed,password);
-        } catch (SQLException e) {
-            throw new SQLException("Failed to write data to the database: \n" + e.getMessage());
-        }
+
+        company.getUserAPI().insertClients(email, username, height, weight, gender, visa, cyclingAvgSpeed, password);
+        return username.size();
+    }
+
+    public void registerClient(String email, String password, String visa, int heightCm, int weightKg, String gender) throws SQLException {
+        List<String> usernames = new ArrayList<>();
+        List<String> emails = new ArrayList<>();
+        List<Integer> heights = new ArrayList<>();
+        List<Integer> weights = new ArrayList<>();
+        List<Float> cyclingAvgSpeeds = new ArrayList<>();
+        List<Character> genders = new ArrayList<>();
+        List<String> visas = new ArrayList<>();
+        List<String> passwords = new ArrayList<>();
+
+        char actualGender;
+        if (gender.contains("f") || gender.contains("F"))
+            actualGender = Client.GENDER_FEMALE;
+        else
+            actualGender = Client.GENDER_MALE;
+
+        usernames.add(Long.toString(randomUsername++));
+        emails.add(email);
+        heights.add(heightCm);
+        weights.add(weightKg);
+        cyclingAvgSpeeds.add(1f);
+        genders.add(actualGender);
+        visas.add(visa);
+        passwords.add(password);
+
+        company.getUserAPI().insertClients(emails, usernames, heights, weights, genders, visas, cyclingAvgSpeeds, passwords);
     }
 }

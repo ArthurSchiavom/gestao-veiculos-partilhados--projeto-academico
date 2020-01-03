@@ -4,6 +4,13 @@ import lapr.project.data.DataHandler;
 import lapr.project.mapgraph.Graph;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.User;
+import lapr.project.model.vehicles.Vehicle;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a company
@@ -15,7 +22,8 @@ public class Company {
     private final UserAPI userAPI;
     private final TripAPI tripAPI;
     private final VehicleAPI vehicleAPI;
-    private Graph<PointOfInterest, Path> mapGraph;
+    private Graph<PointOfInterest, Path> mapGraphDistance;
+    private Graph<PointOfInterest, Path> mapGraphEnergy;
     private final PathAPI pathAPI;
     private final PoiAPI poiAPI;
 
@@ -29,7 +37,8 @@ public class Company {
         this.userAPI = new UserAPI(dataHandler);
         this.tripAPI = new TripAPI(dataHandler);
         this.vehicleAPI = new VehicleAPI(dataHandler);
-        mapGraph = null;
+        mapGraphDistance = null;
+        mapGraphEnergy = null;
         this.pathAPI = new PathAPI(dataHandler);
         this.poiAPI = new PoiAPI(dataHandler);
     }
@@ -47,21 +56,42 @@ public class Company {
 
     /**
      * Initializes a graph with the information about poi's and path's
-     * @return a map graph
+     * @return a map graph with weight being the distance between poi's
      */
-    public Graph<PointOfInterest,Path> initializeGraph(){
-        mapGraph = new Graph<>(true);
+    public Graph<PointOfInterest,Path> initializeDistanceGraph(){
+        mapGraphDistance = new Graph<>(true);
         for(PointOfInterest poi : poiAPI.fetchAllPois()){
-            mapGraph.insertVertex(poi);
+            mapGraphDistance.insertVertex(poi);
         }
         PointOfInterest startingPoint;
         PointOfInterest endingPoint;
         for(Path path : pathAPI.fetchAllPaths()){
             startingPoint = path.getStartingPoint();
             endingPoint = path.getEndingPoint();
-            mapGraph.insertEdge(startingPoint,endingPoint,path,startingPoint.getCoordinates().distance(endingPoint.getCoordinates()));
+            mapGraphDistance.insertEdge(startingPoint,endingPoint,path,startingPoint.getCoordinates().distance(endingPoint.getCoordinates()));
         }
-        return mapGraph;
+        return mapGraphDistance;
+    }
+
+    /**
+     * Initializes a graph with the information about poi's and path's
+     * @return a map graph with the weight being the energy between poi's
+     */
+    public Graph<PointOfInterest,Path> initializeEnergyGraph(Client client, Vehicle vehicle){
+        mapGraphEnergy = new Graph<>(true);
+        for(PointOfInterest poi : poiAPI.fetchAllPois()){
+            mapGraphEnergy.insertVertex(poi);
+        }
+        PointOfInterest startingPoint;
+        PointOfInterest endingPoint;
+        for(Path path : pathAPI.fetchAllPaths()){
+            startingPoint = path.getStartingPoint();
+            endingPoint = path.getEndingPoint();
+            List<Path> trip = new ArrayList<>();
+            trip.add(path);
+            mapGraphEnergy.insertEdge(startingPoint,endingPoint,path, PhysicsMethods.predictEnergySpent(client,trip,vehicle));
+        }
+        return mapGraphEnergy;
     }
 
     public static void reset() {
@@ -77,10 +107,25 @@ public class Company {
     }
 
     /**
-     * @return Returns the map graph that contains the information about parks and poi's
+     * @return Returns the map graph that contains the information about parks and poi's distance
      */
-    public Graph<PointOfInterest,Path> getMapGraph(){
-        return mapGraph;
+    public Graph<PointOfInterest,Path> getMapGraphDistance(){
+        if(mapGraphDistance != null) {
+            return mapGraphDistance;
+        }else{
+            return initializeDistanceGraph();
+        }
+    }
+
+    /**
+     * @return Returns the map graph that contains the information about parks and poi's energy
+     */
+    public Graph<PointOfInterest,Path> getMapGraphEnergy(Client client, Vehicle vehicle){
+        if(mapGraphEnergy != null) {
+            return mapGraphEnergy;
+        }else{
+            return initializeEnergyGraph(client, vehicle);
+        }
     }
 
     public ParkAPI getParkAPI() {
