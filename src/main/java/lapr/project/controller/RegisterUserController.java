@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles the registering of users
+ */
 public class RegisterUserController {
     private static final int USER_USERNAME = 0;
     private static final int USER_EMAIL = 1;
@@ -28,6 +31,7 @@ public class RegisterUserController {
     }
 
     /**
+     * @param filePath path to the file that contains the clients information
      * @return the number of users added
      */
     public int registerClients(String filePath) throws SQLException, InvalidFileDataException, FileNotFoundException {

@@ -331,18 +331,20 @@ public class MapGraphAlgorithms {
      * @return the shortest path going through all constraints
      */
     @SuppressWarnings("Duplicates")
-    public static <V, E> double shortestPathWithConstraints(Graph<V, E> g, V vOrig, V vDest, Set<V> constraints, LinkedList<V> shortPath) {
+    public static <V, E> double shortestPathWithConstraints(Graph<V, E> g, V vOrig, V vDest, Set<V> constraints, List<LinkedList<V>> shortPaths) {
         double totalWeight = Double.MAX_VALUE;
         //Performs all the standard checks
         if (!g.validVertex(vOrig) || !g.validVertex(vDest)) {
             return 0;
         }
         if(constraints.isEmpty()) {
-            totalWeight = shortestPath(g, vOrig, vDest, shortPath);
+            shortPaths.clear();
+            shortPaths.add(new LinkedList<>());
+            totalWeight = shortestPath(g, vOrig, vDest, shortPaths.get(0));
             return totalWeight;
         }
         if(vOrig.equals(vDest)) {
-            shortPath.add(vDest);
+            shortPaths.get(0).add(vDest);
             return 0;
         }
         ArrayList<LinkedList<V>> allSolutions = allPaths(g, vOrig, vDest);
@@ -361,6 +363,7 @@ public class MapGraphAlgorithms {
         if(filteredSolutions.isEmpty()) {
             return 0;
         }
+        int i = 0;
         for(LinkedList<V> path: filteredSolutions) {
             double temp = 0;
             Iterator<V> it = path.iterator();
@@ -372,10 +375,13 @@ public class MapGraphAlgorithms {
                 temp += edge.getWeight();                       //Goes through all edges in solution and calculates total cost
             }
             if(temp<totalWeight) {                              //If total cost is less than already found solution, then record this
-                shortPath.clear();                              //as the optimal solution
-                shortPath.addAll(path);
+                shortPaths.clear();                              //as the optimal solution
+                shortPaths.add(new LinkedList<V>(path));
                 totalWeight = temp;
+            }else if(temp == totalWeight){
+                shortPaths.add(new LinkedList<V>(path));
             }
+            i++;
         }
         return totalWeight;
     }

@@ -462,9 +462,15 @@ public class Facade implements Serviceable {
         }
     }
 
+    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParksForGivenPOIs(double v, double v1, double v2, double v3, String s, String s1) {
-        return 0;
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(v,v1,v2,v3,s,s1);
+        } catch (SQLException | FileNotFoundException | InvalidFileDataException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0; // doesn't say what to return in the documentation
+        }
     }
 
     @Override
