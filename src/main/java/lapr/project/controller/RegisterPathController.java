@@ -71,10 +71,7 @@ public class RegisterPathController {
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
-        try {
-            return company.getPathAPI().insertPaths(latA,lonA,latB,lonB,kineticCoefficient,windDirection,windSpeed);
-        } catch (SQLException e) {
-            throw new SQLException("Failed to write data to the database");
-        }
+
+        return company.getPathAPI().insertPaths(latA,lonA,latB,lonB,kineticCoefficient,windDirection,windSpeed);
     }
 }

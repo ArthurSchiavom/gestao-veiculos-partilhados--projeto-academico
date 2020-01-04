@@ -57,12 +57,8 @@ public class RegisterBicyclesController {
             throw new FileNotFoundException("File not found - " + filePath);
         }
 
-        try {
-            company.getVehicleAPI().registerBicycles(aerodynamicCoefficient, frontalArea, weight,
-                    size, description, parkLatitude, parkLongitude);
-            return aerodynamicCoefficient.size();
-        } catch (SQLException e) {
-            throw new SQLException("Failed to write data to the database");
-        }
+        company.getVehicleAPI().registerBicycles(aerodynamicCoefficient, frontalArea, weight, size, description, parkLatitude, parkLongitude);
+        return aerodynamicCoefficient.size();
+
     }
 }

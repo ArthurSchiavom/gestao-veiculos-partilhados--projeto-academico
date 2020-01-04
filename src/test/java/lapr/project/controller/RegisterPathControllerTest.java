@@ -42,7 +42,7 @@ class RegisterPathControllerTest {
     void registerPathsTest() {
         try {
             int result = controller.registerPaths("testFiles/path.txt");
-            assertEquals(3, result,"should be 2 but was: " + result);
+            assertEquals(3, result,"should be 3 but was: " + result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             fail();

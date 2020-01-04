@@ -68,11 +68,7 @@ public class RegisterElectricScootersController {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
 
-        try {
             company.getVehicleAPI().registerElectricScooters(aerodynamicCoefficient, frontalArea, weight, type, description, maxBatteryCapacity, actualBatteryCapacity, enginePower, parkLatitude, parkLongitude);
             return aerodynamicCoefficient.size();
-        } catch (SQLException e) {
-            throw new SQLException("Failed to write data to the database");
-        }
     }
 }
