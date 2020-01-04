@@ -363,7 +363,6 @@ public class MapGraphAlgorithms {
         if(filteredSolutions.isEmpty()) {
             return 0;
         }
-        int i = 0;
         for(LinkedList<V> path: filteredSolutions) {
             double temp = 0;
             Iterator<V> it = path.iterator();
@@ -381,7 +380,6 @@ public class MapGraphAlgorithms {
             }else if(temp == totalWeight){
                 shortPaths.add(new LinkedList<V>(path));
             }
-            i++;
         }
         return totalWeight;
     }
