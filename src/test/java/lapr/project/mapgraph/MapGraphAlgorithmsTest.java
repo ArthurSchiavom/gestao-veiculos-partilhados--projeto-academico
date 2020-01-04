@@ -114,13 +114,13 @@ public class MapGraphAlgorithmsTest {
         ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
 
         paths=MapGraphAlgorithms.allPaths(completeMap, "Porto", "LX");
-        assertEquals(true,paths.size()==0);
+        assertEquals(paths.size(),0);
 
         paths = MapGraphAlgorithms.allPaths(incompleteMap, "Porto", "Lisboa");
-        assertEquals(true, paths.size()==4);
+        assertEquals(paths.size(), 92);
 
         paths=MapGraphAlgorithms.allPaths(incompleteMap, "Porto", "Faro");
-        assertEquals(true, paths.size()==0);
+        assertEquals(paths.size(), 0);
     }
 
     /**
@@ -277,7 +277,7 @@ public class MapGraphAlgorithmsTest {
 //            System.out.println("\n");
 //        }
         assertEquals( 335, dist, 0);
-        assertEquals(4,shortPath.size());
+        assertEquals(8,shortPath.size());
     }
 
     /**

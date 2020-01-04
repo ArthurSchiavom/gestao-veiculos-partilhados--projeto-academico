@@ -18,6 +18,7 @@ public class MostEnergyEfficientRouteController {
         this.company = company;
     }
 
+    //TODO: teacher has to give the missing variables, or a way to identify the vehicle to perform the required calculations
     public LinkedList<Path> mostEnergyEfficientRouteBetweenTwoParks(String originParkIdentification,String destinationParkIdentification,String typeOfVehicle,String vehicleSpecs,String username,String outputFileName) throws SQLException {
         Park parkStart = company.getParkAPI().fetchParkById(originParkIdentification);
         Park parkEnd = company.getParkAPI().fetchParkById(destinationParkIdentification);

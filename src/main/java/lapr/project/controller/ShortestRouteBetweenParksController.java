@@ -6,7 +6,6 @@ import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
-
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.*;
@@ -15,8 +14,8 @@ public class ShortestRouteBetweenParksController {
     private final Company company;
     private static final int POI_LAT = 0;
     private static final int POI_LON = 1;
-    private static final int POI_ELEVATION = 2;
-    private static final int POI_DESCRIPTION = 3;
+//    private static final int POI_ELEVATION = 2;
+//    private static final int POI_DESCRIPTION = 3;
     private static final String HEADER = "latitude;longitude;elevation;poi description";
     private static final String LINE_SEPARATOR = ";";
     private static final String COMMENT_TAG = "#";
@@ -83,7 +82,14 @@ public class ShortestRouteBetweenParksController {
             pois.add(company.getPoiAPI().fetchPoi(lat.get(i),lon.get(i)));
         }
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
-        return Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
+        long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
+        Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
+            @Override
+            public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
+                return t1.size()-pointOfInterests.size();
+            }
+        });
+        return distance;
     }
     /**
      * Returns the distance in meters of the shortest route between 2 parks
@@ -140,6 +146,13 @@ public class ShortestRouteBetweenParksController {
         }
         LinkedList<PointOfInterest> path = new LinkedList<>();
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
-        return Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
+        long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
+        Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
+            @Override
+            public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
+                return t1.size()-pointOfInterests.size();
+            }
+        });
+        return distance;
     }
 }

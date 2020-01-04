@@ -93,7 +93,7 @@ public class MapGraphAlgorithms {
                 path.add(vDest);
                 paths.add(new LinkedList<>(path));
                 path.removeLast();
-            } else if (!path.contains(adj)) {            //Path doesn't contain adjacent vertice
+            } else if (Collections.frequency(path,adj)<2) {            //Path doesn't contain adjacent vertice more than 2 times
                 allPaths(g, adj, vDest, path, paths);
             }
         }
