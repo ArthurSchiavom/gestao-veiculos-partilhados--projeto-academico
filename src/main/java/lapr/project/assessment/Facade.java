@@ -34,7 +34,7 @@ public class Facade implements Serviceable {
     private RegisterUserController registerUserController;
     private RegisterPOIController registerPOIController;
     private RemoveParkController removeParkController;
-    private GetFreeSlotsByTypeController getFreeSlotsByTypeController;
+    private VisualizeFreeSlotsAtParkController visualizeFreeSlotsAtParkController;
     private RegisterPathController registerPathController;
     private VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
     private FindParksNearbyController findParksNearbyController;
@@ -53,7 +53,7 @@ public class Facade implements Serviceable {
             if (resetDatabase)
                 Bootstrap.resetDatabase();
         } catch (SQLException | IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to boot up: " + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to boot up: " + e.getMessage());
             return false;
         }
 
@@ -64,7 +64,7 @@ public class Facade implements Serviceable {
         registerUserController = new RegisterUserController(company);
         registerPOIController = new RegisterPOIController(company);
         removeParkController = new RemoveParkController(company);
-        getFreeSlotsByTypeController = new GetFreeSlotsByTypeController(company);
+        visualizeFreeSlotsAtParkController = new VisualizeFreeSlotsAtParkController(company);
         registerPathController = new RegisterPathController(company);
         visualizeVehiclesAtParkController = new VisualizeVehiclesAtParkController(company);
         findParksNearbyController = new FindParksNearbyController(company);
@@ -80,7 +80,7 @@ public class Facade implements Serviceable {
         try {
             parsedData = Utils.parseDataFile(filePath, ";", "#");
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE, () -> "Inexistent file: " + filePath);
+            LOGGER.log(Level.INFO, () -> "Inexistent file: " + filePath);
             return null;
         }
 
@@ -96,7 +96,7 @@ public class Facade implements Serviceable {
         try {
             return registerBicyclesController.registerBicycles(s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         } finally {
             Shutdown.shutdown();
@@ -108,7 +108,7 @@ public class Facade implements Serviceable {
         try {
             return registerElectricScootersController.registerElectricScooters(s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -143,7 +143,7 @@ public class Facade implements Serviceable {
         try {
             return registerPOIController.registerPOIs(s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -153,7 +153,7 @@ public class Facade implements Serviceable {
         try {
             return registerUserController.registerClients(s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -163,7 +163,7 @@ public class Facade implements Serviceable {
         try {
             return registerPathController.registerPaths(s);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
         }
     }
@@ -177,10 +177,10 @@ public class Facade implements Serviceable {
             result = bicycles.size();
             visualizeVehiclesAtParkController.writeOutputFile(bicycles, s);
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to write output file");
+            LOGGER.log(Level.INFO, "Failed to write output file");
         }
         return result;
     }
@@ -194,10 +194,10 @@ public class Facade implements Serviceable {
             result = bicycles.size();
             visualizeVehiclesAtParkController.writeOutputFile(bicycles, s);
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to write output file");
+            LOGGER.log(Level.INFO, "Failed to write output file");
         }
         return result;
     }
@@ -211,10 +211,10 @@ public class Facade implements Serviceable {
             result = electricScooters.size();
             visualizeVehiclesAtParkController.writeOutputFile(electricScooters, s);
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to write output file");
+            LOGGER.log(Level.INFO, "Failed to write output file");
         }
         return result;
     }
@@ -228,10 +228,10 @@ public class Facade implements Serviceable {
             result = electricScooters.size();
             visualizeVehiclesAtParkController.writeOutputFile(electricScooters, s);
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to get number of vehicles at park");
+            LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to write output file");
+            LOGGER.log(Level.INFO, "Failed to write output file");
         }
         return result;
     }
@@ -257,10 +257,10 @@ public class Facade implements Serviceable {
             }
             Utils.writeToFile(outputLines, s);
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to access the database when attempting to find nearby parks.");
+            LOGGER.log(Level.INFO, "Failed to access the database when attempting to find nearby parks.");
             e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to write the output file.");
+            LOGGER.log(Level.INFO, "Failed to write the output file.");
         }
         Shutdown.shutdown();
     }
@@ -268,9 +268,9 @@ public class Facade implements Serviceable {
     @Override
     public int getFreeBicycleSlotsAtPark(String s, String s1) {
         try {
-            return getFreeSlotsByTypeController.getFreeSlotsByType(s,s1, VehicleType.BICYCLE);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            return visualizeFreeSlotsAtParkController.fetchFreeSlotsAtParkByType(s, VehicleType.BICYCLE);
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, "failed to retrieve free slots at park: " + e.getMessage());
             return 0;
         }
     }
@@ -278,16 +278,24 @@ public class Facade implements Serviceable {
     @Override
     public int getFreeEscooterSlotsAtPark(String s, String s1) {
         try {
-            return getFreeSlotsByTypeController.getFreeSlotsByType(s,s1, VehicleType.ELECTRIC_SCOOTER);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            return visualizeFreeSlotsAtParkController.fetchFreeSlotsAtParkByType(s, VehicleType.ELECTRIC_SCOOTER);
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, "failed to retrieve free slots at park: " + e.getMessage());
             return 0;
         }
     }
 
     @Override
     public int getFreeSlotsAtParkForMyLoanedVehicle(String s, String s1) {
-        return 0;
+        prepare(false);
+        try {
+            return visualizeFreeSlotsAtParkController.fetchFreeSlotsAtPark(s1, s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, String.format("Failed to get free slots at park (%s) for user's (%s) loaned vehicle", s1, s));
+        } catch (UnregisteredDataException e) {
+            LOGGER.log(Level.INFO, "Invalid information provided: " + e.getMessage());
+        }
+        return -1;
     }
 
     @Override

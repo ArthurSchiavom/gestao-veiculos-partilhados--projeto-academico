@@ -55,95 +55,35 @@ public class TripAPI {
         }
     }
 
-    /**
-     *  return the trip of the client
-     * @param email of the client who its doing the trip
-     * @return startTime of the trip
-     */
-
-    public Trip fetchUnfinishedTrip (String email){
+    public Trip fetchUnfinishedTrip (String email) throws SQLException {
         PreparedStatement prepStat = null;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            prepStat = dataHandler.prepareStatement("SELECT * FROM trips where user_email=? AND end_time=?");
+            prepStat = dataHandler.prepareStatement("SELECT * FROM trips where user_email=? AND end_time is null");
             autoCloseableManager.addAutoCloseable(prepStat);
             prepStat.setString( 1, email);
-            prepStat.setTimestamp(2, null);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
             autoCloseableManager.addAutoCloseable(resultSet);
-            if (resultSet == null || !resultSet.next() ) {
+            if (!resultSet.next() ) {
                 return null;
             }
-            Timestamp startTimeTimeStamp = resultSet.getTimestamp(1);
+            Timestamp startTimeTimeStamp = resultSet.getTimestamp("start_time");
             LocalDateTime startTime = startTimeTimeStamp.toLocalDateTime();
-            String startParkId = resultSet.getString(4);
-            String endParkId = resultSet.getString(5);
-            String vehicleId = resultSet.getString(3);
-            LocalDateTime endDate = LocalDateTime.now();
-            return new Trip(startTime,endDate,email,startParkId,endParkId,vehicleId);
+            String startParkId = resultSet.getString("start_park_id");
+            String endParkId = resultSet.getString("end_park_id");
+            String vehicleDescription = resultSet.getString("vehicle_description");
+            Timestamp endDateTimestamp = resultSet.getTimestamp("end_time");
+            LocalDateTime endDate;
+            if (endDateTimestamp != null)
+                endDate = endDateTimestamp.toLocalDateTime();
+            else
+                endDate = null;
+            return new Trip(startTime,endDate,email,startParkId,endParkId,vehicleDescription);
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+            throw new SQLException();
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
-    }
-
-    /**
-     * update in park_vehicle sql
-     * @param email of the client
-     */
-
-    public boolean updateReturnVehicle(String email){
-        PreparedStatement prepStat = null;
-        Trip trip = fetchUnfinishedTrip (email);
-        updateEndTrip(trip);
-        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
-        try {
-            prepStat = dataHandler.prepareStatement(
-                    "INSERT INTO park_vehicle (PARK_ID, VEHICLE_DESCRIPTION) VALUES(?,?)");
-            autoCloseableManager.addAutoCloseable(prepStat);
-            prepStat.setString(1,trip.getEndParkId());
-            prepStat.setString(2,trip.getVehicleDescription());
-
-            dataHandler.commitTransaction();
-            return true;
-        }catch (SQLException ex){
-            ex.printStackTrace();
-            return false;
-        } finally {
-            autoCloseableManager.closeAutoCloseables();
-        }
-    }
-
-    /**
-     * Update to the trip in sql
-     * @param trip of the client
-     * @return
-     */
-
-    public boolean updateEndTrip(Trip trip){
-        PreparedStatement prepStat = null;
-        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
-        try {
-            prepStat = dataHandler.prepareStatement(
-                    "UPDATE TRIPS SET start_time =? ,user_email=?,VEHICLE_DESCRIPTION =?,start_park_id=?,end_park_id=?,end_time=?");
-            autoCloseableManager.addAutoCloseable(prepStat);
-            prepStat.setTimestamp(1,Timestamp.valueOf(trip.getStartTime()));
-            prepStat.setString(2,trip.getClientEmail());
-            prepStat.setString(3,trip.getVehicleDescription());
-            prepStat.setString(4,trip.getStartParkId());
-            prepStat.setString(5,trip.getEndParkId());
-            prepStat.setTimestamp(6,Timestamp.valueOf(trip.getEndTime()));
-            dataHandler.commitTransaction();
-            return true;
-        }catch (SQLException ex){
-            ex.printStackTrace();
-            return false;
-        } finally {
-            autoCloseableManager.closeAutoCloseables();
-        }
-
     }
 
     /**

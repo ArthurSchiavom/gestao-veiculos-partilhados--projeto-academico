@@ -17,12 +17,12 @@ import java.util.Objects;
  */
 public class Trip {
 
-    private LocalDateTime startTime;
+    private final LocalDateTime startTime;
     private LocalDateTime endTime = null;
-    private String clientEmail;
-    private String startParkId;
+    private final String clientEmail;
+    private final String startParkId;
     private String endParkId = null;
-    private String vehicleDescription;
+    private final String vehicleDescription;
 
     /**
      * Constructor that instantiates a trip
@@ -35,7 +35,7 @@ public class Trip {
      * @param vehicleDescription description of the vehicle in use
      */
     public Trip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
-        if (startTime == null || endTime == null || clientEmail == null || clientEmail.isEmpty() || startParkId == null || startParkId.isEmpty() || endParkId == null)
+        if (startTime == null || clientEmail == null || clientEmail.isEmpty() || startParkId == null || startParkId.isEmpty())
             throw new IllegalArgumentException("Null or empty elements are not allowed");
         this.startTime = startTime;
         this.endTime = endTime;
@@ -90,7 +90,7 @@ public class Trip {
     /**
      * Returns the end time of the current trip.
      *
-     * @return the end time of the trip
+     * @return (1) trip end time or (2) null if the trip hasn't ended yet
      */
     public LocalDateTime getEndTime() {
         return this.endTime;
@@ -117,7 +117,7 @@ public class Trip {
     /**
      * Returns the ending point (park) of the current trip.
      *
-     * @return the ending point (park) of the trip
+     * @return (1) trip's end park (2) null if the trip hasn't ended yet
      */
     public String getEndParkId() {
         return this.endParkId;

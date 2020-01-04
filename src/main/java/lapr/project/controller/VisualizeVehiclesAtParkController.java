@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Note: Vehicles registered to be on a park are always available
+ */
 public class VisualizeVehiclesAtParkController {
     private final Company company;
 

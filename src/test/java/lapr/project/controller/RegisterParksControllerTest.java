@@ -143,8 +143,6 @@ public class RegisterParksControllerTest {
 
     }
 
-
-
     private <T extends Exception> void testExceptionCase(String filePath, Class<T> exceptionClass) {
         try {
             controller.registerParks(filePath);
