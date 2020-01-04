@@ -7,3 +7,4 @@
 latitudeA;longitudeA;latitudeB;longitudeB;kinetic coefficient;wind direction;wind speed
 30;33;25;26;7;;4
 31;32;24;27;1;2;
+15;16;17;18;;19;20

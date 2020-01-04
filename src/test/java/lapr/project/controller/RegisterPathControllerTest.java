@@ -42,7 +42,7 @@ class RegisterPathControllerTest {
     void registerPathsTest() {
         try {
             int result = controller.registerPaths("testFiles/path.txt");
-            assertEquals(2, result,"should be 2 but was: " + result);
+            assertEquals(3, result,"should be 2 but was: " + result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             fail();
@@ -66,9 +66,17 @@ class RegisterPathControllerTest {
             verify(preparedStatement).setInt(6, 2);
             verify(preparedStatement).setDouble(7, 0);
 
+            verify(preparedStatement).setDouble(1, 15);
+            verify(preparedStatement).setDouble(2, 16);
+            verify(preparedStatement).setDouble(3, 17);
+            verify(preparedStatement).setDouble(4, 18);
+            verify(preparedStatement).setDouble(5, 0);
+            verify(preparedStatement).setInt(6, 19);
+            verify(preparedStatement).setDouble(7, 20);
 
-            verify(preparedStatement, times(2)).setInt(anyInt(), anyInt());
-            verify(preparedStatement, times(12)).setDouble(anyInt(), anyDouble());
+
+            verify(preparedStatement, times(3)).setInt(anyInt(), anyInt());
+            verify(preparedStatement, times(18)).setDouble(anyInt(), anyDouble());
         } catch (Exception e) {
             fail();
         }
