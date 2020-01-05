@@ -2,18 +2,13 @@ package lapr.project.controller;
 
 import lapr.project.model.users.Client;
 import lapr.project.utils.InvalidFileDataException;
-import lapr.project.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import org.junit.jupiter.api.BeforeAll;
-import org.mockito.Matchers;
-
 import java.io.FileNotFoundException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
