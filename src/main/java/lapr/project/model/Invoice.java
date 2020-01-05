@@ -20,16 +20,22 @@ public class Invoice {
     private final double usageCost;
     private final double penalizationCost;
     private final int pointsUsed;
+    private final int previousPoints;
+    private final int earnedPoints;
 
     /**
      * Instantiates an invoice without receipts
-     *  @param clientEmail client's email
+     * @param clientEmail client's email
      * @param paymentStartDate the start date for the payment
      * @param usageCost the normal cost of the vehicle rent
      * @param penalizationCost the penalization cost (incase it's not locked
      * @param pointsUsed
+     * @param previousPoints
+     * @param earnedPoints
      */
-    public Invoice(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed) {
+    public Invoice(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, int previousPoints, int earnedPoints) {
+        this.previousPoints = previousPoints;
+        this.earnedPoints = earnedPoints;
         if (paymentStartDate == null || clientEmail == null || clientEmail.isEmpty())
             throw new IllegalArgumentException("Null elements are not allowed");
         this.pointsUsed = pointsUsed;
@@ -38,6 +44,14 @@ public class Invoice {
         this.penalizationCost = penalizationCost;
         this.usageCost = usageCost;
         this.amountLeftToPay = amountLeftToPay;
+    }
+
+    public int getPreviousPoints() {
+        return previousPoints;
+    }
+
+    public int getEarnedPoints() {
+        return earnedPoints;
     }
 
     /**

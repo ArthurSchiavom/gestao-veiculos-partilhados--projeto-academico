@@ -40,15 +40,8 @@ public class TripAPI {
             autoCloseableManager.addAutoCloseable(resultSet);
 
             while (resultSet.next()) {
-                LocalDateTime endTime;
-                Timestamp endDateTimestamp = resultSet.getTimestamp("end_time");
-                if (endDateTimestamp == null)
-                    endTime = null;
-                else
-                    endTime = endDateTimestamp.toLocalDateTime();
-
-                allClientTrips.add(new Trip(resultSet.getTimestamp("start_time").toLocalDateTime(),
-                        endTime,
+                allClientTrips.add(new Trip(resultSet.getTimestamp("start_time"),
+                        resultSet.getTimestamp("end_time"),
                         clientEmail,
                         resultSet.getString("start_park_id"),
                         resultSet.getString("end_park_id"),
@@ -70,14 +63,14 @@ public class TripAPI {
      * @param startTime   the start time of the trip
      * @return a trip object with data from the database
      */
-    public Trip fetchTrip(String clientEmail, LocalDateTime startTime) {
+    public Trip fetchTrip(String clientEmail, Timestamp startTime) {
         PreparedStatement prepStat = null;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement(
                     "SELECT * FROM TRIPS where start_time=? AND user_email=?");
             autoCloseableManager.addAutoCloseable(prepStat);
-            prepStat.setTimestamp( 1, Timestamp.valueOf(startTime));
+            prepStat.setTimestamp( 1, startTime);
             prepStat.setString( 2, clientEmail);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
             autoCloseableManager.addAutoCloseable(resultSet);
@@ -87,8 +80,7 @@ public class TripAPI {
             String vehicleDescription = resultSet.getString(3);
             String startParkId = resultSet.getString(4);
             String endParkId = resultSet.getString(5);
-            Timestamp endTimeTimeStamp = resultSet.getTimestamp(6);
-            LocalDateTime endTime = endTimeTimeStamp.toLocalDateTime();
+            Timestamp endTime = resultSet.getTimestamp(6);
 
             return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleDescription);
         } catch (SQLException ex) {
@@ -111,18 +103,12 @@ public class TripAPI {
             if (!resultSet.next() ) {
                 return null;
             }
-            Timestamp startTimeTimeStamp = resultSet.getTimestamp("start_time");
-            LocalDateTime startTime = startTimeTimeStamp.toLocalDateTime();
+            Timestamp startTime = resultSet.getTimestamp("start_time");
             String startParkId = resultSet.getString("start_park_id");
             String endParkId = resultSet.getString("end_park_id");
             String vehicleDescription = resultSet.getString("vehicle_description");
-            Timestamp endDateTimestamp = resultSet.getTimestamp("end_time");
-            LocalDateTime endDate;
-            if (endDateTimestamp != null)
-                endDate = endDateTimestamp.toLocalDateTime();
-            else
-                endDate = null;
-            return new Trip(startTime,endDate,email,startParkId,endParkId,vehicleDescription);
+            Timestamp endTime = resultSet.getTimestamp("end_time");
+            return new Trip(startTime,endTime,email,startParkId,endParkId,vehicleDescription);
         } catch (SQLException ex) {
             throw new SQLException();
         } finally {
@@ -140,7 +126,7 @@ public class TripAPI {
      * @param vehicleId   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId,
+    public Trip createNewTrip(Timestamp startTime, String clientEmail, String startParkId,
             String endParkId, String vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, endParkId, vehicleId);
     }
@@ -155,7 +141,7 @@ public class TripAPI {
      * @param vehicleId   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, String clientEmail, String startParkId, String vehicleId) {
+    public Trip createNewTrip(Timestamp startTime, String clientEmail, String startParkId, String vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, vehicleId);
     }
 
@@ -171,7 +157,7 @@ public class TripAPI {
      * @param vehicleDescription   the id of the vehicle
      * @return a trip with all the arguments
      */
-    public Trip createNewTrip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail,
+    public Trip createNewTrip(Timestamp startTime, Timestamp endTime, String clientEmail,
             String startParkId, String endParkId, String vehicleDescription) {
         return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleDescription);
     }
@@ -201,8 +187,7 @@ public class TripAPI {
                 return dispVehicles;
             }
             while (resultVehicles.next()) {
-                Timestamp startT = resultVehicles.getTimestamp("start_time");
-                LocalDateTime start_time = startT.toLocalDateTime();
+                Timestamp start_time = resultVehicles.getTimestamp("start_time");
                 String userEmail = resultVehicles.getString("user_email");
                 String vehicleDescription = resultVehicles.getString("VEHICLE_DESCRIPTION");
                 String startParkId = resultVehicles.getString("start_park_id");
@@ -334,8 +319,8 @@ public class TripAPI {
         }
     }
 
-    public HashMap<Double, Trip> fetchUserTripsInDebt(String username) throws SQLException, UnregisteredDataException {
-        HashMap<Double, Trip> tripsInDebt = new HashMap<>();
+    public List<Trip> fetchUserTripsInDebt(String username) throws SQLException, UnregisteredDataException {
+        List<Trip> allTripsInDebt = new ArrayList<>();
         UserAPI userAPI = Company.getInstance().getUserAPI();
         InvoiceAPI invoiceAPI = Company.getInstance().getInvoiceAPI();
 
@@ -354,14 +339,13 @@ public class TripAPI {
             endInvoicesDateEpochSeconds[i] = invoiceStartDate.plusMonths(1).toEpochDay() * 86400;
         }
 
-        // FETCH TRIPS THAT ADDED UP TO THOSE INVOICES (between the 5th of each month)
+        // FETCH TRIPS THAT ADDED UP TO THOSE INVOICES
         List<Trip> allClientTrips = fetchAllClientTrips(userEmail);
-        List<Trip> allTripsInDebt = new ArrayList<>();
         for (Trip trip : allClientTrips) {
-            LocalDateTime tripEndTime = trip.getEndTime();
-            if (tripEndTime == null)
+            if (trip.calculateTripCost() == 0)
                 continue;
-            long tripEndTimeEpochSeconds = tripEndTime.toEpochSecond(ZoneOffset.UTC);
+
+            long tripEndTimeEpochSeconds = (trip.getEndTime().getTime() / 1000);
 
             int i = 0;
             boolean tripIsInDebt = false;
@@ -369,23 +353,13 @@ public class TripAPI {
                 if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds[i]
                 && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds[i])
                     tripIsInDebt = true;
+
                 i++;
             }
             if (tripIsInDebt)
                 allTripsInDebt.add(trip);
         }
 
-        // CALCULATE THOSE TRIPS COSTS
-        for (Trip trip : allTripsInDebt) {
-            //TODO
-            //TODO
-            //TODO
-            //TODO
-            //TODO
-        }
-
-        // FILL THE HASHMAP
-
-        return tripsInDebt;
+        return allTripsInDebt;
     }
 }

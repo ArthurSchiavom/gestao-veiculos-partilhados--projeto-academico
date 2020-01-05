@@ -33,7 +33,9 @@ public class InvoiceAPI {
                         resultSet.getDouble("amount_left_to_pay"),
                         resultSet.getDouble("usage_cost"),
                         resultSet.getDouble("penalisation_cost"),
-                        resultSet.getInt("points_used")));
+                        resultSet.getInt("points_used"),
+                        resultSet.getInt("previous_points"),
+                        resultSet.getInt("earned_points")));
             }
         } catch (SQLException e) {
             throw new SQLException("Failed to access the database when fetching invoices.", e.getSQLState(), e.getErrorCode());

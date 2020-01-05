@@ -1,6 +1,5 @@
 package lapr.project.model;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -15,18 +14,18 @@ class InvoiceTest {
     private static final double USAGE_COST = 25;
     private static final double PENALIZATION_COST = 35;
     private static final int POINTS_USED = 10;
-    private static final Invoice INVOICE = new Invoice(EMAIL, LOCAL_DATE, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED);
+    private static final Invoice INVOICE = new Invoice(EMAIL, LOCAL_DATE, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, 10, 10);
 
     @Test
     void testConstructor() {
-        testConstructorExceptionCase(null, LOCAL_DATE, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, IllegalArgumentException.class);
-        testConstructorExceptionCase("", LOCAL_DATE, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, IllegalArgumentException.class);
-        testConstructorExceptionCase(EMAIL, null, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, IllegalArgumentException.class);
+        testConstructorExceptionCase(null, LOCAL_DATE, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, 10, 10, IllegalArgumentException.class);
+        testConstructorExceptionCase("", LOCAL_DATE, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, 10, 10, IllegalArgumentException.class);
+        testConstructorExceptionCase(EMAIL, null, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, 10, 10, IllegalArgumentException.class);
     }
 
-    private <T extends Exception> void testConstructorExceptionCase(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, Class<T> exceptionClass) {
+    private <T extends Exception> void testConstructorExceptionCase(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, int previousPoints, int earnedPoints, Class<T> exceptionClass) {
         try {
-            new Invoice(clientEmail, paymentStartDate, amountLeftToPay, usageCost, penalizationCost, pointsUsed);
+            new Invoice(clientEmail, paymentStartDate, amountLeftToPay, usageCost, penalizationCost, pointsUsed, 10, 10);
             fail();
         } catch (Exception e) {
             if (e.getClass() != exceptionClass)
@@ -43,6 +42,8 @@ class InvoiceTest {
         assertEquals(POINTS_USED, INVOICE.getPointsUsed());
         assertEquals(USAGE_COST, INVOICE.getUsageCost());
         assertEquals(USAGE_COST+PENALIZATION_COST, INVOICE.getTotalAmountToPay());
+        assertEquals(10, INVOICE.getPreviousPoints());
+        assertEquals(10, INVOICE.getEarnedPoints());
     }
 
     @Test
@@ -50,19 +51,19 @@ class InvoiceTest {
         LocalDate now1 = LocalDate.now();
         LocalDate now2 = LocalDate.now();
         LocalDate yesterday = now1.minusDays(1);
-        Object inv1 = new Invoice("a", now1, 10, 10, 10, 10);
+        Object inv1 = new Invoice("a", now1, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1, inv1);
 
-        Invoice inv2 = new Invoice("a", now2, 10, 10, 10, 10);
+        Invoice inv2 = new Invoice("a", now2, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1, inv2);
 
-        inv2 = new Invoice("a", now2, 15, 15, 15, 15);
+        inv2 = new Invoice("a", now2, 15, 15, 15, 15, 10, 10);
         assertEquals(inv1, inv2);
 
-        inv2 = new Invoice("b", now2, 10, 10, 10, 10);
+        inv2 = new Invoice("b", now2, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1, inv2);
 
-        inv2 = new Invoice("a", yesterday, 10, 10, 10, 10);
+        inv2 = new Invoice("a", yesterday, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1, inv2);
 
         inv2 = null;
@@ -76,19 +77,19 @@ class InvoiceTest {
         LocalDate now1 = LocalDate.now();
         LocalDate now2 = LocalDate.now();
         LocalDate yesterday = now1.minusDays(1);
-        Object inv1 = new Invoice("a", now1, 10, 10, 10, 10);
+        Object inv1 = new Invoice("a", now1, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1.hashCode(), inv1.hashCode());
 
-        Invoice inv2 = new Invoice("a", now2, 10, 10, 10, 10);
+        Invoice inv2 = new Invoice("a", now2, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1.hashCode(), inv2.hashCode());
 
-        inv2 = new Invoice("a", now2, 15, 15, 15, 15);
+        inv2 = new Invoice("a", now2, 15, 15, 15, 15, 10, 10);
         assertEquals(inv1.hashCode(), inv2.hashCode());
 
-        inv2 = new Invoice("b", now2, 10, 10, 10, 10);
+        inv2 = new Invoice("b", now2, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1.hashCode(), inv2.hashCode());
 
-        inv2 = new Invoice("a", yesterday, 10, 10, 10, 10);
+        inv2 = new Invoice("a", yesterday, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1.hashCode(), inv2.hashCode());
     }
 }

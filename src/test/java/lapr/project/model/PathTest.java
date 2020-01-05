@@ -106,7 +106,7 @@ public class PathTest {
      */
     @Test
     public void testGetEndingPoint() {
-        PointOfInterest expResult = new PointOfInterest("desc2" ,new Coordinates(1.0, 1.0, 1));
+        PointOfInterest expResult = new PointOfInterest("desc1" ,new Coordinates(1.5, 1.0, 1));
         PointOfInterest result = instance.getEndingPoint();
         assertEquals(expResult, result);
     }

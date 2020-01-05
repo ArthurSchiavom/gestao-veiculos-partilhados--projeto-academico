@@ -7,7 +7,9 @@ package lapr.project.model;
 
 import lapr.project.model.vehicles.ElectricScooter;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,8 +19,8 @@ import java.util.Objects;
  */
 public class Trip {
 
-	private final LocalDateTime startTime;
-	private LocalDateTime endTime = null;
+	private final Timestamp startTime;
+	private Timestamp endTime = null;
 	private final String clientEmail;
 	private final String startParkId;
 	private String endParkId = null;
@@ -34,7 +36,7 @@ public class Trip {
 	 * @param endParkId          - the ending point (park) for the trip
 	 * @param vehicleDescription description of the vehicle in use
 	 */
-	public Trip(LocalDateTime startTime, LocalDateTime endTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
+	public Trip(Timestamp startTime, Timestamp endTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
 		if (startTime == null || clientEmail == null || clientEmail.isEmpty() || startParkId == null || startParkId.isEmpty())
 			throw new IllegalArgumentException("Null or empty elements are not allowed");
 		this.startTime = startTime;
@@ -54,7 +56,7 @@ public class Trip {
 	 * @param startParkId        - the starting point (park) for the trip
 	 * @param vehicleDescription - the vehicle being used
 	 */
-	public Trip(LocalDateTime startTime, String clientEmail, String startParkId, String vehicleDescription) {
+	public Trip(Timestamp startTime, String clientEmail, String startParkId, String vehicleDescription) {
 		this.startTime = startTime;
 		this.clientEmail = clientEmail;
 		this.startParkId = startParkId;
@@ -70,7 +72,7 @@ public class Trip {
 	 * @param endParkId          - the ending point (park) for the trip
 	 * @param vehicleDescription - the vehicle being used
 	 */
-	public Trip(LocalDateTime startTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
+	public Trip(Timestamp startTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
 		this.startTime = startTime;
 		this.clientEmail = clientEmail;
 		this.startParkId = startParkId;
@@ -83,7 +85,7 @@ public class Trip {
 	 *
 	 * @return the start time of the trip
 	 */
-	public LocalDateTime getStartTime() {
+	public Timestamp getStartTime() {
 		return this.startTime;
 	}
 
@@ -92,7 +94,7 @@ public class Trip {
 	 *
 	 * @return (1) trip end time or (2) null if the trip hasn't ended yet
 	 */
-	public LocalDateTime getEndTime() {
+	public Timestamp getEndTime() {
 		return this.endTime;
 	}
 
@@ -158,5 +160,21 @@ public class Trip {
 			}
 		}
 		return scooters;
+	}
+
+	/**
+	 * Calculates this trip's cost
+	 *
+	 * @return trip's cost; 0 if it didn't end yet
+	 */
+	public double calculateTripCost() {
+		if (endTime == null)
+			return 0;
+
+		double cost = ((endTime.getTime() - startTime.getTime()) * 60 - 60) * 0.025; // 0.025 = 1.5/60 = preço por minuto dado que o custo é 1.5 euros por hora
+		if (cost <= 0)
+			return 0;
+
+		return cost;
 	}
 }

@@ -4,7 +4,9 @@ import lapr.project.controller.*;
 import lapr.project.data.Bootstrap;
 import lapr.project.data.Shutdown;
 import lapr.project.data.registers.Company;
+import lapr.project.data.registers.ParkAPI;
 import lapr.project.model.Coordinates;
+import lapr.project.model.Trip;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.ElectricScooter;
@@ -22,6 +24,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -444,7 +447,43 @@ public class Facade implements Serviceable {
 
     @Override
     public double getUserCurrentDebt(String s, String s1) {
-        return 0;
+        prepare(false);
+        double totalDebt = 0;
+        try {
+            ParkAPI parkAPI = company.getParkAPI();
+            List<Trip> tripsInDebt = company.getTripAPI().fetchUserTripsInDebt(s);
+            Collections.sort(tripsInDebt, new compareTripsByUnlockTime());
+
+            List<String> fileLines = new ArrayList<>();
+            fileLines.add("vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;destination park latitude;destination park longitude;total time spent in seconds;charged value");
+            for (Trip trip : tripsInDebt) {
+                Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
+                Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
+                Coordinates startParkCoordinates = startPark.getCoordinates();
+                Coordinates endParkCoordinates = startPark.getCoordinates();
+                long unlockTimeMilli = trip.getStartTime().getTime();
+                long lockTimeMilli = trip.getEndTime().getTime();
+                int tripDuration = Math.toIntExact((lockTimeMilli-unlockTimeMilli) / 1000);
+                double tripCost = trip.calculateTripCost();
+                totalDebt += tripCost;
+                fileLines.add(String.format("%s;%d;%d;%s;%s;%s;%s;%d;%.2f",
+                        trip.getVehicleDescription(),
+                        unlockTimeMilli,
+                        lockTimeMilli,
+                        formatInputCoordinate(startParkCoordinates.getLatitude()),
+                        formatInputCoordinate(startParkCoordinates.getLongitude()),
+                        formatInputCoordinate(endParkCoordinates.getLatitude()),
+                        formatInputCoordinate(endParkCoordinates.getLongitude()),
+                        tripDuration,
+                        tripCost));
+            }
+
+            Utils.writeToFile(fileLines, s1);
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, "Failed to fetch trips in debt: " + e.getMessage());
+        }
+        Shutdown.shutdown();
+        return totalDebt;
     }
 
     @Override

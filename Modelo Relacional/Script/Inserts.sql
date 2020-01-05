@@ -136,11 +136,11 @@ insert into pending_registrations(email, amount_left_to_pay, visa, height_cm, we
 values('e@e.e', 0, '6666666666666666', 1.80, 80,'M',13.1, '999', 'zeh');
 
 -- invoices
-insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost,points_used)
-values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), 10, 10, 2,20);
+insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost, points_used, previous_points)
+values('a@a.a', TO_DATE('01-10-2019', 'dd/mm/yyyy'), 10, 10, 2, 20, 10);
 
-insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost,points_used)
-values('b@b.b', TO_DATE('01-12-2019', 'dd/mm/yyyy'), 0, 4, 2,17);
+insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost, points_used, previous_points)
+values('b@b.b', TO_DATE('01-12-2019', 'dd/mm/yyyy'), 0, 4, 2, 17, 10);
 
 -- park_capacity
 insert into park_capacity(park_id, vehicle_type_name, park_capacity, amount_occupied)

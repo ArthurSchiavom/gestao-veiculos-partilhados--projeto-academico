@@ -15,9 +15,9 @@ import java.util.Objects;
  */
 public class PointOfInterest {
     
-    private String description;
-    private Coordinates coordinates;
-    
+    private final String description;
+    private final Coordinates coordinates;
+
     /**
      * Constructor that instantiates a trip.
      * @param description - the description (can be the name) of the point of interest
@@ -58,11 +58,11 @@ public class PointOfInterest {
             return false;
         }
         PointOfInterest poi = (PointOfInterest) o;
-        return coordinates.equals(poi.coordinates);
+        return description.equals(poi.description);
     }
     
         @Override
     public int hashCode() {
-        return Objects.hash(description, coordinates);
+        return Objects.hashCode(description);
     }
 }

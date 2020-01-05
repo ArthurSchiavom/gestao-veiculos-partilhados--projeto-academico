@@ -5,6 +5,7 @@
  */
 package lapr.project.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +29,8 @@ public class TripTest {
     public void testGetStartTime() {
         System.out.println("getStartTime");
 
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -37,8 +38,8 @@ public class TripTest {
         String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
-        LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime result = instance.getStartTime();
+        Timestamp expResult = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp result = instance.getStartTime();
         assertEquals(expResult, result);
 
         instance = new Trip(startTime,clientEmail,startParkId,endParkId,vehicleId);
@@ -51,8 +52,8 @@ public class TripTest {
      */
     @Test
     public void testGetEndTime() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -60,8 +61,8 @@ public class TripTest {
         String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
 
-        LocalDateTime expResult = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime result = instance.getEndTime();
+        Timestamp expResult = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp result = instance.getEndTime();
         assertEquals(expResult, result);
     }
 
@@ -70,7 +71,7 @@ public class TripTest {
      */
     @Test
     public void testGetEndTime2() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -78,7 +79,7 @@ public class TripTest {
         String vehicleId = "1";
         Trip instance = new Trip(startTime, clientEmail, startParkId, vehicleId);
 
-        LocalDateTime result = instance.getEndTime();
+        Timestamp result = instance.getEndTime();
         assertNull(result);
 
     }
@@ -88,8 +89,8 @@ public class TripTest {
      */
     @Test
     public void testGetClientId() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -108,8 +109,8 @@ public class TripTest {
      */
     @Test
     public void testGetStartParkId() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -128,8 +129,8 @@ public class TripTest {
      */
     @Test
     public void testGetEndParkId() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -145,7 +146,7 @@ public class TripTest {
 
     @Test
     public void testGetEndParkId2() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -160,8 +161,8 @@ public class TripTest {
      */
     @Test
     public void testGetVehicleDescription() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
-        LocalDateTime endTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         String clientEmail = "email@email.com";
         String startParkId = "1";
@@ -177,7 +178,7 @@ public class TripTest {
 
     @Test
     void testEquals() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         Object trip1 = new Trip(startTime, "email@email.com", "0","1");
         assertEquals(trip1, trip1);
@@ -194,7 +195,7 @@ public class TripTest {
 
     @Test
     void testHashCode() {
-        LocalDateTime startTime = LocalDateTime.of(2019,10,9,12,10);
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
 
         Trip trip1 = new Trip(startTime, "email@email.com", "0","1");
         Trip trip2 = new Trip(startTime, "email@email.com","0","1");

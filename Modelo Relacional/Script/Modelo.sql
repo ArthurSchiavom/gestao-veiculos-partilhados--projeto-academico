@@ -117,10 +117,12 @@ CREATE TABLE pending_registrations (
 CREATE TABLE invoices (
   user_email         varchar2(50), 
   payment_start_date date, 
-  amount_left_to_pay number(9, 2) DEFAULT null, 
+  amount_left_to_pay number(9, 2), 
   usage_cost         number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_usage_cost NOT NULL, 
   penalisation_cost  number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_penalisation_cost NOT NULL,
-  points_used        number(6)    DEFAULT 0 constraint nn_invoices_points_used NOT NULL,
+  points_used        number(6), -- set no final
+  previous_points    number(6)    constraint nn_invoices_previous_points NOT NULL,
+  earned_points      number(6), -- set no final
   CONSTRAINT pk_invoices_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date) 
 );
 

@@ -1,0 +1,2 @@
+vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;destination park latitude;destination park longitude;total time spent in seconds;charged value
+PT001;1569923400000;1570046100000;18.222;20.12;18.222;20.12;122700;184049998.50

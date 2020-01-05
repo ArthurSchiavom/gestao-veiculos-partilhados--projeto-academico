@@ -79,8 +79,8 @@ public class PointOfInterestTest {
         Object poi1= new PointOfInterest("parque 1", cor1);
         assertEquals(poi1, poi1);
         
-        Coordinates cor2 = new Coordinates(0,0,0);
-        PointOfInterest poi2= new PointOfInterest("parque 2", cor2);
+        Coordinates cor2 = new Coordinates(30,10,20);
+        PointOfInterest poi2= new PointOfInterest("parque 1", cor2);
         assertEquals(poi1, poi2);
 
         poi1 = null;

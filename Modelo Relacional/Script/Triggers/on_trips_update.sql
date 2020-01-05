@@ -42,6 +42,7 @@ create or replace function get_latest_invoice_start_date(p_user_email invoices.u
     v_this_month char(2);
     v_new_payment_start_date_char varchar(10);
     v_new_payment_start_date invoices.payment_start_date%type;
+    v_user_current_points clients.points%type;
 begin
     select max(payment_start_date) into v_latest_payment_start_date from invoices where user_email = p_user_email;
     
@@ -49,12 +50,13 @@ begin
             OR ((extract(year from sysdate) != extract(year from v_latest_payment_start_date)
             OR extract(month from sysdate) != extract(month from v_latest_payment_start_date))
                 AND extract(day from sysdate) >= 5) then -- Invoice é enviado dia 5.
+        select points into v_user_current_points from clients where user_email = p_user_email;
         v_this_month := to_char(extract(month from sysdate));
         v_this_year := to_char(extract(year from sysdate));
         v_new_payment_start_date_char := '05/' || v_this_month || '/' ||v_this_year;
         v_new_payment_start_date := to_date(v_new_payment_start_date_char, 'DD/MM/YYYY');
-        insert into invoices(user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost, points_used)
-            values (p_user_email, v_new_payment_start_date, 0, 0, 0, 0);
+        insert into invoices(previous_points, user_email, payment_start_date, amount_left_to_pay, usage_cost, penalisation_cost, points_used)
+            values (v_user_current_points, p_user_email, v_new_payment_start_date, 0, 0, 0, 0);
         
         v_latest_payment_start_date := v_new_payment_start_date;
     end if;
@@ -125,4 +127,4 @@ begin
 end;
 /
 
-Update trips set end_park_id = 'park2', end_time = to_timestamp('31/12/2019-21:58', 'DD/MM/YYYY-HH24:MI') where user_email = 'b@b.b' and vehicle_description = 'PT003';
+Update trips set end_park_id = 'park2', end_time = to_timestamp('02/10/2019-20:55', 'DD/MM/YYYY-HH24:MI') where user_email = 'a@a.a' and vehicle_description = 'PT001';
