@@ -1,0 +1,2 @@
+latitude;longitude;elevation;poi description
+-20.222; 122.12; 14; Parque do kevin

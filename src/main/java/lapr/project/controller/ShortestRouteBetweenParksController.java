@@ -1,5 +1,6 @@
 package lapr.project.controller;
 
+import lapr.project.data.SortByHeightDescending;
 import lapr.project.data.registers.Company;
 import lapr.project.mapgraph.MapGraphAlgorithms;
 import lapr.project.model.point.of.interest.PointOfInterest;
@@ -7,6 +8,7 @@ import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -52,7 +54,7 @@ public class ShortestRouteBetweenParksController {
      * @return distance in meters
      * @throws SQLException exception that might occur when accessing the sql oracle database
      */
-    public long shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, String inputPOIs, String outputFileName) throws SQLException, FileNotFoundException, InvalidFileDataException {
+    public long shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, String inputPOIs, String outputFileName) throws SQLException, IOException, InvalidFileDataException {
         Park originPark = company.getParkAPI().fetchParkByCoordinates(originLatitudeInDegrees,originLongitudeInDegrees);
         Park endPark = company.getParkAPI().fetchParkByCoordinates(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
         List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(inputPOIs, LINE_SEPARATOR, COMMENT_TAG, HEADER);
@@ -83,12 +85,8 @@ public class ShortestRouteBetweenParksController {
         }
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
-        Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
-            @Override
-            public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
-                return t1.size()-pointOfInterests.size();
-            }
-        });
+        sort(paths);
+        Utils.writeToFile(getOutput(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
         return distance;
     }
     /**
@@ -115,7 +113,7 @@ public class ShortestRouteBetweenParksController {
      * @return distance in meters
      * @throws SQLException exception that might occur when accessing the sql oracle database
      */
-    public long shortestRouteBetweenTwoParksAndGivenPoisFetchById(String originParkIdentification, String destinationParkIdentification, String inputPOIs, String outputFileName) throws SQLException, FileNotFoundException, InvalidFileDataException {
+    public long shortestRouteBetweenTwoParksAndGivenPoisFetchById(String originParkIdentification, String destinationParkIdentification, String inputPOIs, String outputFileName) throws SQLException, IOException, InvalidFileDataException {
         Park originPark = company.getParkAPI().fetchParkById(originParkIdentification);
         Park endPark = company.getParkAPI().fetchParkById(destinationParkIdentification);
         List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(inputPOIs, LINE_SEPARATOR, COMMENT_TAG, HEADER);
@@ -144,15 +142,41 @@ public class ShortestRouteBetweenParksController {
         for(i = 0; i<lat.size(); i++) {
             pois.add(company.getPoiAPI().fetchPoi(lat.get(i),lon.get(i)));
         }
-        LinkedList<PointOfInterest> path = new LinkedList<>();
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
+        sort(paths);
+        Utils.writeToFile(getOutput(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
+        return distance;
+    }
+
+    /**
+     * Orders ascending by numbers of poi's, and then descending by height
+     * @param paths list that contains list of paths
+     */
+    private void sort(List<LinkedList<PointOfInterest>> paths){
         Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
             @Override
             public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
-                return t1.size()-pointOfInterests.size();
+                return pointOfInterests.size()-t1.size();
             }
         });
-        return distance;
+        for(LinkedList<PointOfInterest> p : paths){
+            Collections.sort(p, new SortByHeightDescending());
+        }
+    }
+
+    private List<String> getOutput(List<LinkedList<PointOfInterest>> paths, long distance,int elevation){
+        List<String> output = new LinkedList<>();
+        int pathNumber = 1;
+        for(LinkedList<PointOfInterest> path : paths){
+            String line= String.format("Path %03d", pathNumber)+"\n";
+            line += "total distance: "+distance+"\nelevation: "+ elevation+"\n";
+            for(PointOfInterest poi : path) {
+                line+=poi.getCoordinates().getLatitude()+";"+poi.getCoordinates().getLongitude()+"\n";
+            }
+            output.add(line);
+            pathNumber++;
+        }
+        return output;
     }
 }

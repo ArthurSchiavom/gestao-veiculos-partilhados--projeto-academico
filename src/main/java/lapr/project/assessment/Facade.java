@@ -465,7 +465,7 @@ public class Facade implements Serviceable {
     public long shortestRouteBetweenTwoParksForGivenPOIs(String s, String s1, String s2, String s3) {
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksAndGivenPoisFetchById(s,s1,s2,s3);
-        } catch (SQLException | FileNotFoundException | InvalidFileDataException e) {
+        } catch (SQLException | InvalidFileDataException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
         }
@@ -476,7 +476,7 @@ public class Facade implements Serviceable {
     public long shortestRouteBetweenTwoParksForGivenPOIs(double v, double v1, double v2, double v3, String s, String s1) {
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(v,v1,v2,v3,s,s1);
-        } catch (SQLException | FileNotFoundException | InvalidFileDataException e) {
+        } catch (SQLException | InvalidFileDataException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
         }
