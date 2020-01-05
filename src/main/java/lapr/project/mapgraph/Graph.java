@@ -45,6 +45,10 @@ public class Graph<V, E> implements GraphInterface<V, E> {
         return vertices.get(vert).getKey();
     }
 
+    /**
+     *
+     * @return (1) all vertices or (2) null if no elements
+     */
     public V[] allkeyVerts() {
 
         //V[] keyverts = (V[]) new Object[numVert];
@@ -52,6 +56,8 @@ public class Graph<V, E> implements GraphInterface<V, E> {
         for (Vertex<V, E> vert : vertices.values()) {
             vertElem = vert.getElement();            // To get type
         }
+        if (vertElem == null)
+            return null;
         @SuppressWarnings("unchecked") V[] keyverts = (V[]) Array.newInstance(vertElem.getClass(), numVert);
 
         for (Vertex<V, E> vert : vertices.values()) {

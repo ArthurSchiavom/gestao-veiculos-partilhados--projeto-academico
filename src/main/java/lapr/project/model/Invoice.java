@@ -6,9 +6,7 @@
 package lapr.project.model;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -16,34 +14,30 @@ import java.util.Set;
  */
 public class Invoice {
 
-    private int clientId;
-    private LocalDate paymentStartDate;
-    private double amountLeftToPay;
-    private double usageCost;
-    private double penalizationCost;
-    private Set<Receipt> receipts;
+    private final String clientEmail;
+    private final LocalDate paymentStartDate;
+    private final double amountLeftToPay;
+    private final double usageCost;
+    private final double penalizationCost;
+    private final int pointsUsed;
 
     /**
      * Instantiates an invoice without receipts
-     *
-     * @param clientId the id of the client
+     *  @param clientEmail client's email
      * @param paymentStartDate the start date for the payment
      * @param usageCost the normal cost of the vehicle rent
      * @param penalizationCost the penalization cost (incase it's not locked
-     * properly, etc)
+     * @param pointsUsed
      */
-    public Invoice(int clientId, LocalDate paymentStartDate, double usageCost, double penalizationCost) {
-        if(clientId<0) {
-            throw new IllegalArgumentException("client ID can't be less than 0");
-        }
-        if (paymentStartDate == null)
+    public Invoice(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed) {
+        if (paymentStartDate == null || clientEmail == null || clientEmail.isEmpty())
             throw new IllegalArgumentException("Null elements are not allowed");
-        this.clientId = clientId;
+        this.pointsUsed = pointsUsed;
+        this.clientEmail = clientEmail;
         this.paymentStartDate = paymentStartDate;
         this.penalizationCost = penalizationCost;
         this.usageCost = usageCost;
-        this.amountLeftToPay = usageCost + penalizationCost;
-        this.receipts = new HashSet<>();
+        this.amountLeftToPay = amountLeftToPay;
     }
 
     /**
@@ -51,8 +45,8 @@ public class Invoice {
      *
      * @return the client ID
      */
-    public int getClientId() {
-        return clientId;
+    public String getClientEmail() {
+        return clientEmail;
     }
 
     /**
@@ -96,20 +90,12 @@ public class Invoice {
      *
      * @return the total cost of the invoice
      */
-    public double getTotalAmount() {
+    public double getTotalAmountToPay() {
         return (usageCost + penalizationCost);
     }
 
-    /**
-     * Returns a copy of all the receipts associated with this invoice
-     *
-     * @return a copy of all the receipts associated with this invoice
-     */
-    public Set<Receipt> getReceipts() {
-        if(receipts.isEmpty()) {
-            return null;
-        }
-        return new HashSet<>(receipts);
+    public int getPointsUsed() {
+        return pointsUsed;
     }
 
     @Override
@@ -117,12 +103,12 @@ public class Invoice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return clientId == invoice.clientId &&
+        return clientEmail == invoice.clientEmail &&
                 paymentStartDate.equals(invoice.paymentStartDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, paymentStartDate);
+        return Objects.hash(clientEmail, paymentStartDate);
     }
 }

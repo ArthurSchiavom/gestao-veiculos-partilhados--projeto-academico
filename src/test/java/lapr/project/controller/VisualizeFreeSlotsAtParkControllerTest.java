@@ -3,6 +3,7 @@ package lapr.project.controller;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
 import lapr.project.model.vehicles.VehicleType;
+import lapr.project.utils.UnregisteredDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +44,6 @@ class VisualizeFreeSlotsAtParkControllerTest {
 
     private void prepareFetchFreeSlotsAtParkByType() {
         try {
-            when(resultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
             when(resultSet.getDouble("latitude")).thenReturn(1.0);
             when(resultSet.getDouble("longitude")).thenReturn(1.0);
             when(resultSet.getInt("altitude_m")).thenReturn(1);
@@ -68,14 +68,16 @@ class VisualizeFreeSlotsAtParkControllerTest {
         VehicleType vehicleType = VehicleType.BICYCLE;
         int expected = 7;
 
-        prepareFetchFreeSlotsAtParkByType();
         try {
+            prepareFetchFreeSlotsAtParkByType();
+            when(resultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
             assertEquals(expected, controller.fetchFreeSlotsAtParkByType(parkId, vehicleType));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
+            prepare();
             when(resultSet.next()).thenReturn(false);
             testPrepareFetchFreeSlotsAtParkException(expected, parkId, vehicleType, UnregisteredDataException.class);
         } catch (SQLException e) {
@@ -88,15 +90,26 @@ class VisualizeFreeSlotsAtParkControllerTest {
         prepareFetchFreeSlotsAtParkByType();
         try {
             assertEquals(expected, controller.fetchFreeSlotsAtParkByType(parkId, vehicleType));
+            fail();
         } catch (Exception e) {
             if (e.getClass() != exceptionClass)
                 fail();
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
     private void prepareFetchFreeSlotsAtPark(int maxSlots, int nOccupiedSlots) {
         try {
-            // ResultSet #1
             when(resultSet.getString(anyString())).thenReturn("mockString");
             when(resultSet.getFloat(anyString())).thenReturn(1f);
             when(resultSet.getBoolean(anyString())).thenReturn(true);
@@ -104,7 +117,6 @@ class VisualizeFreeSlotsAtParkControllerTest {
             when(resultSet.getTimestamp(anyString())).thenReturn(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
             when(resultSet.getString("vehicle_type_name")).thenReturn("bicycle");
-            when(resultSet.next()).thenReturn(true);
 
             // ResultSet #2
             PreparedStatement preparedStatement2 = mock(PreparedStatement.class);
@@ -133,8 +145,10 @@ class VisualizeFreeSlotsAtParkControllerTest {
         int nOccupiedSlots = 7;
         int expected = maxSlots - nOccupiedSlots;
 
-        prepareFetchFreeSlotsAtPark(maxSlots, nOccupiedSlots);
         try {
+            prepare();
+            prepareFetchFreeSlotsAtPark(maxSlots, nOccupiedSlots);
+            when(resultSet.next()).thenReturn(true);
             assertEquals(expected, controller.fetchFreeSlotsAtPark("any", "any"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,12 +156,18 @@ class VisualizeFreeSlotsAtParkControllerTest {
         }
 
         try {
+            prepare();
+            prepareFetchFreeSlotsAtPark(maxSlots, nOccupiedSlots);
             when(resultSet.next()).thenReturn(false);
             testFetchFreeSlotsAtParkTestException(maxSlots, nOccupiedSlots, UnregisteredDataException.class);
 
+            prepare();
+            prepareFetchFreeSlotsAtPark(maxSlots, nOccupiedSlots);
             when(resultSet.next()).thenReturn(true, true, false);
             testFetchFreeSlotsAtParkTestException(maxSlots, nOccupiedSlots, UnregisteredDataException.class);
 
+            prepare();
+            prepareFetchFreeSlotsAtPark(maxSlots, nOccupiedSlots);
             when(resultSet.next()).thenReturn(true, true, true, false);
             testFetchFreeSlotsAtParkTestException(maxSlots, nOccupiedSlots, IllegalStateException.class);
         } catch (SQLException e) {
@@ -161,6 +181,7 @@ class VisualizeFreeSlotsAtParkControllerTest {
 
         try {
             assertEquals(expected, controller.fetchFreeSlotsAtPark("any", "any"));
+            fail();
         } catch (Exception e) {
             if (e.getClass() != exceptionClass)
                 fail();

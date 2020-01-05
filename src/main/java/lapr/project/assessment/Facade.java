@@ -10,6 +10,7 @@ import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.InvalidFileDataException;
+import lapr.project.utils.UnregisteredDataException;
 import lapr.project.utils.Utils;
 
 import javax.mail.MessagingException;
@@ -88,7 +89,7 @@ public class Facade implements Serviceable {
     }
 
     private String formatInputCoordinate(double coordinate) {
-        return new BigDecimal(coordinate).setScale(10, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
+        return BigDecimal.valueOf(coordinate).setScale(10, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
     }
 
     @Override
