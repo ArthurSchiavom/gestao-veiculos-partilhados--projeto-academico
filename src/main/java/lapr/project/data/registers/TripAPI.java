@@ -1,15 +1,23 @@
 package lapr.project.data.registers;
 
+import lapr.project.model.Invoice;
+import lapr.project.utils.UnregisteredDataException;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.data.Emailer;
 import lapr.project.model.Trip;
 import lapr.project.model.users.Client;
+import lapr.project.model.users.User;
+import oracle.jdbc.proxy.annotation.Pre;
 
 import javax.mail.MessagingException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TripAPI {
@@ -17,6 +25,42 @@ public class TripAPI {
 
     public TripAPI(DataHandler dataHandler) {
         this.dataHandler = dataHandler;
+    }
+
+    public List<Trip> fetchAllClientTrips(String clientEmail) throws SQLException {
+        List<Trip> allClientTrips = new ArrayList<>();
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = dataHandler.prepareStatement("select * from TRIPS where USER_EMAIL = ?");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setString(1, clientEmail);
+
+            ResultSet resultSet = dataHandler.executeQuery(preparedStatement);
+            autoCloseableManager.addAutoCloseable(resultSet);
+
+            while (resultSet.next()) {
+                LocalDateTime endTime;
+                Timestamp endDateTimestamp = resultSet.getTimestamp("end_time");
+                if (endDateTimestamp == null)
+                    endTime = null;
+                else
+                    endTime = endDateTimestamp.toLocalDateTime();
+
+                allClientTrips.add(new Trip(resultSet.getTimestamp("start_time").toLocalDateTime(),
+                        endTime,
+                        clientEmail,
+                        resultSet.getString("start_park_id"),
+                        resultSet.getString("end_park_id"),
+                        resultSet.getString("vehicle_description")));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Failed to access database when fetching trips", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+
+        return allClientTrips;
     }
 
     /**
@@ -288,5 +332,60 @@ public class TripAPI {
         } finally {
             closeableManager.closeAutoCloseables();
         }
+    }
+
+    public HashMap<Double, Trip> fetchUserTripsInDebt(String username) throws SQLException, UnregisteredDataException {
+        HashMap<Double, Trip> tripsInDebt = new HashMap<>();
+        UserAPI userAPI = Company.getInstance().getUserAPI();
+        InvoiceAPI invoiceAPI = Company.getInstance().getInvoiceAPI();
+
+        User user = userAPI.fetchClientByUsername(username);
+        if (user == null)
+            throw new UnregisteredDataException("user " + username + " does not exist.");
+
+        String userEmail = user.getEmail();
+        // FETCH UNPAID INVOICES
+        List<Invoice> unpaidInvoices = invoiceAPI.fetchUnpaidInvoicesFor(userEmail);
+        long[] startInvoicesDateEpochSeconds = new long[unpaidInvoices.size()];
+        long[] endInvoicesDateEpochSeconds = new long[unpaidInvoices.size()];
+        for (int i = 0; i < unpaidInvoices.size(); i++) {
+            LocalDate invoiceStartDate = unpaidInvoices.get(i).getPaymentStartDate();
+            startInvoicesDateEpochSeconds[i] = invoiceStartDate.toEpochDay() * 86400;
+            endInvoicesDateEpochSeconds[i] = invoiceStartDate.plusMonths(1).toEpochDay() * 86400;
+        }
+
+        // FETCH TRIPS THAT ADDED UP TO THOSE INVOICES (between the 5th of each month)
+        List<Trip> allClientTrips = fetchAllClientTrips(userEmail);
+        List<Trip> allTripsInDebt = new ArrayList<>();
+        for (Trip trip : allClientTrips) {
+            LocalDateTime tripEndTime = trip.getEndTime();
+            if (tripEndTime == null)
+                continue;
+            long tripEndTimeEpochSeconds = tripEndTime.toEpochSecond(ZoneOffset.UTC);
+
+            int i = 0;
+            boolean tripIsInDebt = false;
+            while (i < startInvoicesDateEpochSeconds.length && !tripIsInDebt) {
+                if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds[i]
+                && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds[i])
+                    tripIsInDebt = true;
+                i++;
+            }
+            if (tripIsInDebt)
+                allTripsInDebt.add(trip);
+        }
+
+        // CALCULATE THOSE TRIPS COSTS
+        for (Trip trip : allTripsInDebt) {
+            //TODO
+            //TODO
+            //TODO
+            //TODO
+            //TODO
+        }
+
+        // FILL THE HASHMAP
+
+        return tripsInDebt;
     }
 }

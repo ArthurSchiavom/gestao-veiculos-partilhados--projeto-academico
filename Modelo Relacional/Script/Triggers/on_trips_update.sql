@@ -46,8 +46,8 @@ begin
     select max(payment_start_date) into v_latest_payment_start_date from invoices where user_email = p_user_email;
     
     if v_latest_payment_start_date is null
-            OR extract(year from sysdate) != extract(year from v_latest_payment_start_date)
-            OR (extract(month from sysdate) != extract(month from v_latest_payment_start_date)
+            OR ((extract(year from sysdate) != extract(year from v_latest_payment_start_date)
+            OR extract(month from sysdate) != extract(month from v_latest_payment_start_date))
                 AND extract(day from sysdate) >= 5) then -- Invoice é enviado dia 5.
         v_this_month := to_char(extract(month from sysdate));
         v_this_year := to_char(extract(year from sysdate));
@@ -60,6 +60,17 @@ begin
     end if;
     
     return v_latest_payment_start_date;
+end;
+/
+
+create or replace function calculateTripPrice(trip_duration_min int) return invoices.usage_cost%type is
+	v_trip_cost invoices.usage_cost%type;
+begin
+	v_trip_cost := (trip_duration_min - 60) * 0.025; -- 0.025 = 1.5/60 = preço por minuto dado que o custo é 1.5 euros por hora
+	if v_trip_cost < 0 then
+		v_trip_cost := 0;
+	end if;
+	return v_trip_cost;
 end;
 /
 
@@ -102,7 +113,7 @@ begin
         -- Add amount to pay to invoice
         -- After the gratuitous period (1h), each following hour costs 1,5€.
         if v_trip_duration_min > 60 then
-            v_usage_cost := (v_trip_duration_min - 60) * 0.025; -- 0.025 = 1.5/60 = preço por minuto dado que o custo é 1.5 euros por hora
+            v_usage_cost := calculateTripPrice(v_trip_duration_min);
             update invoices set usage_cost = usage_cost + v_usage_cost where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
         end if;
     end if;
@@ -114,4 +125,4 @@ begin
 end;
 /
 
-Update trips set end_park_id = 'park2', end_time = to_timestamp('03/12/2019-13:13', 'DD/MM/YYYY-HH24:MI') where user_email = 'b@b.b';
+Update trips set end_park_id = 'park2', end_time = to_timestamp('31/12/2019-21:58', 'DD/MM/YYYY-HH24:MI') where user_email = 'b@b.b' and vehicle_description = 'PT003';

@@ -6,6 +6,7 @@ import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.User;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
+import lapr.project.utils.UnregisteredDataException;
 
 import java.sql.SQLException;
 
