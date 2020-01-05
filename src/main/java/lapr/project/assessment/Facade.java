@@ -462,30 +462,27 @@ public class Facade implements Serviceable {
         return 0;
     }
 
-    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParks(double v, double v1, double v2, double v3, String s) {
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v,v1,v2,v3,s);
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
         }
     }
 
 
-    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParks(String s, String s1, String s2) {
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchById(s,s1,s2);
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
         }
     }
 
-    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParksForGivenPOIs(String s, String s1, String s2, String s3) {
         try {
@@ -496,7 +493,6 @@ public class Facade implements Serviceable {
         }
     }
 
-    //TODO: falta fazer o output
     @Override
     public long shortestRouteBetweenTwoParksForGivenPOIs(double v, double v1, double v2, double v3, String s, String s1) {
         try {
