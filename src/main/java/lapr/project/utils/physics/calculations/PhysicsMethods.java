@@ -90,7 +90,7 @@ public class PhysicsMethods {
 
         return Math.acos(cosAngle);
     }
-    
+
 
     /**
      * Returns the value of the apparent wind speed
@@ -112,7 +112,7 @@ public class PhysicsMethods {
      * @param windSpeed - the wind speed
      * @param apparentWindSpeed - the apparent wind speed
      * @param windAndRiderAngleRad - the angle made between the wind speed direction and the vehicle
-     * 
+     *
      * @return the cosine of the angle made between the apparent wind speed and
      * the speed of the rider
      */
@@ -228,10 +228,10 @@ public class PhysicsMethods {
         Double realAutonomy = fullAutonomy * SCOOTER_EFICIENCY;
         return Math.round(realAutonomy * 100.0) / 100.0;
     }
-    
+
     /**
      * Converts an angle in degrees to radians
-     * 
+     *
      * @param angle - the angle in degrees
      * @return an angle in radians
      */
@@ -241,36 +241,34 @@ public class PhysicsMethods {
 
     /**
      * Converts the value of the energy in joule to calories
-     * 
+     *
      * @param energyJoule - the energy in joules
      * @return the value of the energy in joule to calories
      */
     public static Double convertJouleToCal(double energyJoule) {
         return Math.round(energyJoule * CONVERT_JOULE_CAL * 100.0) /100.0;
     }
-    
-    
+
+
     /**
      * Predicts the energy spent in a trip between two parks
-     * 
+     *
      * @param client - the client 
-     * @param trip - the trip
+     * @param path - the path
      * @param vehicle - the vehicle in use
      * @return  - the energy spent in a trip between two parks
      */
-    public static double predictEnergySpent(Client client, List<Path> trip, Vehicle vehicle) {
-           double energySpent = 0.0;
-           double averageSpeed = 0.0;
-           double distanceMade = 0.0;
-           if (vehicle.getType() == VehicleType.BICYCLE) {
-               averageSpeed = (double) client.getCyclingAverageSpeed();
-           } else if (vehicle.getType() == VehicleType.ELECTRIC_SCOOTER) {
-               averageSpeed = SCOOTER_MAX_SPEED;
-           }
-           for (Path path : trip) {
-               distanceMade = path.getStartingPoint().getCoordinates().distance(path.getEndingPoint().getCoordinates()) * 1000;
-               energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(), path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
-           } 
-           return energySpent;
-       }
+    public static double predictEnergySpent(Client client, Path path, Vehicle vehicle) {
+        double energySpent = 0.0;
+        double averageSpeed = 0.0;
+        double distanceMade;
+        if (vehicle.getType() == VehicleType.BICYCLE) {
+            averageSpeed = (double) client.getCyclingAverageSpeed();
+        } else if (vehicle.getType() == VehicleType.ELECTRIC_SCOOTER) {
+            averageSpeed = SCOOTER_MAX_SPEED;
+        }
+        distanceMade = path.getStartingPoint().getCoordinates().distance(path.getEndingPoint().getCoordinates()) * 1000;
+        energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(), path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
+        return energySpent;
+    }
 }

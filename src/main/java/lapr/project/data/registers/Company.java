@@ -5,7 +5,6 @@ import lapr.project.mapgraph.Graph;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.users.Client;
-import lapr.project.model.users.User;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 
@@ -89,9 +88,7 @@ public class Company {
         for(Path path : pathAPI.fetchAllPaths()){
             startingPoint = path.getStartingPoint();
             endingPoint = path.getEndingPoint();
-            List<Path> trip = new ArrayList<>();
-            trip.add(path);
-            mapGraphEnergy.insertEdge(startingPoint,endingPoint,path, PhysicsMethods.predictEnergySpent(client,trip,vehicle));
+            mapGraphEnergy.insertEdge(startingPoint,endingPoint,path, PhysicsMethods.predictEnergySpent(client,path,vehicle));
         }
         return mapGraphEnergy;
     }
@@ -119,16 +116,6 @@ public class Company {
         }
     }
 
-    /**
-     * @return Returns the map graph that contains the information about parks and poi's energy
-     */
-    public Graph<PointOfInterest,Path> getMapGraphEnergy(Client client, Vehicle vehicle){
-        if(mapGraphEnergy != null) {
-            return mapGraphEnergy;
-        }else{
-            return initializeEnergyGraph(client, vehicle);
-        }
-    }
 
     public ParkAPI getParkAPI() {
         return parkAPI;
