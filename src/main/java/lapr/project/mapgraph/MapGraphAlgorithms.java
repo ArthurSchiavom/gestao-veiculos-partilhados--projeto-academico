@@ -93,8 +93,32 @@ public class MapGraphAlgorithms {
                 path.add(vDest);
                 paths.add(new LinkedList<>(path));
                 path.removeLast();
-            } else if (!path.contains(adj)) {            //Path doesn't contain adjacent vertice
+            } else if (Collections.frequency(path,adj)<2) {            //Path doesn't contain adjacent vertice more than 2 times
                 allPaths(g, adj, vDest, path, paths);
+            }
+        }
+        path.removeLast();
+    }
+
+    /**
+     * Returns all paths from vOrig to vDest
+     *
+     * @param g Graph instance
+     * @param vOrig Vertex that will be the source of the path
+     * @param vDest Vertex that will be the end of the path
+     * @param path stack with vertices of the current path (the path is in
+     * reverse order)
+     * @param paths ArrayList with all the paths (in correct order)
+     */
+    private static <V, E> void allPathsWithConstraints(Graph<V, E> g, V vOrig, V vDest, LinkedList<V> path, ArrayList<LinkedList<V>> paths,Set<V> constraints) {
+        path.add(vOrig);
+        for (V adj : g.adjVertices(vOrig)) {
+            if (adj.equals(vDest) && path.containsAll(constraints)) {
+                path.add(vDest);
+                paths.add(new LinkedList<>(path));
+                path.removeLast();
+            } else if (Collections.frequency(path,adj)<2) {            //Path doesn't contain adjacent vertice more than 2 times
+                allPathsWithConstraints(g, adj, vDest, path, paths,constraints);
             }
         }
         path.removeLast();
@@ -111,6 +135,23 @@ public class MapGraphAlgorithms {
         LinkedList<V> path = new LinkedList<>();
         try {
             allPaths(g, vOrig, vDest, path, arrResult);
+        } catch (NullPointerException exception) {
+            return null;
+        }
+        return arrResult;
+    }
+
+    /**
+     * @param g Graph instance
+     * @param vOrig information of the Vertex origin
+     * @param vDest information of the Vertex destination
+     * @return paths ArrayList with all paths from voInf to vdInf
+     */
+    public static <V, E> ArrayList<LinkedList<V>> allPathsWithConstraints(Graph<V, E> g, V vOrig, V vDest, Set<V> constraints) {
+        ArrayList<LinkedList<V>> arrResult = new ArrayList<>();
+        LinkedList<V> path = new LinkedList<>();
+        try {
+            allPathsWithConstraints(g, vOrig, vDest, path, arrResult,constraints);
         } catch (NullPointerException exception) {
             return null;
         }
@@ -331,37 +372,34 @@ public class MapGraphAlgorithms {
      * @return the shortest path going through all constraints
      */
     @SuppressWarnings("Duplicates")
-    public static <V, E> double shortestPathWithConstraints(Graph<V, E> g, V vOrig, V vDest, Set<V> constraints, LinkedList<V> shortPath) {
+    public static <V, E> double shortestPathWithConstraints(Graph<V, E> g, V vOrig, V vDest, Set<V> constraints, List<LinkedList<V>> shortPaths) {
         double totalWeight = Double.MAX_VALUE;
         //Performs all the standard checks
         if (!g.validVertex(vOrig) || !g.validVertex(vDest)) {
             return 0;
         }
         if(constraints.isEmpty()) {
-            totalWeight = shortestPath(g, vOrig, vDest, shortPath);
+            shortPaths.clear();
+            shortPaths.add(new LinkedList<>());
+            totalWeight = shortestPath(g, vOrig, vDest, shortPaths.get(0));
             return totalWeight;
         }
         if(vOrig.equals(vDest)) {
-            shortPath.add(vDest);
+            shortPaths.get(0).add(vDest);
             return 0;
         }
-        ArrayList<LinkedList<V>> allSolutions = allPaths(g, vOrig, vDest);
-        ArrayList<LinkedList<V>> filteredSolutions = new ArrayList<>();
+        ArrayList<LinkedList<V>> allSolutions = allPathsWithConstraints(g, vOrig, vDest, constraints);        //Filters all the solutions to only the paths that contain all the constraints
+
         //Checks if no solutions were found
         if(allSolutions==null) {
             return 0;
         }
-        //Filters all the solutions to only the paths that contain all the constraints
-        for(LinkedList<V> list : allSolutions) {
-            if(list.containsAll(constraints)) {
-               filteredSolutions.add(list);
-            }
-        }
+
         //Checks if no solutions containing all constraints were found
-        if(filteredSolutions.isEmpty()) {
+        if(allSolutions.isEmpty()) {
             return 0;
         }
-        for(LinkedList<V> path: filteredSolutions) {
+        for(LinkedList<V> path: allSolutions) {
             double temp = 0;
             Iterator<V> it = path.iterator();
             V prevVert = it.next();
@@ -372,9 +410,11 @@ public class MapGraphAlgorithms {
                 temp += edge.getWeight();                       //Goes through all edges in solution and calculates total cost
             }
             if(temp<totalWeight) {                              //If total cost is less than already found solution, then record this
-                shortPath.clear();                              //as the optimal solution
-                shortPath.addAll(path);
+                shortPaths.clear();                              //as the optimal solution
+                shortPaths.add(new LinkedList<V>(path));
                 totalWeight = temp;
+            }else if(temp == totalWeight){
+                shortPaths.add(new LinkedList<V>(path));
             }
         }
         return totalWeight;

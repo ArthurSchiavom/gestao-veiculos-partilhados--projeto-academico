@@ -58,7 +58,7 @@ public class RegisterParksController {
                 inputCurrent.add(Float.parseFloat(parsedData.get(i)[INPUT_CURRENT_INDEX]));
             }
         } catch (NumberFormatException e) {
-            ;throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + filePath);
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + filePath);
         }
@@ -69,5 +69,27 @@ public class RegisterParksController {
         } catch (SQLException e) {
             throw new SQLException("Failed to write data to the database: \n" + e.getMessage());
         }
+    }
+
+    public void registerPark(String id, double latitude, double longitude, int altitude, int maxNumBikes, int maxNumScooters,
+                             float inputVoltage, float inputCurrent, String description)
+            throws SQLException {
+        List<String> idList = new ArrayList<>();
+        List<Coordinates> coordinatesList = new ArrayList<>();
+        List<Integer> maxNumScootersList = new ArrayList<>();
+        List<Integer> maxNumBikesList = new ArrayList<>();
+        List<String> descriptionList = new ArrayList<>();
+        List<Float> inputVoltageList = new ArrayList<>();
+        List<Float> inputCurrentList = new ArrayList<>();
+
+        idList.add(id);
+        coordinatesList.add(new Coordinates(latitude, longitude, altitude));
+        maxNumBikesList.add(maxNumBikes);
+        maxNumScootersList.add(maxNumScooters);
+        inputVoltageList.add(inputVoltage);
+        inputCurrentList.add(inputCurrent);
+        descriptionList.add(description);
+
+        company.getParkAPI().registerParks(idList, descriptionList, coordinatesList, inputVoltageList, inputCurrentList, maxNumScootersList, maxNumBikesList);
     }
 }

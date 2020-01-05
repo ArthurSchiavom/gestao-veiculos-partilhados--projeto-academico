@@ -6,6 +6,7 @@ import lapr.project.model.Coordinates;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -29,8 +30,8 @@ public class RegisterParksControllerTest {
     private static Company company;
     private static RegisterParksController controller;
 
-    @BeforeAll
-    static void prepare() {
+    @BeforeEach
+    void prepare() {
         dh = mock(DataHandler.class);
         callableStatement = mock(CallableStatement.class);
         Company.reset();
@@ -98,6 +99,48 @@ public class RegisterParksControllerTest {
         testExceptionCase("testFiles/parksBadHeader.txt", InvalidFileDataException.class);
         testExceptionCase("testFiles/inv.txt", FileNotFoundException.class);
         // Can't test the SQL Exception case because the database is a mock object, so no methods depending on it will fail
+    }
+    @Test
+    void registerParkTest() {
+        String id = "id";
+        double latitude = 12;
+        double longitude = 13;
+        int altitude = 14;
+        int maxBikes = 15;
+        int maxScooters = 16;
+        float inputVoltage = 17f;
+        float inputCurrent = 18f;
+        String description = "desc";
+
+        // The controller is using the mock DataHandler, which will return the mock CallableStatement
+        try {
+            controller.registerPark(id, latitude, longitude, altitude, maxBikes, maxScooters, inputVoltage, inputCurrent, description);
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            // Check that all these methods have been called once
+            Coordinates coordinates = new Coordinates(latitude,longitude,altitude);
+            verify(callableStatement).setString(1, id);
+            verify(callableStatement).setDouble(2, coordinates.getLatitude());
+            verify(callableStatement).setDouble(3, coordinates.getLongitude());
+            verify(callableStatement).setInt(4, coordinates.getAltitude());
+            verify(callableStatement).setString(5, description);
+            verify(callableStatement).setFloat(6, inputVoltage);
+            verify(callableStatement).setFloat(7, inputCurrent);
+            verify(callableStatement).setInt(8, maxScooters);
+            verify(callableStatement).setInt(9, maxBikes);
+
+            // Verify that only the Statement.setX() above were called
+            verify(callableStatement, times(3)).setInt(anyInt(), anyInt());
+            verify(callableStatement, times(2)).setFloat(anyInt(), anyFloat());
+            verify(callableStatement, times(2)).setString(anyInt(), anyString());
+            verify(callableStatement, times(2)).setDouble(anyInt(), anyDouble());
+        } catch (Exception e) {
+            fail();
+        }
+
     }
 
     private <T extends Exception> void testExceptionCase(String filePath, Class<T> exceptionClass) {

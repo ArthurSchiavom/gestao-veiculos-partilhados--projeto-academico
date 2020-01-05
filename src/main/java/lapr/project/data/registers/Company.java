@@ -26,6 +26,7 @@ public class Company {
     private Graph<PointOfInterest, Path> mapGraphEnergy;
     private final PathAPI pathAPI;
     private final PoiAPI poiAPI;
+    private final InvoiceAPI invoiceAPI;
 
     /**
      * Represents a Singleton of the class Company
@@ -41,6 +42,7 @@ public class Company {
         mapGraphEnergy = null;
         this.pathAPI = new PathAPI(dataHandler);
         this.poiAPI = new PoiAPI(dataHandler);
+        this.invoiceAPI = new InvoiceAPI(dataHandler);
     }
 
     /**
@@ -150,5 +152,9 @@ public class Company {
     
     public PoiAPI getPoiAPI() {
         return poiAPI;
+    }
+
+    public InvoiceAPI getInvoiceAPI() {
+        return invoiceAPI;
     }
 }

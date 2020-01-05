@@ -114,13 +114,75 @@ public class MapGraphAlgorithmsTest {
         ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
 
         paths=MapGraphAlgorithms.allPaths(completeMap, "Porto", "LX");
-        assertEquals(true,paths.size()==0);
+        assertEquals(paths.size(),0);
 
         paths = MapGraphAlgorithms.allPaths(incompleteMap, "Porto", "Lisboa");
-        assertEquals(true, paths.size()==4);
+        assertEquals(paths.size(), 92);
 
         paths=MapGraphAlgorithms.allPaths(incompleteMap, "Porto", "Faro");
-        assertEquals(true, paths.size()==0);
+        assertEquals(paths.size(), 0);
+    }
+
+    /**
+     * Test of allPathsWithConstraints method, of class MapGraphAlgorithms.
+     */
+    @Test
+    public void AllPathsWithConstraintsTest() {
+        System.out.println("Test of all paths");
+
+        ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
+        Set<String> constraints = new HashSet<>();
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(completeMap, "Porto", "LX",constraints);
+        assertEquals(paths.size(),0);
+
+        paths = MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Lisboa",constraints);
+        assertEquals(paths.size(), 92);
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Faro",constraints);
+        assertEquals(paths.size(), 0);
+    }
+
+    /**
+     * Test of allPathsWithConstraints method, of class MapGraphAlgorithms.
+     */
+    @Test
+    public void AllPathsWithConstraintsTest2() {
+        System.out.println("Test of all paths");
+
+        ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
+        Set<String> constraints = new HashSet<>();
+        constraints.add("Aveiro");
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(completeMap, "Porto", "LX",constraints);
+        assertEquals(paths.size(),0);
+
+        paths = MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Lisboa",constraints);
+        assertEquals(paths.size(), 92);
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Faro",constraints);
+        assertEquals(paths.size(), 0);
+    }
+
+    /**
+     * Test of allPathsWithConstraints method, of class MapGraphAlgorithms.
+     */
+    @Test
+    public void AllPathsWithConstraintsTest3() {
+        System.out.println("Test of all paths");
+
+        ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
+        Set<String> constraints = new HashSet<>();
+        constraints.add("Coimbra");
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(completeMap, "Porto", "LX",constraints);
+        assertEquals(paths.size(),0);
+
+        paths = MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Lisboa",constraints);
+        assertEquals(paths.size(), 132);
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Faro",constraints);
+        assertEquals(paths.size(), 0);
     }
 
     /**
@@ -248,12 +310,49 @@ public class MapGraphAlgorithmsTest {
     public void shortestPathWithConstraintTest() {
         System.out.println("Test of shortest path with constraints");
 
-        LinkedList<String> shortPath = new LinkedList<>();
+        List<LinkedList<String>> shortPath = new LinkedList<>();
         Set<String> constraints = new HashSet<>();
         constraints.add("Coimbra");
         constraints.add("Leiria");
         double dist = MapGraphAlgorithms.shortestPathWithConstraints(completeMap, "Porto", "Lisboa", constraints, shortPath);
         assertEquals( 365, dist, 0);
+    }
+
+    @Test
+    public void shortestPathWithConstraintTest2() {
+        System.out.println("Test of shortest path with constraints");
+        completeMap.insertEdge("Porto","Coimbra","A55",135);
+        completeMap.insertEdge("Aveiro","Lisboa","A54",260);
+        completeMap.insertVertex("Teste1");
+
+        completeMap.insertEdge("Porto","Teste1","A1",0);
+        completeMap.insertEdge("Teste1","Aveiro","A1",75);
+
+        List<LinkedList<String>> shortPath = new LinkedList<>();
+        Set<String> constraints = new HashSet<>();
+        constraints.add("Aveiro");
+        double dist = MapGraphAlgorithms.shortestPathWithConstraints(completeMap, "Porto", "Lisboa", constraints, shortPath);
+//        for(LinkedList<String> shortP : shortPath){
+//            for(String s : shortP){
+//                System.out.printf(s+" ");
+//            }
+//            System.out.println("\n");
+//        }
+        assertEquals( 335, dist, 0);
+        assertEquals(8,shortPath.size());
+    }
+
+    /**
+     * Testing with the constraints empty
+     */
+    @Test
+    public void shortestPathWithConstraintTest3() {
+        System.out.println("Test of shortest path with constraints");
+
+        List<LinkedList<String>> shortPath = new LinkedList<>();
+        Set<String> constraints = new HashSet<>();
+        double dist = MapGraphAlgorithms.shortestPathWithConstraints(completeMap, "Porto", "Lisboa", constraints, shortPath);
+        assertEquals( 335, dist, 0);
     }
 }
 

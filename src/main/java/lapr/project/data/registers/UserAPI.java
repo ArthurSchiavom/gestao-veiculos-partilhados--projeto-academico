@@ -47,7 +47,7 @@ public class UserAPI {
      * @param username client's username
      * @return (1) client object or (2) null if no such client
      */
-    public Client fetchClientByUsername(String username) {
+    public Client fetchClientByUsername(String username) throws SQLException {
         PreparedStatement stm = null;
         ResultSet resultSet = null;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
@@ -83,11 +83,10 @@ public class UserAPI {
             boolean isRiding = resultSet.getBoolean("is_riding");
             return new Client(email, username, password, points, height, weight, gender, cyclingAvgSpeed, isRiding, new CreditCard(creditCardNumber));
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            throw new SQLException("Failed to fetch client from the database", e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
-        return null;
     }
 
     private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws SQLException {
