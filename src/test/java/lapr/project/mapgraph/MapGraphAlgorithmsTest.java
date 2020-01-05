@@ -124,6 +124,68 @@ public class MapGraphAlgorithmsTest {
     }
 
     /**
+     * Test of allPathsWithConstraints method, of class MapGraphAlgorithms.
+     */
+    @Test
+    public void AllPathsWithConstraintsTest() {
+        System.out.println("Test of all paths");
+
+        ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
+        Set<String> constraints = new HashSet<>();
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(completeMap, "Porto", "LX",constraints);
+        assertEquals(paths.size(),0);
+
+        paths = MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Lisboa",constraints);
+        assertEquals(paths.size(), 92);
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Faro",constraints);
+        assertEquals(paths.size(), 0);
+    }
+
+    /**
+     * Test of allPathsWithConstraints method, of class MapGraphAlgorithms.
+     */
+    @Test
+    public void AllPathsWithConstraintsTest2() {
+        System.out.println("Test of all paths");
+
+        ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
+        Set<String> constraints = new HashSet<>();
+        constraints.add("Aveiro");
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(completeMap, "Porto", "LX",constraints);
+        assertEquals(paths.size(),0);
+
+        paths = MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Lisboa",constraints);
+        assertEquals(paths.size(), 92);
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Faro",constraints);
+        assertEquals(paths.size(), 0);
+    }
+
+    /**
+     * Test of allPathsWithConstraints method, of class MapGraphAlgorithms.
+     */
+    @Test
+    public void AllPathsWithConstraintsTest3() {
+        System.out.println("Test of all paths");
+
+        ArrayList<LinkedList<String>> paths = new ArrayList<LinkedList<String>>();
+        Set<String> constraints = new HashSet<>();
+        constraints.add("Coimbra");
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(completeMap, "Porto", "LX",constraints);
+        assertEquals(paths.size(),0);
+
+        paths = MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Lisboa",constraints);
+        assertEquals(paths.size(), 132);
+
+        paths=MapGraphAlgorithms.allPathsWithConstraints(incompleteMap, "Porto", "Faro",constraints);
+        assertEquals(paths.size(), 0);
+    }
+
+    /**
      * Test of shortestPath method, of class MapGraphAlgorithms.
      */
     @Test
