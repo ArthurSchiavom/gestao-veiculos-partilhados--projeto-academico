@@ -116,7 +116,7 @@ begin
         -- After the gratuitous period (1h), each following hour costs 1,5€.
         if v_trip_duration_min > 60 then
             v_usage_cost := calculateTripPrice(v_trip_duration_min);
-            update invoices set usage_cost = usage_cost + v_usage_cost where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
+            update invoices set usage_cost = usage_cost + v_usage_cost, amount_left_to_pay = amount_left_to_pay + v_usage_cost where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
         end if;
     end if;
 END;
@@ -127,4 +127,4 @@ begin
 end;
 /
 
-Update trips set end_park_id = 'park2', end_time = to_timestamp('02/10/2019-20:55', 'DD/MM/YYYY-HH24:MI') where user_email = 'a@a.a' and vehicle_description = 'PT001';
+Update trips set end_park_id = 'park2', end_time = to_timestamp('06/01/2020-23:23', 'DD/MM/YYYY-HH24:MI') where user_email = 'a@a.a' and vehicle_description = 'PT003';

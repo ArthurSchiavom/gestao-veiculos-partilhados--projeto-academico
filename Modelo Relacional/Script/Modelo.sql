@@ -100,7 +100,7 @@ CREATE TABLE park_vehicle (
 -- Tabela pending_registrations 
 CREATE TABLE pending_registrations (
   email                  varchar2(50) CONSTRAINT pk_pending_registrations_email PRIMARY KEY, 
-  amount_left_to_pay     number(6, 2) DEFAULT 10 CONSTRAINT nn_pending_registrations_amount_left_to_pay NOT NULL, 
+  amount_left_to_pay     number(6, 2) DEFAULT 0 CONSTRAINT nn_pending_registrations_amount_left_to_pay NOT NULL, 
   visa     CHAR(16) CONSTRAINT nn_pending_registrations_visa NOT NULL,
   height_cm                 number(3) CONSTRAINT nn_pending_registrations_height NOT NULL, 
   weight                 number(3) CONSTRAINT nn_pending_registrations_weight NOT NULL, 
@@ -117,7 +117,7 @@ CREATE TABLE pending_registrations (
 CREATE TABLE invoices (
   user_email         varchar2(50), 
   payment_start_date date, 
-  amount_left_to_pay number(9, 2), 
+  amount_left_to_pay number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_amount_left_to_pay NOT NULL, 
   usage_cost         number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_usage_cost NOT NULL, 
   penalisation_cost  number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_penalisation_cost NOT NULL,
   points_used        number(6), -- set no final
