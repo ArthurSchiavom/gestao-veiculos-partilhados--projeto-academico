@@ -428,28 +428,4 @@ public class MapGraphAlgorithms {
         }
         return totalWeight;
     }
-
-    /**
-     * Converts a node list to a edge list
-     * @param graph the graph with the information of the nodes and edges
-     * @param list the list of nodes
-     * @param <V> a node of the graph
-     * @param <E> a edge of the graph
-     * @return (1) a list of edges
-     * (2) an empty list if the size of the node list is smaller or equal than 1
-     */
-    public static <V,E> LinkedList<E> convertNodeListToEdgeList(Graph<V,E> graph, LinkedList<V> list) {
-        LinkedList<E> edgeList = new LinkedList<>();
-        if(list.size() <= 1) {
-            return new LinkedList<>();
-        }
-        Iterator<V> it = list.iterator();
-        V startingPoint = it.next();
-        while(it.hasNext()) {
-            V endingPoint = it.next();
-            edgeList.add(graph.getEdge(startingPoint, endingPoint).getElement());
-            startingPoint = endingPoint;
-        }
-        return edgeList;
-    }
 }
