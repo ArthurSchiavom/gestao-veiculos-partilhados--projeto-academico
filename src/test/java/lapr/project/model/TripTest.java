@@ -8,6 +8,7 @@ package lapr.project.model;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import lapr.project.model.point.of.interest.PointOfInterest;
@@ -325,5 +326,16 @@ public class TripTest {
         String vehicleId = "1";
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
         assertEquals(0,instance.calculateTripCost());
+    }
+
+    @Test
+    void getTripDurationMillisTest() {
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,11,40));
+        Trip trip = new Trip(startTime, endTime, "a", "a", "a", "a");
+        assertEquals(endTime.getTime()-startTime.getTime(), trip.getTripDurationMillis());
+
+        trip = new Trip(startTime, null, "a", "a", "a", "a");
+        assertTrue(((Calendar.getInstance().getTimeInMillis() - startTime.getTime()) - trip.getTripDurationMillis()) < 200); //200 = 200 milisseconds error margin from when the method called it to when the test called it
     }
 }
