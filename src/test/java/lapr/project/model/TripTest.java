@@ -42,7 +42,7 @@ public class TripTest {
         Timestamp result = instance.getStartTime();
         assertEquals(expResult, result);
 
-        instance = new Trip(startTime,clientEmail,startParkId,endParkId,vehicleId);
+        instance = new Trip(startTime,clientEmail,startParkId,vehicleId);
         result = instance.getStartTime();
         assertEquals(expResult, result);
     }

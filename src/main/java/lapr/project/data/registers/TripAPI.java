@@ -1,6 +1,7 @@
 package lapr.project.data.registers;
 
 import lapr.project.model.Invoice;
+import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.utils.UnregisteredDataException;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
@@ -70,8 +71,8 @@ public class TripAPI {
             prepStat = dataHandler.prepareStatement(
                     "SELECT * FROM TRIPS where start_time=? AND user_email=?");
             autoCloseableManager.addAutoCloseable(prepStat);
-            prepStat.setTimestamp( 1, startTime);
-            prepStat.setString( 2, clientEmail);
+            prepStat.setTimestamp(1, startTime);
+            prepStat.setString(2, clientEmail);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
             autoCloseableManager.addAutoCloseable(resultSet);
             if (resultSet == null || !resultSet.next()) {
@@ -91,16 +92,16 @@ public class TripAPI {
         }
     }
 
-    public Trip fetchUnfinishedTrip (String email) throws SQLException {
+    public Trip fetchUnfinishedTrip(String email) throws SQLException {
         PreparedStatement prepStat = null;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             prepStat = dataHandler.prepareStatement("SELECT * FROM trips where user_email=? AND end_time is null");
             autoCloseableManager.addAutoCloseable(prepStat);
-            prepStat.setString( 1, email);
+            prepStat.setString(1, email);
             ResultSet resultSet = dataHandler.executeQuery(prepStat);
             autoCloseableManager.addAutoCloseable(resultSet);
-            if (!resultSet.next() ) {
+            if (!resultSet.next()) {
                 return null;
             }
             Timestamp startTime = resultSet.getTimestamp("start_time");
@@ -108,27 +109,12 @@ public class TripAPI {
             String endParkId = resultSet.getString("end_park_id");
             String vehicleDescription = resultSet.getString("vehicle_description");
             Timestamp endTime = resultSet.getTimestamp("end_time");
-            return new Trip(startTime,endTime,email,startParkId,endParkId,vehicleDescription);
+            return new Trip(startTime, endTime, email, startParkId, endParkId, vehicleDescription);
         } catch (SQLException ex) {
             throw new SQLException();
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
-    }
-
-    /**
-     * Loads a trip with a preset end park
-     *
-     * @param startTime   the start time of the trip
-     * @param clientEmail the end time of the trip
-     * @param startParkId the id of the start park
-     * @param endParkId   the id of the end park
-     * @param vehicleId   the id of the vehicle
-     * @return a trip with all the arguments
-     */
-    public Trip createNewTrip(Timestamp startTime, String clientEmail, String startParkId,
-            String endParkId, String vehicleId) {
-        return new Trip(startTime, clientEmail, startParkId, endParkId, vehicleId);
     }
 
 
@@ -149,38 +135,39 @@ public class TripAPI {
     /**
      * Loads a trip with all the arguments
      *
-     * @param startTime   the start time of the trip
-     * @param endTime     the end time of the trip
-     * @param clientEmail the end time of the trip
-     * @param startParkId the id of the start park
-     * @param endParkId   the id of the end park
-     * @param vehicleDescription   the id of the vehicle
+     * @param startTime          the start time of the trip
+     * @param endTime            the end time of the trip
+     * @param clientEmail        the end time of the trip
+     * @param startParkId        the id of the start park
+     * @param endParkId          the id of the end park
+     * @param vehicleDescription the id of the vehicle
      * @return a trip with all the arguments
      */
     public Trip createNewTrip(Timestamp startTime, Timestamp endTime, String clientEmail,
-            String startParkId, String endParkId, String vehicleDescription) {
+                              String startParkId, String endParkId, String vehicleDescription) {
         return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleDescription);
     }
 
     /**
      * returns a list of vehicles that are currently being used
+     *
      * @param startTime
      * @return
      */
 
 
-    public List<Trip> getListOfVehiclesNotAvailable(LocalDateTime startTime,LocalDateTime endTime) {
-        List<Trip> dispVehicles  = new ArrayList<>();
+    public List<Trip> getListOfVehiclesNotAvailable(LocalDateTime startTime, LocalDateTime endTime) {
+        List<Trip> dispVehicles = new ArrayList<>();
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement statement = dataHandler.prepareStatement("Select * from trips  WHERE (? >= start_time AND ? < nvl(end_time, sysdate)) OR (? > start_time AND ? <= nvl(end_time, sysdate) ) OR (? >= nvl(end_time, sysdate) AND ? <= start_time)");
             autoCloseableManager.addAutoCloseable(statement);
-            statement.setTimestamp(1,Timestamp.valueOf(startTime));
-            statement.setTimestamp(2,Timestamp.valueOf(startTime));
-            statement.setTimestamp(3,Timestamp.valueOf(endTime));
-            statement.setTimestamp(4,Timestamp.valueOf(endTime));
-            statement.setTimestamp(5,Timestamp.valueOf(endTime));
-            statement.setTimestamp(6,Timestamp.valueOf(startTime));
+            statement.setTimestamp(1, Timestamp.valueOf(startTime));
+            statement.setTimestamp(2, Timestamp.valueOf(startTime));
+            statement.setTimestamp(3, Timestamp.valueOf(endTime));
+            statement.setTimestamp(4, Timestamp.valueOf(endTime));
+            statement.setTimestamp(5, Timestamp.valueOf(endTime));
+            statement.setTimestamp(6, Timestamp.valueOf(startTime));
             ResultSet resultVehicles = dataHandler.executeQuery(statement);
             autoCloseableManager.addAutoCloseable(resultVehicles);
             if (resultVehicles == null) {
@@ -192,9 +179,9 @@ public class TripAPI {
                 String vehicleDescription = resultVehicles.getString("VEHICLE_DESCRIPTION");
                 String startParkId = resultVehicles.getString("start_park_id");
 
-                Trip trip = new Trip(start_time,null,userEmail,startParkId,null,vehicleDescription);
+                Trip trip = new Trip(start_time, null, userEmail, startParkId, null, vehicleDescription);
 
-               dispVehicles.add(trip);
+                dispVehicles.add(trip);
             }
         } catch (SQLException e) {
             return dispVehicles;
@@ -225,7 +212,7 @@ public class TripAPI {
     /**
      * Unlocks a vehicle and starts a new trip for the user.
      *
-     * @param username user unlocking the vehicle
+     * @param username           user unlocking the vehicle
      * @param vehicleDescription vehicle being unlocked
      */
     public void startTrip(String username, String vehicleDescription) throws SQLException {
@@ -249,7 +236,11 @@ public class TripAPI {
             company.getUserAPI().updateClientIsRidingNoCommit(username, true);
             dataHandler.commitTransaction();
         } catch (SQLException e) {
-            try {dataHandler.rollbackTransaction();} catch (SQLException e2) {};
+            try {
+                dataHandler.rollbackTransaction();
+            } catch (SQLException e2) {
+            }
+            ;
             throw new SQLException("Failed to start a new trip: " + e.getMessage(), e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
@@ -286,9 +277,9 @@ public class TripAPI {
      * Locks a vehicle and ends a trip if there is one by setting the user status to not riding,
      * updating the trip information, updating user points, updating user debt and emailing the user.
      *
-     * @param parkId id of the park where the vehicle is inserted
+     * @param parkId             id of the park where the vehicle is inserted
      * @param vehicleDescription vehicle0s description
-     * @throws SQLException if a database access error occurs
+     * @throws SQLException       if a database access error occurs
      * @throws MessagingException if there is an on-going trip with the vehicle and the system fails to email the user
      */
     public void lockVehicle(String parkId, String vehicleDescription) throws SQLException, MessagingException {
@@ -309,7 +300,11 @@ public class TripAPI {
             if (clientEmail != null)
                 Emailer.sendEmail(clientEmail, "Trip end", "Your vehicle was successfully locked!");
         } catch (SQLException e) {
-            try {dataHandler.rollbackTransaction(); } catch (SQLException e2) {};
+            try {
+                dataHandler.rollbackTransaction();
+            } catch (SQLException e2) {
+            }
+            ;
 
             if (nLinesChanged == 0)
                 throw e;
@@ -351,7 +346,7 @@ public class TripAPI {
             boolean tripIsInDebt = false;
             while (i < startInvoicesDateEpochSeconds.length && !tripIsInDebt) {
                 if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds[i]
-                && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds[i])
+                        && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds[i])
                     tripIsInDebt = true;
 
                 i++;
@@ -361,5 +356,69 @@ public class TripAPI {
         }
 
         return allTripsInDebt;
+    }
+
+    public List<Trip> fetchUserTripsLastInvoice(String username) throws SQLException, UnregisteredDataException {
+        List<Trip> allTripsInDebt = new ArrayList<>();
+        UserAPI userAPI = Company.getInstance().getUserAPI();
+        InvoiceAPI invoiceAPI = Company.getInstance().getInvoiceAPI();
+
+        User user = userAPI.fetchClientByUsername(username);
+        if (user == null)
+            throw new UnregisteredDataException("user " + username + " does not exist.");
+
+        String userEmail = user.getEmail();
+        // FETCH UNPAID INVOICES
+        Invoice lastInvoice = invoiceAPI.fetchLastInvoiceFor(userEmail);
+        LocalDate invoiceStartDate = lastInvoice.getPaymentStartDate();
+        long startInvoicesDateEpochSeconds = invoiceStartDate.toEpochDay() * 86400;
+        long endInvoicesDateEpochSeconds = invoiceStartDate.plusMonths(1).toEpochDay() * 86400;
+
+        // FETCH TRIPS THAT ADDED UP TO THOSE INVOICES
+        List<Trip> allClientTrips = fetchAllClientTrips(userEmail);
+        for (Trip trip : allClientTrips) {
+            if (trip.calculateTripCost() == 0)
+                continue;
+
+            long tripEndTimeEpochSeconds = (trip.getEndTime().getTime() / 1000);
+
+            boolean tripIsInDebt = false;
+                if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds
+                        && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds)
+                    tripIsInDebt = true;
+            if (tripIsInDebt)
+                allTripsInDebt.add(trip);
+        }
+
+        return allTripsInDebt;
+    }
+
+    /**
+     * Calculates the amount of points this trip gave to the user.
+     *
+     * @return amount of points this trip gave to the user; 0 if it didn't end yet
+     */
+    public int calculatePointsGivenToUser(Trip trip) throws SQLException {
+        Timestamp endTime = trip.getEndTime();
+        if (endTime == null)
+            return 0;
+        Timestamp startTime = trip.getStartTime();
+
+        ParkAPI parkAPI = Company.getInstance().getParkAPI();
+
+        int points = 0;
+        long durationMin = (endTime.getTime() - startTime.getTime()) / 60000;
+        if (durationMin < 15)
+            points += 5;
+
+        Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
+        Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
+        int altitudeDiff = endPark.getCoordinates().getAltitude() - startPark.getCoordinates().getAltitude();
+        if (altitudeDiff > 50)
+            points += 15;
+        else if (altitudeDiff > 25)
+            points += 5;
+
+        return points;
     }
 }
