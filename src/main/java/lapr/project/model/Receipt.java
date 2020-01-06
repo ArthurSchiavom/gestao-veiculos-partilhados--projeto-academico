@@ -4,8 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- *
- * @author Pedro Ivo
+ * Class that represents a receipt
  */
 public class Receipt {
     private int pointsUsed;

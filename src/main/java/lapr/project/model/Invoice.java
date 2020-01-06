@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- *
- * @author Pedro Ivo
+ * Class that represents an invoice
  */
 public class Invoice {
 

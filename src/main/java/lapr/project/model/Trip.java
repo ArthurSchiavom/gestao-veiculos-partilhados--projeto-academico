@@ -8,8 +8,6 @@ package lapr.project.model;
 import lapr.project.model.vehicles.ElectricScooter;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -171,7 +169,7 @@ public class Trip {
 		if (endTime == null)
 			return 0;
 
-		double cost = ((endTime.getTime() - startTime.getTime()) * 60 - 60) * 0.025; // 0.025 = 1.5/60 = preço por minuto dado que o custo é 1.5 euros por hora
+		double cost = (((double)(endTime.getTime() - startTime.getTime())/1000) / 60 - 60) * 0.025; // 0.025 = 1.5/60 = preço por minuto dado que o custo é 1.5 euros por hora
 		if (cost <= 0)
 			return 0;
 

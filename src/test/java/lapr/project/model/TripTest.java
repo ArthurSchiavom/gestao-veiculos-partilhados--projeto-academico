@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Jose
+ * test class
  */
 public class TripTest {
 
@@ -234,5 +234,70 @@ public class TripTest {
 
         List <ElectricScooter> result = lapr.project.model.Trip.filterScootersWithAutonomy(listElectricScooters,trip);
         assertEquals(expected,result);
+    }
+
+    @Test
+    public void calculateTripCostTest(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,14,10));
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(1.5,instance.calculateTripCost());
+    }
+
+    @Test
+    public void calculateTripCostTest2(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,13,10));
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(0,instance.calculateTripCost());
+    }
+
+    @Test
+    public void calculateTripCostTest3(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(0,instance.calculateTripCost());
+    }
+
+    @Test
+    public void calculateTripCostTest4(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,17,10));
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(6,instance.calculateTripCost());
+    }
+
+    @Test
+    public void calculateTripCostTest5(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,17,40));
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(6.75,instance.calculateTripCost());
     }
 }

@@ -12,8 +12,7 @@ import lapr.project.model.vehicles.VehicleType;
 import org.junit.jupiter.api.Test;
 
 /**
- *
- * @author kevin
+ * test class
  */
 public class CapacityTest {
     @Test
