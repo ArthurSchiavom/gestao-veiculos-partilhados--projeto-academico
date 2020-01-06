@@ -99,7 +99,8 @@ public class Facade implements Serviceable {
     }
 
     private String formatInputCoordinate(double coordinate) {
-        return BigDecimal.valueOf(coordinate).setScale(10, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
+        //BigDecimal.valueOf(coordinate).setScale(10, RoundingMode.FLOOR).stripTrailingZeros().toPlainString() - old method
+        return String.format(".6f", coordinate);
     }
 
     @Override
