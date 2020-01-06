@@ -7,9 +7,9 @@ import java.util.Objects;
  * Class that represents a receipt
  */
 public class Receipt {
-    private int pointsUsed;
-    private double amountPaidCash;
-    private LocalDate paymentDate;
+    private final int pointsUsed;
+    private final double amountPaidCash;
+    private final LocalDate paymentDate;
 
     /**
      * Instantiates a receipt for the invoices

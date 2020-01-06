@@ -15,11 +15,11 @@ import java.util.Objects;
  */
 public class Path {
 
-    private PointOfInterest startPoint;
-    private PointOfInterest endPoint;
-    private Double kineticCoefficient;
-    private int windDirectionDegrees;
-    private Double windSpeed;
+    private final PointOfInterest startPoint;
+    private final PointOfInterest endPoint;
+    private final Double kineticCoefficient;
+    private final int windDirectionDegrees;
+    private final Double windSpeed;
 
     /**
      * Instantiates a path

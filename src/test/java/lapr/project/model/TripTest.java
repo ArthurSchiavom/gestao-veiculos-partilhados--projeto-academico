@@ -300,4 +300,30 @@ public class TripTest {
         Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
         assertEquals(6.75,instance.calculateTripCost());
     }
+
+    @Test
+    public void calculateTripCostTest6(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = null;
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(0,instance.calculateTripCost());
+    }
+
+    @Test
+    public void calculateTripCostTest7(){
+        Timestamp startTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,12,10));
+        Timestamp endTime = Timestamp.valueOf(LocalDateTime.of(2019,10,9,11,40));
+
+        String clientEmail = "email@email.com";
+        String startParkId = "1";
+        String endParkId = "2";
+        String vehicleId = "1";
+        Trip instance = new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleId);
+        assertEquals(0,instance.calculateTripCost());
+    }
 }

@@ -11,6 +11,8 @@ import lapr.project.model.users.CreditCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -41,6 +43,59 @@ public class PathTest {
         double expResult = 1.20;
         double result = instance.getKineticCoefficient();
         assertEquals(expResult, result);
+    }
+
+    /**
+     * constructor
+     */
+    @Test
+    public void constructor() {
+        try{
+            Path test = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), new PointOfInterest("desc1",new Coordinates(1.0, 1.0, 1)), null, 20, 3.4);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
+    }
+
+    /**
+     * constructor
+     */
+    @Test
+    public void constructor2() {
+        try{
+            Path test = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), new PointOfInterest("desc1",new Coordinates(1.0, 1.0, 1)), 5.3, 0, null);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
+
+    }
+
+    /**
+     * constructor
+     */
+    @Test
+    public void constructor3() {
+        try{
+            Path test = new Path(null, new PointOfInterest("desc1",new Coordinates(1.0, 1.0, 1)), 5.3, 0, 3.3);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
+    }
+
+    /**
+     * constructor
+     */
+    @Test
+    public void constructor4() {
+        try{
+            Path test = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), null, 5.3, 0, null);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
     }
 
     /**
@@ -77,6 +132,20 @@ public class PathTest {
         assertNotEquals(instance, path1);
 
         assertNotEquals(path3, instance);
+    }
+
+    /**
+     * Test of equals method, of class Path.
+     */
+    @Test
+    public void testEquals2() {
+
+        assertNotEquals(path3, null);
+
+        Receipt receipt = new Receipt(LocalDate.now(), 0,5);
+
+        assertNotEquals(path3, receipt);
+
     }
 
     /**

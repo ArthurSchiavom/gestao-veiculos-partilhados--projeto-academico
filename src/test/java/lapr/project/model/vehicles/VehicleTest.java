@@ -16,6 +16,30 @@ class VehicleTest {
     }
 
     @Test
+    void constructor() {
+        try{
+            Bicycle t = new Bicycle(123,null,2.3F,
+                    2.4F,35,true,
+                    15);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
+    }
+
+    @Test
+    void constructor2() {
+        try{
+            Bicycle t = new Bicycle(123,"d",2.3F,
+                    2.4F,35,true,
+                    15);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
+    }
+
+    @Test
     void getUniqueNumberTest() {
         assertEquals(123, instance.getUniqueNumber());
     }
@@ -69,6 +93,12 @@ class VehicleTest {
 
         bike = "";
         assertNotEquals(bike, bike2);
+
+        ElectricScooter e = new ElectricScooter(123, "PT001",2.3F,2.4F,
+                35,true,ElectricScooterType.URBAN,15,
+                1f, 500);
+
+        assertNotEquals(bike, e);
     }
 
     @Test

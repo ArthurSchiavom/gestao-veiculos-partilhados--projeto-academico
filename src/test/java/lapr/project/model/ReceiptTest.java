@@ -1,5 +1,6 @@
 package lapr.project.model;
 
+import lapr.project.model.point.of.interest.PointOfInterest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,6 +48,18 @@ class ReceiptTest {
         assertEquals(expResult, receipt.getPaymentDate());
     }
 
+    /**
+     * constructor
+     */
+    @Test
+    public void constructor() {
+        try{
+            Receipt receipt = new Receipt(null, 0, 5);
+        }catch(IllegalArgumentException e) {
+            if (e.getClass()!= IllegalArgumentException.class)
+                fail();
+        }
+    }
     @Test
     void testEquals() {
         Object receipt1 = new Receipt(cal, 0, 5);
@@ -64,6 +77,10 @@ class ReceiptTest {
 
         receipt1 = "";
         assertNotEquals(receipt1, receipt2);
+
+        Path test = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 0)), new PointOfInterest("desc2",new Coordinates(1.0, 0.0, 0)), 5.3, 0, 3.0);
+
+        assertNotEquals(receipt1, test);
     }
 
     @Test
