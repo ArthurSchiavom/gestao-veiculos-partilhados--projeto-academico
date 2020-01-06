@@ -46,6 +46,7 @@ public class Facade implements Serviceable {
     private UnlockVehicleController unlockVehicleController;
     private LockVehicleController lockVehicleController;
     private ShortestRouteBetweenParksController shortestRouteBetweenParksController;
+    private FilterScootersWithAutonomyController filterScootersWithAutonomyController;
 
     /**
      * Prepares facade by booting up the application and Facade variables.
@@ -76,6 +77,7 @@ public class Facade implements Serviceable {
         unlockVehicleController = new UnlockVehicleController(company);
         lockVehicleController = new LockVehicleController(company);
         shortestRouteBetweenParksController = new ShortestRouteBetweenParksController(company);
+        filterScootersWithAutonomyController = new FilterScootersWithAutonomyController();
 
         return true;
     }
@@ -429,7 +431,15 @@ public class Facade implements Serviceable {
 
     @Override
     public int suggestEscootersToGoFromOneParkToAnother(String s, String s1, double v, double v1, String s2) {
-        throw new UnsupportedOperationException();
+        prepare(false);
+        int size = 0;
+        try {
+            size = filterScootersWithAutonomyController.suggestScootersBetweenParks(s, s1, v, v1, s2);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to suggest scooters\n" + e.getMessage());
+        }
+        Shutdown.shutdown();
+        return size;
     }
 
     @Override

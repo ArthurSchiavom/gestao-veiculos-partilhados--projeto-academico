@@ -5,10 +5,17 @@
  */
 package lapr.project.model;
 
+import lapr.project.data.registers.Company;
+import lapr.project.mapgraph.MapGraphAlgorithms;
+import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -158,6 +165,30 @@ public class Trip {
             }
         }
         return scooters;
+    }
+
+    /**
+     * Filters scooters according to a specific client in a specific park
+     *
+     * @param username   the name of the client
+     * @param origParkId the park where the client is
+     * @param destLat    the latitude of the destination park
+     * @param destLon    the longitude of the destination park
+     * @return the filtered list of scooters
+     */
+    public static List<ElectricScooter> filterScootersWithAutonomy(String username, String origParkId, double destLat, double destLon) throws SQLException {
+        Client client = Company.getInstance().getUserAPI().fetchClientByUsername(username);
+        Park origPark = Company.getInstance().getParkAPI().fetchParkById(origParkId);
+        Park destPark = Company.getInstance().getParkAPI().fetchParkByCoordinates(destLat, destLon);
+        List<ElectricScooter> filteredScooters = new LinkedList<>();
+        List<ElectricScooter> availableVehiclesAtPark = Company.getInstance().getParkAPI().fetchVehiclesAtPark(origParkId, ElectricScooter.class);
+        for(ElectricScooter scooter : availableVehiclesAtPark) {
+            double energyRequired = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, scooter), origPark, destPark, new LinkedList<>());
+            if(scooter.getMaxBatteryCapacity()*scooter.getActualBatteryCapacity()*1.1>=energyRequired) {
+                filteredScooters.add(scooter);
+            }
+        }
+        return filteredScooters;
     }
 
     /**

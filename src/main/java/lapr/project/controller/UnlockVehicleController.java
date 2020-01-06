@@ -7,6 +7,7 @@ import lapr.project.model.Path;
 import lapr.project.model.Trip;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
 
 import java.sql.SQLException;
@@ -60,16 +61,8 @@ public class UnlockVehicleController {
     public void startTripParkDest(String park, String username,
                                   double destinyLatitudeInDegrees, double destinyLongitudeInDegrees,
                                   String outputFileName) throws SQLException {
-		Park origPark = Company.getInstance().getParkAPI().fetchParkById(park);
-		Park destPark = Company.getInstance().getParkAPI().fetchParkByCoordinates(destinyLatitudeInDegrees,
-				destinyLongitudeInDegrees);
-        List<ElectricScooter> availableVehiclesAtPark = Company.getInstance().getParkAPI().fetchVehiclesAtPark(park, ElectricScooter.class);
-		LinkedList<PointOfInterest> shortestPathPOI = new LinkedList<>();
-        MapGraphAlgorithms.shortestPath(Company.getInstance().getMapGraphDistance(), origPark,  destPark, shortestPathPOI);
-		LinkedList<Path> shortestPath = MapGraphAlgorithms.convertNodeListToEdgeList(Company.getInstance().getMapGraphDistance(), shortestPathPOI);
-        List<ElectricScooter> filteredVehiclesAtPark = Trip.filterScootersWithAutonomy(availableVehiclesAtPark, shortestPath);
-        String vehicleDesc = filteredVehiclesAtPark.get(0).getDescription();
-        company.getTripAPI().startTrip(username, vehicleDesc);
+        List<ElectricScooter> scootersWithEnoughEnergy = Trip.filterScootersWithAutonomy(username,park,destinyLatitudeInDegrees, destinyLongitudeInDegrees);
+        company.getTripAPI().startTrip(username, scootersWithEnoughEnergy.get(0).getDescription());
 		//TODO: Implement file export
     }
 }
