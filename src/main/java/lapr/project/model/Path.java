@@ -11,7 +11,6 @@ import java.util.Objects;
 
 /**
  * Class that represents a path
- *
  */
 public class Path {
 
@@ -23,10 +22,11 @@ public class Path {
 
     /**
      * Instantiates a path
-     * @param startPoint - start point of the path
-     * @param endPoint - end point of the path
+     *
+     * @param startPoint           - start point of the path
+     * @param endPoint             - end point of the path
      * @param windDirectionDegrees - wind direction in degrees
-     * @param windSpeed - wind speed
+     * @param windSpeed            - wind speed
      */
     public Path(PointOfInterest startPoint, PointOfInterest endPoint, Double kineticCoefficient, int windDirectionDegrees, Double windSpeed) {
         if (startPoint == null || endPoint == null || kineticCoefficient == null || windSpeed == null)
@@ -40,22 +40,22 @@ public class Path {
 
     /**
      * Returns the starting point of the path
-     * 
-     * @return the starting point of the path 
+     *
+     * @return the starting point of the path
      */
     public PointOfInterest getStartingPoint() {
         return this.startPoint;
     }
-    
+
     /**
      * Returns the ending point of the path
-     * 
+     *
      * @return the ending point of the path
      */
     public PointOfInterest getEndingPoint() {
         return this.endPoint;
     }
-    
+
     /**
      * Returns the kinetic coefficient in that path
      *

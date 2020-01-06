@@ -217,7 +217,16 @@ public class MapGraphAlgorithms {
         }
     }
 
-    //shortest-path between vOrig and vDest
+    /**
+     * Shortest path between vOrig and vDest
+     * @param g the graph to look for the shortest path
+     * @param vOrig the origin node
+     * @param vDest the destination node
+     * @param shortPath the list where the path will be returned
+     * @return (1) the shortest value related to what the distance in the graphs are about
+     * (2) 0 if the nodes are not valid
+     * (3) 0 if no path exists
+     */
     @SuppressWarnings("Duplicates")
     public static <V, E> double shortestPath(Graph<V, E> g, V vOrig, V vDest, LinkedList<V> shortPath) {
         if (!g.validVertex(vOrig) || !g.validVertex(vDest)) {
@@ -366,7 +375,7 @@ public class MapGraphAlgorithms {
      * @param vOrig the origin vertex
      * @param vDest the destination vertex
      * @param constraints all the vertexes the path must pass through
-     * @param shortPath the result path
+     * @param shortPaths the result path
      * @param <V> a vertex
      * @param <E> a edge
      * @return the shortest path going through all constraints
@@ -418,5 +427,29 @@ public class MapGraphAlgorithms {
             }
         }
         return totalWeight;
+    }
+
+    /**
+     * Converts a node list to a edge list
+     * @param graph the graph with the information of the nodes and edges
+     * @param list the list of nodes
+     * @param <V> a node of the graph
+     * @param <E> a edge of the graph
+     * @return (1) a list of edges
+     * (2) an empty list if the size of the node list is smaller or equal than 1
+     */
+    public static <V,E> LinkedList<E> convertNodeListToEdgeList(Graph<V,E> graph, LinkedList<V> list) {
+        LinkedList<E> edgeList = new LinkedList<>();
+        if(list.size() <= 1) {
+            return new LinkedList<>();
+        }
+        Iterator<V> it = list.iterator();
+        V startingPoint = it.next();
+        while(it.hasNext()) {
+            V endingPoint = it.next();
+            edgeList.add(graph.getEdge(startingPoint, endingPoint).getElement());
+            startingPoint = endingPoint;
+        }
+        return edgeList;
     }
 }

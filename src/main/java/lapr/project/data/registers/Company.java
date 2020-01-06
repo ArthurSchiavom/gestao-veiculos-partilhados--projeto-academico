@@ -33,7 +33,7 @@ public class Company {
     private Company(DataHandler dataHandler) {
         instance = this;
         this.dataHandler = dataHandler;
-        this.parkAPI =new ParkAPI(dataHandler);
+        this.parkAPI = new ParkAPI(dataHandler);
         this.userAPI = new UserAPI(dataHandler);
         this.tripAPI = new TripAPI(dataHandler);
         this.vehicleAPI = new VehicleAPI(dataHandler);
@@ -46,10 +46,11 @@ public class Company {
 
     /**
      * Represents a Singleton of the class Company
+     *
      * @return the company
      */
-    public static Company createCompany(DataHandler dataHandler){
-        if(instance == null){
+    public static Company createCompany(DataHandler dataHandler) {
+        if (instance == null) {
             new Company(dataHandler);
         }
         return instance;
@@ -57,38 +58,40 @@ public class Company {
 
     /**
      * Initializes a graph with the information about poi's and path's
+     *
      * @return a map graph with weight being the distance between poi's
      */
-    public Graph<PointOfInterest,Path> initializeDistanceGraph(){
+    public Graph<PointOfInterest, Path> initializeDistanceGraph() {
         mapGraphDistance = new Graph<>(true);
-        for(PointOfInterest poi : poiAPI.fetchAllPois()){
+        for (PointOfInterest poi : poiAPI.fetchAllPois()) {
             mapGraphDistance.insertVertex(poi);
         }
         PointOfInterest startingPoint;
         PointOfInterest endingPoint;
-        for(Path path : pathAPI.fetchAllPaths()){
+        for (Path path : pathAPI.fetchAllPaths()) {
             startingPoint = path.getStartingPoint();
             endingPoint = path.getEndingPoint();
-            mapGraphDistance.insertEdge(startingPoint,endingPoint,path,startingPoint.getCoordinates().distance(endingPoint.getCoordinates()));
+            mapGraphDistance.insertEdge(startingPoint, endingPoint, path, startingPoint.getCoordinates().distance(endingPoint.getCoordinates()));
         }
         return mapGraphDistance;
     }
 
     /**
      * Initializes a graph with the information about poi's and path's
+     *
      * @return a map graph with the weight being the energy between poi's
      */
-    public Graph<PointOfInterest,Path> initializeEnergyGraph(Client client, Vehicle vehicle){
+    public Graph<PointOfInterest, Path> initializeEnergyGraph(Client client, Vehicle vehicle) {
         mapGraphEnergy = new Graph<>(true);
-        for(PointOfInterest poi : poiAPI.fetchAllPois()){
+        for (PointOfInterest poi : poiAPI.fetchAllPois()) {
             mapGraphEnergy.insertVertex(poi);
         }
         PointOfInterest startingPoint;
         PointOfInterest endingPoint;
-        for(Path path : pathAPI.fetchAllPaths()){
+        for (Path path : pathAPI.fetchAllPaths()) {
             startingPoint = path.getStartingPoint();
             endingPoint = path.getEndingPoint();
-            mapGraphEnergy.insertEdge(startingPoint,endingPoint,path, PhysicsMethods.predictEnergySpent(client,path,vehicle));
+            mapGraphEnergy.insertEdge(startingPoint, endingPoint, path, PhysicsMethods.predictEnergySpent(client, path, vehicle));
         }
         return mapGraphEnergy;
     }
@@ -108,14 +111,13 @@ public class Company {
     /**
      * @return Returns the map graph that contains the information about parks and poi's distance
      */
-    public Graph<PointOfInterest,Path> getMapGraphDistance(){
-        if(mapGraphDistance != null) {
+    public Graph<PointOfInterest, Path> getMapGraphDistance() {
+        if (mapGraphDistance != null) {
             return mapGraphDistance;
-        }else{
+        } else {
             return initializeDistanceGraph();
         }
     }
-
 
     public ParkAPI getParkAPI() {
         return parkAPI;
@@ -132,11 +134,11 @@ public class Company {
     public VehicleAPI getVehicleAPI() {
         return vehicleAPI;
     }
-    
+
     public PathAPI getPathAPI() {
         return pathAPI;
     }
-    
+
     public PoiAPI getPoiAPI() {
         return poiAPI;
     }

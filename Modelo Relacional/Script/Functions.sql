@@ -1,5 +1,5 @@
 --Finds the scooter with the minimum battery+10% in the park
-CREATE OR REPLACE FUNCTION findMinimumBatteryScooter(start_park_id_in IN varchar2, minimum_battery_in IN numeric)
+CREATE OR REPLACE FUNCTION find_minimum_battery_scooter(start_park_id_in IN varchar2, minimum_battery_in IN numeric)
 RETURN electric_scooters%rowtype IS
 	scooter electric_scooters%rowtype;
 BEGIN
@@ -24,7 +24,7 @@ END;
 /
 
 --Finds the scooter with the highest amount of battery in the park
-CREATE OR REPLACE FUNCTION findHighestChargeScooter(start_park_id_in IN varchar2) 
+CREATE OR REPLACE FUNCTION find_highest_charge_scooter(start_park_id_in IN varchar2)
 RETURN electric_scooters%rowtype IS
 	scooter electric_scooters%rowtype;
 BEGIN
@@ -49,7 +49,7 @@ END;
 /
 
 --Finds an available vehicle at a park
-CREATE OR REPLACE FUNCTION findAvailableBicycle(start_park_id_in IN varchar2) 
+CREATE OR REPLACE FUNCTION findAvailableBicycle(start_park_id_in IN varchar2)
 RETURN vehicles%rowtype IS
 	vehicle vehicles%rowtype;
 BEGIN

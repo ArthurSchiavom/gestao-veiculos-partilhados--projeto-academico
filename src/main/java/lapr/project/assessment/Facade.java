@@ -401,14 +401,6 @@ public class Facade implements Serviceable {
         }
     }
 
-    /**
-     * TODO DELETE THIS
-     * @param s Park Identification where to unlock escooter.
-     * @param s1 User that requested the unlock.
-     * @param s2 Write the unlocked vehicle information to a file,
-     * according to file output/escooters.csv.
-     * @return The time in milliseconds at which it was unlocked.
-     */
     @Override
     public long unlockAnyEscooterAtPark(String s, String s1, String s2) {
         prepare(false);

@@ -6,6 +6,7 @@
 package lapr.project.utils.physics.calculations;
 
 import java.util.List;
+
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
 import lapr.project.model.users.Client;
@@ -13,12 +14,12 @@ import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
+
 import static lapr.project.model.vehicles.VehicleType.BICYCLE;
 
 /**
  * Class that has the methods to calculate the calories burnt between two points
  * and the autonomy of the scooter
- *
  */
 public class PhysicsMethods {
 
@@ -31,7 +32,7 @@ public class PhysicsMethods {
     /**
      * Returns the time spent to go from one point to another
      *
-     * @param velocity - average speed
+     * @param velocity     - average speed
      * @param distanceMade - distance between the starting and ending points
      * @return time spent to go from one point to another
      */
@@ -42,8 +43,8 @@ public class PhysicsMethods {
     /**
      * Returns the power rolling resistance
      *
-     * @param velocity - average speed
-     * @param mass - mass of the person + vehicle
+     * @param velocity           - average speed
+     * @param mass               - mass of the person + vehicle
      * @param kineticCoefficient - kinetic coefficient
      * @return the power rolling resistance
      */
@@ -55,8 +56,8 @@ public class PhysicsMethods {
      * Returns the power that is need to climb
      *
      * @param velocity - average speed
-     * @param mass - mass of the person + vehicle
-     * @param slope - slope between the starting and ending points
+     * @param mass     - mass of the person + vehicle
+     * @param slope    - slope between the starting and ending points
      * @return the power that is need to climb
      */
     public static Double calculateClimbingPower(double velocity, double mass, double slope) {
@@ -67,13 +68,13 @@ public class PhysicsMethods {
      * Returns the value of the angle made between the vector of the wind speed
      * and the rider speed
      *
-     * @param pathInitX - initial x value of the path
-     * @param pathInitY - initial y value of the path
-     * @param pathFinX - final x value of the path
-     * @param pathFinY - final y value of the path
+     * @param pathInitX    - initial x value of the path
+     * @param pathInitY    - initial y value of the path
+     * @param pathFinX     - final x value of the path
+     * @param pathFinY     - final y value of the path
      * @param windAngleRad - the angle made between the wind speed direction and
-     * the North pole
-     * @param windSpeed - the value of the wind speed
+     *                     the North pole
+     * @param windSpeed    - the value of the wind speed
      * @return the value of the angle made between the vector of the wind speed
      * and the rider speed
      */
@@ -96,8 +97,8 @@ public class PhysicsMethods {
      * Returns the value of the apparent wind speed
      *
      * @param windAndVehicleAngleRad - - the angle made between the wind speed direction and the vehicle
-     * @param riderSpeed - the rider average speed
-     * @param windSpeed - the wind speed
+     * @param riderSpeed             - the rider average speed
+     * @param windSpeed              - the wind speed
      * @return the value of the apparent wind speed
      */
     public static Double calculateApparentWindSpeed(double windAndVehicleAngleRad, double riderSpeed, double windSpeed) {
@@ -108,11 +109,10 @@ public class PhysicsMethods {
      * Returns the cosine of the angle made between the apparent wind speed and
      * the speed of the rider
      *
-     * @param riderSpeed - the rider average speed
-     * @param windSpeed - the wind speed
-     * @param apparentWindSpeed - the apparent wind speed
+     * @param riderSpeed           - the rider average speed
+     * @param windSpeed            - the wind speed
+     * @param apparentWindSpeed    - the apparent wind speed
      * @param windAndRiderAngleRad - the angle made between the wind speed direction and the vehicle
-     *
      * @return the cosine of the angle made between the apparent wind speed and
      * the speed of the rider
      */
@@ -124,11 +124,11 @@ public class PhysicsMethods {
      * Returns the power that needs to surpasse the air drag
      * <url> https://www.sheldonbrown.com/brandt/wind.html </url>
      *
-     * @param velocity - average speed
-     * @param windSpeed - wind speed
+     * @param velocity               - average speed
+     * @param windSpeed              - wind speed
      * @param aerodynamicCoefficient - aerodynamic coefficient
-     * @param frontalArea - frontal area of the vehicle
-     * @param cosApparentWindAngle - the angle that the wind makes with the North pole
+     * @param frontalArea            - frontal area of the vehicle
+     * @param cosApparentWindAngle   - the angle that the wind makes with the North pole
      * @return the power that needs to surpasse the air drag
      */
     public static Double calculatePowerAirDrag(double velocity, double windSpeed, double aerodynamicCoefficient, double frontalArea, double cosApparentWindAngle) {
@@ -138,7 +138,7 @@ public class PhysicsMethods {
     /**
      * The slop between the starting and ending points
      *
-     * @param height - height difference between the points
+     * @param height           - height difference between the points
      * @param distanceTraveled - distance between the points
      * @return the slop between the starting and ending point
      */
@@ -152,18 +152,17 @@ public class PhysicsMethods {
      * Method that calculates the amount of calories burnt between two points
      * <url> https://en.wikipedia.org/wiki/Bicycle_performance </url>
      *
-     *
-     * @param velocity - average speed of a person (m/s)
-     * @param windSpeed - wind speed (m/s)
-     * @param kineticCoefficient - kinetic coefficient between two points
+     * @param velocity               - average speed of a person (m/s)
+     * @param windSpeed              - wind speed (m/s)
+     * @param kineticCoefficient     - kinetic coefficient between two points
      * @param aerodynamicCoefficient - aerodynamic coefficient
-     * @param frontalArea - frontal area of the vehicle (m^2)
-     * @param distanceMade - distance between the two points (m)
-     * @param personMass - mass of the person (kg)
-     * @param vehicleMass - mass of the vehicle (kg)
-     * @param startPoint - the starting point of the path that the rider is going
-     * @param endPoint - the ending point of the path that the rider is going
-     * @param windAngle - the angle made between the wind speed and the north pole
+     * @param frontalArea            - frontal area of the vehicle (m^2)
+     * @param distanceMade           - distance between the two points (m)
+     * @param personMass             - mass of the person (kg)
+     * @param vehicleMass            - mass of the vehicle (kg)
+     * @param startPoint             - the starting point of the path that the rider is going
+     * @param endPoint               - the ending point of the path that the rider is going
+     * @param windAngle              - the angle made between the wind speed and the north pole
      * @return the amount of calories burnt between two points
      */
     public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
@@ -192,7 +191,7 @@ public class PhysicsMethods {
      * Returns the actual battery of the scooter in W.h
      *
      * @param maxBatteryCapacity - The max battery of the scooter
-     * @param percentageBattery - The percentage of the actual battery
+     * @param percentageBattery  - The percentage of the actual battery
      * @return the actual battery of the scooter in W.h
      */
     public static Double calculateActualBatteryWattHrs(Double maxBatteryCapacity, int percentageBattery) {
@@ -204,8 +203,8 @@ public class PhysicsMethods {
      * in hours
      *
      * @param maxBatteryCapacity - The max battery of the scooter
-     * @param percentageBattery - The percentage of the actual battery
-     * @param motorPower - The power of the motor
+     * @param percentageBattery  - The percentage of the actual battery
+     * @param motorPower         - The power of the motor
      * @return the time that the battery of the scooter will take to discharge
      * in hours
      */
@@ -218,8 +217,8 @@ public class PhysicsMethods {
      * Returns the real scooter autonomy in Km
      *
      * @param maxBatteryCapacity - The max battery of the scooter
-     * @param percentageBattery - The percentage of the actual battery
-     * @param motorPower - The power of the motor
+     * @param percentageBattery  - The percentage of the actual battery
+     * @param motorPower         - The power of the motor
      * @return the real scooter autonomy in Km
      */
     public static Double calculateScooterAutonomyKM(Double maxBatteryCapacity, int percentageBattery, int motorPower) {
@@ -236,7 +235,7 @@ public class PhysicsMethods {
      * @return an angle in radians
      */
     public static Double convertDegreesToRadian(int angle) {
-        return (angle*Math.PI)/180;
+        return (angle * Math.PI) / 180;
     }
 
     /**
@@ -246,29 +245,31 @@ public class PhysicsMethods {
      * @return the value of the energy in joule to calories
      */
     public static Double convertJouleToCal(double energyJoule) {
-        return Math.round(energyJoule * CONVERT_JOULE_CAL * 100.0) /100.0;
+        return Math.round(energyJoule * CONVERT_JOULE_CAL * 100.0) / 100.0;
     }
 
 
     /**
      * Predicts the energy spent in a trip between two parks
      *
-     * @param client - the client 
-     * @param path - the path
+     * @param client  - the client
+     * @param path    - the path
      * @param vehicle - the vehicle in use
-     * @return  - the energy spent in a trip between two parks
+     * @return - the energy spent in a trip between two parks
      */
     public static double predictEnergySpent(Client client, Path path, Vehicle vehicle) {
         double energySpent = 0.0;
         double averageSpeed = 0.0;
         double distanceMade;
         if (vehicle.getType() == VehicleType.BICYCLE) {
-            averageSpeed = (double) client.getCyclingAverageSpeed();
+            averageSpeed = client.getCyclingAverageSpeed();
         } else if (vehicle.getType() == VehicleType.ELECTRIC_SCOOTER) {
             averageSpeed = SCOOTER_MAX_SPEED;
         }
         distanceMade = path.getStartingPoint().getCoordinates().distance(path.getEndingPoint().getCoordinates()) * 1000;
-        energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(), path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
+        energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(),
+                vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(),
+                path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
         return energySpent;
     }
 }

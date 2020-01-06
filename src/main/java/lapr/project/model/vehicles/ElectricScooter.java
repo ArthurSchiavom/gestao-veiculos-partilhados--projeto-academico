@@ -85,7 +85,7 @@ public class ElectricScooter extends Vehicle {
      * Returns true if a scooter has the necessary autonomy to make a trip of X
      * km over a flat road
      *
-     * @param trip - the trip
+     * @param km the amount of kms to check for
      * @return true if a scooter has the necessary autonomy to make a trim of X
      * km over a flat road
      */
