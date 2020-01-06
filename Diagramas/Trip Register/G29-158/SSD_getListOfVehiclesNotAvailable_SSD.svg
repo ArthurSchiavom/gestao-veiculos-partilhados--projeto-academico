@@ -24,10 +24,10 @@
       ><path d="M0 0 L554 0 L554 104 L0 104 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath7"
-      ><path d="M89 9 L89 24 L4 24 L4 9 ZM419 30 L419 45 L131 45 L131 30 ZM387 60 L387 75 L156 75 L156 60 ZM0 0 L0 104 L554 104 L554 0 Z"
+      ><path d="M89 9 L89 24 L4 24 L4 9 ZM419 30 L419 45 L131 45 L131 30 ZM409 60 L409 75 L132 75 L132 60 ZM0 0 L0 104 L554 104 L554 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath8"
-      ><path d="M387 30 L387 45 L156 45 L156 30 ZM361 78 L361 93 L188 93 L188 78 ZM0 0 L0 104 L554 104 L554 0 L419 0 L419 15 L131 15 L131 0 Z"
+      ><path d="M409 30 L409 45 L132 45 L132 30 ZM361 78 L361 93 L188 93 L188 78 ZM0 0 L0 104 L554 104 L554 0 L419 0 L419 15 L131 15 L131 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath9"
       ><path d="M361 30 L361 45 L188 45 L188 30 ZM344 59 L344 74 L206 74 L206 59 ZM0 0 L0 104 L239 104 L239 102 L308 102 L308 104 L554 104 L554 0 Z"
@@ -54,7 +54,7 @@
       ><path d="M-173 -15 L346 -15 L346 30 L-173 30 L-173 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath17"
-      ><path d="M-231 -15 L462 -15 L462 30 L-231 30 L-231 -15 Z"
+      ><path d="M-277 -15 L554 -15 L554 30 L-277 30 L-277 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath18"
       ><path d="M-288 -15 L576 -15 L576 30 L-288 30 L-288 -15 Z"
@@ -158,10 +158,10 @@
       /><text fill="black" x="9" xml:space="preserve" y="12" clip-path="url(#clipPath16)" stroke="none"
       >2: introduce the requested data</text
     ></g
-    ><g font-size="11px" transform="translate(154,88)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
-    ><rect x="0" width="231" height="15" y="0" clip-path="url(#clipPath17)" stroke="none"
+    ><g font-size="11px" transform="translate(130,88)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
+    ><rect x="0" width="277" height="15" y="0" clip-path="url(#clipPath17)" stroke="none"
       /><text fill="black" x="9" xml:space="preserve" y="12" clip-path="url(#clipPath17)" stroke="none"
-      >1.1: request the necessary data (startTime)</text
+      >1.1: request the necessary data (startTime,endTime)</text
     ></g
     ><g font-size="11px" transform="translate(129,58)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
     ><rect x="0" width="288" height="15" y="0" clip-path="url(#clipPath18)" stroke="none"
