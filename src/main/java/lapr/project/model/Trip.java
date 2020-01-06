@@ -14,10 +14,7 @@ import lapr.project.model.vehicles.ElectricScooter;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Class that represents a trip
@@ -205,5 +202,21 @@ public class Trip {
             return 0;
 
         return cost;
+    }
+
+    /**
+     * Calculates the trip's duration at the moment.
+     *
+     * @return trip duration at the moment, if the trip hasn't ended, the duration will vary according to when it's called.
+     */
+    public long getTripDurationMillis() {
+        if (endTime != null)
+            return endTime.getTime() - startTime.getTime();
+
+        Calendar cal = Calendar.getInstance();
+        long val = cal.getTimeInMillis() - startTime.getTime();
+        System.out.println(cal.getTimeInMillis());
+        System.out.println(startTime.getTime());
+        return val;
     }
 }

@@ -43,7 +43,8 @@ public class VehicleAPI {
         ResultSet rs2;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            ps = dataHandler.prepareStatement("select * from VEHICLES where VEHICLE_TYPE_NAME = " + type.getSQLName());
+            ps = dataHandler.prepareStatement("select * from VEHICLES where VEHICLE_TYPE_NAME = ?");
+            ps.setString(1, type.getSQLName());
             autoCloseableManager.addAutoCloseable(ps);
             rs = dataHandler.executeQuery(ps);
             autoCloseableManager.addAutoCloseable(rs);
@@ -52,7 +53,8 @@ public class VehicleAPI {
                 String description = rs.getString(DESCRIPTION_FIELD_NAME);
                 switch (type) {
                     case BICYCLE:
-                        ps2 = dataHandler.prepareStatement("SELECT * from bicycles where VEHICLE_DESCRIPTION = " + description);
+                        ps2 = dataHandler.prepareStatement("SELECT * from bicycles where VEHICLE_DESCRIPTION = ?");
+                        ps2.setString(1, description);
                         autoCloseableManager.addAutoCloseable(ps2);
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
@@ -62,7 +64,8 @@ public class VehicleAPI {
                                 rs2.getInt(BICYCLE_SIZE_FIELD_NAME)));
                         break;
                     case ELECTRIC_SCOOTER:
-                        ps2 = dataHandler.prepareStatement("SELECT * from ELECTRIC_SCOOTERS where VEHICLE_DESCRIPTION = " + description);
+                        ps2 = dataHandler.prepareStatement("SELECT * from ELECTRIC_SCOOTERS where VEHICLE_DESCRIPTION = ?");
+                        ps2.setString(1, description);
                         autoCloseableManager.addAutoCloseable(ps2);
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
@@ -75,7 +78,7 @@ public class VehicleAPI {
                 }
             }
         } catch (SQLException e) {
-            throw e;
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }

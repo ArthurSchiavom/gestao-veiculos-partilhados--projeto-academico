@@ -589,7 +589,16 @@ public class Facade implements Serviceable {
 
     @Override
     public long forHowLongAVehicleIsUnlocked(String s) {
-        return 0;
+        TripAPI tripAPI = company.getTripAPI();
+        Trip trip = null;
+        try {
+            trip = tripAPI.fetchTripVehicleIsIn(s);
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "Failed to fetch trip: " + e.getMessage());
+        }
+        if (trip == null)
+            return 0;
+        return trip.getTripDurationMillis() / 1000;
     }
 
     @Override

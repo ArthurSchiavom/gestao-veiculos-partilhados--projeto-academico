@@ -2,6 +2,7 @@ package lapr.project.data.registers;
 
 import lapr.project.model.Invoice;
 import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.UnregisteredDataException;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
@@ -111,7 +112,7 @@ public class TripAPI {
             Timestamp endTime = resultSet.getTimestamp("end_time");
             return new Trip(startTime, endTime, email, startParkId, endParkId, vehicleDescription);
         } catch (SQLException ex) {
-            throw new SQLException();
+            throw new SQLException("database access error", ex.getSQLState(), ex.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -420,5 +421,33 @@ public class TripAPI {
             points += 5;
 
         return points;
+    }
+
+    /**
+     * Finds the trip a vehicle is in.
+     *
+     * @param vehicleDescription vehicle description
+     * @return (1) trip a vehicle is in or (2) null if the vehicle is not in a trip
+     * @throws SQLException if a database access error occurs
+     */
+    public Trip fetchTripVehicleIsIn(String vehicleDescription) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("select user_email from trips where vehicle_description = ? and end_park_id is null");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setString(1, vehicleDescription);
+            ResultSet resultSet = dataHandler.executeQuery(preparedStatement);
+            autoCloseableManager.addAutoCloseable(resultSet);
+            if (!resultSet.next())
+                return null;
+
+            String userEmail = resultSet.getString(1);
+            return fetchUnfinishedTrip(userEmail);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("failed to fetch vehicle from the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
     }
 }
