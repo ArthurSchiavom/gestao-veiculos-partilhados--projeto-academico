@@ -20,9 +20,14 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import lapr.project.mapgraph.MapGraphAlgorithms;
+import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.vehicles.Bicycle;
 
 public class TripAPI {
+
     private DataHandler dataHandler;
 
     public TripAPI(DataHandler dataHandler) {
@@ -62,7 +67,7 @@ public class TripAPI {
      * Fetches a trip from the database
      *
      * @param clientEmail the email of the client
-     * @param startTime   the start time of the trip
+     * @param startTime the start time of the trip
      * @return a trip object with data from the database
      */
     public Trip fetchTrip(String clientEmail, Timestamp startTime) {
@@ -118,34 +123,32 @@ public class TripAPI {
         }
     }
 
-
     /**
      * Loads a trip without a preset end
      *
-     * @param startTime   the start time of the trip
+     * @param startTime the start time of the trip
      * @param clientEmail the end time of the trip
      * @param startParkId the id of the start park
-     * @param vehicleId   the id of the vehicle
+     * @param vehicleId the id of the vehicle
      * @return a trip with all the arguments
      */
     public Trip createNewTrip(Timestamp startTime, String clientEmail, String startParkId, String vehicleId) {
         return new Trip(startTime, clientEmail, startParkId, vehicleId);
     }
 
-
     /**
      * Loads a trip with all the arguments
      *
-     * @param startTime          the start time of the trip
-     * @param endTime            the end time of the trip
-     * @param clientEmail        the end time of the trip
-     * @param startParkId        the id of the start park
-     * @param endParkId          the id of the end park
+     * @param startTime the start time of the trip
+     * @param endTime the end time of the trip
+     * @param clientEmail the end time of the trip
+     * @param startParkId the id of the start park
+     * @param endParkId the id of the end park
      * @param vehicleDescription the id of the vehicle
      * @return a trip with all the arguments
      */
     public Trip createNewTrip(Timestamp startTime, Timestamp endTime, String clientEmail,
-                              String startParkId, String endParkId, String vehicleDescription) {
+            String startParkId, String endParkId, String vehicleDescription) {
         return new Trip(startTime, endTime, clientEmail, startParkId, endParkId, vehicleDescription);
     }
 
@@ -155,8 +158,6 @@ public class TripAPI {
      * @param startTime
      * @return
      */
-
-
     public List<Trip> getListOfVehiclesNotAvailable(LocalDateTime startTime, LocalDateTime endTime) {
         List<Trip> dispVehicles = new ArrayList<>();
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
@@ -195,8 +196,8 @@ public class TripAPI {
     private int registerNewTripNoCommit(String userEmail, String vehicleDescription, String startParkId) throws SQLException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            PreparedStatement preparedStatement = dataHandler.prepareStatement("INSERT INTO TRIPS(start_time, user_email, vehicle_description, start_park_id)" +
-                    "VALUES(current_timestamp, ?, ?, ?)");
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("INSERT INTO TRIPS(start_time, user_email, vehicle_description, start_park_id)"
+                    + "VALUES(current_timestamp, ?, ?, ?)");
             autoCloseableManager.addAutoCloseable(preparedStatement);
             preparedStatement.setString(1, userEmail);
             preparedStatement.setString(2, vehicleDescription);
@@ -213,7 +214,7 @@ public class TripAPI {
     /**
      * Unlocks a vehicle and starts a new trip for the user.
      *
-     * @param username           user unlocking the vehicle
+     * @param username user unlocking the vehicle
      * @param vehicleDescription vehicle being unlocked
      */
     public void startTrip(String username, String vehicleDescription) throws SQLException {
@@ -223,11 +224,13 @@ public class TripAPI {
             Company company = Company.getInstance();
             ParkAPI parkAPI = company.getParkAPI();
             parkId = parkAPI.fetchParkIdVehicleIsIn(vehicleDescription);
-            if (parkId == null)
+            if (parkId == null) {
                 throw new SQLException("Vehicle is not in any park.");
+            }
             Client client = company.getUserAPI().fetchClientByUsername(username);
-            if (client == null)
+            if (client == null) {
                 throw new SQLException("Client doesn't exist.");
+            }
 
             // 1. unlock
             parkAPI.unlockVehicleNoCommit(vehicleDescription); // done
@@ -252,7 +255,8 @@ public class TripAPI {
      * Finds the user that is currently riding a given vehicle.
      *
      * @param vehicleDescription vehicle to search for
-     * @return (1) email of the user riding the given vehicle or (2) null if no one is riding that vehicle
+     * @return (1) email of the user riding the given vehicle or (2) null if no
+     * one is riding that vehicle
      * @throws SQLException if a database access error occurs
      */
     public String fetchUserEmailRiding(String vehicleDescription) throws SQLException {
@@ -266,8 +270,9 @@ public class TripAPI {
             dataHandler.executeUpdate(cs);
             return cs.getString(1);
         } catch (SQLException e) {
-            if (e.getErrorCode() != DataHandler.ORA_ERROR_CODE_NO_DATA_FOUND)
+            if (e.getErrorCode() != DataHandler.ORA_ERROR_CODE_NO_DATA_FOUND) {
                 throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+            }
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -275,13 +280,15 @@ public class TripAPI {
     }
 
     /**
-     * Locks a vehicle and ends a trip if there is one by setting the user status to not riding,
-     * updating the trip information, updating user points, updating user debt and emailing the user.
+     * Locks a vehicle and ends a trip if there is one by setting the user
+     * status to not riding, updating the trip information, updating user
+     * points, updating user debt and emailing the user.
      *
-     * @param parkId             id of the park where the vehicle is inserted
+     * @param parkId id of the park where the vehicle is inserted
      * @param vehicleDescription vehicle0s description
-     * @throws SQLException       if a database access error occurs
-     * @throws MessagingException if there is an on-going trip with the vehicle and the system fails to email the user
+     * @throws SQLException if a database access error occurs
+     * @throws MessagingException if there is an on-going trip with the vehicle
+     * and the system fails to email the user
      */
     public void lockVehicle(String parkId, String vehicleDescription) throws SQLException, MessagingException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
@@ -292,14 +299,16 @@ public class TripAPI {
             ps.setString(1, parkId);
             ps.setString(2, vehicleDescription);
             nLinesChanged = dataHandler.executeUpdate(ps);
-            if (nLinesChanged == 0)
+            if (nLinesChanged == 0) {
                 throw new SQLException("Impossible to associate the given park and vehicle");
+            }
 
             dataHandler.commitTransaction();
 
             String clientEmail = fetchUserEmailRiding(vehicleDescription);
-            if (clientEmail != null)
+            if (clientEmail != null) {
                 Emailer.sendEmail(clientEmail, "Trip end", "Your vehicle was successfully locked!");
+            }
         } catch (SQLException e) {
             try {
                 dataHandler.rollbackTransaction();
@@ -307,8 +316,9 @@ public class TripAPI {
             }
             ;
 
-            if (nLinesChanged == 0)
+            if (nLinesChanged == 0) {
                 throw e;
+            }
             throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
@@ -321,8 +331,9 @@ public class TripAPI {
         InvoiceAPI invoiceAPI = Company.getInstance().getInvoiceAPI();
 
         User user = userAPI.fetchClientByUsername(username);
-        if (user == null)
+        if (user == null) {
             throw new UnregisteredDataException("user " + username + " does not exist.");
+        }
 
         String userEmail = user.getEmail();
         // FETCH UNPAID INVOICES
@@ -338,8 +349,9 @@ public class TripAPI {
         // FETCH TRIPS THAT ADDED UP TO THOSE INVOICES
         List<Trip> allClientTrips = fetchAllClientTrips(userEmail);
         for (Trip trip : allClientTrips) {
-            if (trip.calculateTripCost() == 0)
+            if (trip.calculateTripCost() == 0) {
                 continue;
+            }
 
             long tripEndTimeEpochSeconds = (trip.getEndTime().getTime() / 1000);
 
@@ -347,13 +359,15 @@ public class TripAPI {
             boolean tripIsInDebt = false;
             while (i < startInvoicesDateEpochSeconds.length && !tripIsInDebt) {
                 if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds[i]
-                        && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds[i])
+                        && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds[i]) {
                     tripIsInDebt = true;
+                }
 
                 i++;
             }
-            if (tripIsInDebt)
+            if (tripIsInDebt) {
                 allTripsInDebt.add(trip);
+            }
         }
 
         return allTripsInDebt;
@@ -365,8 +379,9 @@ public class TripAPI {
         InvoiceAPI invoiceAPI = Company.getInstance().getInvoiceAPI();
 
         User user = userAPI.fetchClientByUsername(username);
-        if (user == null)
+        if (user == null) {
             throw new UnregisteredDataException("user " + username + " does not exist.");
+        }
 
         String userEmail = user.getEmail();
         // FETCH UNPAID INVOICES
@@ -378,17 +393,20 @@ public class TripAPI {
         // FETCH TRIPS THAT ADDED UP TO THOSE INVOICES
         List<Trip> allClientTrips = fetchAllClientTrips(userEmail);
         for (Trip trip : allClientTrips) {
-            if (trip.calculateTripCost() == 0)
+            if (trip.calculateTripCost() == 0) {
                 continue;
+            }
 
             long tripEndTimeEpochSeconds = (trip.getEndTime().getTime() / 1000);
 
             boolean tripIsInDebt = false;
-                if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds
-                        && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds)
-                    tripIsInDebt = true;
-            if (tripIsInDebt)
+            if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds
+                    && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds) {
+                tripIsInDebt = true;
+            }
+            if (tripIsInDebt) {
                 allTripsInDebt.add(trip);
+            }
         }
 
         return allTripsInDebt;
@@ -397,28 +415,32 @@ public class TripAPI {
     /**
      * Calculates the amount of points this trip gave to the user.
      *
-     * @return amount of points this trip gave to the user; 0 if it didn't end yet
+     * @return amount of points this trip gave to the user; 0 if it didn't end
+     * yet
      */
     public int calculatePointsGivenToUser(Trip trip) throws SQLException {
         Timestamp endTime = trip.getEndTime();
-        if (endTime == null)
+        if (endTime == null) {
             return 0;
+        }
         Timestamp startTime = trip.getStartTime();
 
         ParkAPI parkAPI = Company.getInstance().getParkAPI();
 
         int points = 0;
         long durationMin = (endTime.getTime() - startTime.getTime()) / 60000;
-        if (durationMin < 15)
+        if (durationMin < 15) {
             points += 5;
+        }
 
         Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
         Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
         int altitudeDiff = endPark.getCoordinates().getAltitude() - startPark.getCoordinates().getAltitude();
-        if (altitudeDiff > 50)
+        if (altitudeDiff > 50) {
             points += 15;
-        else if (altitudeDiff > 25)
+        } else if (altitudeDiff > 25) {
             points += 5;
+        }
 
         return points;
     }
@@ -427,7 +449,8 @@ public class TripAPI {
      * Finds the trip a vehicle is in.
      *
      * @param vehicleDescription vehicle description
-     * @return (1) trip a vehicle is in or (2) null if the vehicle is not in a trip
+     * @return (1) trip a vehicle is in or (2) null if the vehicle is not in a
+     * trip
      * @throws SQLException if a database access error occurs
      */
     public Trip fetchTripVehicleIsIn(String vehicleDescription) throws SQLException {
@@ -438,8 +461,9 @@ public class TripAPI {
             preparedStatement.setString(1, vehicleDescription);
             ResultSet resultSet = dataHandler.executeQuery(preparedStatement);
             autoCloseableManager.addAutoCloseable(resultSet);
-            if (!resultSet.next())
+            if (!resultSet.next()) {
                 return null;
+            }
 
             String userEmail = resultSet.getString(1);
             return fetchUnfinishedTrip(userEmail);
@@ -449,5 +473,14 @@ public class TripAPI {
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
+    }
+
+    public static double predictCalories(Client client, Bicycle bicycle, PointOfInterest poi1, PointOfInterest poi2, String filePath) throws SQLException {
+       
+
+        LinkedList<PointOfInterest> prevision = new LinkedList<>();
+        double energySpent = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, bicycle), poi1, poi2, prevision);
+
+        return energySpent;
     }
 }
