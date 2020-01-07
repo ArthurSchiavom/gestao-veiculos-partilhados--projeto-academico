@@ -179,12 +179,14 @@ public class TestUtilsTest {
 
     @Test
     void getOutputPathTest(){
+        Locale.setDefault(Locale.US);
+
         LinkedList<PointOfInterest> path = new LinkedList<>();
         path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
         path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,5)));
         List<String> outputExpected = new LinkedList<>();
         List<String> output = new LinkedList<>();
-        outputExpected.add("Path 002\ntotal distance: 5\ntotal energy: 3,00\nelevation: 10\n2.3;3.4\n2.31;3.41\n");
+        outputExpected.add("Path 002\ntotal distance: 5\ntotal energy: 3.00\nelevation: 10\n2.3;3.4\n2.31;3.41\n");
         long distance=5;
         int elevation = 13;
         int pathNumber = 2;
