@@ -7,7 +7,7 @@ public enum ElectricScooterType {
     URBAN("urban"),
     OFFROAD("offroad");
 
-    private final String SQLName;
+    public final String SQLName;
     ElectricScooterType(String SQLName) {
         this.SQLName = SQLName;
     }
