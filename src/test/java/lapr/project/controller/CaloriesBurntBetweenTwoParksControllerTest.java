@@ -238,7 +238,7 @@ public class CaloriesBurntBetweenTwoParksControllerTest {
         String filePath = "testFiles/temp/CaloriesBurntBetweenTwoParksTest.writeOutputFileTest.output";
         prepareGets(username, vehicleDescription, startParkId, endParkId, latA, lonA, latB, lonB);
         try {
-            double energy = controller.predictCaloriesBurnt(username, vehicleDescription, startParkId, endParkId, latA, lonA, latB, lonB, filePath);
+            double energy = controller.predictCaloriesBurnt(username, vehicleDescription, latA, lonA, latB, lonB);
             verifyGets(username, vehicleDescription);
             assertEquals(0.0, energy);
 //            assertEquals(75, client.getWeight());

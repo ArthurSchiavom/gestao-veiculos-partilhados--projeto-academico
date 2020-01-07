@@ -35,12 +35,9 @@ public class CaloriesBurntBetweenTwoParksController {
        }
        
        
-       public double predictCaloriesBurnt(String username, String vehicleDescription, String startParkId, String endParkId, double latA, double lonA, double latB, double lonB, String filePath) throws SQLException, IOException {
-           Client client = company.getUserAPI().fetchClientByUsername(username);
-           Bicycle vehicle = (Bicycle) company.getVehicleAPI().fetchVehicle(vehicleDescription);
-            PointOfInterest poiA = company.getPoiAPI().fetchPoi(latA, lonA);
-            PointOfInterest poiB = company.getPoiAPI().fetchPoi(latB, lonB);
+       public double predictCaloriesBurnt(String username, String vehicleDescription, double latA, double lonA, double latB, double lonB) throws SQLException, IOException {
 
-            return TripAPI.predictCalories(client, vehicle, poiA, poiB, filePath);
+
+            return TripAPI.predictCalories(username, vehicleDescription, latA, lonA,latB, lonB);
        }
 }
