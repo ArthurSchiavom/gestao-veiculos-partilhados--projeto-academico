@@ -278,4 +278,34 @@ public class PhysicsMethodsTest {
         assertEquals(expResult, result, 0.0);
     }
 
+    
+
+    /**
+     * Test of predictEnergySpent method, of class PhysicsMethods.
+     */
+    @org.junit.Test
+    public void testPredictEnergySpent_3args_2() {
+        System.out.println("predictEnergySpent");
+       Client client = new Client("a@a.a", "peleila", "password", 170, 75, 'M', 3.0f, false, new CreditCard("1111111111111111"));
+        Path path1 = new Path(new PointOfInterest("desc1",new Coordinates(0.0, 0.0, 100)),new PointOfInterest("desc2", new Coordinates(0.0018, 0.002, 300)), 0.002, 90, 1.0);
+
+        Vehicle vehicle = new Bicycle(1, "PT001", 1.10f, 0.3f, 20, true, 15);
+        double expResult = 251309.92;
+        double result = PhysicsMethods.predictEnergySpent(client, path1, vehicle);
+        assertEquals(expResult, result, 0.0);
+
+        Vehicle vehicle2 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.URBAN, 75, 1, 1000);
+        expResult = 251312.95;
+        result = PhysicsMethods.predictEnergySpent(client, path1, vehicle2);
+        assertEquals(expResult, result, 0.0);
+        
+        Vehicle vehicle3 = new ElectricScooter(2, "PT002", 1.10f, 0.3f, 20, true, ElectricScooterType.OFFROAD, 75, 1, 1000);
+        expResult = 251312.95;
+        List<Path> paths = new ArrayList<>();
+        paths.add(path1);
+        result = PhysicsMethods.predictEnergySpent(client, paths, vehicle3);
+        assertEquals(expResult, result, 0.0);
+
+    }
+
 }
