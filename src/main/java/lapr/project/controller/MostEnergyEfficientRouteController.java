@@ -50,7 +50,7 @@ public class MostEnergyEfficientRouteController {
         }else if(typeOfVehicle.equalsIgnoreCase("escooter")){
             isBicycle=false;
         }else{
-            return null;
+            return new LinkedList<>();
         }
 
         Vehicle vehicle = vehicleAPI.fetchVehicleBySpecs(isBicycle,vehicleSpecs);
@@ -60,7 +60,7 @@ public class MostEnergyEfficientRouteController {
         PointOfInterest end = new PointOfInterest(parkEnd.getDescription(),parkEnd.getCoordinates());
         Client client = company.getUserAPI().fetchClientByUsername(username);
         LinkedList<PointOfInterest> path = new LinkedList<>();
-        long energy = Math.round(MapGraphAlgorithms.shortestPath(company.initializeEnergyGraph(client,vehicle),start,end,path)*1000);
+        double energy = MapGraphAlgorithms.shortestPath(company.initializeEnergyGraph(client,vehicle),start,end,path)/3600000; //Joules to KwH
         List<String> output = new LinkedList<>();
         long distance = Utils.calculateDistanceInMeters(path);
         Utils.getOutputPath(path,output,distance,energy,start.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );

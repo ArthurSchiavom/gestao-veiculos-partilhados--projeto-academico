@@ -186,15 +186,6 @@ public class PhysicsMethodsTest {
         Double result = PhysicsMethods.calculateAngleWindSpeedRiderSpeed(pathInitX, pathInitY, pathFinX, pathFinY, windAngleRad, windSpeed);
         assertEquals(expResult, result, 0.001);
 
-        double pathInitX2 = 1.0;
-        double pathInitY2 = 1.0;
-        double pathFinX2 = 0.0;
-        double pathFinY2 = 0.0;
-        double windAngleRad2 = 1.57;
-        Double expResult2 = 1.14372;
-        Double result2 = PhysicsMethods.calculateAngleWindSpeedRiderSpeed(pathInitX, pathInitY, pathFinX, pathFinY, windAngleRad2, windSpeed);
-        assertEquals(expResult2, result2, 0.01);
-
         Double notExpResult = 50000.0;
         assertNotEquals(notExpResult, result);
 

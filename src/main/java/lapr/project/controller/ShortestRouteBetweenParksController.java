@@ -3,6 +3,7 @@ package lapr.project.controller;
 import lapr.project.data.SortByHeightDescending;
 import lapr.project.data.registers.Company;
 import lapr.project.mapgraph.MapGraphAlgorithms;
+import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
@@ -45,16 +46,17 @@ public class ShortestRouteBetweenParksController {
         PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees,originLongitudeInDegrees);
         PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
         //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
-                35,true, ElectricScooterType.URBAN,75,
-                1f, 500);
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
+                500,true, ElectricScooterType.URBAN,75,
+                1f, 1500);
 
         Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
         LinkedList<PointOfInterest> path = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),originPark,endPark,path)*1000); // km to meters
-        long energy = Utils.calculateEnergy(path,dummyVehicle,dummyClient);
+        LinkedList<Path> paths = MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(),path);
+        double energy = PhysicsMethods.predictEnergySpent(dummyClient,paths,dummyVehicle) / 3600000;
         List<String> output = new LinkedList<>();
         Utils.getOutputPath(path,output,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),1 );
         Utils.writeToFile(output,outputFileName);
@@ -109,15 +111,14 @@ public class ShortestRouteBetweenParksController {
             return 0;
         }
         //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
-                35,true, ElectricScooterType.URBAN,75,
-                1f, 500);
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
+                500,true, ElectricScooterType.URBAN,75,
+                1f, 1500);
 
         Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
-        long energy = Utils.calculateEnergy(paths.get(0),dummyVehicle,dummyClient);
-        Utils.writeToFile(Utils.getOutputPaths(paths,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
+        Utils.writeToFile(Utils.getOutputPaths(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),dummyClient,dummyVehicle), outputFileName);
         return distance;
     }
     /**
@@ -137,14 +138,14 @@ public class ShortestRouteBetweenParksController {
         long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),origin,end,path)*1000); // km to meters
         List<String> output = new LinkedList<>();
         //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
-                35,true, ElectricScooterType.URBAN,75,
-                1f, 500);
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
+                500,true, ElectricScooterType.URBAN,75,
+                1f, 1500);
 
         Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
-        long energy = Utils.calculateEnergy(path,dummyVehicle,dummyClient);
+        double energy = PhysicsMethods.predictEnergySpent(dummyClient,MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(),path),dummyVehicle);
         Utils.getOutputPath(path,output,distance,energy,origin.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );
         Utils.writeToFile(output,outputFileName);
         return distance;
@@ -200,15 +201,14 @@ public class ShortestRouteBetweenParksController {
             return 0;
         }
         //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
-                35,true, ElectricScooterType.URBAN,75,
-                1f, 500);
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
+                500,true, ElectricScooterType.URBAN,75,
+                1f, 1500);
 
         Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
-        long energy = Utils.calculateEnergy(paths.get(0),dummyVehicle,dummyClient);
-        Utils.writeToFile(Utils.getOutputPaths(paths,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
+        Utils.writeToFile(Utils.getOutputPaths(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),dummyClient,dummyVehicle), outputFileName);
         return distance;
     }
 }

@@ -2,9 +2,14 @@ package lapr.project.utils;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.SortByHeightDescending;
+import lapr.project.data.registers.Company;
+import lapr.project.mapgraph.MapGraphAlgorithms;
+import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.Vehicle;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import java.io.*;
 import java.util.*;
@@ -125,11 +130,13 @@ public class Utils {
      * @param elevation overall elevation
      * @return list of strings ready to be outputed with the information given in the output/path.csv
      */
-    public static List<String> getOutputPaths(List<LinkedList<PointOfInterest>> paths, long distance, long energy, int elevation){
+    public static List<String> getOutputPaths(List<LinkedList<PointOfInterest>> paths, long distance, int elevation, Client client, Vehicle vehicle){
         List<String> output = new LinkedList<>();
         int pathNumber = 1;
         for(LinkedList<PointOfInterest> path : paths){
-            getOutputPath(path,output,distance, energy,elevation,pathNumber);
+            LinkedList<Path> pathsEnergy = MapGraphAlgorithms.convertNodeListToEdgeList(Company.getInstance().getMapGraphDistance(),path);
+            double energy = PhysicsMethods.predictEnergySpent(client,pathsEnergy,vehicle) / 3600000; //Joule to KwH
+            getOutputPath(path,output,distance, energy, elevation,pathNumber);
         }
         return output;
     }
@@ -143,9 +150,9 @@ public class Utils {
      * @param elevation overall elevation
      * @param pathNumber path number
      */
-    public static void getOutputPath(LinkedList<PointOfInterest> path, List<String> output, long distance, long energy, int elevation,int pathNumber){
+    public static void getOutputPath(LinkedList<PointOfInterest> path, List<String> output, long distance,double energy, int elevation,int pathNumber){
         String line= String.format("Path %03d", pathNumber)+"\n";
-        line += "total distance: "+distance+"\ntotal energy: "+ energy +"\nelevation: "+ elevation+"\n";
+        line += String.format("total distance: "+distance+"\ntotal energy: %.02f\nelevation: "+ Math.round((double)elevation/10)*10+"\n", energy);
         for(PointOfInterest poi : path) {
             line+=poi.getCoordinates().getLatitude()+";"+poi.getCoordinates().getLongitude()+"\n";
         }
@@ -167,17 +174,5 @@ public class Utils {
             previous = poi;
         }
         return Math.round(distance*1000); //km to meters
-    }
-
-    /**
-     * Calculates the energy spent on the trip
-     * @param path
-     * @param dummyVehicle
-     * @param dummyClient
-     * @return
-     */
-    public static long calculateEnergy(LinkedList<PointOfInterest> path, ElectricScooter dummyVehicle, Client dummyClient) {
-        //TODO: d
-        return 3;
     }
 }
