@@ -194,31 +194,6 @@ public class TestUtilsTest {
     }
 
     @Test
-    void getOutputPaths(){
-        LinkedList<PointOfInterest> path = new LinkedList<>();
-        List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
-        //------------------------------------------------------------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
-                35,true, ElectricScooterType.URBAN,75,
-                1f, 500);
-
-        Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
-                true, new CreditCard("12341234123412"));
-        //------------------------------------------------------------------------
-        paths.add(path);
-        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
-        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,5)));
-        path.add(new PointOfInterest("321",new Coordinates(2.32,3.42,5)));
-
-        List<String> outputExpected = new LinkedList<>();
-        outputExpected.add("Path 001\ntotal distance: 5\ntotal energy: 3,00\nelevation: 0\n2.3;3.4\n2.31;3.41\n");
-        long distance=5;
-        int elevation = 3;
-
-        assertEquals(outputExpected, Utils.getOutputPaths(paths,distance,elevation,dummyClient,dummyVehicle));
-    }
-
-    @Test
     void sortPois(){
         LinkedList<PointOfInterest> path = new LinkedList<>();
         path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
