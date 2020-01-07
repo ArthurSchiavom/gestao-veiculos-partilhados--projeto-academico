@@ -101,9 +101,9 @@ public class VehicleAPI {
 
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            PreparedStatement stm = dataHandler.prepareStatement("select * from vehicles where lower(description) like ?");
+            PreparedStatement stm = dataHandler.prepareStatement("select * from vehicles where description like ?");
             autoCloseableManager.addAutoCloseable(stm);
-            stm.setString(1, vehicleDescription.toLowerCase());
+            stm.setString(1, vehicleDescription);
             ResultSet rs = dataHandler.executeQuery(stm);
             autoCloseableManager.addAutoCloseable(rs);
             if (!rs.next())
@@ -111,7 +111,9 @@ public class VehicleAPI {
 
             VehicleType vehicleType = VehicleType.parseVehicleType(rs.getString(VEHICLE_TYPE_FIELD_NAME));
             String childTableName = null;
-            assert vehicleType != null;
+            if (vehicleType == null)
+                throw new IllegalStateException("Unregistered vehicle type");
+
             switch (vehicleType) {
                 case BICYCLE:
                     childTableName = "bicycles";
@@ -121,9 +123,9 @@ public class VehicleAPI {
             }
 
             @SuppressWarnings("SqlResolve")
-            PreparedStatement stm2 = dataHandler.prepareStatement("select * from " + childTableName + " where lower(vehicle_description) like ?");
+            PreparedStatement stm2 = dataHandler.prepareStatement("select * from " + childTableName + " where vehicle_description like ?");
             autoCloseableManager.addAutoCloseable(stm2);
-            stm2.setString(1, vehicleDescription.toLowerCase());
+            stm2.setString(1, vehicleDescription);
             ResultSet rs2 = dataHandler.executeQuery(stm2);
             autoCloseableManager.addAutoCloseable(rs2);
             if (!rs2.next())
