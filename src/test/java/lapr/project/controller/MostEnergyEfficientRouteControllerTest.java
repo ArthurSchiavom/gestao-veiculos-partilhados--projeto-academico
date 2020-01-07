@@ -6,12 +6,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 class MostEnergyEfficientRouteControllerTest {
 
@@ -34,6 +36,18 @@ class MostEnergyEfficientRouteControllerTest {
             when(dh.executeUpdate(preparedStatement)).thenReturn(1);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    void calculateElectricalEnergyToTravelFromOneLocationToAnother() {
+        try {
+            controller.calculateElectricalEnergyToTravelFromOneLocationToAnother(2.3,2.1,3.1,2.3,"asdasd");
+            fail();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (e.getClass() != NullPointerException.class)
+                fail();
         }
     }
 

@@ -50,6 +50,7 @@ public class Facade implements Serviceable {
     private LockVehicleController lockVehicleController;
     private ShortestRouteBetweenParksController shortestRouteBetweenParksController;
     private FilterScootersWithAutonomyController filterScootersWithAutonomyController;
+    private MostEnergyEfficientRouteController mostEnergyEfficientRouteController;
 
     public Facade() {
         company = Company.getInstance();
@@ -67,6 +68,7 @@ public class Facade implements Serviceable {
         lockVehicleController = new LockVehicleController(company);
         shortestRouteBetweenParksController = new ShortestRouteBetweenParksController(company);
         filterScootersWithAutonomyController = new FilterScootersWithAutonomyController();
+        mostEnergyEfficientRouteController = new MostEnergyEfficientRouteController(company);
     }
 
     /**
@@ -467,7 +469,12 @@ public class Facade implements Serviceable {
 
     @Override
     public long mostEnergyEfficientRouteBetweenTwoParks(String s, String s1, String s2, String s3, String s4, String s5) {
-        throw new UnsupportedOperationException();
+        try {
+            return mostEnergyEfficientRouteController.mostEnergyEfficientRouteBetweenTwoParks(s,s1,s2,s3,s4,s5);
+        } catch (SQLException |IOException e) {
+            LOGGER.log(Level.INFO, "Couldn't find a route:\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
@@ -604,7 +611,13 @@ public class Facade implements Serviceable {
 
     @Override
     public double calculateElectricalEnergyToTravelFromOneLocationToAnother(double v, double v1, double v2, double v3, String s) {
-        return 0;
+        try {
+            return BigDecimal.valueOf(mostEnergyEfficientRouteController.calculateElectricalEnergyToTravelFromOneLocationToAnother(v,v1,v2,v3,s)).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "No trip detacted: " + e.getMessage());
+            return 0;
+
+        }
     }
 
     @Override
