@@ -5,8 +5,13 @@ import lapr.project.data.registers.Company;
 import lapr.project.mapgraph.MapGraphAlgorithms;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.CreditCard;
+import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -39,10 +44,19 @@ public class ShortestRouteBetweenParksController {
     public long shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, String outputFileName) throws SQLException, IOException {
         PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees,originLongitudeInDegrees);
         PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
+                35,true, ElectricScooterType.URBAN,75,
+                1f, 500);
+
+        Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
+                true, new CreditCard("12341234123412"));
+        //------------------------------------------------------------------------
         LinkedList<PointOfInterest> path = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),originPark,endPark,path)*1000); // km to meters
+        long energy = Utils.calculateEnergy(path,dummyVehicle,dummyClient);
         List<String> output = new LinkedList<>();
-        getOutputPath(path,output,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),1 );
+        Utils.getOutputPath(path,output,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),1 );
         Utils.writeToFile(output,outputFileName);
         return distance;
     }
@@ -89,8 +103,21 @@ public class ShortestRouteBetweenParksController {
         }
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),originPark,endPark,pois,paths)*1000); // km to meters
-        sort(paths);
-        Utils.writeToFile(getOutputPaths(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
+        Utils.sort(paths);
+
+        if(paths.isEmpty()){
+            return 0;
+        }
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
+                35,true, ElectricScooterType.URBAN,75,
+                1f, 500);
+
+        Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
+                true, new CreditCard("12341234123412"));
+        //------------------------------------------------------------------------
+        long energy = Utils.calculateEnergy(paths.get(0),dummyVehicle,dummyClient);
+        Utils.writeToFile(Utils.getOutputPaths(paths,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
         return distance;
     }
     /**
@@ -109,7 +136,16 @@ public class ShortestRouteBetweenParksController {
         LinkedList<PointOfInterest> path = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),origin,end,path)*1000); // km to meters
         List<String> output = new LinkedList<>();
-        getOutputPath(path,output,distance,origin.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
+                35,true, ElectricScooterType.URBAN,75,
+                1f, 500);
+
+        Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
+                true, new CreditCard("12341234123412"));
+        //------------------------------------------------------------------------
+        long energy = Utils.calculateEnergy(path,dummyVehicle,dummyClient);
+        Utils.getOutputPath(path,output,distance,energy,origin.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );
         Utils.writeToFile(output,outputFileName);
         return distance;
     }
@@ -158,65 +194,21 @@ public class ShortestRouteBetweenParksController {
         }
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(),origin,end,pois,paths)*1000); // km to meters
-        sort(paths);
-        Utils.writeToFile(getOutputPaths(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
+        Utils.sort(paths);
+
+        if(paths.isEmpty()){
+            return 0;
+        }
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",2.3F,2.4F,
+                35,true, ElectricScooterType.URBAN,75,
+                1f, 500);
+
+        Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
+                true, new CreditCard("12341234123412"));
+        //------------------------------------------------------------------------
+        long energy = Utils.calculateEnergy(paths.get(0),dummyVehicle,dummyClient);
+        Utils.writeToFile(Utils.getOutputPaths(paths,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude()), outputFileName);
         return distance;
-    }
-
-    /**
-     * Orders ascending by numbers of poi's, and then descending by height
-     * @param paths list that contains list of paths
-     */
-    private void sort(List<LinkedList<PointOfInterest>> paths){
-        Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
-            @Override
-            public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
-                return pointOfInterests.size()-t1.size();
-            }
-        });
-        for(LinkedList<PointOfInterest> p : paths){
-            sortPois(p);
-        }
-    }
-
-    /**
-     * Orders the poi's according to the output/paths.csv file
-     * @param path path containing the poi's
-     */
-    private void sortPois(LinkedList<PointOfInterest> path){
-        Collections.sort(path, new SortByHeightDescending());
-    }
-
-    /**
-     * Puts the information of the parks and poi's in a list so it can be printed
-     * @param paths all the possible shortest paths
-     * @param distance overall distance
-     * @param elevation overall elevation
-     * @return list of strings ready to be outputed with the information given in the output/path.csv
-     */
-    private List<String> getOutputPaths(List<LinkedList<PointOfInterest>> paths, long distance, int elevation){
-        List<String> output = new LinkedList<>();
-        int pathNumber = 1;
-        for(LinkedList<PointOfInterest> path : paths){
-            getOutputPath(path,output,distance,elevation,pathNumber);
-        }
-        return output;
-    }
-
-    /**
-     * Orders by individual path
-     * @param path path to output
-     * @param output list of strings containing the output
-     * @param distance overall distance
-     * @param elevation overall elevation
-     * @param pathNumber path number
-     */
-    private void getOutputPath(LinkedList<PointOfInterest> path, List<String> output, long distance, int elevation,int pathNumber){
-        String line= String.format("Path %03d", pathNumber)+"\n";
-        line += "total distance: "+distance+"\nelevation: "+ elevation+"\n";
-        for(PointOfInterest poi : path) {
-            line+=poi.getCoordinates().getLatitude()+";"+poi.getCoordinates().getLongitude()+"\n";
-        }
-        output.add(line);
     }
 }

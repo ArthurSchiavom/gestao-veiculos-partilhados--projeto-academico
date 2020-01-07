@@ -23,9 +23,7 @@ public class VehicleAPI {
     private static final String WEIGHT_FIELD_NAME = "weight";
     private static final String AERO_COEFFICIENT_FIELD_NAME = "aerodynamic_coefficient";
     private static final String FRONTAL_AREA_FIELD_NAME = "frontal_area";
-
     private static final String BICYCLE_SIZE_FIELD_NAME = "bicycle_size";
-
     private static final String ESCOOTER_TYPE_FIELD_NAME = "electric_scooter_type_name";
     private static final String ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME = "actual_battery_capacity";
     private static final String ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME = "max_battery_capacity";
@@ -35,6 +33,12 @@ public class VehicleAPI {
         this.dataHandler = dataHandler;
     }
 
+    /**
+     * Fetches all vehicles from the database of the type vehicle type
+     * @param type vehicle type
+     * @return all vehicles of that type
+     * @throws SQLException in case of an sql exception
+     */
     public List<Vehicle> fetchAllVehicles(VehicleType type) throws SQLException {
         List<Vehicle> vehicles = new ArrayList<>();
         PreparedStatement ps;
@@ -44,7 +48,7 @@ public class VehicleAPI {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             ps = dataHandler.prepareStatement("select * from VEHICLES where VEHICLE_TYPE_NAME = ?");
-            ps.setString(1, type.getSQLName());
+            ps.setString(1,type.getSQLName());
             autoCloseableManager.addAutoCloseable(ps);
             rs = dataHandler.executeQuery(ps);
             autoCloseableManager.addAutoCloseable(rs);
@@ -54,7 +58,7 @@ public class VehicleAPI {
                 switch (type) {
                     case BICYCLE:
                         ps2 = dataHandler.prepareStatement("SELECT * from bicycles where VEHICLE_DESCRIPTION = ?");
-                        ps2.setString(1, description);
+                        ps2.setString(1,description);
                         autoCloseableManager.addAutoCloseable(ps2);
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
@@ -65,7 +69,7 @@ public class VehicleAPI {
                         break;
                     case ELECTRIC_SCOOTER:
                         ps2 = dataHandler.prepareStatement("SELECT * from ELECTRIC_SCOOTERS where VEHICLE_DESCRIPTION = ?");
-                        ps2.setString(1, description);
+                        ps2.setString(1,description);
                         autoCloseableManager.addAutoCloseable(ps2);
                         rs2 = dataHandler.executeQuery(ps2);
                         autoCloseableManager.addAutoCloseable(rs2);
@@ -86,14 +90,20 @@ public class VehicleAPI {
         return vehicles;
     }
 
+    /**
+     * Fetch vehicle by vehicle description
+     * @param vehicleDescription description of the vehicle
+     * @return the vehicle from the database
+     * @throws SQLException in case of an sql exception
+     */
     public Vehicle fetchVehicle(String vehicleDescription) throws SQLException {
         Vehicle vehicle = null;
 
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            PreparedStatement stm = dataHandler.prepareStatement("select * from vehicles where description = ?");
+            PreparedStatement stm = dataHandler.prepareStatement("select * from vehicles where lower(description) like ?");
             autoCloseableManager.addAutoCloseable(stm);
-            stm.setString(1, vehicleDescription);
+            stm.setString(1, vehicleDescription.toLowerCase());
             ResultSet rs = dataHandler.executeQuery(stm);
             autoCloseableManager.addAutoCloseable(rs);
             if (!rs.next())
@@ -111,9 +121,9 @@ public class VehicleAPI {
             }
 
             @SuppressWarnings("SqlResolve")
-            PreparedStatement stm2 = dataHandler.prepareStatement("select * from " + childTableName + " where vehicle_description = ?");
+            PreparedStatement stm2 = dataHandler.prepareStatement("select * from " + childTableName + " where lower(vehicle_description) like ?");
             autoCloseableManager.addAutoCloseable(stm2);
-            stm2.setString(1, vehicleDescription);
+            stm2.setString(1, vehicleDescription.toLowerCase());
             ResultSet rs2 = dataHandler.executeQuery(stm2);
             autoCloseableManager.addAutoCloseable(rs2);
             if (!rs2.next())
@@ -143,6 +153,9 @@ public class VehicleAPI {
         return vehicle;
     }
 
+    /**
+     * registers a batch of vehicles
+     */
     private void registerBicycleNoCommit(float aerodynamicCoefficient, float frontalArea,
                                          int weight, int size,
                                          String description, double parkLatitude, double parkLongitude) throws SQLException {
@@ -166,6 +179,9 @@ public class VehicleAPI {
         }
     }
 
+    /**
+     * registers a batch of eletric scooters in one transaction
+     */
     private void registerEletricScooterNoCommit(float aerodynamicCoefficient, float frontalArea,
                                                 int weight,
                                                 ElectricScooterType type, String description,
@@ -207,6 +223,9 @@ public class VehicleAPI {
         }
     }
 
+    /**
+     * registers a batch of bicycles in one transaction
+     */
     public void registerBicycles(List<Float> aerodynamicCoefficient, List<Float> frontalArea,
                                  List<Integer> weight, List<Integer> size,
                                  List<String> description, List<Double> parkLatitude, List<Double> parkLongitude) throws SQLException {
@@ -227,6 +246,9 @@ public class VehicleAPI {
         }
     }
 
+    /**
+     * registers a batch of electric scooters in one transaction
+     */
     public void registerElectricScooters(List<Float> aerodynamicCoefficient, List<Float> frontalArea,
                                          List<Integer> weight,
                                          List<ElectricScooterType> type, List<String> description,
@@ -252,4 +274,72 @@ public class VehicleAPI {
         }
     }
 
+    /**
+     * Fetch vehicle by vehicle specs
+     * @param isBicycle true = bicycle, false = scooter
+     * @param vehicleSpecs specs of the vehicle
+     * @return the vehicle from the database
+     * @throws SQLException in case of an sql exception
+     */
+    public Vehicle fetchVehicleBySpecs(Boolean isBicycle, String vehicleSpecs) throws SQLException {
+        Vehicle vehicle = null;
+        PreparedStatement stm2=null;
+        PreparedStatement stm1=null;
+        int wheelSize;
+        try {
+            if (isBicycle) {
+                wheelSize = Integer.parseInt(vehicleSpecs);
+                stm2 = dataHandler.prepareStatement("select * from BICYCLES where BICYCLE_SIZE = ?");
+                stm2.setInt(1,wheelSize);
+            }else{
+                if(vehicleSpecs.equalsIgnoreCase("city")){
+                    stm2 = dataHandler.prepareStatement("select * from ELECTRIC_SCOOTERS where lower(ELECTRIC_SCOOTER_TYPE_NAME) like 'urban' fetch first row only");
+                }else if(vehicleSpecs.equalsIgnoreCase("off-road")){
+                    stm2 = dataHandler.prepareStatement("select * from ELECTRIC_SCOOTERS where lower(ELECTRIC_SCOOTER_TYPE_NAME) like 'offroad' fetch first row only");
+                }else{
+                    return null;
+                }
+            }
+        }catch(NumberFormatException e){
+            return null;
+        }
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        try {
+            autoCloseableManager.addAutoCloseable(stm2);
+            ResultSet rs2 = dataHandler.executeQuery(stm2);
+            autoCloseableManager.addAutoCloseable(rs2);
+            if (!rs2.next())
+                return null;
+
+            stm1 = dataHandler.prepareStatement("select * from VEHICLES where "+DESCRIPTION_FIELD_NAME+" like ?");
+            stm1.setString(1,rs2.getString("vehicle_description"));
+
+
+            autoCloseableManager.addAutoCloseable(stm1);
+            ResultSet rs = dataHandler.executeQuery(stm1);
+            autoCloseableManager.addAutoCloseable(rs);
+            if (!rs.next())
+                return null;
+
+            if(isBicycle){
+                vehicle = new Bicycle(rs.getInt(UNIQUE_NUMBER_FIELD_NAME), rs.getString(DESCRIPTION_FIELD_NAME),
+                        rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                        rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME),
+                        rs.getBoolean(AVAILABLE_FIELD_NAME), rs2.getInt(BICYCLE_SIZE_FIELD_NAME));
+            }else{
+                vehicle = new ElectricScooter(rs.getInt(UNIQUE_NUMBER_FIELD_NAME), rs.getString(DESCRIPTION_FIELD_NAME),
+                        rs.getFloat(AERO_COEFFICIENT_FIELD_NAME),
+                        rs.getFloat(FRONTAL_AREA_FIELD_NAME), rs.getInt(WEIGHT_FIELD_NAME),
+                        rs.getBoolean(AVAILABLE_FIELD_NAME), ElectricScooterType.parseScooterType(
+                        rs2.getString(ESCOOTER_TYPE_FIELD_NAME)),
+                        rs2.getInt(ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME), rs2.getFloat(ESCOOTER_MAX_BATTERY_CAPACITY_FIELD_NAME),
+                        rs2.getInt(ESCOOTER_ENGINE_POWER_FIELD_NAME));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Failed to fetch vehicle from the database.", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+        return vehicle;
+    }
 }
