@@ -163,12 +163,14 @@ public class PhysicsMethods {
      * @param startPoint             - the starting point of the path that the rider is going
      * @param endPoint               - the ending point of the path that the rider is going
      * @param windAngle              - the angle made between the wind speed and the north pole
-     * @return the amount of joules spent between two points
+     *                               <<<<<<< HEAD
+     * @return the amount of energy in Joules burnt between two points
+     * >>>>>>> 557bde1ed67d5d9702ad27a4ae102c2af103eb62
      */
     public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
 
         double time = calculateTimeSpent(velocity, distanceMade);
-        double totalMass = personMass + vehicleMass;
+        double totalMass = ((double) personMass) + vehicleMass;
         int heightDifference = endPoint.getAltitude() - startPoint.getAltitude();
         double slope = calculateSlope(heightDifference, distanceMade);
         double windAngleRad = convertDegreesToRadian(windAngle);
@@ -248,14 +250,13 @@ public class PhysicsMethods {
         return Math.round(energyJoule * CONVERT_JOULE_CAL * 100.0) / 100.0;
     }
 
-
     /**
-     * Predicts the energy spent in a trip between two parks
+     * Predicts the energy spent in Joules in a trip between two parks
      *
      * @param client  - the client
      * @param path    - the path
      * @param vehicle - the vehicle in use
-     * @return - the energy spent in a trip between two parks
+     * @return - the energy spent in a trip between two parks in Joules
      */
     public static double predictEnergySpent(Client client, Path path, Vehicle vehicle) {
         double energySpent = 0.0;
@@ -275,10 +276,36 @@ public class PhysicsMethods {
 
     /**
      * Converts a value from joules to Watts per hour
+     *
      * @param joules the value in calories
      * @return the value in Watts per hour
      */
     public static double convertJoulesToWattHr(double joules) {
-        return 1/3600.0*joules;
+        return 1 / 3600.0 * joules;
+    }
+
+    /**
+     * Predicts the energy spent in Joules in a trip between two parks
+     *
+     * @param client  - the client
+     * @param paths   - list of path
+     * @param vehicle - the vehicle in use
+     * @return - the energy spent in a trip between two parks in Joules
+     */
+    public static double predictEnergySpent(Client client, List<Path> paths, Vehicle vehicle) {
+        double energySpent = 0.0;
+        double averageSpeed = 0.0;
+        double distanceMade;
+        if (vehicle.getType() == VehicleType.BICYCLE) {
+            averageSpeed = client.getCyclingAverageSpeed();
+        } else if (vehicle.getType() == VehicleType.ELECTRIC_SCOOTER) {
+            averageSpeed = SCOOTER_MAX_SPEED;
+        }
+        for (Path path : paths) {
+            distanceMade = path.getStartingPoint().getCoordinates().distance(path.getEndingPoint().getCoordinates()) * 1000;
+            energySpent += PhysicsMethods.calculateEnergySpent(averageSpeed, path.getWindSpeed(), path.getKineticCoefficient(), vehicle.getAerodynamicCoefficient(), vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(),
+                    path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
+        }
+        return energySpent;
     }
 }

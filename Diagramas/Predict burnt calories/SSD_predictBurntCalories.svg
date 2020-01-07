@@ -21,19 +21,19 @@
       ><path d="M-7 -7 L19 -7 L19 64 L-7 64 L-7 -7 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath6"
-      ><path d="M-70 -15 L140 -15 L140 30 L-70 30 L-70 -15 Z"
+      ><path d="M-49 -15 L98 -15 L98 30 L-49 30 L-49 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath7"
-      ><path d="M-49 -15 L98 -15 L98 30 L-49 30 L-49 -15 Z"
+      ><path d="M-70 -15 L140 -15 L140 30 L-70 30 L-70 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath8"
       ><path d="M0 0 L522 0 L522 104 L0 104 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath9"
-      ><path d="M71 10 L71 25 L22 25 L22 10 ZM458 30 L458 45 L60 45 L60 30 ZM0 0 L0 104 L126 104 L126 67 L409 67 L409 104 L522 104 L522 0 Z"
+      ><path d="M71 10 L71 25 L22 25 L22 10 ZM458 30 L458 45 L60 45 L60 30 ZM0 0 L0 104 L126 104 L126 63 L409 63 L409 104 L522 104 L522 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath10"
-      ><path d="M339 87 L339 102 L179 102 L179 87 ZM0 0 L0 104 L522 104 L522 0 L409 0 L409 49 L126 49 L126 0 Z"
+      ><path d="M339 87 L339 102 L179 102 L179 87 ZM0 0 L0 104 L522 104 L522 0 L409 0 L409 44 L126 44 L126 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath11"
       ><path d="M339 30 L339 45 L179 45 L179 30 ZM402 69 L402 84 L117 84 L117 69 ZM0 0 L0 104 L522 104 L522 0 Z"
@@ -60,7 +60,7 @@
       ><path d="M-160 -15 L320 -15 L320 30 L-160 30 L-160 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath19"
-      ><path d="M-283 -50 L566 -50 L566 100 L-283 100 L-283 -50 Z"
+      ><path d="M-283 -49 L566 -49 L566 98 L-283 98 L-283 -49 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath20"
       ><path d="M-398 -15 L796 -15 L796 30 L-398 30 L-398 -15 Z"
@@ -106,13 +106,13 @@
     ><g stroke-linecap="butt" font-size="11px" transform="translate(454,315)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke-linejoin="round" stroke="black" stroke-opacity="1" stroke-miterlimit="0"
     ><rect fill="none" x="0" width="8" height="53" y="0" clip-path="url(#clipPath5)"
     /></g
-    ><g font-size="11px" transform="translate(423,2)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="14" xml:space="preserve" y="12" clip-path="url(#clipPath6)" stroke="none"
-      >: system</text
-    ></g
     ><g font-size="11px" transform="translate(8,37)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath7)" stroke="none"
+    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath6)" stroke="none"
       >Client</text
+    ></g
+    ><g font-size="11px" transform="translate(423,2)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><text x="14" xml:space="preserve" y="12" clip-path="url(#clipPath7)" stroke="none"
+      >: system</text
     ></g
     ><g stroke-linecap="butt" font-size="11px" transform="translate(-14,27)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke-linejoin="round" stroke="black" stroke-opacity="1"
     ><line y2="50" fill="none" x1="50" clip-path="url(#clipPath9)" x2="468" y1="50"
@@ -164,14 +164,12 @@
       /><text fill="black" x="9" xml:space="preserve" y="12" clip-path="url(#clipPath18)" stroke="none"
       >2: inserts the requested data</text
     ></g
-    ><g font-size="11px" transform="translate(112,94)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
-    ><rect x="0" width="283" height="50" y="0" clip-path="url(#clipPath19)" stroke="none"
-      /><text fill="black" x="15" xml:space="preserve" y="14" clip-path="url(#clipPath19)" stroke="none"
-      >1.1: requests the necessary data(i.e. data about the</text
-      ><text fill="black" x="16" xml:space="preserve" y="29" clip-path="url(#clipPath19)" stroke="none"
-      >client, the bicycle used and data about the different</text
-      ><text fill="black" x="86" xml:space="preserve" y="44" clip-path="url(#clipPath19)" stroke="none"
-      >paths that the trip has)</text
+    ><g font-size="11px" transform="translate(112,90)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
+    ><rect x="0" width="283" height="49" y="0" clip-path="url(#clipPath19)" stroke="none"
+      /><text fill="black" x="13" xml:space="preserve" y="21" clip-path="url(#clipPath19)" stroke="none"
+      >1.1: requests the necessary data(i.e. clientid, vehicle</text
+      ><text fill="black" x="26" xml:space="preserve" y="36" clip-path="url(#clipPath19)" stroke="none"
+      >description and the id of the start and end park)</text
     ></g
     ><g font-size="11px" transform="translate(46,57)" fill-opacity="1" fill="white" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="white" stroke-opacity="1"
     ><rect x="0" width="398" height="15" y="0" clip-path="url(#clipPath20)" stroke="none"

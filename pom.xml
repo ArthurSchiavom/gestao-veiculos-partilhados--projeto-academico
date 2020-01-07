@@ -22,9 +22,9 @@
         <dependency>
             <groupId>lapr3</groupId>
             <artifactId>ride-sharing-assessment-interfaces</artifactId>
-            <version>3.0</version>
+            <version>3.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/third-parties/ride-sharing-assessment-interfaces-3.0.jar</systemPath>
+            <systemPath>${project.basedir}/third-parties/ride-sharing-assessment-interfaces-3.1.jar</systemPath>
         </dependency>
 
         <!-- Students can only add new dependencies to this section -->

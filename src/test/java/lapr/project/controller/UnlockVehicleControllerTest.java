@@ -2,18 +2,12 @@ package lapr.project.controller;
 
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import lapr.project.model.Coordinates;
-import lapr.project.model.vehicles.ElectricScooter;
-import lapr.project.model.vehicles.ElectricScooterType;
-import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
-import oracle.jdbc.proxy.annotation.Pre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,8 +27,6 @@ public class UnlockVehicleControllerTest {
     private static final String WEIGHT_FIELD_NAME = "weight";
     private static final String AERO_COEFFICIENT_FIELD_NAME = "aerodynamic_coefficient";
     private static final String FRONTAL_AREA_FIELD_NAME = "frontal_area";
-
-    private static final String BICYCLE_SIZE_FIELD_NAME = "bicycle_size";
 
     private static final String ESCOOTER_TYPE_FIELD_NAME = "electric_scooter_type_name";
     private static final String ESCOOTER_ACTUAL_BATTERY_CAPACITY_FIELD_NAME = "actual_battery_capacity";
@@ -168,7 +160,7 @@ public class UnlockVehicleControllerTest {
             ResultSet rs2 = mock(ResultSet.class);
 
             when(rs1.getString("description")).thenReturn("PT001");
-            when(dataHandler.prepareStatement("select * from vehicles where description = ?")).thenReturn(stm2);
+            when(dataHandler.prepareStatement("select * from vehicles where description like ?")).thenReturn(stm2);
             when(dataHandler.executeQuery(stm2)).thenReturn(rs2);
             //Important to add these
             when(rs2.next()).thenReturn(false).thenReturn(true);
@@ -190,7 +182,7 @@ public class UnlockVehicleControllerTest {
             ResultSet rs2b = mock(ResultSet.class);
 
             when(rs2.getString(VEHICLE_TYPE_FIELD_NAME)).thenReturn("electric_scooter");
-            when(dataHandler.prepareStatement("select * from " + "electric_scooters" + " where vehicle_description = ?")).thenReturn(stm2b);
+            when(dataHandler.prepareStatement("select * from " + "electric_scooters" + " where vehicle_description like ?")).thenReturn(stm2b);
             when(rs2b.next()).thenReturn(true);
             when(dataHandler.executeQuery(stm2b)).thenReturn(rs2b);
 
@@ -375,11 +367,11 @@ public class UnlockVehicleControllerTest {
             PreparedStatement stmFetchScooter = mock(PreparedStatement.class);
             ResultSet rsFetchScooter = mock(ResultSet.class);
 
-            when(dataHandler.prepareStatement("select * from vehicles where description = ?")).thenReturn(stmFetchVehicle);
+            when(dataHandler.prepareStatement("select * from vehicles where description like ?")).thenReturn(stmFetchVehicle);
             when(dataHandler.executeQuery(stmFetchVehicle)).thenReturn(rsFetchVehicle);
             when(rsFetchVehicle.next()).thenReturn(true).thenReturn(true);
             when(rsFetchVehicle.getString(VEHICLE_TYPE_FIELD_NAME)).thenReturn("electric_scooter");
-            when(dataHandler.prepareStatement("select * from " + "electric_scooters" + " where vehicle_description = ?")).thenReturn(stmFetchScooter);
+            when(dataHandler.prepareStatement("select * from " + "electric_scooters" + " where vehicle_description like ?")).thenReturn(stmFetchScooter);
             when(rsFetchScooter.next()).thenReturn(true).thenReturn(true);
             when(dataHandler.executeQuery(stmFetchScooter)).thenReturn(rsFetchScooter);
 

@@ -18,7 +18,6 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class VisualizeVehiclesAtParkControllerTest {
@@ -56,10 +55,10 @@ public class VisualizeVehiclesAtParkControllerTest {
         try {
             when(dataHandler.prepareStatement("Select * from PARK_VEHICLE where PARK_ID = ?")).thenReturn(stm1);
             when(dataHandler.executeQuery(stm1)).thenReturn(rs1);
-            when(dataHandler.prepareStatement("select * from vehicles where description = ?")).thenReturn(stm2);
+            when(dataHandler.prepareStatement("select * from vehicles where description like ?")).thenReturn(stm2);
             when(dataHandler.executeQuery(stm2)).thenReturn(rs2);
-            when(dataHandler.prepareStatement("select * from " + "bicycles" + " where vehicle_description = ?")).thenReturn(stm3);
-            when(dataHandler.prepareStatement("select * from " + "electric_scooters" + " where vehicle_description = ?")).thenReturn(stm3);
+            when(dataHandler.prepareStatement("select * from " + "bicycles" + " where vehicle_description like ?")).thenReturn(stm3);
+            when(dataHandler.prepareStatement("select * from " + "electric_scooters" + " where vehicle_description like ?")).thenReturn(stm3);
             when(dataHandler.executeQuery(stm3)).thenReturn(rs3);
 
             when(rs1.getString("vehicle_description")).thenReturn(vehicleDescription);

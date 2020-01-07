@@ -1,14 +1,16 @@
 package lapr.project.utils;
 
+import lapr.project.model.Coordinates;
+import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.CreditCard;
+import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.ElectricScooterType;
 import org.junit.jupiter.api.Test;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -158,4 +160,60 @@ public class TestUtilsTest {
             // pass
         }
     }
+
+    @Test
+    void calculateDistanceInMeters() {
+        LinkedList<PointOfInterest> path = new LinkedList<>();
+        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+        path.add(new PointOfInterest("321",new Coordinates(2.3,3.4,5)));
+        assertEquals(0,Utils.calculateDistanceInMeters(path));
+    }
+
+    @Test
+    void calculateDistanceInMeter2() {
+        LinkedList<PointOfInterest> path = new LinkedList<>();
+        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,5)));
+        assertEquals(1572,Utils.calculateDistanceInMeters(path));
+    }
+
+    @Test
+    void getOutputPathTest(){
+        Locale.setDefault(Locale.US);
+
+        LinkedList<PointOfInterest> path = new LinkedList<>();
+        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,5)));
+        List<String> outputExpected = new LinkedList<>();
+        List<String> output = new LinkedList<>();
+        outputExpected.add("Path 002\ntotal distance: 5\ntotal energy: 3.00\nelevation: 10\n2.3;3.4\n2.31;3.41\n");
+        long distance=5;
+        int elevation = 13;
+        int pathNumber = 2;
+        long energy = 3;
+        Utils.getOutputPath(path,output,distance,energy,elevation,pathNumber);
+        assertEquals(outputExpected,output);
+    }
+
+    @Test
+    void sortPois(){
+        LinkedList<PointOfInterest> path = new LinkedList<>();
+        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,6)));
+
+        LinkedList<PointOfInterest> pathCopy = new LinkedList<>();
+        pathCopy.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+        pathCopy.add(new PointOfInterest("321",new Coordinates(2.31,3.41,6)));
+        List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
+        paths.add(path);
+
+        LinkedList<PointOfInterest> pathSorted = new LinkedList<>();
+        pathSorted.add(new PointOfInterest("321",new Coordinates(2.31,3.41,6)));
+        pathSorted.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+
+        Utils.sort(paths);
+        assertEquals(paths.get(0),pathSorted);
+        assertNotEquals(paths.get(0),pathCopy);
+    }
+
 }

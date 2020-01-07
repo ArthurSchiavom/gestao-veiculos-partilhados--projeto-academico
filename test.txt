@@ -1,3 +1,1 @@
-vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;destination park latitude;destination park longitude;total time spent in seconds;charged value
-PT001;1569923400000;1570046100000;18.222;20.12;18.222;20.12;122700;184049998.50
-PT003;1578266374443;1578352980000;18.222;20.12;18.222;20.12;86605;129908334.00
+vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;origin park elevation;destination park latitude;destination park longitude;destination park elevation;elevation difference;points

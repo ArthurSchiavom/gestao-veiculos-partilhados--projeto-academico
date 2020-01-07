@@ -25,12 +25,12 @@ public class RegisterBicyclesController {
     }
 
     public int registerBicycles(String filePath) throws InvalidFileDataException, SQLException, FileNotFoundException {
+        List<Integer> weight = new ArrayList<>();
         List<Float> frontalArea = new ArrayList<>();
         List<Integer> size = new ArrayList<>();
-        List<Integer> weight = new ArrayList<>();
         List<Double> parkLatitude = new ArrayList<>();
-        List<Float> aerodynamicCoefficient = new ArrayList<>();
         List<String> description = new ArrayList<>();
+        List<Float> aerodynamicCoefficient = new ArrayList<>();
         List<Double> parkLongitude = new ArrayList<>();
         int i = 0;
         try {
@@ -44,7 +44,8 @@ public class RegisterBicyclesController {
                 aerodynamicCoefficient.add(Float.parseFloat(line[BICYCLES_AERODYNAMIC_COEFFICIENT_INDEX]));
                 weight.add(Integer.parseInt(line[BICYCLES_WEIGHT_INDEX]));
                 frontalArea.add(Float.parseFloat(line[BICYCLES_FRONTAL_AREA_INDEX]));
-                size.add(Integer.parseInt(line[BICYCLES_WHEEL_SIZE_INDEX]));
+                String str = line[BICYCLES_WHEEL_SIZE_INDEX].replace("\"", "");
+                size.add(Integer.parseInt(str));
                 description.add(line[BICYCLES_BICYCLE_DESCRIPTION_INDEX]);
                 parkLatitude.add(Double.parseDouble(line[BICYCLES_PARK_LAT_INDEX]));
                 parkLongitude.add(Double.parseDouble(line[BICYCLES_PARK_LON_INDEX]));
