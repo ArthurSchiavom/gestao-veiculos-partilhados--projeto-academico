@@ -400,16 +400,30 @@ public class Facade implements Serviceable {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    /**
+     * Register a user on the system.
+     *
+     * @param username User's username.
+     * @param email User's email.
+     * @param password User's desired password.
+     * @param visaCardNumber User's Visa Card number.
+     * @param height User's height in cm.
+     * @param weight User's weight in kg.
+     * @param averageCyclingSpeed User's average speed in m/s with two decimal places e.g 4.17.
+     * @param gender User's gender in text.
+     * @return Return 1 if a user is successfully registered.
+     */
     @Override
-    public int registerUser(String s, String s1, String s2, String s3, int i, int i1, String s4) {
-        prepare();
-        try {
-            registerUserController.registerClient(s, s1, s2, s3, i, i1, s4, 10f);
-            return 1;
-        } catch (SQLException e) {
-            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
-            return 0;
-        }
+    public int registerUser(String username, String email, String password, String visaCardNumber, int height, int weight, BigDecimal averageCyclingSpeed, String gender) {
+        return 0;
+//        prepare();
+////        try {
+////            registerUserController.registerClient(s, s1, s2, s3, i, i1, s4, 10f);
+////            return 1;
+////        } catch (SQLException e) {
+////            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
+////            return 0;
+////        }
     }
 
     @Override
@@ -607,25 +621,53 @@ public class Facade implements Serviceable {
         return trip.getTripDurationMillis() / 1000;
     }
 
+    /**
+     * Calculate the shortest Route from one park to another.
+     * <p>
+     * Basic: Only one shortest Route between two Parks is available. Advanced: More than one Route between two parks
+     * are available with different number of POIs (limit to a maximum of two) inbetween and different evelations
+     * difference.
+     *
+     * @param originLatitudeInDegrees Origin latitude in Decimal degrees.
+     * @param originLongitudeInDegrees Origin Longitude in Decimal degrees.
+     * @param destinationLatitudeInDegrees Destination Park latitude in Decimal degrees.
+     * @param destinationLongitudeInDegrees Destination Park Longitude in Decimal degrees.
+     * @param numberOfPOIs The number of POIs that should be included in the path. Default can be 0.
+     * @param outputFileName Write to the file the Route between two parks according to file output/paths.csv. More than
+     * one path may exist. If so, sort routes by the ascending number of points between the parks and by ascending order
+     * of elevation difference.
+     * @return The distance in meters for the shortest path.
+     */
     @Override
-    public long shortestRouteBetweenTwoParks(double v, double v1, double v2, double v3, String s) {
-        try {
-            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v, v1, v2, v3, s);
-        } catch (Exception e) {
-            LOGGER.log(Level.INFO, e.getMessage());
-            return 0; // doesn't say what to return in the documentation
-        }
+    public long shortestRouteBetweenTwoParks(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, int numberOfPOIs, String outputFileName) {
+        return 0;
     }
 
-
+    /**
+     * Calculate the shortest Route from one park to another.
+     * <p>
+     * Basic: Only one shortest Route between two Parks is available. Advanced: More than one Route between two parks
+     * are available with different number of POIs (limit to a maximum of two) inbetween and different evelations
+     * difference.
+     *
+     * @param originParkIdentification Origin Park Identification.
+     * @param destinationParkIdentification Destination Park Identification.
+     * @param numberOfPOIs The number of POIs that should be included in the path. Default can be 0.
+     * @param outputFileName Write to the file the Route between two parks according to file output/paths.csv. More than
+     * one path may exist. If so, sort routes by the ascending number of points between the parks and by ascending order
+     * of elevation difference.
+     * @return The distance in meters for the shortest path.
+     */
     @Override
-    public long shortestRouteBetweenTwoParks(String s, String s1, String s2) {
-        try {
-            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchById(s, s1, s2);
-        } catch (SQLException | IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
-            return 0; // doesn't say what to return in the documentation
-        }
+    public long shortestRouteBetweenTwoParks(String originParkIdentification, String destinationParkIdentification, int numberOfPOIs, String outputFileName) {
+        return 0;
+        //TODO: change according to new changes the DAY BEFORE THE DELIEVERY (thanks)
+//        try {
+//            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v, v1, v2, v3, s);
+//        } catch (Exception e) {
+//            LOGGER.log(Level.INFO, e.getMessage());
+//            return 0; // doesn't say what to return in the documentation
+//        }
     }
 
     @Override
