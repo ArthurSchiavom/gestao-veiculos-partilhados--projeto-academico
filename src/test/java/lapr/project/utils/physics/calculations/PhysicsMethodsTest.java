@@ -283,7 +283,7 @@ public class PhysicsMethodsTest {
     /**
      * Test of predictEnergySpent method, of class PhysicsMethods.
      */
-    @org.junit.Test
+    @Test
     public void testPredictEnergySpent_3args_2() {
         System.out.println("predictEnergySpent");
        Client client = new Client("a@a.a", "peleila", "password", 170, 75, 'M', 3.0f, false, new CreditCard("1111111111111111"));
