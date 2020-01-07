@@ -1,14 +1,18 @@
 package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
+import lapr.project.data.registers.ParkAPI;
 import lapr.project.mapgraph.MapGraphAlgorithms;
 import lapr.project.model.Path;
 import lapr.project.model.Trip;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.utils.Utils;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilterScootersWithAutonomyController {
@@ -36,9 +40,14 @@ public class FilterScootersWithAutonomyController {
      *                   according to file output/escooters.csv.
      * @return The number of suggested vehicles.
      */
-    public int suggestScootersBetweenParks(String park, String username, double destLat, double destLon, String outputFile) throws SQLException {
-        List<ElectricScooter> filteredScooters = Trip.filterScootersWithAutonomy(username, park, destLat, destLon);
-        //TODO implement the output to file
+    public int suggestScootersBetweenParks(String park, String username, double destLat, double destLon, String outputFile) throws SQLException, IOException {
+        List<ElectricScooter> filteredScooters = ParkAPI.filterScootersWithAutonomy(username, park, destLat, destLon);
+        List<String> fileLines = new ArrayList<>();
+        fileLines.add("escooter description;type;actual battery capacity");
+        for(ElectricScooter scooter : filteredScooters) {
+            fileLines.add(scooter.generateExportString());
+        }
+        Utils.writeToFile(fileLines, outputFile);
         return filteredScooters.size();
     }
 }

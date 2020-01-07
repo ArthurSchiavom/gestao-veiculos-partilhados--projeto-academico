@@ -26,12 +26,7 @@ public class Park extends PointOfInterest {
         this.id = id;
         this.parkInputVoltage = parkInputVoltage;
         this.parkInputCurrent = parkInputCurrent;
-
-        if(vehicleCapacities==null) {
-            this.vehicleCapacities = new ArrayList<>();
-        } else {
-            this.vehicleCapacities = new ArrayList<>(vehicleCapacities);
-        }
+        this.vehicleCapacities = new ArrayList<>(vehicleCapacities);
     }
 
     public String getId() {

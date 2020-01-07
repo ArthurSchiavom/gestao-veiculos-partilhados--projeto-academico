@@ -6,13 +6,15 @@ package lapr.project.data.registers;
 
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
+import lapr.project.mapgraph.MapGraphAlgorithms;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.park.Capacity;
 import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
-import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -20,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -154,7 +157,9 @@ public class ParkAPI {
             ResultSet rs = dataHandler.executeQuery(ps);
             closeableManager.addAutoCloseable(rs);
 
-            rs.next();
+            if(!rs.next()){
+                return null;
+            }
             String parkId = rs.getString("park_id");
             return new Park(parkId, rs.getFloat("park_input_voltage"), rs.getFloat("park_input_current"),
                     getListOfCapacities(parkId), rs.getString("poi_description"), new Coordinates(lat, lon, rs.getInt("altitude_m")));
@@ -536,12 +541,12 @@ public class ParkAPI {
     public String fetchScooterHighestBattery(String startingParkId) {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            CallableStatement cs = dataHandler.prepareCall(
+            PreparedStatement ps = dataHandler.prepareStatement(
                     "SELECT func_find_highest_charge_scooter(?) FROM DUAL");
-            cs.setString(1, startingParkId);
-            ResultSet rs = dataHandler.executeQuery(cs);
+            ps.setString(1, startingParkId);
+            ResultSet rs = dataHandler.executeQuery(ps);
 
-            if (rs.next()) {
+            if (rs.next()) {   //Check that result set found a scooter
                 return rs.getString("description");
             } else {
                 return null;
@@ -551,6 +556,38 @@ public class ParkAPI {
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
+    }
+
+    /**
+     * Filters scooters according to a specific client in a specific park
+     *
+     * @param username   the name of the client
+     * @param origParkId the park where the client is
+     * @param destLat    the latitude of the destination park
+     * @param destLon    the longitude of the destination park
+     * @return the filtered list of scooters
+     */
+    public static List<ElectricScooter> filterScootersWithAutonomy(String username, String origParkId, double destLat, double destLon) throws SQLException {
+        Client client = Company.getInstance().getUserAPI().fetchClientByUsername(username);
+        Park origPark = Company.getInstance().getParkAPI().fetchParkById(origParkId);
+        Park destPark = Company.getInstance().getParkAPI().fetchParkByCoordinates(destLat, destLon);
+        if(client == null || origPark == null || destPark == null) {
+            return new LinkedList<>();
+        }
+        List<ElectricScooter> filteredScooters = new LinkedList<>();
+        List<ElectricScooter> availableVehiclesAtPark = Company.getInstance().getParkAPI().fetchVehiclesAtPark(origParkId, ElectricScooter.class);
+        if(availableVehiclesAtPark.isEmpty()) {
+            return new LinkedList<>();
+        }
+        for(ElectricScooter scooter : availableVehiclesAtPark) {
+            double energyRequired = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, scooter), origPark, destPark, new LinkedList<>());
+            //Converts from calories to watts per hour
+            energyRequired = PhysicsMethods.convertJoulesToWattHr(energyRequired);
+            if(PhysicsMethods.calculateActualBatteryWattHrs((double) scooter.getMaxBatteryCapacity(), scooter.getActualBatteryCapacity()) *1.1>=energyRequired) {
+                filteredScooters.add(scooter);
+            }
+        }
+        return filteredScooters;
     }
 
     /**

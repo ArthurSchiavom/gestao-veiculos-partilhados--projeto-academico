@@ -108,6 +108,7 @@ public class VisualizeVehiclesAtParkControllerTest {
             when(dataHandler.prepareStatement("select * from PARKS p, points_of_interest poi where p.LATITUDE = ? AND p.LONGITUDE = ? " +
                     "AND p.latitude = poi.latitude AND p.longitude = poi.longitude")).thenReturn(stm4);
             when(dataHandler.executeQuery(stm4)).thenReturn(rs4);
+            when(rs4.next()).thenReturn(true);
             when(rs4.getString(anyString())).thenReturn(parkId);
             when(rs4.getFloat(anyString())).thenReturn(1f);
             when(rs4.getInt(anyString())).thenReturn(2);

@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ParkTest {
 
-
     @Test
     public void testGetParkInputVoltage() {
         System.out.println("getParkInputVoltage");
@@ -154,6 +153,14 @@ public class ParkTest {
                 expResult, "descricao",
                 new Coordinates(45, 45, 0));
         assertEquals(expResult, park.getVehicleCapacities());
+
+        try{
+            park = new Park("novo park", 10.2f, 10.1f, null,
+                    "descricao", new Coordinates(45,45,0));
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true, "caught the illegal argument exception");
+        }
     }
 
     @Test

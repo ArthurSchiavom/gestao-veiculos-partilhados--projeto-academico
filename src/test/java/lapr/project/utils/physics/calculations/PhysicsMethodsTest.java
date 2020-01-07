@@ -5,8 +5,6 @@
  */
 package lapr.project.utils.physics.calculations;
 
-import java.util.ArrayList;
-import java.util.List;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
@@ -287,4 +285,12 @@ public class PhysicsMethodsTest {
         assertEquals(expResult, result, 0.0);
     }
 
+    @Test
+    public void testConvertJoulesToWattHr() {
+        double joules = 1;
+        assertEquals(0.000277777778, PhysicsMethods.convertJoulesToWattHr(joules), 0.001);
+
+        joules = 5000;
+        assertEquals(1.38888889, PhysicsMethods.convertJoulesToWattHr(joules), 0.001);
+    }
 }

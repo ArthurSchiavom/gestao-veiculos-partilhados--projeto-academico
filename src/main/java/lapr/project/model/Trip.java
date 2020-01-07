@@ -11,6 +11,7 @@ import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,8 +45,12 @@ public class Trip {
     public Trip(Timestamp startTime, Timestamp endTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
         if (startTime == null || clientEmail == null || clientEmail.isEmpty() || startParkId == null || startParkId.isEmpty())
             throw new IllegalArgumentException("Null or empty elements are not allowed");
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = new Timestamp(startTime.getTime());
+        if(endTime == null) {
+            this.endTime = null;
+        } else {
+            this.endTime = new Timestamp(endTime.getTime());
+        }
         this.clientEmail = clientEmail;
         this.startParkId = startParkId;
         this.endParkId = endParkId;
@@ -62,7 +67,7 @@ public class Trip {
      * @param vehicleDescription - the vehicle being used
      */
     public Trip(Timestamp startTime, String clientEmail, String startParkId, String vehicleDescription) {
-        this.startTime = startTime;
+        this.startTime = new Timestamp(startTime.getTime());
         this.clientEmail = clientEmail;
         this.startParkId = startParkId;
         this.vehicleDescription = vehicleDescription;
@@ -78,7 +83,7 @@ public class Trip {
      * @param vehicleDescription - the vehicle being used
      */
     public Trip(Timestamp startTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
-        this.startTime = startTime;
+        this.startTime = new Timestamp(startTime.getTime());
         this.clientEmail = clientEmail;
         this.startParkId = startParkId;
         this.endParkId = endParkId;
@@ -91,7 +96,7 @@ public class Trip {
      * @return the start time of the trip
      */
     public Timestamp getStartTime() {
-        return this.startTime;
+        return new Timestamp(startTime.getTime());
     }
 
     /**
@@ -100,7 +105,10 @@ public class Trip {
      * @return (1) trip end time or (2) null if the trip hasn't ended yet
      */
     public Timestamp getEndTime() {
-        return this.endTime;
+        if(endTime == null) {
+            return null;
+        }
+        return new Timestamp(endTime.getTime());
     }
 
     /**
@@ -165,30 +173,6 @@ public class Trip {
             }
         }
         return scooters;
-    }
-
-    /**
-     * Filters scooters according to a specific client in a specific park
-     *
-     * @param username   the name of the client
-     * @param origParkId the park where the client is
-     * @param destLat    the latitude of the destination park
-     * @param destLon    the longitude of the destination park
-     * @return the filtered list of scooters
-     */
-    public static List<ElectricScooter> filterScootersWithAutonomy(String username, String origParkId, double destLat, double destLon) throws SQLException {
-        Client client = Company.getInstance().getUserAPI().fetchClientByUsername(username);
-        Park origPark = Company.getInstance().getParkAPI().fetchParkById(origParkId);
-        Park destPark = Company.getInstance().getParkAPI().fetchParkByCoordinates(destLat, destLon);
-        List<ElectricScooter> filteredScooters = new LinkedList<>();
-        List<ElectricScooter> availableVehiclesAtPark = Company.getInstance().getParkAPI().fetchVehiclesAtPark(origParkId, ElectricScooter.class);
-        for(ElectricScooter scooter : availableVehiclesAtPark) {
-            double energyRequired = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, scooter), origPark, destPark, new LinkedList<>());
-            if(scooter.getMaxBatteryCapacity()*scooter.getActualBatteryCapacity()*1.1>=energyRequired) {
-                filteredScooters.add(scooter);
-            }
-        }
-        return filteredScooters;
     }
 
     /**

@@ -5,7 +5,6 @@ import java.util.Objects;
 /**
  * A coordinates class holds information about coordinates lat and lon in
  * decimal degrees
- *
  */
 public class Coordinates {
 
@@ -16,10 +15,10 @@ public class Coordinates {
     /**
      * Creates a set of coordinates
      *
-     * @param lat the lat parameter
-     * @param lon the lon parameter
+     * @param lat      the lat parameter
+     * @param lon      the lon parameter
      * @param altitude the altitude of the coordinates, in meters, 0 is sea
-     * level
+     *                 level
      */
     public Coordinates(double lat, double lon, int altitude) {
         if (lon > 180) {
@@ -107,7 +106,7 @@ public class Coordinates {
             return 0;
         } else {
             double height = (altitude - other.getAltitude()) / 1000;
-          
+
             double distance = Math.pow(distanceIgnoringHeight(other), 2) + Math.pow(height, 2);
             return Math.sqrt(distance);
         }
@@ -118,13 +117,16 @@ public class Coordinates {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null
+                || getClass()
+                != o.getClass()) {
             return false;
         }
         Coordinates that = (Coordinates) o;
         return Double.compare(that.lat, lat) == 0
                 && Double.compare(that.lon, lon) == 0
-                && Integer.compare(that.altitude, altitude) == 0;
+                && Integer.compare(that.altitude,
+                altitude) == 0;
     }
 
     @Override
@@ -135,14 +137,16 @@ public class Coordinates {
     @Override
     public String toString() {
         return "Coordinates{"
-                + "latitude=" + lat
-                + ", longitude=" + lon
-                + ", altitude=" + altitude
+                + "latitude="
+                + lat
+                + ", longitude="
+                + lon
+                + ", altitude="
+                + altitude
                 + '}';
     }
 
-    
-       /**
+    /**
      * Returns the corresponding cartesian value of x to this coordinate in m
      *
      * @return the corresponding cartesian value of x to this coordinate in m

@@ -92,5 +92,19 @@ class ElectricScooterTest {
         expResult = false;
         result = instance.hasAutonomyFlat(km);
         assertEquals(expResult, result);
+
+        assertTrue(instance.hasAutonomyFlat(4));
+    }
+
+    @Test
+    public void testGenerateExportString() {
+        String expResult = "PT001;city;15";
+        assertEquals(expResult, instance.generateExportString());
+
+        ElectricScooter electricScooter = new ElectricScooter(0, "PT002", 1f
+                , 1f, 10, true, ElectricScooterType.OFFROAD, 100, 2f, 500);
+
+        expResult = "PT002;off-road;100";
+        assertEquals(expResult, electricScooter.generateExportString());
     }
 }

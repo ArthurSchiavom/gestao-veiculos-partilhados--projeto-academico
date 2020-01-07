@@ -70,6 +70,7 @@ public class RegisterElectricScootersControllerTest {
             when(dataHandler.executeQuery(mockPS1)).thenReturn(mockRS1);
             when(dataHandler.executeQuery(mockPS2)).thenReturn(mockRS2);
             when(dataHandler.executeQuery(mockPS3)).thenReturn(mockRS3);
+            when(mockRS3.next()).thenReturn(true);
 
             when(dataHandler.executeUpdate(anyObject())).thenReturn(1);
             when(dataHandler.prepareCall(anyString())).thenReturn(mockCS1);

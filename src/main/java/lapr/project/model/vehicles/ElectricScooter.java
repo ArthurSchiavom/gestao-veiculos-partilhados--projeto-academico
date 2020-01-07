@@ -92,4 +92,23 @@ public class ElectricScooter extends Vehicle {
     public boolean hasAutonomyFlat(int km) {
         return Math.round(getScooterAutonomy()) >= km;
     }
+
+    /**
+     * Generate the export string of scooter<br>
+     * According to output/escooter.csv<br>
+     * #escooter description - a descriptive reference for the escooter e.g. ePT050<br>
+     * #type can be "city" or "off-road".<br>
+     * #actual battery capacity - the percentage with no decimal places of the battery capacity e.g. 75 for a battery with 0.75kWh charge.
+     * For non electrical vehicles, it should be 0.
+     * @return the export string of the scooter
+     */
+    public String generateExportString() {
+        String scooterType = "";
+        if(getElectricScooterType() == ElectricScooterType.URBAN) {
+            scooterType = "city";
+        } else {
+            scooterType = "off-road";
+        }
+        return String.format("%s;%s;%d", getDescription(), scooterType, getActualBatteryCapacity());
+    }
 }

@@ -129,7 +129,7 @@ public class PhysicsMethods {
      * @param aerodynamicCoefficient - aerodynamic coefficient
      * @param frontalArea            - frontal area of the vehicle
      * @param cosApparentWindAngle   - the angle that the wind makes with the North pole
-     * @return the power that needs to surpasse the air drag
+     * @return the power that needs to surpass the air drag
      */
     public static Double calculatePowerAirDrag(double velocity, double windSpeed, double aerodynamicCoefficient, double frontalArea, double cosApparentWindAngle) {
         return 0.5 * AIR_DENSITY * Math.pow(windSpeed, 2) * velocity * cosApparentWindAngle * aerodynamicCoefficient * frontalArea;
@@ -149,7 +149,7 @@ public class PhysicsMethods {
     }
 
     /**
-     * Method that calculates the amount of calories burnt between two points
+     * Method that calculates the amount of joules burnt between two points
      * <url> https://en.wikipedia.org/wiki/Bicycle_performance </url>
      *
      * @param velocity               - average speed of a person (m/s)
@@ -163,7 +163,7 @@ public class PhysicsMethods {
      * @param startPoint             - the starting point of the path that the rider is going
      * @param endPoint               - the ending point of the path that the rider is going
      * @param windAngle              - the angle made between the wind speed and the north pole
-     * @return the amount of calories burnt between two points
+     * @return the amount of joules spent between two points
      */
     public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
 
@@ -271,5 +271,14 @@ public class PhysicsMethods {
                 vehicle.getFrontalArea(), distanceMade, client.getWeight(), vehicle.getWeight(), path.getStartingPoint().getCoordinates(),
                 path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
         return energySpent;
+    }
+
+    /**
+     * Converts a value from joules to Watts per hour
+     * @param joules the value in calories
+     * @return the value in Watts per hour
+     */
+    public static double convertJoulesToWattHr(double joules) {
+        return 1/3600.0*joules;
     }
 }

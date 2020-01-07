@@ -409,8 +409,9 @@ public class Facade implements Serviceable {
         try {
             unlockVehicleController.startTripPark(s1, s, s2);
         } catch (SQLException e) {
-            LOGGER.log(Level.INFO, "Failed to unlock scooter with highest battery:\n"
-                    + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to unlock scooter with highest battery:\n" + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.log(Level.INFO, "Failed to export information about the scooter to a file\n" + e.getMessage());
         }
         Shutdown.shutdown();
         return Calendar.getInstance().getTimeInMillis();
@@ -424,6 +425,8 @@ public class Facade implements Serviceable {
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to unlock scooter with highest battery:\n"
                     + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.log(Level.INFO, "Failed to export information about the scooter to a file\n" + e.getMessage());
         }
         Shutdown.shutdown();
         return Calendar.getInstance().getTimeInMillis();
@@ -436,7 +439,9 @@ public class Facade implements Serviceable {
         try {
             size = filterScootersWithAutonomyController.suggestScootersBetweenParks(s, s1, v, v1, s2);
         } catch (SQLException e) {
-            LOGGER.log(Level.INFO, "Failed to suggest scooters\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to retrieve data from the database with scooters that have enough battery\n" + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.log(Level.INFO, "Failed to export the file with the scooter information\n" + e.getMessage());
         }
         Shutdown.shutdown();
         return size;
