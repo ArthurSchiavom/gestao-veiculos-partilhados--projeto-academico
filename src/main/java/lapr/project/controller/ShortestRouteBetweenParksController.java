@@ -13,7 +13,6 @@ import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.utils.InvalidFileDataException;
 import lapr.project.utils.Utils;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
@@ -22,8 +21,6 @@ public class ShortestRouteBetweenParksController {
     private final Company company;
     private static final int POI_LAT = 0;
     private static final int POI_LON = 1;
-//    private static final int POI_ELEVATION = 2;
-//    private static final int POI_DESCRIPTION = 3;
     private static final String HEADER = "latitude;longitude;elevation;poi description";
     private static final String LINE_SEPARATOR = ";";
     private static final String COMMENT_TAG = "#";
@@ -32,6 +29,21 @@ public class ShortestRouteBetweenParksController {
         this.company = company;
     }
 
+    /**
+     * Returns the distance in meters of the shortest route between 2 parks
+     * @param originLatitudeInDegrees lat of the origin park
+     * @param originLongitudeInDegrees lon of the origin park
+     * @param destinationLatitudeInDegrees lat of the end park
+     * @param destinationLongitudeInDegrees lon of the end park
+     * @return distance in meters
+     * @throws SQLException exception that might occur when accessing the sql oracle database
+     */
+    public int shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees) throws SQLException {
+        PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees,originLongitudeInDegrees);
+        PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
+        LinkedList<PointOfInterest> path = new LinkedList<>();
+        return (int) Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),originPark,endPark,path)*1000); // km to meters
+    }
     /**
      * Returns the distance in meters of the shortest route between 2 parks
      * @param originLatitudeInDegrees lat of the origin park
@@ -81,18 +93,13 @@ public class ShortestRouteBetweenParksController {
         String[] line;
         List<Double> lat = new ArrayList<>();
         List<Double> lon = new ArrayList<>();
-//        List<Integer> elevation = new ArrayList<>();
-//        List<String> description = new ArrayList<>();
 
         int i=0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-
                 lat.add(Double.parseDouble(line[POI_LAT]));
                 lon.add(Double.parseDouble(line[POI_LON]));
-//                elevation.add(Integer.parseInt(line[POI_ELEVATION]));
-//                description.add(line[POI_DESCRIPTION]);
             }
         } catch (NumberFormatException e) {
             throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + inputPOIs);
@@ -171,18 +178,13 @@ public class ShortestRouteBetweenParksController {
         String[] line;
         List<Double> lat = new ArrayList<>();
         List<Double> lon = new ArrayList<>();
-//        List<Integer> elevation = new ArrayList<>();
-//        List<String> description = new ArrayList<>();
 
         int i=0;
         try {
             for (i = 1; i < parsedData.size(); i++) {
                 line = parsedData.get(i);
-
                 lat.add(Double.parseDouble(line[POI_LAT]));
                 lon.add(Double.parseDouble(line[POI_LON]));
-//                elevation.add(Integer.parseInt(line[POI_ELEVATION]));
-//                description.add(line[POI_DESCRIPTION]);
             }
         } catch (NumberFormatException e) {
             throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + inputPOIs);

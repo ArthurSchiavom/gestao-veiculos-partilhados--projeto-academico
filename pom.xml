@@ -22,9 +22,9 @@
         <dependency>
             <groupId>lapr3</groupId>
             <artifactId>ride-sharing-assessment-interfaces</artifactId>
-            <version>3.0</version>
+            <version>3.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/third-parties/ride-sharing-assessment-interfaces-3.0.jar</systemPath>
+            <systemPath>${project.basedir}/third-parties/ride-sharing-assessment-interfaces-3.1.jar</systemPath>
         </dependency>
 
         <!-- Students can only add new dependencies to this section -->
@@ -131,6 +131,8 @@
                             <value>org.sonar.java.jacoco.JUnitListener</value>
                         </property>
                     </properties>
+                    <!-- Added this line cause according to https://stackoverflow.com/questions/55632614/maven-surefire-plugin-crahsing-jvm-on-java-11-corrupted-stdout-by-directly-writ it crashes -->
+                    <forkCount>0</forkCount>
                 </configuration>
             </plugin>
 

@@ -318,7 +318,12 @@ public class Facade implements Serviceable {
 
     @Override
     public int pathDistanceTo(double v, double v1, double v2, double v3) {
-        throw new UnsupportedOperationException();
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v,v1,v2,v3);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "No path found:\n" + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
