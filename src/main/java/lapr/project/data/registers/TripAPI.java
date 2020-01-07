@@ -475,11 +475,14 @@ public class TripAPI {
         }
     }
 
-    public static double predictCalories(Client client, Bicycle bicycle, PointOfInterest poi1, PointOfInterest poi2, String filePath) throws SQLException {
-       
+    public static double predictCalories(String username, String vehicleDescription, double latA, double lonA, double latB, double lonB) throws SQLException {
+            Client client = Company.getInstance().getUserAPI().fetchClientByUsername(username);
+            Bicycle bicycle = (Bicycle) Company.getInstance().getVehicleAPI().fetchVehicle(vehicleDescription);
+            PointOfInterest poiA = Company.getInstance().getPoiAPI().fetchPoi(latA, lonA);
+            PointOfInterest poiB = Company.getInstance().getPoiAPI().fetchPoi(latB, lonB);
 
         LinkedList<PointOfInterest> prevision = new LinkedList<>();
-        double energySpent = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, bicycle), poi1, poi2, prevision);
+        double energySpent = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, bicycle), poiA, poiB, prevision);
 
         return energySpent;
     }
