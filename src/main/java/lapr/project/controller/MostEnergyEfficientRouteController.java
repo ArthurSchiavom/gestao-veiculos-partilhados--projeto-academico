@@ -6,6 +6,8 @@ import lapr.project.mapgraph.MapGraphAlgorithms;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
+import lapr.project.model.vehicles.ElectricScooter;
+import lapr.project.model.vehicles.ElectricScooterType;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.Utils;
 
@@ -28,6 +30,30 @@ public class MostEnergyEfficientRouteController {
     }
 
     /**
+     *
+     * @param originLatitudeInDegrees latitude
+     * @param originLongitudeInDegrees longitude
+     * @param destinationLatitudeInDegrees latitude end
+     * @param destinationLongitudeInDegrees longitude end
+     * @param username username of the client
+     * @return energy spent in KwH
+     * @throws SQLException in case of an sql exception
+     */
+    public double calculateElectricalEnergyToTravelFromOneLocationToAnother(double originLatitudeInDegrees,double originLongitudeInDegrees, double destinationLatitudeInDegrees,double destinationLongitudeInDegrees,String username) throws SQLException {
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
+                500,true, ElectricScooterType.URBAN,75,
+                1f, 1500);
+        Park parkStart = company.getParkAPI().fetchParkByCoordinates(originLatitudeInDegrees,originLongitudeInDegrees);
+        Park parkEnd = company.getParkAPI().fetchParkByCoordinates(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
+        PointOfInterest start = new PointOfInterest(parkStart.getDescription(),parkStart.getCoordinates());
+        PointOfInterest end = new PointOfInterest(parkEnd.getDescription(),parkEnd.getCoordinates());
+        Client client = company.getUserAPI().fetchClientByUsername(username);
+        LinkedList<PointOfInterest> path = new LinkedList<>();
+        return MapGraphAlgorithms.shortestPath(company.initializeEnergyGraph(client,dummyVehicle),start,end,path)/3600000; //Joules to KwH
+    }
+
+    /**
      * Calculates the most energy efficient route between two parks
      * @param originParkIdentification the origin park description
      * @param destinationParkIdentification the destination park description
@@ -38,7 +64,7 @@ public class MostEnergyEfficientRouteController {
      * @return list of smallest paths
      * @throws SQLException in case an exception occurs
      */
-    public LinkedList<PointOfInterest> mostEnergyEfficientRouteBetweenTwoParks(String originParkIdentification,
+    public long mostEnergyEfficientRouteBetweenTwoParks(String originParkIdentification,
                                                                     String destinationParkIdentification,
                                                                     String typeOfVehicle,
                                                                     String vehicleSpecs,
@@ -50,7 +76,7 @@ public class MostEnergyEfficientRouteController {
         }else if(typeOfVehicle.equalsIgnoreCase("escooter")){
             isBicycle=false;
         }else{
-            return new LinkedList<>();
+            return 0;
         }
 
         Vehicle vehicle = vehicleAPI.fetchVehicleBySpecs(isBicycle,vehicleSpecs);
@@ -65,6 +91,6 @@ public class MostEnergyEfficientRouteController {
         long distance = Utils.calculateDistanceInMeters(path);
         Utils.getOutputPath(path,output,distance,energy,start.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );
         Utils.writeToFile(output,outputFileName);
-        return path;
+        return distance;
     }
 }

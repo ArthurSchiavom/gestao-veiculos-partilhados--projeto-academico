@@ -5,9 +5,29 @@ import org.junit.jupiter.api.Test;
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
+import lapr.project.data.DataHandler;
+import lapr.project.data.registers.Company;
+import lapr.project.mapgraph.MapGraphAlgorithms;
+import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.users.Client;
+import lapr.project.model.users.CreditCard;
+import lapr.project.model.vehicles.Bicycle;
+import lapr.project.model.vehicles.Vehicle;
+import lapr.project.model.vehicles.VehicleType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class ShortestRouteBetweenParksControllerTest {
 
@@ -15,6 +35,8 @@ class ShortestRouteBetweenParksControllerTest {
     private static PreparedStatement preparedStatement;
     private static Company company;
     private static ShortestRouteBetweenParksController controller;
+
+
 
     @BeforeEach
     void prepare() {
@@ -30,6 +52,18 @@ class ShortestRouteBetweenParksControllerTest {
             when(dh.executeUpdate(preparedStatement)).thenReturn(1);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    void shortestRouteBetweenTwoParksFetchByCoordinates2() {
+        try {
+            controller.shortestRouteBetweenTwoParksFetchByCoordinates(2.3,3.2,-3.1,13.3);
+            fail();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (e.getClass() != NullPointerException.class)
+                fail();
         }
     }
 
