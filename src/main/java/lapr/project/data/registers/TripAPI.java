@@ -274,16 +274,6 @@ public class TripAPI {
         return null;
     }
 
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
-    //TODO - TEST
     /**
      * Locks a vehicle and ends a trip if there is one by setting the user status to not riding,
      * updating the trip information, updating user points, updating user debt and emailing the user.
@@ -296,15 +286,13 @@ public class TripAPI {
      * @throws MessagingException if there is an on-going trip with the vehicle and the system fails to email the user
      * @return true if the park-vehicle association was possible and false otherwise
      */
-    public boolean lockVehicle(String parkId, String vehicleDescription, boolean sendEmail) throws SQLException, MessagingException {
+    public boolean lockVehicle(String parkId, String vehicleDescription, boolean sendEmail, boolean commit) throws SQLException, MessagingException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
-
         String clientEmail = fetchUserEmailRiding(vehicleDescription);
         Trip trip = null;
         if (clientEmail != null) {
             trip = Company.getInstance().getTripAPI().fetchUnfinishedTrip(clientEmail);
         }
-
         int nLinesChanged = -1;
         try {
             PreparedStatement ps = dataHandler.prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
@@ -314,9 +302,8 @@ public class TripAPI {
             nLinesChanged = dataHandler.executeUpdate(ps);
             if (nLinesChanged == 0)
                 return false;
-
-            dataHandler.commitTransaction();
-
+            if (commit)
+                dataHandler.commitTransaction();
             if (sendEmail && clientEmail != null) {
                 long duration = trip.getTripDurationMillis() / 60000;
                 Emailer.sendEmailCurrentThread(clientEmail, "Trip end", "Your vehicle was successfully locked! Trip duration: " + duration + " min");
@@ -327,9 +314,10 @@ public class TripAPI {
                 dataHandler.rollbackTransaction();
             } catch (SQLException e2) {
             }
-
             if (nLinesChanged == 0)
                 throw e;
+            if (e.getErrorCode() == 20248)
+                throw new SQLException("Failed to lock the vehicle because the park no longer exists", e.getSQLState(), e.getErrorCode());
             throw new SQLException("Failed to return vehicle to park", e.getSQLState(), e.getErrorCode());
         } finally {
             closeableManager.closeAutoCloseables();
@@ -384,26 +372,21 @@ public class TripAPI {
         List<Trip> allTripsLastInvoice = new ArrayList<>();
         UserAPI userAPI = Company.getInstance().getUserAPI();
         InvoiceAPI invoiceAPI = Company.getInstance().getInvoiceAPI();
-
         User user = userAPI.fetchClientByUsername(username);
         if (user == null)
             throw new UnregisteredDataException("user " + username + " does not exist.");
-
         String userEmail = user.getEmail();
         // FETCH LATEST INVOICES
         Invoice lastInvoice = invoiceAPI.fetchLastInvoiceFor(userEmail);
         Date invoiceStartDate = lastInvoice.getPaymentStartDate();
         long startInvoicesDateEpochSeconds = invoiceStartDate.getTime();
-        long endInvoicesDateEpochSeconds = invoiceStartDate.toLocalDate().plusMonths(1).toEpochDay() * 86400;
-
+        long endInvoicesDateEpochSeconds = invoiceStartDate.toLocalDate().plusMonths(1).toEpochDay() * 86400000;
         // FETCH TRIPS THAT ADDED UP TO THIS INVOICE
         List<Trip> allClientTrips = fetchAllClientTrips(userEmail);
         for (Trip trip : allClientTrips) {
             if (onlyUnpaid && trip.calculateTripCost() == 0)
                 continue;
-
-            long tripEndTimeEpochSeconds = (trip.getEndTime().getTime() / 1000);
-
+            long tripEndTimeEpochSeconds = trip.getEndTime().getTime();
             boolean shouldAddTrip = false;
             if (tripEndTimeEpochSeconds < endInvoicesDateEpochSeconds
                     && tripEndTimeEpochSeconds > startInvoicesDateEpochSeconds)
@@ -411,7 +394,6 @@ public class TripAPI {
             if (shouldAddTrip)
                 allTripsLastInvoice.add(trip);
         }
-
         return allTripsLastInvoice;
     }
 
@@ -454,7 +436,7 @@ public class TripAPI {
     public Trip fetchTripVehicleIsIn(String vehicleDescription) throws SQLException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
-            PreparedStatement preparedStatement = dataHandler.prepareStatement("select user_email from trips where vehicle_description = ? and end_park_id is null");
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("select user_email from trips where vehicle_description like ? and end_park_id is null");
             autoCloseableManager.addAutoCloseable(preparedStatement);
             preparedStatement.setString(1, vehicleDescription);
             ResultSet resultSet = dataHandler.executeQuery(preparedStatement);

@@ -175,7 +175,12 @@ public class VehicleAPI {
             cs.setDouble(7, parkLongitude);
             dataHandler.execute(cs);
         } catch (SQLException e) {
-            throw new SQLException("Failed to register bicycle into the database.", e.getSQLState(), e.getErrorCode());
+            String message;
+            if (e.getErrorCode() == 1403)
+                message = "Park doesn't exist";
+            else
+                message = "Failed to register bicycle into the database.";
+            throw new SQLException(message, e.getSQLState(), e.getErrorCode());
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -184,13 +189,14 @@ public class VehicleAPI {
     /**
      * registers a batch of eletric scooters in one transaction
      */
-    private void registerEletricScooterNoCommit(float aerodynamicCoefficient, float frontalArea,
-                                                int weight,
-                                                ElectricScooterType type, String description,
-                                                float maxBatteryCapacity,
-                                                int actualBatteryCapacity,
-                                                int enginePower, double parkLatitude, double parkLongitude) throws SQLException, MessagingException {
+    private void registerElectricScooterNoCommit(float aerodynamicCoefficient, float frontalArea,
+                                                 int weight,
+                                                 ElectricScooterType type, String description,
+                                                 float maxBatteryCapacity,
+                                                 int actualBatteryCapacity,
+                                                 int enginePower, double parkLatitude, double parkLongitude) throws SQLException, MessagingException {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        boolean customErrorMessage = true;
         try {
             PreparedStatement vehiclesInsert = dataHandler.prepareStatement("INSERT INTO vehicles(description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) " +
                     "VALUES (?, ?, ?, ?, ?, ?)");
@@ -215,11 +221,15 @@ public class VehicleAPI {
             eScootersInsert.setInt(5, enginePower);
             dataHandler.execute(eScootersInsert);
 
+            customErrorMessage = false;
             Company company = Company.getInstance();
             Park park = company.getParkAPI().fetchParkByCoordinates(parkLatitude, parkLongitude);
-            company.getTripAPI().lockVehicle(park.getId(), description, false);
+            company.getTripAPI().lockVehicle(park.getId(), description, false, false);
         } catch (SQLException e) {
-            throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
+            if (customErrorMessage)
+                throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
+            else
+                throw e;
         } finally {
             autoCloseableManager.closeAutoCloseables();
         }
@@ -231,18 +241,28 @@ public class VehicleAPI {
     public void registerBicycles(List<Float> aerodynamicCoefficient, List<Float> frontalArea,
                                  List<Integer> weight, List<Integer> size,
                                  List<String> description, List<Double> parkLatitude, List<Double> parkLongitude) throws SQLException {
+        boolean success = false;
         try {
             for (int i = 0; i < aerodynamicCoefficient.size(); i++) {
                 registerBicycleNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
                         size.get(i), description.get(i), parkLatitude.get(i), parkLongitude.get(i));
             }
-            dataHandler.commitTransaction();
+            success = true;
         } catch (SQLException e) {
-            try {
+            try {dataHandler.rollbackTransaction();} catch (SQLException e2) {}
+            throw new SQLException("failed to batch register bicycles - " + e.getMessage(), e.getSQLState(), e.getErrorCode());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("All the parameter lists must have the same size.");
+        }
+
+        try {
+            if (success)
+                dataHandler.commitTransaction();
+            else
                 dataHandler.rollbackTransaction();
-            } catch (SQLException e2) {
-            }
-            throw new SQLException("failed to batch register bicycles.", e.getSQLState(), e.getErrorCode());
+        } catch (SQLException e) {
+            try {dataHandler.rollbackTransaction();} catch (SQLException e2) {}
+            throw new SQLException("failed to batch register bicycles - commit failed.", e.getSQLState(), e.getErrorCode());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }
@@ -258,19 +278,24 @@ public class VehicleAPI {
                                          List<Integer> actualBatteryCapacity,
                                          List<Integer> enginePower, List<Double> parkLatitude, List<Double> parkLongitude)
                                         throws SQLException, MessagingException {
+        boolean customErrorMessage = false;
         try {
             for (int i = 0; i < aerodynamicCoefficient.size(); i++) {
-                registerEletricScooterNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
+                registerElectricScooterNoCommit(aerodynamicCoefficient.get(i), frontalArea.get(i), weight.get(i),
                         type.get(i), description.get(i), maxBatteryCapacity.get(i),
                         actualBatteryCapacity.get(i), enginePower.get(i), parkLatitude.get(i), parkLongitude.get(i));
             }
+            customErrorMessage = true;
             dataHandler.commitTransaction();
         } catch (SQLException e) {
             try {
                 dataHandler.rollbackTransaction();
             } catch (SQLException e2) {
             }
-            throw new SQLException("Failed to batch register electric scooters.", e.getSQLState(), e.getErrorCode());
+            if (customErrorMessage)
+                throw new SQLException("Failed to batch register electric scooters.", e.getSQLState(), e.getErrorCode());
+            else
+                throw e;
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("All the parameter lists must have the same size.");
         }

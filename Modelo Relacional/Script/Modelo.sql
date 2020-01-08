@@ -131,7 +131,8 @@ CREATE TABLE park_capacity (
   park_id           varchar2(50), 
   vehicle_type_name varchar2(50), 
   park_capacity     number(5) CONSTRAINT nn_park_capacity_park_capacity NOT NULL, 
-  amount_occupied   number(5) DEFAULT 0 CONSTRAINT nn_park_capacity_amount_occupied NOT NULL, 
+  amount_occupied   number(5) DEFAULT 0 CONSTRAINT nn_park_capacity_amount_occupied NOT NULL,
+  CONSTRAINT ck_park_capacity_park_capacity_amount_occupied CHECK (amount_occupied <= park_capacity),
   CONSTRAINT pk_park_capacity_park_id_vehicle_type_name PRIMARY KEY (park_id, vehicle_type_name)
 );
 

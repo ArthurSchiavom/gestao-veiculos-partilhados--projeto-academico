@@ -77,8 +77,8 @@ public class RegisterBicyclesControllerTest {
             verify(callableStatement).setFloat(3, 1.4f);
             verify(callableStatement).setInt(4, 99);
             verify(callableStatement).setString(5, "cat bike");
-            verify(callableStatement).setDouble(6, -80.222);
-            verify(callableStatement).setDouble(7, 172.12);
+            verify(callableStatement).setDouble(6, 50);
+            verify(callableStatement).setDouble(7, 180.0);
 
             // bike #2
             verify(callableStatement).setInt(1, 20);
@@ -86,8 +86,8 @@ public class RegisterBicyclesControllerTest {
             verify(callableStatement).setFloat(3, 4.4f);
             verify(callableStatement).setInt(4, 88);
             verify(callableStatement).setString(5, "dog bike");
-            verify(callableStatement).setDouble(6, -20.222);
-            verify(callableStatement).setDouble(7, 122.12);
+            verify(callableStatement).setDouble(6, 90);
+            verify(callableStatement).setDouble(7, 150.56);
 
             // Verify that only the Statement.setX() above were called
             verify(callableStatement, times(4)).setInt(anyInt(), anyInt());
