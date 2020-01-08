@@ -361,10 +361,10 @@ class ShortestRouteBetweenParksControllerTest {
             when(rsFetchPOISpecific.getInt("altitude_m")).thenReturn(5).thenReturn(5).thenReturn(6).thenReturn(6);
             when(rsFetchPOISpecific.getString("poi_description")).thenReturn("1").thenReturn("Parque do kevin").thenReturn("Parque do kevin").thenReturn("2");
 
-            long expResult = 26105660;
-            long result = controller.shortestRouteBetweenTwoParksFetchByCoordinates(2.3,3.4,2.31,3.41);
+            long expResult = 26670910;
+            long result = controller.shortestRouteBetweenTwoParksFetchByCoordinates(2.3,3.4,2.31,3.41,1,"outputtyBoy.txt");
             assertEquals(expResult, result);
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             fail("SQLException thrown\n" + e.getMessage());
         }
     }
