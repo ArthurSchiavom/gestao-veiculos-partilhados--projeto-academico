@@ -162,11 +162,16 @@ public class ShortestRouteBetweenParksController {
     public long shortestRouteBetweenTwoParksFetchById(String originParkIdentification, String destinationParkIdentification, String outputFileName) throws SQLException, IOException {
         Park originPark = company.getParkAPI().fetchParkById(originParkIdentification);
         Park endPark = company.getParkAPI().fetchParkById(destinationParkIdentification);
+        List<String> output = new LinkedList<>();
+        if(originPark == null || endPark == null){
+            output.add("Não existem pontos de interesse com as coordenadas fornecidas");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
         PointOfInterest origin = new PointOfInterest(originPark.getDescription(), originPark.getCoordinates());
         PointOfInterest end = new PointOfInterest(endPark.getDescription(), endPark.getCoordinates());
         LinkedList<PointOfInterest> path = new LinkedList<>();
-        long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(), origin, end, path) * 1000); // km to meters
-        List<String> output = new LinkedList<>();
+        long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),origin,end,path)*1000); // km to meters
         //dummy vehicle and client because they're not given----------------------
         ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596", 5.3F, 3.4F,
                 500, true, ElectricScooterType.URBAN, 75,
@@ -196,6 +201,12 @@ public class ShortestRouteBetweenParksController {
                                                                   String inputPOIs, String outputFileName) throws SQLException, IOException, InvalidFileDataException {
         Park originPark = company.getParkAPI().fetchParkById(originParkIdentification);
         Park endPark = company.getParkAPI().fetchParkById(destinationParkIdentification);
+        if(originPark == null || endPark == null){
+            LinkedList<String> output = new LinkedList<>();
+            output.add("Não existem pontos de interesse com as coordenadas fornecidas");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
         PointOfInterest origin = new PointOfInterest(originPark.getDescription(), originPark.getCoordinates());
         PointOfInterest end = new PointOfInterest(endPark.getDescription(), endPark.getCoordinates());
         List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(inputPOIs, LINE_SEPARATOR, COMMENT_TAG, HEADER);
@@ -238,25 +249,29 @@ public class ShortestRouteBetweenParksController {
         return distance;
     }
 
-    /**
-     * Returns the distance in meters of the shortest route between 2 parks
-     *
-     * @param originParkIdentification      description of the origin park
-     * @param destinationParkIdentification description of the end park
-     * @param outputFileName                name of the output file
-     * @return distance in meters
-     * @throws SQLException exception that might occur when accessing the sql oracle database
-     */
-    public long shortestRouteBetweenTwoParksFetchByID(String originParkIdentification, String destinationParkIdentification, int numberOfPOIs, String outputFileName) throws IOException {
-        PointOfInterest origin = company.getPoiAPI().fetchPoiByDescription(originParkIdentification);
-        PointOfInterest end = company.getPoiAPI().fetchPoiByDescription(destinationParkIdentification);
-        List<String> output = new LinkedList<>();
-        if (origin == null || end == null) {
+/**
+ * Returns the distance in meters of the shortest route between 2 parks
+ * @param originParkIdentification description of the origin park
+ * @param destinationParkIdentification description of the end park
+ * @param outputFileName name of the output file
+ * @return distance in meters
+ * @throws SQLException exception that might occur when accessing the sql oracle database
+ */
+    public long shortestRouteBetweenTwoParksFetchByID(String originParkIdentification, String destinationParkIdentification, int numberOfPOIs, String outputFileName) throws IOException, SQLException {
+        Park originPark = originPark = company.getParkAPI().fetchParkById(originParkIdentification);
+        Park endPark = endPark = company.getParkAPI().fetchParkById(destinationParkIdentification);
+
+        if(originPark == null || endPark == null){
+            LinkedList<String> output = new LinkedList<>();
             output.add("Não existem pontos de interesse com as coordenadas fornecidas");
             Utils.writeToFile(output, outputFileName);
             return 0;
         }
-        ArrayList<LinkedList<PointOfInterest>> paths = MapGraphAlgorithms.allPaths(company.getMapGraphDistance(), origin, end);
+        PointOfInterest origin = new PointOfInterest(originPark.getDescription(),originPark.getCoordinates());
+        PointOfInterest end = new PointOfInterest(endPark.getDescription(),endPark.getCoordinates());
+        List<String> output = new LinkedList<>();
+
+        ArrayList<LinkedList<PointOfInterest>> paths = MapGraphAlgorithms.allPaths(company.getMapGraphDistance(),origin,end);
         LinkedList<PointOfInterest> choosenPath = null;
         for (LinkedList<PointOfInterest> path : paths) {
             if ((path.size() - 2) == numberOfPOIs) {

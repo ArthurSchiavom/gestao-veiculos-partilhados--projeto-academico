@@ -46,6 +46,9 @@ public class MostEnergyEfficientRouteController {
                 1f, 1500);
         Park parkStart = company.getParkAPI().fetchParkByCoordinates(originLatitudeInDegrees,originLongitudeInDegrees);
         Park parkEnd = company.getParkAPI().fetchParkByCoordinates(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
+        if(parkStart == null || parkEnd == null){
+            return 0;
+        }
         PointOfInterest start = new PointOfInterest(parkStart.getDescription(),parkStart.getCoordinates());
         PointOfInterest end = new PointOfInterest(parkEnd.getDescription(),parkEnd.getCoordinates());
         Client client = company.getUserAPI().fetchClientByUsername(username);
@@ -82,6 +85,12 @@ public class MostEnergyEfficientRouteController {
         Vehicle vehicle = vehicleAPI.fetchVehicleBySpecs(isBicycle,vehicleSpecs);
         Park parkStart = company.getParkAPI().fetchParkById(originParkIdentification);
         Park parkEnd = company.getParkAPI().fetchParkById(destinationParkIdentification);
+        if(parkStart == null || parkEnd == null || vehicle == null){
+            LinkedList<String> output = new LinkedList<>();
+            output.add("Não existem pontos de interesse com as coordenadas fornecidas ou/e bicicletas com as specs fornecidas");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
         PointOfInterest start = new PointOfInterest(parkStart.getDescription(),parkStart.getCoordinates());
         PointOfInterest end = new PointOfInterest(parkEnd.getDescription(),parkEnd.getCoordinates());
         Client client = company.getUserAPI().fetchClientByUsername(username);
