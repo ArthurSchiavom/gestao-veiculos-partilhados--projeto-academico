@@ -1,5 +1,8 @@
 package lapr.project.utils;
 
+import lapr.project.controller.UnlockVehicleController;
+import lapr.project.data.DataHandler;
+import lapr.project.data.registers.Company;
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.users.Client;
@@ -7,12 +10,18 @@ import lapr.project.model.users.CreditCard;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.ElectricScooterType;
 import org.junit.jupiter.api.Test;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UtilsTest {
 
@@ -164,56 +173,119 @@ public class UtilsTest {
     @Test
     void calculateDistanceInMeters() {
         LinkedList<PointOfInterest> path = new LinkedList<>();
-        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
-        path.add(new PointOfInterest("321",new Coordinates(2.3,3.4,5)));
-        assertEquals(0,Utils.calculateDistanceInMeters(path));
+        path.add(new PointOfInterest("123", new Coordinates(2.3, 3.4, 5)));
+        path.add(new PointOfInterest("321", new Coordinates(2.3, 3.4, 5)));
+        assertEquals(0, Utils.calculateDistanceInMeters(path));
     }
 
     @Test
     void calculateDistanceInMeter2() {
         LinkedList<PointOfInterest> path = new LinkedList<>();
-        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
-        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,5)));
-        assertEquals(1572,Utils.calculateDistanceInMeters(path));
+        path.add(new PointOfInterest("123", new Coordinates(2.3, 3.4, 5)));
+        path.add(new PointOfInterest("321", new Coordinates(2.31, 3.41, 5)));
+        assertEquals(1572, Utils.calculateDistanceInMeters(path));
     }
 
     @Test
-    void getOutputPathTest(){
+    void testGetOutputPaths() {
+        Locale.setDefault(Locale.US);
+
+        DataHandler dataHandler = mock(DataHandler.class);
+        Company.reset();
+        Company.createCompany(dataHandler);
+
+        try {
+            PreparedStatement stmFetchPOI = mock(PreparedStatement.class);
+            ResultSet rsFetchPOI = mock(ResultSet.class);
+
+            when(dataHandler.prepareStatement("SELECT * FROM points_of_interest")).thenReturn(stmFetchPOI);
+            when(dataHandler.executeQuery(stmFetchPOI)).thenReturn(rsFetchPOI);
+            when(rsFetchPOI.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+            when(rsFetchPOI.getInt("altitude_m")).thenReturn(5).thenReturn(5).thenReturn(6).thenReturn(6);
+            when(rsFetchPOI.getDouble("longitude")).thenReturn(3.4).thenReturn(3.41).thenReturn(4.4).thenReturn(4.41);
+            when(rsFetchPOI.getString("poi_description")).thenReturn("1").thenReturn("2").thenReturn("3").thenReturn("4");
+            when(rsFetchPOI.getDouble("latitude")).thenReturn(2.3).thenReturn(2.31).thenReturn(3.3).thenReturn(3.41);
+
+            PreparedStatement stmFetchAllPaths = mock(PreparedStatement.class);
+            ResultSet rsFetchAllPaths = mock(ResultSet.class);
+            when(dataHandler.prepareStatement("SELECT * FROM paths")).thenReturn(stmFetchAllPaths);
+            when(dataHandler.executeQuery(stmFetchAllPaths)).thenReturn(rsFetchAllPaths);
+            when(rsFetchAllPaths.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+            when(rsFetchAllPaths.getDouble("longitudeA")).thenReturn(3.4).thenReturn(4.4);
+            when(rsFetchAllPaths.getDouble("latitudeA")).thenReturn(2.3).thenReturn(3.3);
+            when(rsFetchAllPaths.getDouble("latitudeB")).thenReturn(2.31).thenReturn(3.31);
+            when(rsFetchAllPaths.getDouble("longitudeB")).thenReturn(3.41).thenReturn(4.41);
+            when(rsFetchAllPaths.getDouble("kinetic_coefficient")).thenReturn(0.002).thenReturn(0.002);
+            when(rsFetchAllPaths.getInt("wind_direction_degrees")).thenReturn(90).thenReturn(90);
+            when(rsFetchAllPaths.getDouble("wind_speed")).thenReturn(15.6).thenReturn(15.6);
+
+            PreparedStatement stmFetchCertainPOI = mock(PreparedStatement.class);
+            ResultSet rsFetchCertainPOI = mock(ResultSet.class);
+
+            when(dataHandler.prepareStatement("SELECT * FROM points_of_interest WHERE latitude =? and longitude =?")).thenReturn(stmFetchCertainPOI);
+            when(dataHandler.executeQuery(stmFetchCertainPOI)).thenReturn(rsFetchCertainPOI);
+            when(rsFetchCertainPOI.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true);
+            when(rsFetchCertainPOI.getInt("altitude_m")).thenReturn(5).thenReturn(5).thenReturn(6).thenReturn(6);
+            when(rsFetchCertainPOI.getString("poi_description")).thenReturn("1").thenReturn("2").thenReturn("3").thenReturn("4");
+        } catch (SQLException e) {
+            fail("SQLException thrown\n" + e.getMessage());
+        }
+
+        List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
+        LinkedList<PointOfInterest> path1 = new LinkedList<>();
+        LinkedList<PointOfInterest> path2 = new LinkedList<>();
+        path1.add(new PointOfInterest("1", new Coordinates(2.3, 3.4, 5)));
+        path1.add(new PointOfInterest("2", new Coordinates(2.31, 3.41, 5)));
+        path2.add(new PointOfInterest("3", new Coordinates(3.3, 4.4, 6)));
+        path2.add(new PointOfInterest("4", new Coordinates(3.31, 4.41, 6)));
+        paths.add(path1);
+        List<String> outputExpected = new LinkedList<>();
+        List<String> output = new LinkedList<>();
+        outputExpected.add("Path 001\ntotal distance: 5\ntotal energy: 3.00\nelevation: 10\n2.3;3.4\n2.31;3.41\n");
+        outputExpected.add("Path 002\ntotal distance: 5\ntotal energy: 3.00\nelevation: 10\n3.3;4.4\n3.31;4.41\n");
+        output = Utils.getOutputPaths(paths, 5, 10, new Client("a@a.a", "a", "123", 2, 50, 'M', 25f,
+                false, new CreditCard("200123456")), new ElectricScooter(1, "PT001"
+                , 1f, 1f, 10, true, ElectricScooterType.URBAN, 75
+                , 1f, 500));
+    }
+
+    @Test
+    void getOutputPathTest() {
         Locale.setDefault(Locale.US);
 
         LinkedList<PointOfInterest> path = new LinkedList<>();
-        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
-        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,5)));
+        path.add(new PointOfInterest("123", new Coordinates(2.3, 3.4, 5)));
+        path.add(new PointOfInterest("321", new Coordinates(2.31, 3.41, 5)));
         List<String> outputExpected = new LinkedList<>();
         List<String> output = new LinkedList<>();
         outputExpected.add("Path 002\ntotal distance: 5\ntotal energy: 3.00\nelevation: 10\n2.3;3.4\n2.31;3.41\n");
-        long distance=5;
+        long distance = 5;
         int elevation = 13;
         int pathNumber = 2;
         long energy = 3;
-        Utils.getOutputPath(path,output,distance,energy,elevation,pathNumber);
-        assertEquals(outputExpected,output);
+        Utils.getOutputPath(path, output, distance, energy, elevation, pathNumber);
+        assertEquals(outputExpected, output);
     }
 
     @Test
-    void sortPois(){
+    void sortPois() {
         LinkedList<PointOfInterest> path = new LinkedList<>();
-        path.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
-        path.add(new PointOfInterest("321",new Coordinates(2.31,3.41,6)));
+        path.add(new PointOfInterest("123", new Coordinates(2.3, 3.4, 5)));
+        path.add(new PointOfInterest("321", new Coordinates(2.31, 3.41, 6)));
 
         LinkedList<PointOfInterest> pathCopy = new LinkedList<>();
-        pathCopy.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
-        pathCopy.add(new PointOfInterest("321",new Coordinates(2.31,3.41,6)));
+        pathCopy.add(new PointOfInterest("123", new Coordinates(2.3, 3.4, 5)));
+        pathCopy.add(new PointOfInterest("321", new Coordinates(2.31, 3.41, 6)));
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
         paths.add(path);
 
         LinkedList<PointOfInterest> pathSorted = new LinkedList<>();
-        pathSorted.add(new PointOfInterest("321",new Coordinates(2.31,3.41,6)));
-        pathSorted.add(new PointOfInterest("123",new Coordinates(2.3,3.4,5)));
+        pathSorted.add(new PointOfInterest("321", new Coordinates(2.31, 3.41, 6)));
+        pathSorted.add(new PointOfInterest("123", new Coordinates(2.3, 3.4, 5)));
 
         Utils.sort(paths);
-        assertEquals(paths.get(0),pathSorted);
-        assertNotEquals(paths.get(0),pathCopy);
+        assertEquals(paths.get(0), pathSorted);
+        assertNotEquals(paths.get(0), pathCopy);
     }
 
     @Test
@@ -233,6 +305,12 @@ public class UtilsTest {
             fail();
         } catch (IllegalArgumentException e) {
             //pass
+        }
+        try {
+            Utils.howManyTimesBfitsIntoAPositive(0, 0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true, "Passed");
         }
     }
 

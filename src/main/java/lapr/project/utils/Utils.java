@@ -83,111 +83,115 @@ public class Utils {
         return result;
     }
 
+    /**
+     * Writes a list of lines to a specific file
+     *
+     * @param lines    the lines, each new line is an element in the array
+     * @param fileName the name of the file to store it in
+     * @throws IOException incase something happens when creating the file
+     */
     public static void writeToFile(List<String> lines, String fileName) throws IOException {
-        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
-        try {
-            FileWriter fileWriter = new FileWriter(fileName);
-            autoCloseableManager.addAutoCloseable(fileWriter);
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
             PrintWriter printWriter = new PrintWriter(fileWriter);
-            autoCloseableManager.addAutoCloseable(printWriter);
             for (String line : lines) {
                 printWriter.println(line);
             }
         } catch (IOException e) {
             throw e;
-        } finally {
-            autoCloseableManager.closeAutoCloseables();
         }
     }
 
     /**
      * Orders ascending by numbers of poi's, and then descending by height
+     *
      * @param paths list that contains list of paths
      */
-    public static void sort(List<LinkedList<PointOfInterest>> paths){
-        Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
-            @Override
-            public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
-                return pointOfInterests.size()-t1.size();
-            }
-        });
-        for(LinkedList<PointOfInterest> p : paths){
+    public static void sort(List<LinkedList<PointOfInterest>> paths) {
+        for (LinkedList<PointOfInterest> p : paths) {
             sortPois(p);
         }
     }
 
     /**
      * Orders the poi's according to the output/paths.csv file
+     *
      * @param path path containing the poi's
      */
-    public static void sortPois(LinkedList<PointOfInterest> path){
+    public static void sortPois(LinkedList<PointOfInterest> path) {
         Collections.sort(path, new SortByHeightDescending());
     }
 
     /**
      * Puts the information of the parks and poi's in a list so it can be printed
-     * @param paths all the possible shortest paths
-     * @param distance overall distance
+     *
+     * @param paths     all the possible shortest paths
+     * @param distance  overall distance
      * @param elevation overall elevation
      * @return list of strings ready to be outputed with the information given in the output/path.csv
      */
-    public static List<String> getOutputPaths(List<LinkedList<PointOfInterest>> paths, long distance, int elevation, Client client, Vehicle vehicle){
+    public static List<String> getOutputPaths(List<LinkedList<PointOfInterest>> paths, long distance, int elevation, Client client, Vehicle vehicle) {
         List<String> output = new LinkedList<>();
         int pathNumber = 1;
-        for(LinkedList<PointOfInterest> path : paths){
-            LinkedList<Path> pathsEnergy = MapGraphAlgorithms.convertNodeListToEdgeList(Company.getInstance().getMapGraphDistance(),path);
-            double energy = PhysicsMethods.predictEnergySpent(client,pathsEnergy,vehicle) / 3600000; //Joule to KwH
-            getOutputPath(path,output,distance, energy, elevation,pathNumber);
+        for (LinkedList<PointOfInterest> path : paths) {
+            LinkedList<Path> pathsEnergy = MapGraphAlgorithms.convertNodeListToEdgeList(Company.getInstance().getMapGraphDistance(), path);
+            double energy = PhysicsMethods.predictEnergySpent(client, pathsEnergy, vehicle) / 3600000; //Joule to KwH
+            getOutputPath(path, output, distance, energy, elevation, pathNumber);
+            pathNumber++;
         }
         return output;
     }
 
     /**
      * Orders by individual path
-     * @param path path to output
-     * @param output list of strings containing the output
-     * @param distance overall distance
-     * @param energy overall energy
-     * @param elevation overall elevation
+     *
+     * @param path       path to output
+     * @param output     list of strings containing the output
+     * @param distance   overall distance
+     * @param energy     overall energy
+     * @param elevation  overall elevation
      * @param pathNumber path number
      */
-    public static void getOutputPath(LinkedList<PointOfInterest> path, List<String> output, long distance,double energy, int elevation,int pathNumber){
-        String line= String.format("Path %03d", pathNumber)+"\n";
-        line += String.format("total distance: "+distance+"\ntotal energy: %.02f\nelevation: "+ Math.round((double)elevation/10)*10+"\n", energy);
-        for(PointOfInterest poi : path) {
-            line+=poi.getCoordinates().getLatitude()+";"+poi.getCoordinates().getLongitude()+"\n";
+    public static void getOutputPath(LinkedList<PointOfInterest> path, List<String> output, long distance, double energy, int elevation, int pathNumber) {
+        String line = String.format("Path %03d", pathNumber) + "\n";
+        line += String.format("total distance: " + distance + "\ntotal energy: %.02f\nelevation: " + Math.round((double) elevation / 10) * 10 + "\n", energy);
+        for (PointOfInterest poi : path) {
+            line += poi.getCoordinates().getLatitude() + ";" + poi.getCoordinates().getLongitude() + "\n";
         }
         output.add(line);
     }
 
     /**
      * Calculates distance of a trip
+     *
      * @param path path taken
      * @return overall distance in meters
      */
     public static long calculateDistanceInMeters(LinkedList<PointOfInterest> path) {
         PointOfInterest previous = null;
         double distance = 0;
-        for(PointOfInterest poi : path){
-            if(previous!= null){
-                distance+= previous.getCoordinates().distance(poi.getCoordinates());
+        for (PointOfInterest poi : path) {
+            if (previous != null) {
+                distance += previous.getCoordinates().distance(poi.getCoordinates());
             }
             previous = poi;
         }
-        return Math.round(distance*1000); //km to meters
+        return Math.round(distance * 1000); //km to meters
     }
 
     public static int howManyTimesBfitsIntoAPositive(double a, double b) {
-        if (a < 0 || b < 0)
+        if (a < 0 || b < 0) {
             throw new IllegalArgumentException("no value can be negative");
-        return howManyTimesBfitsIntoAPositive(a-b, b, 0);
+        } else if(b==0) {
+            throw new IllegalArgumentException("b can't be 0");
+        }
+        return howManyTimesBfitsIntoAPositive(a - b, b, 0);
     }
 
     private static int howManyTimesBfitsIntoAPositive(double a, double b, int count) {
         if (a < 0)
             return count;
         count++;
-        return howManyTimesBfitsIntoAPositive(a-b, b, count);
+        return howManyTimesBfitsIntoAPositive(a - b, b, count);
     }
 
     public static int pointsToEuros(int points) {

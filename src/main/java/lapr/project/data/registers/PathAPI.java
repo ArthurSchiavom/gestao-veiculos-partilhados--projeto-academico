@@ -84,7 +84,7 @@ public class PathAPI {
                 stmStartAltitude.setDouble(2, lon1);
                 ResultSet resultSetAltitudeSP = dataHandler.executeQuery(stmStartAltitude);
                 closeableManager.addAutoCloseable(resultSetAltitudeSP);
-                if (resultSetAltitudeSP == null || !resultSetAltitudeSP.next()) {
+                if (!resultSetAltitudeSP.next()) {
                     return null;
                 }
                 int startAltitude = resultSetAltitudeSP.getInt("altitude_m");

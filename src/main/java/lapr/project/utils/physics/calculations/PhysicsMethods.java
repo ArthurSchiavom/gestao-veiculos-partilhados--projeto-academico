@@ -162,7 +162,7 @@ public class PhysicsMethods {
      * @param vehicleMass            - mass of the vehicle (kg)
      * @param startPoint             - the starting point of the path that the rider is going
      * @param endPoint               - the ending point of the path that the rider is going
-     * @param windAngle              - the angle made between the wind speed and the north pole
+     * @param windAngle              - the angle >made between the wind speed and the north pole
      * @return the amount of energy in Joules burnt between two points
      */
     public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient
