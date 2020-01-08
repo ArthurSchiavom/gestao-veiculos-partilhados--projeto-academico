@@ -35,12 +35,11 @@ BEGIN
 		ON pv.VEHICLE_DESCRIPTION=v.DESCRIPTION AND pv.park_id=start_park_id_in
 		WHERE v.vehicle_type_name LIKE 'electric_scooter'
 	)
-	SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.VEHICLE_DESCRIPTION
+	SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.engine_power
 	INTO scooter
 	FROM electric_scooters es, parked_electric_scooters pes
-	WHERE pes.v_id=es.VEHICLE_DESCRIPTION
-	ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC
-	FETCH FIRST ROW ONLY;	
+	WHERE pes.v_id=es.VEHICLE_DESCRIPTION AND rownum = 1
+	ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC;	
 	RETURN scooter;
 EXCEPTION
 	WHEN no_data_found THEN

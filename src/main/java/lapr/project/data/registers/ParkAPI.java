@@ -542,12 +542,23 @@ public class ParkAPI {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement(
-                    "SELECT func_find_highest_charge_scooter(?) FROM DUAL");
+                    "WITH parked_electric_scooters AS (\n" +
+                            "\tSELECT v.DESCRIPTION v_id\n" +
+                            "\tFROM vehicles v\n" +
+                            "\tINNER JOIN park_vehicle pv\n" +
+                            "\tON pv.VEHICLE_DESCRIPTION=v.DESCRIPTION AND pv.park_id=?\n" +
+                            "\tWHERE v.vehicle_type_name LIKE 'electric_scooter'\n" +
+                            ")\n" +
+                            "SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.engine_power\n" +
+                            "FROM electric_scooters es, parked_electric_scooters pes\n" +
+                            "WHERE pes.v_id=es.VEHICLE_DESCRIPTION\n" +
+                            "ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC\n" +
+                            "FETCH FIRST ROW ONLY;");
             ps.setString(1, startingParkId);
             ResultSet rs = dataHandler.executeQuery(ps);
 
             if (rs.next()) {   //Check that result set found a scooter
-                return rs.getString("description");
+                return rs.getString("vehicle_description");
             } else {
                 return null;
             }
