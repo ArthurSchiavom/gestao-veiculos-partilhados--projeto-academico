@@ -1,5 +1,5 @@
-escooter description;type;actual battery capacity
-aac;off-road;10
-abc;city;10
-xxy;city;15
-zyw;city;10
+bicycle description;wheel size
+aac;10"
+abc;10"
+xxy;10"
+zyw;10"

@@ -107,6 +107,12 @@ public class Utils {
      * @param paths list that contains list of paths
      */
     public static void sort(List<LinkedList<PointOfInterest>> paths) {
+        Collections.sort(paths, new Comparator<LinkedList<PointOfInterest>>() {
+            @Override
+            public int compare(LinkedList<PointOfInterest> pointOfInterests, LinkedList<PointOfInterest> t1) {
+                return pointOfInterests.size()-t1.size();
+            }
+        });
         for (LinkedList<PointOfInterest> p : paths) {
             sortPois(p);
         }
