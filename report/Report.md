@@ -1,12 +1,13 @@
 # **Report for LAPR3** 
 
 ## Done By:
-Team 29, Class 2DF
+Group 29, Class 2DF
 - Arthur Silva 1180842
 - Ivo Macieira 1170554
 - Francisco Andrade 1181477
 - Diogo Silva 1161752
 - José Magalhães 1180852
+- Kevin Sousa 1180853
 
 
 # 1. Introduction
@@ -44,6 +45,10 @@ Team 29, Class 2DF
 
 ![CD.png](CD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks.png)
 
+**Description**
+
+    In this use case, the client is able to consult the most efficient route between two parks, passing by a certain number of points of interest. 
+
 ### 2.2.2. Fetch free slots at park by type
 
 **Use case diagram**
@@ -57,6 +62,10 @@ Team 29, Class 2DF
 **Class Diagram**	
 
 ![CD.png](CD_fetchFreeSlotsAtParkByType.png)
+
+**Description**
+
+    In this use case, the client is able to check if a park has free slots to a specified type of vehicle.
 
 ### 2.2.3. Get uncapable scooters
 
@@ -72,6 +81,10 @@ Team 29, Class 2DF
 
 ![CD.png](CD_GetUncapableScooters.png)
 
+**Description**
+
+    In this use case, the administrator is able to get a report stating which scooters, registered in the system, do not have enough autonomy to make a trip with a certain number of kilometers, defined by him.
+
 ### 2.2.4. Get the most energetically efficient Route between Two Parks
 
 **Use case diagram**
@@ -86,6 +99,10 @@ Team 29, Class 2DF
 
 ![CD.png](CD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks2.png)
 
+**Description**
+
+    In this use case, the client is able to get the most energetically efficient route between two parks. To calculate the energy that will be spent, information about the client, the vehicle and the paths that he will pass are needed, since the physic calculation needs that information.
+
 ### 2.2.5. Get the nearest park
 
 **Use case diagram**
@@ -99,6 +116,10 @@ Team 29, Class 2DF
 **Class Diagram**	
 
 ![CD.png](CD_NearestPark.png)
+
+**Description**
+
+    In this use case, the client is able to get the nearest park to him. If not specified, it is given a nearest park inside the range of 1km.
 
 ### 2.2.6. Update park
 
@@ -119,6 +140,10 @@ Team 29, Class 2DF
 
 ![CD.png](CD_updatePark.png)
 
+**Description**
+
+    In this use case, the administrator is able to update the information of a park.
+
 ### 2.2.7. Add park
 
 **Use case diagram**
@@ -131,7 +156,11 @@ Team 29, Class 2DF
 
 **Class Diagram**	
 
-![CD_UC1_IT2.png](CD_AddNewPark.png)
+![CD.png](CD_AddNewPark.png)
+
+**Description**
+
+    In this use case, the administrator uses the application (Inserts a park) to register a park into the system.
 
 ### 2.2.8. Distance of a park by id
 
@@ -145,6 +174,10 @@ Team 29, Class 2DF
 **Class Diagram**	
 
 ![CD.png](CD_DistanceOfParkById.png)
+
+**Description**
+
+    In this use case, the client can obtain the distance to a given park.
 
 ### 2.2.9. Remove a park by id
 
@@ -160,7 +193,11 @@ Team 29, Class 2DF
 
 ![CD.png](CD_DeleteParkById.png)
 
-### 2.2.10. Load a poi
+**Description**
+
+    In this use case, the administrator can remove a park from the system, by providing the id.
+
+### 2.2.10. Load a point of interest
 
 **Use case diagram**
 ![SSD.png](SDD_LoadPOI.png)
@@ -172,6 +209,10 @@ Team 29, Class 2DF
 **Class Diagram**	
 
 ![CD.png](CD_LoadPOI.png)
+
+**Description**
+
+    In this use case, the administrator is able to load a point of interest into the system, by specifying his description, latitude, longitude and altitude.
 
 ### 2.2.11. Predict burned calories
 
