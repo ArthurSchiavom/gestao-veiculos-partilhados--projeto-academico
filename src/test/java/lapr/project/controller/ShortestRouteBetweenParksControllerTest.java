@@ -80,6 +80,41 @@ class ShortestRouteBetweenParksControllerTest {
     }
 
     @Test
+    void shortestRouteBetweenTwoParksFetchByID() {
+        try {
+            controller.shortestRouteBetweenTwoParksFetchByID("uhm", "wot",2,"outputWTF.txt");
+            fail();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (e.getClass() != NullPointerException.class)
+                fail();
+        }
+    }
+
+    @Test
+    void shortestRouteBetweenTwoParksAndGivenPoisFetchById0() {
+        try {
+            controller.shortestRouteBetweenTwoParksAndGivenPoisFetchById("uhm", "wot","ad.txt","outputWTF.txt");
+            fail();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (e.getClass() != NullPointerException.class)
+                fail();
+        }
+    }
+
+    @Test
+    void shortestRouteBetweenTwoParksFetchByCoordinates0() {
+        try {
+            controller.shortestRouteBetweenTwoParksFetchByCoordinates(2.3,2.4,3.1,0,3,"outputWTF.txt");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (e.getClass() != NullPointerException.class)
+                fail();
+        }
+    }
+
+    @Test
     void shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates() {
 //        long result=0;
 //        try {

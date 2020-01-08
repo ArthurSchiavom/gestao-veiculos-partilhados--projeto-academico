@@ -11,7 +11,6 @@ import lapr.project.model.Coordinates;
 import lapr.project.model.Trip;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
-import lapr.project.model.users.User;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.VehicleType;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -417,15 +415,14 @@ public class Facade implements Serviceable {
      */
     @Override
     public int registerUser(String username, String email, String password, String visaCardNumber, int height, int weight, BigDecimal averageCyclingSpeed, String gender) {
-        return 0;
-//        prepare();
-////        try {
-////            registerUserController.registerClient(s, s1, s2, s3, i, i1, s4, 10f);
-////            return 1;
-////        } catch (SQLException e) {
-////            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
-////            return 0;
-////        }
+        prepare();
+        try {
+            registerUserController.registerClient(username,email,password,visaCardNumber,height,weight,averageCyclingSpeed.toString(),gender.charAt(0));
+            return 1;
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
@@ -658,7 +655,12 @@ public class Facade implements Serviceable {
      */
     @Override
     public long shortestRouteBetweenTwoParks(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, int numberOfPOIs, String outputFileName) {
-        return 0;
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(originLatitudeInDegrees, originLongitudeInDegrees, destinationLatitudeInDegrees, destinationLongitudeInDegrees, numberOfPOIs, outputFileName);
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0; // doesn't say what to return in the documentation
+        }
     }
 
     /**
@@ -678,14 +680,12 @@ public class Facade implements Serviceable {
      */
     @Override
     public long shortestRouteBetweenTwoParks(String originParkIdentification, String destinationParkIdentification, int numberOfPOIs, String outputFileName) {
-        return 0;
-        //TODO: change according to new changes the DAY BEFORE THE DELIEVERY (thanks)
-//        try {
-//            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v, v1, v2, v3, s);
-//        } catch (Exception e) {
-//            LOGGER.log(Level.INFO, e.getMessage());
-//            return 0; // doesn't say what to return in the documentation
-//        }
+        try {
+            return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByID(originParkIdentification,destinationParkIdentification, numberOfPOIs, outputFileName);
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0; // doesn't say what to return in the documentation
+        }
     }
 
     @Override

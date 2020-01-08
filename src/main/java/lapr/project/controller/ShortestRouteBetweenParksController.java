@@ -54,9 +54,29 @@ public class ShortestRouteBetweenParksController {
      * @return distance in meters
      * @throws SQLException exception that might occur when accessing the sql oracle database
      */
-    public long shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, String outputFileName) throws SQLException, IOException {
-        PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees,originLongitudeInDegrees);
-        PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
+    public long shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, int numberOfPois, String outputFileName) throws SQLException, IOException {
+        PointOfInterest origin = company.getPoiAPI().fetchPoi(originLatitudeInDegrees,originLongitudeInDegrees);
+        PointOfInterest end = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees,destinationLongitudeInDegrees);
+        List<String> output = new LinkedList<>();
+        if(origin == null || end == null){
+            output.add("Não existem pontos de interesse com as coordenadas fornecidas");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
+        ArrayList<LinkedList<PointOfInterest>> paths = MapGraphAlgorithms.allPaths(company.getMapGraphDistance(),origin,end);
+        LinkedList<PointOfInterest> choosenPath = null;
+        for(LinkedList<PointOfInterest> path : paths){
+            if((path.size()-2) == numberOfPois){
+                choosenPath = path;
+                break;
+            }
+        }
+
+        if(choosenPath == null){
+            output.add("Não existem caminhos com esse tamanho");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
         //dummy vehicle and client because they're not given----------------------
         ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
                 500,true, ElectricScooterType.URBAN,75,
@@ -65,12 +85,9 @@ public class ShortestRouteBetweenParksController {
         Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
-        LinkedList<PointOfInterest> path = new LinkedList<>();
-        long distance = Math.round(MapGraphAlgorithms.shortestPath(company.getMapGraphDistance(),originPark,endPark,path)*1000); // km to meters
-        LinkedList<Path> paths = MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(),path);
-        double energy = PhysicsMethods.predictEnergySpent(dummyClient,paths,dummyVehicle) / 3600000;
-        List<String> output = new LinkedList<>();
-        Utils.getOutputPath(path,output,distance,energy,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),1 );
+        long distance = Utils.calculateDistanceInMeters(choosenPath);
+        double energy = PhysicsMethods.predictEnergySpent(dummyClient,MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(),choosenPath),dummyVehicle)/ 3600000; //Joule to KwH
+        Utils.getOutputPath(choosenPath,output,distance,energy,origin.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );
         Utils.writeToFile(output,outputFileName);
         return distance;
     }
@@ -211,6 +228,52 @@ public class ShortestRouteBetweenParksController {
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
         Utils.writeToFile(Utils.getOutputPaths(paths,distance,originPark.getCoordinates().getAltitude()-endPark.getCoordinates().getAltitude(),dummyClient,dummyVehicle), outputFileName);
+        return distance;
+    }
+
+/**
+ * Returns the distance in meters of the shortest route between 2 parks
+ * @param originParkIdentification description of the origin park
+ * @param destinationParkIdentification description of the end park
+ * @param outputFileName name of the output file
+ * @return distance in meters
+ * @throws SQLException exception that might occur when accessing the sql oracle database
+ */
+    public long shortestRouteBetweenTwoParksFetchByID(String originParkIdentification, String destinationParkIdentification, int numberOfPOIs, String outputFileName) throws IOException {
+        PointOfInterest origin = company.getPoiAPI().fetchPoiByDescription(originParkIdentification);
+        PointOfInterest end = company.getPoiAPI().fetchPoiByDescription(destinationParkIdentification);
+        List<String> output = new LinkedList<>();
+        if(origin == null || end == null){
+            output.add("Não existem pontos de interesse com as coordenadas fornecidas");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
+        ArrayList<LinkedList<PointOfInterest>> paths = MapGraphAlgorithms.allPaths(company.getMapGraphDistance(),origin,end);
+        LinkedList<PointOfInterest> choosenPath = null;
+        for(LinkedList<PointOfInterest> path : paths){
+            if((path.size()-2) == numberOfPOIs){
+                choosenPath = path;
+                break;
+            }
+        }
+
+        if(choosenPath == null){
+            output.add("Não existem caminhos com esse tamanho");
+            Utils.writeToFile(output,outputFileName);
+            return 0;
+        }
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596",5.3F,3.4F,
+                500,true, ElectricScooterType.URBAN,75,
+                1f, 1500);
+
+        Client dummyClient = new Client("1180852@isep.ipp.pt","username","password", 22, 180, 60, 'm',22.3F,
+                true, new CreditCard("12341234123412"));
+        //------------------------------------------------------------------------
+        long distance = Utils.calculateDistanceInMeters(choosenPath);
+        double energy = PhysicsMethods.predictEnergySpent(dummyClient,MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(),choosenPath),dummyVehicle)/ 3600000; //Joule to KwH
+        Utils.getOutputPath(choosenPath,output,distance,energy,origin.getCoordinates().getAltitude()-end.getCoordinates().getAltitude(),1 );
+        Utils.writeToFile(output,outputFileName);
         return distance;
     }
 }
