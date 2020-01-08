@@ -71,23 +71,6 @@ public class Trip {
     }
 
     /**
-     * Constructor that instantiates a trip without the end time defined
-     *
-     * @param startTime          - the start time of the trip
-     * @param clientEmail        - the email of the client that is taking the trip
-     * @param startParkId        - the starting point (park) for the trip
-     * @param endParkId          - the ending point (park) for the trip
-     * @param vehicleDescription - the vehicle being used
-     */
-    public Trip(Timestamp startTime, String clientEmail, String startParkId, String endParkId, String vehicleDescription) {
-        this.startTime = new Timestamp(startTime.getTime());
-        this.clientEmail = clientEmail;
-        this.startParkId = startParkId;
-        this.endParkId = endParkId;
-        this.vehicleDescription = vehicleDescription;
-    }
-
-    /**
      * Returns the start time of the current trip.
      *
      * @return the start time of the trip

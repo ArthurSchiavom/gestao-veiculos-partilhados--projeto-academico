@@ -33,7 +33,7 @@ public class ParkChargingReportController {
         List<String> fileLines = new ArrayList<>();
         List<ElectricScooter> scooterList = Company.getInstance().getParkAPI().fetchVehiclesAtPark(parkIdentification
                 , ElectricScooter.class);
-        if(scooterList.isEmpty()) {
+        if (scooterList.isEmpty()) {
             fileLines.add(FAIL_MESSAGE);
             Utils.writeToFile(fileLines, outputFileName);
             return 0;
@@ -41,12 +41,14 @@ public class ParkChargingReportController {
         Park park = Company.getInstance().getParkAPI().fetchParkById(parkIdentification);
         Collections.sort(scooterList, new ChargeTimeComparator(park).thenComparing(new ScooterDescriptionComparator()));
         fileLines.add("escooter description;actual battery capacity;time to finish charge in seconds");
-        for(ElectricScooter scooter : scooterList) {
-            fileLines.add(scooter.getDescription()+";"+ scooter.getActualBatteryCapacity()+";"+PhysicsMethods.timeToChargeInSeconds(scooter, park));
+        List<ElectricScooter> scootersFullyCharged = new ArrayList<>();
+        for (ElectricScooter scooter : scooterList) {
+            fileLines.add(scooter.getDescription() + ";" + scooter.getActualBatteryCapacity() + ";" + PhysicsMethods.timeToChargeInSeconds(scooter, park));
             if(scooter.getActualBatteryCapacity()==100) {
-                scooterList.remove(scooter);
+                scootersFullyCharged.add(scooter);
             }
         }
+        scooterList.removeAll(scootersFullyCharged);
         Utils.writeToFile(fileLines, outputFileName);
         return scooterList.size();
     }
