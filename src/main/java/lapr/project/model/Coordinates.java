@@ -146,34 +146,6 @@ public class Coordinates {
                 + '}';
     }
 
-    /**
-     * Returns the corresponding cartesian value of x to this coordinate in m
-     *
-     * @return the corresponding cartesian value of x to this coordinate in m
-     */
-    public double getCoordinateX() {
-        final int R = 6371; // Radius of the earth
-        return R * Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(lon)) * 1000;
-    }
 
-    /**
-     * Returns the corresponding cartesian value of y to this coordinate in m
-     *
-     * @return the corresponding cartesian value of y to this coordinate in m
-     */
-    public double getCoordinateY() {
-        final int R = 6371; // Radius of the earth
-        return R * Math.cos(Math.toRadians(lat)) * Math.sin(Math.toRadians(lon)) * 1000;
-    }
-
-    /**
-     * Returns the corresponding cartesian value of z to this coordinate in m
-     *
-     * @return the corresponding cartesian value of z to this coordinate in m
-     */
-    public double getCoordinateZ() {
-        final int R = 6371; // Radius of the earth
-        return R * Math.sin(Math.toRadians(lat)) * 1000;
-    }
 
 }
