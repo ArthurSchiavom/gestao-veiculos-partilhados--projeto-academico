@@ -68,9 +68,9 @@ class InvoiceTest {
         assertNotEquals(inv1, inv2);
 
         inv2 = null;
-        assertNotEquals(inv2, inv1);
+        assertFalse(inv1.equals(inv2));
 
-        assertNotEquals(inv1, "str");
+        assertFalse(inv1.equals("str"));
     }
 
     @Test
@@ -98,9 +98,13 @@ class InvoiceTest {
     void calculatePointsToDiscountTest() {
         Invoice inv1 = new Invoice("a", new Date(1), 10, 10, 10,
                 10, 10, 10);
+        Invoice inv2 = new Invoice("a", new Date(1), 10, 1, 0,
+                10, 10, 10);
         assertEquals(200, inv1.calculatePointsToDiscount(200));
         assertEquals(200, inv1.calculatePointsToDiscount(500));
         assertEquals(100, inv1.calculatePointsToDiscount(100));
         assertEquals(100, inv1.calculatePointsToDiscount(109));
+        assertEquals(0, inv1.calculatePointsToDiscount(-10));
+        assertEquals(10, inv2.calculatePointsToDiscount(100));
     }
 }

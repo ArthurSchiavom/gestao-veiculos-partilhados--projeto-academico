@@ -42,7 +42,7 @@ public class Invoice {
             throw new IllegalArgumentException("Null elements are not allowed");
         this.pointsUsed = pointsUsed;
         this.clientEmail = clientEmail;
-        this.paymentStartDate = paymentStartDate;
+        this.paymentStartDate = new Date(paymentStartDate.getTime());
         this.penalizationCost = penalizationCost;
         this.usageCost = usageCost;
         this.amountLeftToPay = amountLeftToPay;
@@ -71,7 +71,7 @@ public class Invoice {
      * @return the payment start date
      */
     public Date getPaymentStartDate() {
-        return paymentStartDate;
+        return new Date(paymentStartDate.getTime());
     }
 
     /**
