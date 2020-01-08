@@ -199,8 +199,6 @@ public class Trip {
 
         Calendar cal = Calendar.getInstance();
         long val = cal.getTimeInMillis() - startTime.getTime();
-        System.out.println(cal.getTimeInMillis());
-        System.out.println(startTime.getTime());
         return val;
     }
 }
