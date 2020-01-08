@@ -470,6 +470,17 @@ public class TripAPI {
         }
     }
 
+    /**
+     * Calculates the amount of calories burnt between two parks
+     * @param username
+     * @param vehicleDescription
+     * @param latA
+     * @param lonA
+     * @param latB
+     * @param lonB
+     * @return
+     * @throws SQLException 
+     */
     public static double predictCalories(String username, String vehicleDescription, double latA, double lonA, double latB, double lonB) throws SQLException {
             Client client = Company.getInstance().getUserAPI().fetchClientByUsername(username);
             Bicycle bicycle = (Bicycle) Company.getInstance().getVehicleAPI().fetchVehicle(vehicleDescription);
