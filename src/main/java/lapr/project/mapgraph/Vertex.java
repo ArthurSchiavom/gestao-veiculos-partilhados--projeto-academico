@@ -50,7 +50,9 @@ public class Vertex<V, E> {
     }
     public void remAdjVert(V vAdj){ outVerts.remove(vAdj); }
     
-    public Edge<V,E> getEdge(V vAdj){ return outVerts.get(vAdj); }
+    public Edge<V,E> getEdge(V vAdj){
+        return outVerts.get(vAdj);
+    }
     
     public int numAdjVerts() { return outVerts.size();}
     
