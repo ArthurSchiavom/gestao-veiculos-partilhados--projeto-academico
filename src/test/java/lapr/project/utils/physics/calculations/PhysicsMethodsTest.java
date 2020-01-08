@@ -8,12 +8,11 @@ package lapr.project.utils.physics.calculations;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.point.of.interest.park.Capacity;
+import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
 import lapr.project.model.users.CreditCard;
-import lapr.project.model.vehicles.Bicycle;
-import lapr.project.model.vehicles.ElectricScooter;
-import lapr.project.model.vehicles.ElectricScooterType;
-import lapr.project.model.vehicles.Vehicle;
+import lapr.project.model.vehicles.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -314,5 +313,17 @@ public class PhysicsMethodsTest {
         paths.add(path1);
         result = PhysicsMethods.predictEnergySpent(client, paths, vehicle3);
         assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testTimeToFullyCharge() {
+        ElectricScooter scooter = new ElectricScooter(1,"PT001",1f,1f,10
+                ,true,ElectricScooterType.URBAN,75,1,200);
+        Capacity cap = new Capacity(30, 20, VehicleType.ELECTRIC_SCOOTER);
+        List<Capacity> cp = new ArrayList<>();
+        Park park = new Park("Trindade", 220, 16, cp, "Trindade", new Coordinates(0,0,0));
+        long expResult = 256;
+        long result = PhysicsMethods.timeToChargeInSeconds(scooter, park);
+        assertEquals(expResult, result);
     }
 }

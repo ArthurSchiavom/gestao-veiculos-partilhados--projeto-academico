@@ -9,6 +9,7 @@ import java.util.List;
 
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
+import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.ElectricScooter;
@@ -305,5 +306,19 @@ public class PhysicsMethods {
                     path.getEndingPoint().getCoordinates(), path.getWindDirectionDegrees());
         }
         return energySpent;
+    }
+
+    /**
+     * Calculates the time in seconds to achieve
+     *
+     * @param scooter the scooter we want to check for
+     * @param park    the park where we want to charge the scooter at
+     * @return the time to charge the bike to 100% in seconds
+     */
+    public static long timeToChargeInSeconds(ElectricScooter scooter, Park park) {
+        double timeToFullyCharge = scooter.getMaxBatteryCapacity() * 1000 / (park.getParkInputCurrent() * park.getParkInputVoltage());
+        double timeToChargeRn = PhysicsMethods.calculateActualBatteryWattHrs((double) scooter.getMaxBatteryCapacity()
+                , scooter.getActualBatteryCapacity()) / (park.getParkInputCurrent() * park.getParkInputVoltage());
+        return Math.round((timeToFullyCharge - timeToChargeRn) * 3600);
     }
 }

@@ -107,6 +107,13 @@ public class ParkAPI {
         }
     }
 
+    /**
+     * Retrieves park from the database by using it's identification
+     * @param id the id of the park
+     * @return (1) a park object
+     * (2) null if it couldn't find anything
+     * @throws SQLException if it can't find a sql
+     */
     public Park fetchParkById(String id) throws SQLException {
         Coordinates coord;
         double latitude;
