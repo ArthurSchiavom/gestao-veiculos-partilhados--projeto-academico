@@ -1,1 +1,0 @@
-vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;origin park elevation;destination park latitude;destination park longitude;destination park elevation;elevation difference;points

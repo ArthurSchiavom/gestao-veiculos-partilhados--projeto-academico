@@ -200,3 +200,5 @@ nbdist/
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,netbeans,intellij
 .idea/
+test.csv
+test.txt
