@@ -96,6 +96,9 @@ public class ShortestRouteBetweenParksController {
         PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees, originLongitudeInDegrees);
         PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees, destinationLongitudeInDegrees);
 
+        if(originPark == null || endPark == null){
+            return 0;
+        }
         return calculateExportsLoadFile(inputPOIs, originPark, endPark, outputFileName);
     }
 
@@ -251,7 +254,6 @@ public class ShortestRouteBetweenParksController {
         }
         List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
         long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(), originPark, endPark, pois, paths) * 1000); // km to meters
-        Utils.sort(paths);
 
         if (paths.isEmpty()) {
             return 0;
@@ -264,7 +266,9 @@ public class ShortestRouteBetweenParksController {
         Client dummyClient = new Client("1180852@isep.ipp.pt", "username", "password", 22, 180, 60, 'm', 22.3F,
                 true, new CreditCard("12341234123412"));
         //------------------------------------------------------------------------
-        Utils.writeToFile(Utils.getOutputPaths(paths, distance, originPark.getCoordinates().getAltitude() - endPark.getCoordinates().getAltitude(), dummyClient, dummyVehicle), outputFileName);
+        List<String> output = Utils.getOutputPaths(paths, distance, originPark.getCoordinates().getAltitude() - endPark.getCoordinates().getAltitude(), dummyClient, dummyVehicle);
+        Utils.sort(paths);
+        Utils.writeToFile(output, outputFileName);
         return distance;
     }
 }

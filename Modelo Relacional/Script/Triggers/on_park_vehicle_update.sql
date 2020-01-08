@@ -8,11 +8,17 @@ end;
 
 create or replace trigger on_park_vehicle_update before insert or delete on park_vehicle
 for each row
-declare 
+declare
     quantidade integer;
     emailUser trips.user_email%type;
+    v_available vehicles.available%type;
 begin 
     if inserting then
+        select available into v_available from parks where PARKS.PARK_ID = :new.park_id;
+        if v_available = 0 then
+            raise_application_error(-20248, 'Park is disabled or was removed');
+        end if;
+
         UPDATE park_capacity SET amount_occupied = amount_occupied + 1 WHERE park_id = :new.park_id and vehicle_type_name = get_vehicle_type(:new.vehicle_description);
         /* O caso de veículos não estarem associados a viagens não é verificado porque os veículos não têm necessáriamente de estar em uso. Pode ser a primeira vez
            que são adicionados ou serem coletados por funcionários após certos incidentes. */

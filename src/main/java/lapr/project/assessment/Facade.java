@@ -109,7 +109,7 @@ public class Facade implements Serviceable {
         try {
             return registerBicyclesController.registerBicycles(s);
         } catch (Exception e) {
-            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation:\n" + e.getMessage());
             return 0;
         } finally {
             Shutdown.shutdown();
@@ -121,7 +121,7 @@ public class Facade implements Serviceable {
         try {
             return registerElectricScootersController.registerElectricScooters(s);
         } catch (Exception e) {
-            LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
+            LOGGER.log(Level.INFO, "Failed to execute the operation:\n" + e.getMessage());
             return 0;
         }
     }
@@ -239,7 +239,7 @@ public class Facade implements Serviceable {
         try {
             electricScooters = visualizeVehiclesAtParkController.getVehiclesAtPark(s, ElectricScooter.class);
             result = electricScooters.size();
-            visualizeVehiclesAtParkController.writeOutputFileElectricScooter(electricScooters, s);
+            visualizeVehiclesAtParkController.writeOutputFileElectricScooter(electricScooters, s1);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
@@ -564,23 +564,26 @@ public class Facade implements Serviceable {
     @Override
     public double getUserCurrentPoints(String s, String s1) {
         Client client = null;
+        int totalPoints = 0;
         try {
             ParkAPI parkAPI = company.getParkAPI();
             UserAPI userAPI = company.getUserAPI();
             TripAPI tripAPI = company.getTripAPI();
             client = userAPI.fetchClientByUsername(s);
             List<Trip> trips = tripAPI.fetchAllClientTrips(client.getEmail());
-
             List<String> fileLines = new ArrayList<>();
             fileLines.add("vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;origin park elevation;" +
                     "destination park latitude;destination park longitude;destination park elevation;elevation difference;points");
             for (Trip trip : trips) {
+                if (trip.getEndTime() == null)
+                    continue;
                 Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
                 Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
                 Coordinates startParkCoordinates = startPark.getCoordinates();
                 Coordinates endParkCoordinates = endPark.getCoordinates();
                 long unlockTimeMilli = trip.getStartTime().getTime();
                 long lockTimeMilli = trip.getEndTime().getTime();
+                int pointGivenToUser = tripAPI.calculatePointsGivenToUser(trip);
                 fileLines.add(String.format("%s;%d;%d;%s;%s;%d;%s;%s;%d;%d;%d",
                         trip.getVehicleDescription(),
                         unlockTimeMilli,
@@ -592,10 +595,10 @@ public class Facade implements Serviceable {
                         formatInputCoordinate(endParkCoordinates.getLongitude()),
                         endParkCoordinates.getAltitude(),
                         endParkCoordinates.getAltitude() - startParkCoordinates.getAltitude(),
-                        tripAPI.calculatePointsGivenToUser(trip)
+                        pointGivenToUser
                 ));
+                totalPoints += pointGivenToUser;
             }
-
             Utils.writeToFile(fileLines, s1);
             if (client == null)
                 LOGGER.log(Level.INFO, "username " + s + " is not registered");
@@ -604,9 +607,8 @@ public class Facade implements Serviceable {
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Failed to write to file (user points)");
         }
-
         if (client != null)
-            return client.getPoints();
+            return totalPoints;
         else
             return -1;
     }
@@ -731,7 +733,7 @@ public class Facade implements Serviceable {
     @Override
     public double getInvoiceForMonth(int i, String s, String s1) {
         prepare();
-        double totalDebt = 0;
+        double totalCost = 0;
         try {
             ParkAPI parkAPI = company.getParkAPI();
             InvoiceAPI invoiceAPI = company.getInvoiceAPI();
@@ -744,7 +746,6 @@ public class Facade implements Serviceable {
             Invoice invoice = invoiceAPI.issueInvoice(i, client.getEmail());
             List<Trip> tripsInDebt = company.getTripAPI().fetchTripsForInvoice(invoice, true);
             Collections.sort(tripsInDebt, new compareTripsByUnlockTime());
-
             double valueToPay = BigDecimal.valueOf(invoice.getAmountLeftToPay()).setScale(2, RoundingMode.HALF_UP).doubleValue();
             List<String> fileLines = new ArrayList<>();
             fileLines.add(String.format("%s\n" +
@@ -769,6 +770,7 @@ public class Facade implements Serviceable {
                 long lockTimeMilli = trip.getEndTime().getTime();
                 int tripDuration = Math.toIntExact((lockTimeMilli - unlockTimeMilli) / 1000);
                 double tripCost = BigDecimal.valueOf(trip.calculateTripCost()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                totalCost += tripCost;
                 fileLines.add(String.format("%s;%d;%d;%s;%s;%s;%s;%d;%.2f",
                         trip.getVehicleDescription(),
                         unlockTimeMilli,
@@ -780,9 +782,9 @@ public class Facade implements Serviceable {
                         tripDuration,
                         tripCost));
             }
-
             Utils.writeToFile(fileLines, s1);
-            return valueToPay;
+            // Guarantees that even if data is forcefully inserted into the database, this method will return an accurate total amount to pay
+            return totalCost - Utils.pointsToEuros(invoice.calculatePointsToDiscount(invoice.getEarnedPoints() + invoice.getPreviousPoints()));
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.log(Level.INFO, "Failed to get invoice for month: " + e.getMessage());

@@ -13,7 +13,7 @@ public class LockVehicleController {
     }
 
     public void lockVehicle(String parkId, String vehicleDescription, boolean sendEmail) throws SQLException, MessagingException {
-        company.getTripAPI().lockVehicle(parkId, vehicleDescription, sendEmail);
+        company.getTripAPI().lockVehicle(parkId, vehicleDescription, sendEmail, true);
     }
 
     public void lockVehicle(double parkLatitude, double parkLongitude, String vehicleDescription, boolean sendEmail) throws SQLException, MessagingException {

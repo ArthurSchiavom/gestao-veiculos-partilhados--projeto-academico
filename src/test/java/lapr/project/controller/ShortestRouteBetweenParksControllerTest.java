@@ -504,7 +504,7 @@ class ShortestRouteBetweenParksControllerTest {
         }
     }
 
-    @Test
+    @TestShort
     void testShortestRouteBetweenTwoParksFetchByCoordinates1() {
         try {
             PreparedStatement stmFetchPOI = mock(PreparedStatement.class);
@@ -620,8 +620,8 @@ class ShortestRouteBetweenParksControllerTest {
 //        }
 
         try {
-            controller.shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(18.222, 20.12, 18.222, 22.12, "testFiles/uhm.txt", "outputWTF.txt");
-            fail();
+            long distance = controller.shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(18.222,20.12,18.222,22.12,"testFiles/uhm.txt","outputWTF.txt");
+            assertEquals(0,distance);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             if (e.getClass() != NullPointerException.class)

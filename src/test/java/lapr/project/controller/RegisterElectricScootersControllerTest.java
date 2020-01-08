@@ -123,12 +123,12 @@ public class RegisterElectricScootersControllerTest {
 
 
             // #1
-            verify(mockPS3).setDouble(1, -80.222);
-            verify(mockPS3).setDouble(2, 172.12);
+            verify(mockPS3).setDouble(1, 50);
+            verify(mockPS3).setDouble(2, 180);
 
             // #2
-            verify(mockPS3).setDouble(1, -20.222);
-            verify(mockPS3).setDouble(2, 122.12);
+            verify(mockPS3).setDouble(1, 90);
+            verify(mockPS3).setDouble(2, 150.56);
 
 
             // #all

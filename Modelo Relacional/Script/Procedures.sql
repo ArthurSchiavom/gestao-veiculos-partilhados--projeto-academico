@@ -24,36 +24,6 @@ begin
 end;
 /
 
-create or replace procedure register_electric_scooter(
-            p_weight vehicles.weight%type, 
-            p_aerodynamic_coefficient vehicles.aerodynamic_coefficient%type, 
-            p_frontal_area vehicles.frontal_area%type, 
-            p_electric_scooter_type_name electric_scooters.electric_scooter_type_name%type, 
-            p_description vehicles.DESCRIPTION%type,
-            p_max_battery_capacity electric_scooters.max_battery_capacity%type, 
-            p_actual_battery_capacity electric_scooters.actual_battery_capacity%type,
-			p_engine_power electric_scooters.engine_power%type,
-            p_park_lat parks.latitude%type,
-            p_park_lon parks.longitude%type
-        )
-is
-    v_vehicle_type_name vehicles.vehicle_type_name%type;
-    v_park_id park_vehicle.park_id%type;
-begin
-    v_vehicle_type_name := 'electric_scooter';
-    
-    INSERT INTO vehicles(description, vehicle_type_name, available, weight, aerodynamic_coefficient, frontal_area) 
-        VALUES (p_description, v_vehicle_type_name, 1, p_weight, p_aerodynamic_coefficient, p_frontal_area);
-
-    insert into electric_scooters(vehicle_description, electric_scooter_type_name, max_battery_capacity, actual_battery_capacity, engine_power) 
-        values(p_description, p_electric_scooter_type_name, p_max_battery_capacity, p_actual_battery_capacity, p_engine_power);
-    
-    select park_id into v_park_id from parks where parks.latitude = p_park_lat and parks.longitude = p_park_lon;
-    insert into park_vehicle(park_id, vehicle_description) VALUES(v_park_id, p_description);
-dbms_output.put_line('hello');
-end;
-/
-
 create or replace procedure register_park(
                     p_park_id parks.park_id%type,
                     p_latitude points_of_interest.latitude%type, 
