@@ -583,8 +583,11 @@ public class ParkAPI {
             double energyRequired = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, scooter), origPark, destPark, new LinkedList<>());
             //Converts from calories to watts per hour
             energyRequired = PhysicsMethods.convertJoulesToWattHr(energyRequired);
-            if(PhysicsMethods.calculateActualBatteryWattHrs((double) scooter.getMaxBatteryCapacity(), scooter.getActualBatteryCapacity()) *1.1>=energyRequired) {
+            double scooterBattery = PhysicsMethods.calculateActualBatteryWattHrs((double) scooter.getMaxBatteryCapacity(), scooter.getActualBatteryCapacity()) *1.1;
+            System.out.println(String.format("%.2f %.2f", scooterBattery, energyRequired));
+            if(scooterBattery>=energyRequired) {
                 filteredScooters.add(scooter);
+                System.out.println("My world is ending " + scooter.getDescription());
             }
         }
         return filteredScooters;

@@ -153,7 +153,7 @@ public class Coordinates {
      */
     public double getCoordinateX() {
         final int R = 6371; // Radius of the earth
-        return R * Math.cos(lat) * Math.cos(lon) * 1000;
+        return R * Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(lon)) * 1000;
     }
 
     /**
@@ -163,7 +163,7 @@ public class Coordinates {
      */
     public double getCoordinateY() {
         final int R = 6371; // Radius of the earth
-        return R * Math.cos(lat) * Math.sin(lon) * 1000;
+        return R * Math.cos(Math.toRadians(lat)) * Math.sin(Math.toRadians(lon)) * 1000;
     }
 
     /**
@@ -173,7 +173,7 @@ public class Coordinates {
      */
     public double getCoordinateZ() {
         final int R = 6371; // Radius of the earth
-        return R * Math.sin(lat) * 1000;
+        return R * Math.sin(Math.toRadians(lat)) * 1000;
     }
 
 }

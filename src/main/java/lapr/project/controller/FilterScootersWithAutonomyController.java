@@ -41,8 +41,14 @@ public class FilterScootersWithAutonomyController {
      * @return The number of suggested vehicles.
      */
     public int suggestScootersBetweenParks(String park, String username, double destLat, double destLon, String outputFile) throws SQLException, IOException {
-        List<ElectricScooter> filteredScooters = ParkAPI.filterScootersWithAutonomy(username, park, destLat, destLon);
+        final String FAIL_MESSAGE = "Couldn't find scooters to suggest between the two parks.";
         List<String> fileLines = new ArrayList<>();
+        List<ElectricScooter> filteredScooters = ParkAPI.filterScootersWithAutonomy(username, park, destLat, destLon);
+        if(filteredScooters.isEmpty()) {
+            fileLines.add(FAIL_MESSAGE);
+            Utils.writeToFile(fileLines, outputFile);
+            return 0;
+        }
         fileLines.add("escooter description;type;actual battery capacity");
         for(ElectricScooter scooter : filteredScooters) {
             fileLines.add(scooter.generateExportString());

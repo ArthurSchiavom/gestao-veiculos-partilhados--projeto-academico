@@ -140,9 +140,9 @@ public class PhysicsMethods {
      *
      * @param height           - height difference between the points
      * @param distanceTraveled - distance between the points
-     * @return the slop between the starting and ending point
+     * @return the slope between the starting and ending point
      */
-    public static Double calculateSlope(int height, double distanceTraveled) {
+    public static double calculateSlope(int height, double distanceTraveled) {
         double cateto = Math.sqrt(Math.pow(distanceTraveled, 2) - Math.pow(height, 2));
         double slope = height / cateto;
         return Math.round(slope * 100.0) / 100.0;
@@ -163,20 +163,18 @@ public class PhysicsMethods {
      * @param startPoint             - the starting point of the path that the rider is going
      * @param endPoint               - the ending point of the path that the rider is going
      * @param windAngle              - the angle made between the wind speed and the north pole
-     *                               <<<<<<< HEAD
      * @return the amount of energy in Joules burnt between two points
-     * >>>>>>> 557bde1ed67d5d9702ad27a4ae102c2af103eb62
      */
-    public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient, double aerodynamicCoefficient, double frontalArea, double distanceMade, int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
-
+    public static Double calculateEnergySpent(double velocity, double windSpeed, double kineticCoefficient
+            , double aerodynamicCoefficient, double frontalArea, double distanceMade
+            , int personMass, int vehicleMass, Coordinates startPoint, Coordinates endPoint, int windAngle) {
         double time = calculateTimeSpent(velocity, distanceMade);
         double totalMass = ((double) personMass) + vehicleMass;
         int heightDifference = endPoint.getAltitude() - startPoint.getAltitude();
         double slope = calculateSlope(heightDifference, distanceMade);
         double windAngleRad = convertDegreesToRadian(windAngle);
-        double angleWindSpeedRiderSpeed = calculateAngleWindSpeedRiderSpeed(startPoint.getCoordinateX(), startPoint.getCoordinateY(), endPoint.getCoordinateX(), endPoint.getCoordinateY(), windAngleRad, windSpeed);
-        double apparentWindSpeed = calculateApparentWindSpeed(angleWindSpeedRiderSpeed, velocity, windSpeed);
-        double cosineApparentWind = calculateCosApparentWindAngle(velocity, windSpeed, apparentWindSpeed, angleWindSpeedRiderSpeed);
+        double apparentWindSpeed = calculateApparentWindSpeed(windAngleRad, velocity, windSpeed);
+        double cosineApparentWind = calculateCosApparentWindAngle(velocity, windSpeed, apparentWindSpeed, windAngleRad);
 
         double powerRollingResistance = calculatePowerRollingResistance(velocity, totalMass, kineticCoefficient);
         double powerClimbing = calculateClimbingPower(velocity, totalMass, slope);
