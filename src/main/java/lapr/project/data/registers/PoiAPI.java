@@ -170,38 +170,4 @@ public class PoiAPI {
     public PointOfInterest newPointOfInterest(Double latitude, Double longitude, int altitude, String description) {
         return new PointOfInterest(description, new Coordinates(latitude, longitude, altitude));
     }
-
-    /**
-     * Fetches a Poi object from the oracle sql table
-     *
-     * @param originParkIdentification description
-     * @return the point of interest from the oracle sql table
-     */
-    public PointOfInterest fetchPoiByDescription(String originParkIdentification) {
-            PreparedStatement stm = null;
-            AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
-            try {
-                stm = dataHandler.prepareStatement("SELECT * FROM points_of_interest where POI_DESCRIPTION LIKE ?");
-                autoCloseableManager.addAutoCloseable(stm);
-                stm.setString(1,originParkIdentification);
-                ResultSet resultSet = dataHandler.executeQuery(stm);
-                autoCloseableManager.addAutoCloseable(resultSet);
-                if (!resultSet.next()) {
-                    return null;
-                }
-                double lat = resultSet.getDouble("latitude");
-                double lon = resultSet.getDouble("longitude");
-                int alt = resultSet.getInt("altitude_m");
-                String desc = resultSet.getString("poi_description");
-
-                Coordinates coordinates = new Coordinates(lat, lon, alt);
-                return new PointOfInterest(desc, coordinates);
-            } catch (SQLException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
-            } finally {
-                autoCloseableManager.closeAutoCloseables();
-            }
-            return null;
-        }
-
 }
