@@ -613,6 +613,7 @@ class ShortestRouteBetweenParksControllerTest {
                 if(scanner.hasNextLine() && scanner.nextLine().equals("Path 001")) {
                     if(scanner.hasNextLine() && scanner.nextLine().equals("total distance: 9345009")) {
                         if(scanner.hasNextLine()) {
+                            scanner.nextLine();
                             if(scanner.hasNextLine() && scanner.nextLine().equals("elevation: 0")) {
                                 if(scanner.hasNextLine() && scanner.nextLine().equals("10.0;20.0")) {
                                     if(scanner.hasNextLine() && scanner.nextLine().equals("30.0;40.0")) {
