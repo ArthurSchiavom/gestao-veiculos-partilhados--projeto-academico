@@ -84,7 +84,7 @@ public class PhysicsMethodsTest {
         double aerodynamicCoefficient = 1.10;
         double frontalArea = 0.3;
         double cosApparentWindAngle = 0.948;
-        Double expResult = 0.574844;
+        Double expResult = 0.5752;
 
         Double result = PhysicsMethods.calculatePowerAirDrag(velocity, windSpeed, aerodynamicCoefficient, frontalArea, cosApparentWindAngle);
         assertEquals(expResult, result, 0.001);
@@ -119,7 +119,6 @@ public class PhysicsMethodsTest {
         double distanceMade = 300.0;
         int personMass = 75;
         int vehicleMass = 20;
-//        Double expResult = 249194.42;//TODO: @Zé fix this test
         Double expResult = 249193.13;
         Double result = PhysicsMethods.calculateEnergySpent(velocity, windSpeed, kineticCoefficient, aerodynamicCoefficient, frontalArea, distanceMade, personMass, vehicleMass, new Coordinates(0.0, 0.0, 100), new Coordinates(1.0, 1.0, 300), 90);
         assertEquals(expResult, result, 0.01);
@@ -173,35 +172,14 @@ public class PhysicsMethodsTest {
     }
 
     /**
-     * Test of calculateAngleWindSpeedRiderSpeed method, of class
-     * PhysicsMethods.
-     */
-    @Test
-    public void testCalculateAngleWindSpeedRiderSpeed() {
-        double pathInitX = 0.0;
-        double pathInitY = 0.0;
-        double pathFinX = 1.0;
-        double pathFinY = 1.0;
-        double windAngleRad = 1.57;
-        double windSpeed = 1.0;
-        Double expResult = 1.14372;
-        Double result = PhysicsMethods.calculateAngleWindSpeedRiderSpeed(pathInitX, pathInitY, pathFinX, pathFinY, windAngleRad, windSpeed);
-        assertEquals(expResult, result, 0.001);
-
-        Double notExpResult = 50000.0;
-        assertNotEquals(notExpResult, result);
-
-    }
-
-    /**
      * Test of calculateApparentWindSpeed method, of class PhysicsMethods.
      */
     @Test
     public void testCalculateApparentWindSpeed() {
-        double windAngleRad = 1.14372;
+        double windAngleRad = 1.570796327;
         double riderSpeed = 3.0;
         double windSpeed = 1.0;
-        Double expResult = 3.533;
+        Double expResult = 3.1622;
         Double result = PhysicsMethods.calculateApparentWindSpeed(windAngleRad, riderSpeed, windSpeed);
         assertEquals(expResult, result, 0.001);
 
@@ -217,9 +195,9 @@ public class PhysicsMethodsTest {
     public void testCalculateCosApparentWindAngle() {
         double riderSpeed = 3.0;
         double windSpeed = 1.0;
-        double apparentWindSpeed = 3.533;
-        double windAngleRad = 1.14372;
-        Double expResult = 0.966;
+        double apparentWindSpeed = 3.1622;
+        double windAngleRad = 1.57;
+        Double expResult = 0.9487;
         Double result = PhysicsMethods.calculateCosApparentWindAngle(riderSpeed, windSpeed, apparentWindSpeed, windAngleRad);
         assertEquals(expResult, result, 0.01);
 

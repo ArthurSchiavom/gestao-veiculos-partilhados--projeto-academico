@@ -5,30 +5,16 @@
  */
 package lapr.project.controller;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 import lapr.project.data.DataHandler;
 import lapr.project.data.registers.Company;
-import lapr.project.mapgraph.MapGraphAlgorithms;
-import lapr.project.model.point.of.interest.park.Park;
-import lapr.project.model.users.Client;
-import lapr.project.model.users.CreditCard;
-import lapr.project.model.vehicles.Bicycle;
-import lapr.project.model.vehicles.Vehicle;
-import lapr.project.model.vehicles.VehicleType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
