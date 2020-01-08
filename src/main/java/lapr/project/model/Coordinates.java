@@ -105,7 +105,7 @@ public class Coordinates {
         if ((lat == other.getLatitude()) && (lon == other.getLongitude()) && (altitude == other.getAltitude())) {
             return 0;
         } else {
-            double height = (altitude - other.getAltitude()) / 1000;
+            double height = ((double) altitude - other.getAltitude()) / 1000;
 
             double distance = Math.pow(distanceIgnoringHeight(other), 2) + Math.pow(height, 2);
             return Math.sqrt(distance);

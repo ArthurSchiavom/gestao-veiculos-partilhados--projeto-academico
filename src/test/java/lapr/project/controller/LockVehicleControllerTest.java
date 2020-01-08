@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -57,13 +58,21 @@ public class LockVehicleControllerTest {
         CallableStatement callableStatement1 = mock(CallableStatement.class);
 
         try {
+            ResultSet resultSet = mock(ResultSet.class);
             when(dataHandler.prepareStatement(anyString())).thenReturn(preparedStatement1);
             when(dataHandler.executeUpdate(preparedStatement1)).thenReturn(1);
+
+            when(dataHandler.executeQuery(anyObject())).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true);
+            when(resultSet.getString(anyString())).thenReturn("true");
+            when(resultSet.getTimestamp(anyString())).thenReturn(new Timestamp(1000))
+                    .thenReturn(new Timestamp(120000));
+
 
             when(dataHandler.prepareCall(anyString())).thenReturn(callableStatement1);
             when(callableStatement1.getString(1)).thenReturn(userEmail);
 
-            controller.lockVehicle(parkId, vehicleDescription);
+            controller.lockVehicle(parkId, vehicleDescription, false);
 
             verify(dataHandler).prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
             verify(preparedStatement1).setString(1, parkId);
@@ -73,7 +82,7 @@ public class LockVehicleControllerTest {
             verify(callableStatement1).setString(2, vehicleDescription);
             verify(dataHandler).executeUpdate(callableStatement1);
 
-            verify(preparedStatement1).close();
+            verify(preparedStatement1, times(2)).close();
             verify(callableStatement1).close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,8 +105,12 @@ public class LockVehicleControllerTest {
         try {
             when(dataHandler.prepareStatement(anyString())).thenReturn(preparedStatement1);
             when(dataHandler.executeQuery(preparedStatement1)).thenReturn(resultSet1);
-            when(resultSet1.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+            when(resultSet1.next()).thenReturn(true).thenReturn(true).thenReturn(false).thenReturn(true);
             when(dataHandler.executeUpdate(preparedStatement1)).thenReturn(1);
+
+            when(resultSet1.getString(anyString())).thenReturn("true");
+            when(resultSet1.getTimestamp(anyString())).thenReturn(new Timestamp(0))
+                    .thenReturn(new Timestamp(120000));
 
             when(dataHandler.prepareCall(anyString())).thenReturn(callableStatement1);
             when(callableStatement1.getString(1)).thenReturn(userEmail);
@@ -111,14 +124,14 @@ public class LockVehicleControllerTest {
             when(resultSet1.getInt("park_capacity")).thenReturn(10);
             when(resultSet1.getInt("amount_occupied")).thenReturn(2);
 
-            controller.lockVehicle(latitude, longitude, vehicleDescription);
+            controller.lockVehicle(latitude, longitude, vehicleDescription, false);
             // Ignore TripAPI.lockVehicle verifies since it is verified in the other test
 
             verify(preparedStatement1).setDouble(1, latitude);
             verify(preparedStatement1).setDouble(2, longitude);
 
-            verify(preparedStatement1, times(3)).close();
-            verify(resultSet1, times(2)).close();
+            verify(preparedStatement1, times(4)).close();
+            verify(resultSet1, times(3)).close();
 
             verify(preparedStatement1, times(2)).setString(1, parkId);
         } catch (Exception e) {

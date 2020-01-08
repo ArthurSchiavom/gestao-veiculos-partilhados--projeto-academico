@@ -217,7 +217,7 @@ public class VehicleAPI {
 
             Company company = Company.getInstance();
             Park park = company.getParkAPI().fetchParkByCoordinates(parkLatitude, parkLongitude);
-            company.getTripAPI().lockVehicle(park.getId(), description);
+            company.getTripAPI().lockVehicle(park.getId(), description, false);
         } catch (SQLException e) {
             throw new SQLException("Failed to insert new electric scooter into the database.", e.getSQLState(), e.getErrorCode());
         } finally {

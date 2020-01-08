@@ -5,9 +5,10 @@ import lapr.project.data.DataHandler;
 import lapr.project.model.users.Client;
 import lapr.project.model.users.CreditCard;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -89,6 +90,30 @@ public class UserAPI {
         }
     }
 
+    /**
+     * Fetches a client from the database.
+     *
+     * @param email client's email
+     * @return (1) client object or (2) null if no such client
+     */
+    public Client fetchClientByEmail(String email) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        try {
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("select USER_NAME from REGISTERED_USERS where USER_EMAIL = ?");
+            preparedStatement.setString(1, email);
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            ResultSet resultSet = dataHandler.executeQuery(preparedStatement);
+            autoCloseableManager.addAutoCloseable(resultSet);
+            if (!resultSet.next())
+                return null;
+            return fetchClientByUsername(resultSet.getString(1));
+        } catch (SQLException e) {
+            throw new SQLException("Failed to fetch client from the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
+
     private void insertClient(String email, String username, int height, int weight, char gender, String creditCardNumber,  float cyclingAvgSpeed, String password) throws SQLException {
         //create statement to be executed later
         PreparedStatement stm = null;
@@ -142,6 +167,30 @@ public class UserAPI {
             PreparedStatement preparedStatement = dataHandler.prepareStatement("update clients set is_riding = ? where user_email = ?");
             autoCloseableManager.addAutoCloseable(preparedStatement);
             preparedStatement.setInt(1, isRidingInt);
+            preparedStatement.setString(2, client.getEmail());
+
+            return dataHandler.executeUpdate(preparedStatement);
+        } catch (SQLException e) {
+            if (client == null)
+                throw e;
+
+            throw new SQLException("Failed to access the database", e.getSQLState(), e.getErrorCode());
+        } finally {
+            autoCloseableManager.closeAutoCloseables();
+        }
+    }
+
+    int updateClientSubtractPointsNoCommit(String username, int pointsToSubtract) throws SQLException {
+        AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
+        Client client = null;
+        try {
+            client = fetchClientByUsername(username);
+            if (client == null)
+                throw new SQLException("No such client");
+
+            PreparedStatement preparedStatement = dataHandler.prepareStatement("update clients set POINTS = POINTS - ? where user_email = ?");
+            autoCloseableManager.addAutoCloseable(preparedStatement);
+            preparedStatement.setInt(1, pointsToSubtract);
             preparedStatement.setString(2, client.getEmail());
 
             return dataHandler.executeUpdate(preparedStatement);
