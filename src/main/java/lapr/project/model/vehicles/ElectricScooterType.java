@@ -4,12 +4,14 @@ package lapr.project.model.vehicles;
  * Represents the types of existent scooters
  */
 public enum ElectricScooterType {
-    URBAN("urban"),
-    OFFROAD("offroad");
+    URBAN("urban", "city"),
+    OFFROAD("offroad", "off-road");
 
     public final String SQLName;
-    ElectricScooterType(String SQLName) {
+    public final String fileName;
+    ElectricScooterType(String SQLName, String fileName) {
         this.SQLName = SQLName;
+        this.fileName = fileName;
     }
 
     public String getSQLName() {
@@ -22,5 +24,9 @@ public enum ElectricScooterType {
                 return value;
         }
         return null;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 }

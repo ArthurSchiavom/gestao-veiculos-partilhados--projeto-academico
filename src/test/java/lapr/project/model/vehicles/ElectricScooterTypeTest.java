@@ -27,4 +27,10 @@ public class ElectricScooterTypeTest {
         sqlName = "flying";
         assertNull(ElectricScooterType.parseScooterType(sqlName));
     }
+
+    @Test
+    void getFileNameTest() {
+        assertEquals("city", ElectricScooterType.URBAN.getFileName());
+        assertEquals("off-road", ElectricScooterType.OFFROAD.getFileName());
+    }
 }

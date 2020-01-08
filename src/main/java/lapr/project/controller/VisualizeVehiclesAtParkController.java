@@ -3,6 +3,8 @@ package lapr.project.controller;
 import lapr.project.data.registers.Company;
 import lapr.project.data.registers.ParkAPI;
 import lapr.project.model.VehicleDescriptionComparator;
+import lapr.project.model.vehicles.Bicycle;
+import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.Utils;
 
@@ -31,13 +33,23 @@ public class VisualizeVehiclesAtParkController {
         return getVehiclesAtPark(parkAPI.fetchParkByCoordinates(lat, lon).getId(), classType);
     }
 
-    public <T extends Vehicle> void writeOutputFile(List<T> vehicles, String filePath) throws IOException {
+    public void writeOutputFileBicycle(List<Bicycle> vehicles, String filePath) throws IOException {
         Collections.sort(vehicles, new VehicleDescriptionComparator());
-        List<String> fileContent = new ArrayList<>();
-        fileContent.add("bicycle description");
-        for (T vehicle : vehicles) {
-            fileContent.add(vehicle.getDescription());
+        List<String> fileLines = new ArrayList<>();
+        fileLines.add("bicycle description;wheel size");
+        for (Bicycle vehicle : vehicles) {
+            fileLines.add(String.format("%s;%d\"",vehicle.getDescription(), vehicle.getSize()));
         }
-        Utils.writeToFile(fileContent, filePath);
+        Utils.writeToFile(fileLines, filePath);
+    }
+
+    public void writeOutputFileElectricScooter(List<ElectricScooter> vehicles, String filePath) throws IOException {
+        Collections.sort(vehicles, new VehicleDescriptionComparator());
+        List<String> fileLines = new ArrayList<>();
+        fileLines.add("escooter description;type;actual battery capacity");
+        for (ElectricScooter vehicle : vehicles) {
+            fileLines.add(String.format("%s;%s;%d", vehicle.getDescription(), vehicle.getElectricScooterType().getFileName(), vehicle.getActualBatteryCapacity()));
+        }
+        Utils.writeToFile(fileLines, filePath);
     }
 }

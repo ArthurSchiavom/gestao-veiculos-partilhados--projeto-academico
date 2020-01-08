@@ -188,7 +188,7 @@ public class Facade implements Serviceable {
         try {
             bicycles = visualizeVehiclesAtParkController.getVehiclesAtPark(v, v1, Bicycle.class);
             result = bicycles.size();
-            visualizeVehiclesAtParkController.writeOutputFile(bicycles, s);
+            visualizeVehiclesAtParkController.writeOutputFileBicycle(bicycles, s);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
@@ -205,7 +205,7 @@ public class Facade implements Serviceable {
         try {
             bicycles = visualizeVehiclesAtParkController.getVehiclesAtPark(s, Bicycle.class);
             result = bicycles.size();
-            visualizeVehiclesAtParkController.writeOutputFile(bicycles, s);
+            visualizeVehiclesAtParkController.writeOutputFileBicycle(bicycles, s);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
@@ -222,7 +222,7 @@ public class Facade implements Serviceable {
         try {
             electricScooters = visualizeVehiclesAtParkController.getVehiclesAtPark(v, v1, ElectricScooter.class);
             result = electricScooters.size();
-            visualizeVehiclesAtParkController.writeOutputFile(electricScooters, s);
+            visualizeVehiclesAtParkController.writeOutputFileElectricScooter(electricScooters, s);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
@@ -239,7 +239,7 @@ public class Facade implements Serviceable {
         try {
             electricScooters = visualizeVehiclesAtParkController.getVehiclesAtPark(s, ElectricScooter.class);
             result = electricScooters.size();
-            visualizeVehiclesAtParkController.writeOutputFile(electricScooters, s);
+            visualizeVehiclesAtParkController.writeOutputFileElectricScooter(electricScooters, s);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to get number of vehicles at park");
             return -1;
