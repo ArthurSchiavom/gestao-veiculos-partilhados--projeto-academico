@@ -107,6 +107,13 @@ public class ParkAPI {
         }
     }
 
+    /**
+     * Retrieves park from the database by using it's identification
+     * @param id the id of the park
+     * @return (1) a park object
+     * (2) null if it couldn't find anything
+     * @throws SQLException if it can't find a sql
+     */
     public Park fetchParkById(String id) throws SQLException {
         Coordinates coord;
         double latitude;
@@ -542,18 +549,7 @@ public class ParkAPI {
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement ps = dataHandler.prepareStatement(
-                    "WITH parked_electric_scooters AS (\n" +
-                            "\tSELECT v.DESCRIPTION v_id\n" +
-                            "\tFROM vehicles v\n" +
-                            "\tINNER JOIN park_vehicle pv\n" +
-                            "\tON pv.VEHICLE_DESCRIPTION=v.DESCRIPTION AND pv.park_id=?\n" +
-                            "\tWHERE v.vehicle_type_name LIKE 'electric_scooter'\n" +
-                            ")\n" +
-                            "SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.engine_power\n" +
-                            "FROM electric_scooters es, parked_electric_scooters pes\n" +
-                            "WHERE pes.v_id=es.VEHICLE_DESCRIPTION\n" +
-                            "ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC\n" +
-                            "FETCH FIRST ROW ONLY;");
+                    "SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.engine_power FROM electric_scooters es, (SELECT v.DESCRIPTION v_id FROM vehicles v INNER JOIN park_vehicle pv ON pv.VEHICLE_DESCRIPTION=v.DESCRIPTION AND pv.park_id like ? WHERE v.vehicle_type_name LIKE 'electric_scooter') pes WHERE pes.v_id=es.VEHICLE_DESCRIPTION ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC");
             ps.setString(1, startingParkId);
             ResultSet rs = dataHandler.executeQuery(ps);
 

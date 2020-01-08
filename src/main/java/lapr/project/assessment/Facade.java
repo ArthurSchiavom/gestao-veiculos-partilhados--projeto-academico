@@ -47,6 +47,7 @@ public class Facade implements Serviceable {
     private final ShortestRouteBetweenParksController shortestRouteBetweenParksController;
     private final FilterScootersWithAutonomyController filterScootersWithAutonomyController;
     private final MostEnergyEfficientRouteController mostEnergyEfficientRouteController;
+    private final ParkChargingReportController parkChargingReportController;
 
     public Facade() {
         company = Company.getInstance();
@@ -65,6 +66,7 @@ public class Facade implements Serviceable {
         shortestRouteBetweenParksController = new ShortestRouteBetweenParksController(company);
         filterScootersWithAutonomyController = new FilterScootersWithAutonomyController();
         mostEnergyEfficientRouteController = new MostEnergyEfficientRouteController(company);
+        parkChargingReportController = new ParkChargingReportController();
     }
 
     /**
@@ -708,12 +710,22 @@ public class Facade implements Serviceable {
 
     @Override
     public long getParkChargingReport(String s, String s1) {
-        return 0;
+        try {
+            return parkChargingReportController.retrieveParkChargingReport(s,s1);
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+            return 0;
+        }
     }
 
     @Override
     public int suggestRoutesBetweenTwoLocations(String s, String s1, String s2, String s3, String s4, int i, boolean b, String s5, String s6, String s7) {
-        return 0;
+        try {
+            return mostEnergyEfficientRouteController.suggestRoutesBetweenTwoLocations(s,s1,s2,s3,s4,i,b,s5,s6,s7);
+        } catch (SQLException | IOException | InvalidFileDataException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override
