@@ -5,16 +5,19 @@
  */
 package lapr.project.model;
 
-import java.time.LocalDate;
-import java.util.*;
+import lapr.project.utils.Utils;
+
+import java.sql.Date;
+import java.util.Objects;
 
 /**
  * Class that represents an invoice
  */
 public class Invoice {
+    public static final int HOW_MANY_POINTS_IS_1_EURO = 10;
 
     private final String clientEmail;
-    private final LocalDate paymentStartDate;
+    private final Date paymentStartDate;
     private final double amountLeftToPay;
     private final double usageCost;
     private final double penalizationCost;
@@ -32,14 +35,14 @@ public class Invoice {
      * @param previousPoints
      * @param earnedPoints
      */
-    public Invoice(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, int previousPoints, int earnedPoints) {
+    public Invoice(String clientEmail, Date paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, int previousPoints, int earnedPoints) {
         this.previousPoints = previousPoints;
         this.earnedPoints = earnedPoints;
         if (paymentStartDate == null || clientEmail == null || clientEmail.isEmpty())
             throw new IllegalArgumentException("Null elements are not allowed");
         this.pointsUsed = pointsUsed;
         this.clientEmail = clientEmail;
-        this.paymentStartDate = paymentStartDate;
+        this.paymentStartDate = new Date(paymentStartDate.getTime());
         this.penalizationCost = penalizationCost;
         this.usageCost = usageCost;
         this.amountLeftToPay = amountLeftToPay;
@@ -67,8 +70,8 @@ public class Invoice {
      *
      * @return the payment start date
      */
-    public LocalDate getPaymentStartDate() {
-        return paymentStartDate;
+    public Date getPaymentStartDate() {
+        return new Date(paymentStartDate.getTime());
     }
 
     /**
@@ -111,6 +114,25 @@ public class Invoice {
         return pointsUsed;
     }
 
+    /**
+     * Calculates the number of points to discount on this invoice.
+     *
+     * @param maxPointsToUse the maximum number of points to discount
+     * @return the number of points to discount on this invoice. 0 if maxPointsToUse is negative
+     */
+    public int calculatePointsToDiscount(int maxPointsToUse) {
+        if (maxPointsToUse < 0)
+            return 0;
+        maxPointsToUse = (maxPointsToUse / 10) * 10;
+        double total = getTotalAmountToPay();
+        // The line below must be updated if the points get updated
+        int amountToPayInPoints = (Utils.eurosToPoints(total) / 10) * 10;
+        if (maxPointsToUse <= amountToPayInPoints)
+            return maxPointsToUse;
+        else
+            return amountToPayInPoints;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,4 +146,5 @@ public class Invoice {
     public int hashCode() {
         return Objects.hash(clientEmail, paymentStartDate);
     }
+
 }

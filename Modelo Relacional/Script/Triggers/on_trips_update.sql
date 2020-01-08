@@ -82,17 +82,19 @@ declare
     v_altitudeInicial points_of_interest.altitude_m%type;
     v_altitudeFinal points_of_interest.altitude_m%type;
     v_pontosAltitude number(4);
-    v_user_points clients.points%type;
+    v_points clients.points%type;
     v_diferencaDeAltitude int;
     v_invoice_payment_date invoices.payment_start_date%type;
     v_trip_duration_min int;
     v_usage_cost invoices.usage_cost%type;
 begin
-    if :new.end_time is not null then 
+    if :new.end_time is not null then
+        v_points := 0;
         -- adicionar 5 pontos ao utilizador caso a viagem tenha durado menos de 15min
         v_trip_duration_min := time_difference_minutes(:new.start_time, :new.end_time);
         if v_trip_duration_min < 15 then
             update clients set points = points + 5 where user_email = :new.user_email;
+            v_points := v_points + 5;
         end if;
         
         --Diferenca das altitudes
@@ -107,8 +109,9 @@ begin
             end if;
             
             update clients set points = points + v_pontosAltitude where user_email = :new.user_email;
+            v_points := v_points + v_pontosAltitude;
         end if;
-        
+
         -- If no invoice exists for this month, create a new one
         v_invoice_payment_date := get_latest_invoice_start_date(:new.user_email);
         
@@ -116,7 +119,7 @@ begin
         -- After the gratuitous period (1h), each following hour costs 1,5€.
         if v_trip_duration_min > 60 then
             v_usage_cost := calculateTripPrice(v_trip_duration_min);
-            update invoices set usage_cost = usage_cost + v_usage_cost, amount_left_to_pay = amount_left_to_pay + v_usage_cost where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
+            update invoices set usage_cost = usage_cost + v_usage_cost, amount_left_to_pay = amount_left_to_pay + v_usage_cost, earned_points = earned_points + v_points where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
         end if;
     end if;
 END;
@@ -127,4 +130,4 @@ begin
 end;
 /
 
-Update trips set end_park_id = 'park2', end_time = to_timestamp('06/01/2020-23:23', 'DD/MM/YYYY-HH24:MI') where user_email = 'a@a.a' and vehicle_description = 'PT003';
+Update trips set end_park_id = 'park2', end_time = to_timestamp('06/01/2020-23:23', 'DD/MM/YYYY-HH24:MI') where user_email = 'a@a.a' and vehicle_description = 'PT001';

@@ -14,7 +14,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestUtilsTest {
+public class UtilsTest {
 
     @Test
     void parseDataFileTest() {
@@ -216,4 +216,33 @@ public class TestUtilsTest {
         assertNotEquals(paths.get(0),pathCopy);
     }
 
+    @Test
+    void howManyTimesBfitsIntoAPositiveTest() {
+        assertEquals(5, Utils.howManyTimesBfitsIntoAPositive(5, 1));
+        assertEquals(11, Utils.howManyTimesBfitsIntoAPositive(57, 5));
+        assertEquals(0, Utils.howManyTimesBfitsIntoAPositive(5, 10));
+
+        try {
+            Utils.howManyTimesBfitsIntoAPositive(-5, 10);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //pass
+        }
+        try {
+            Utils.howManyTimesBfitsIntoAPositive(5, -10);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //pass
+        }
+    }
+
+    @Test
+    void pointsToEurosTest() {
+        assertEquals(10, Utils.pointsToEuros(100));
+    }
+
+    @Test
+    void eurosToPointsTest() {
+        assertEquals(100, Utils.eurosToPoints(10));
+    }
 }

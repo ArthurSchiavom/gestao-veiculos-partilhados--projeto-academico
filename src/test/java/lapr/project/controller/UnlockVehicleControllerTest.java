@@ -404,8 +404,8 @@ public class UnlockVehicleControllerTest {
             when(rsFetchAllPaths.next()).thenReturn(true).thenReturn(false);
             when(rsFetchAllPaths.getDouble("longitudeA")).thenReturn(-8.61180);
             when(rsFetchAllPaths.getDouble("latitudeA")).thenReturn(-41.140630);
-            when(rsFetchAllPaths.getDouble("latitudeB")).thenReturn(-8.689950);
-            when(rsFetchAllPaths.getDouble("longitudeB")).thenReturn(41.168750);
+            when(rsFetchAllPaths.getDouble("latitudeB")).thenReturn(-41.168750);
+            when(rsFetchAllPaths.getDouble("longitudeB")).thenReturn(-8.689950);
             when(rsFetchAllPaths.getDouble("kinetic_coefficient")).thenReturn(0.002);
             when(rsFetchAllPaths.getInt("wind_direction_degrees")).thenReturn(90);
             when(rsFetchAllPaths.getDouble("wind_speed")).thenReturn(15.6);

@@ -46,22 +46,18 @@ public class PointOfInterest {
     public Coordinates getCoordinates() {
         return this.coordinates;
     }
-    
-    
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (this == o) return true;
+        if (!(o instanceof PointOfInterest)) {
             return false;
         }
-        PointOfInterest poi = (PointOfInterest) o;
-        return description.equals(poi.description);
+        PointOfInterest that = (PointOfInterest) o;
+        return getDescription().equals(that.getDescription());
     }
-    
-        @Override
+
+    @Override
     public int hashCode() {
         return Objects.hashCode(description);
     }

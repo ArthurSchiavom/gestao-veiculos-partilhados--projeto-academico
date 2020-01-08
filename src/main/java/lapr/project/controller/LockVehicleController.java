@@ -12,12 +12,12 @@ public class LockVehicleController {
         this.company = company;
     }
 
-    public void lockVehicle(String parkId, String vehicleDescription) throws SQLException, MessagingException {
-        company.getTripAPI().lockVehicle(parkId, vehicleDescription);
+    public void lockVehicle(String parkId, String vehicleDescription, boolean sendEmail) throws SQLException, MessagingException {
+        company.getTripAPI().lockVehicle(parkId, vehicleDescription, sendEmail);
     }
 
-    public void lockVehicle(double parkLatitude, double parkLongitude, String vehicleDescription) throws SQLException, MessagingException {
+    public void lockVehicle(double parkLatitude, double parkLongitude, String vehicleDescription, boolean sendEmail) throws SQLException, MessagingException {
         String parkId = company.getParkAPI().fetchParkByCoordinates(parkLatitude, parkLongitude).getId();
-        lockVehicle(parkId, vehicleDescription);
+        lockVehicle(parkId, vehicleDescription, sendEmail);
     }
 }

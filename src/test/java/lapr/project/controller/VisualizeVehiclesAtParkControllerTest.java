@@ -200,11 +200,52 @@ public class VisualizeVehiclesAtParkControllerTest {
         verifyGetVehiclesWithParkCoordinates(parkId, vehicleDescription, lat, lon);
     }
 
+    @Test
+    void writeOutputFileElectricScooterTest() {
+        String filePath = "testFiles/temp/VisualizeVehiclesAtParkControllerTest.writeOutputFileTest.output";
+        String header = "escooter description;type;actual battery capacity";
+        String desc1 = "abc";
+        String desc2 = "aac";
+        String desc3 = "zyw";
+        String desc4 = "xxy";
+        List<ElectricScooter> scooters = new ArrayList<>();
+
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add(header);
+
+        try {
+            controller.writeOutputFileElectricScooter(scooters, filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+        verifyOutputFile(expectedResult, filePath);
+
+        scooters.add(new ElectricScooter(1, desc1, 2f, 2f, 2, true, ElectricScooterType.URBAN,
+                10, 10f, 10));
+        scooters.add(new ElectricScooter(1, desc2, 2f, 2f, 2, true, ElectricScooterType.OFFROAD,
+                10, 10f, 10));
+        scooters.add(new ElectricScooter(1, desc3, 2f, 2f, 2, true, ElectricScooterType.URBAN,
+                10, 10f, 10));
+        scooters.add(new ElectricScooter(1, desc4, 2f, 2f, 2, true, ElectricScooterType.URBAN,
+                15, 10f, 10));
+        expectedResult.add(desc2 + ";off-road;10");
+        expectedResult.add(desc1 + ";city;10");
+        expectedResult.add(desc4 + ";city;15");
+        expectedResult.add(desc3 + ";city;10");
+        try {
+            controller.writeOutputFileElectricScooter(scooters, filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+        verifyOutputFile(expectedResult, filePath);
+    }
 
     @Test
-    void writeOutputFileTest() {
+    void writeOutputFileBicycleTest() {
         String filePath = "testFiles/temp/VisualizeVehiclesAtParkControllerTest.writeOutputFileTest.output";
-        String header = "bicycle description";
+        String header = "bicycle description;wheel size";
         String desc1 = "abc";
         String desc2 = "aac";
         String desc3 = "zyw";
@@ -215,7 +256,7 @@ public class VisualizeVehiclesAtParkControllerTest {
         expectedResult.add(header);
 
         try {
-            controller.writeOutputFile(bicycles, filePath);
+            controller.writeOutputFileBicycle(bicycles, filePath);
         } catch (IOException e) {
             e.printStackTrace();
             fail();
@@ -226,12 +267,12 @@ public class VisualizeVehiclesAtParkControllerTest {
         bicycles.add(new Bicycle(1, desc2, 2f, 2f, 2, true, 10));
         bicycles.add(new Bicycle(1, desc3, 2f, 2f, 2, true, 10));
         bicycles.add(new Bicycle(1, desc4, 2f, 2f, 2, true, 10));
-        expectedResult.add(desc2);
-        expectedResult.add(desc1);
-        expectedResult.add(desc4);
-        expectedResult.add(desc3);
+        expectedResult.add(desc2 + ";10\"");
+        expectedResult.add(desc1 + ";10\"");
+        expectedResult.add(desc4 + ";10\"");
+        expectedResult.add(desc3 + ";10\"");
         try {
-            controller.writeOutputFile(bicycles, filePath);
+            controller.writeOutputFileBicycle(bicycles, filePath);
         } catch (IOException e) {
             e.printStackTrace();
             fail();

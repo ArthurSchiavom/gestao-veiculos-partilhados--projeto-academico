@@ -7,9 +7,15 @@ package lapr.project.model.point.of.interest;
 
 import lapr.project.model.Coordinates;
 import lapr.project.model.point.of.interest.PointOfInterest;
+import lapr.project.model.point.of.interest.park.Capacity;
+import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.vehicles.VehicleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.Null;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,7 +94,14 @@ public class PointOfInterestTest {
 
         Coordinates cor3 = new Coordinates(3,3,3);   
          PointOfInterest poi3 = new PointOfInterest("parque 3", cor3);
+
         assertNotEquals(poi3, poi2);
+
+        List<Capacity> capacities = new ArrayList<>();
+        capacities.add(new Capacity(15,2, VehicleType.ELECTRIC_SCOOTER));
+        Park park = new Park("Ribeira", 220f, 16f,capacities,"Ribeira",new Coordinates(0,0,0));
+        PointOfInterest poiPedro = new PointOfInterest("Ribeira", new Coordinates(0,0,0));
+        assertEquals(poiPedro, park);
     }
 
     /**
