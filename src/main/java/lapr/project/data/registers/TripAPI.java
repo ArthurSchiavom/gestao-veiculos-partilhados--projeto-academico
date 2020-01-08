@@ -288,12 +288,13 @@ public class TripAPI {
      *
      * @param parkId             id of the park where the vehicle is inserted
      * @param vehicleDescription vehicle0s description
+     * @param sendEmail if the application should email the user that was in a trip with that vehicle is appliable
      * @return (1) true if success, (2) if the vehicle and parkId can't be associated
      * @throws SQLException       if a database access error occurs
      * @throws MessagingException if there is an on-going trip with the vehicle and the system fails to email the user
      * @return true if the park-vehicle association was possible and false otherwise
      */
-    public boolean lockVehicle(String parkId, String vehicleDescription) throws SQLException, MessagingException {
+    public boolean lockVehicle(String parkId, String vehicleDescription, boolean sendEmail) throws SQLException, MessagingException {
         AutoCloseableManager closeableManager = new AutoCloseableManager();
 
         String clientEmail = fetchUserEmailRiding(vehicleDescription);
@@ -314,7 +315,7 @@ public class TripAPI {
 
             dataHandler.commitTransaction();
 
-            if (clientEmail != null) {
+            if (sendEmail && clientEmail != null) {
                 long duration = trip.getTripDurationMillis() / 60000;
                 Emailer.sendEmailCurrentThread(clientEmail, "Trip end", "Your vehicle was successfully locked! Trip duration: " + duration + " min");
             }

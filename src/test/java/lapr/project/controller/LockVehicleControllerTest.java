@@ -72,7 +72,7 @@ public class LockVehicleControllerTest {
             when(dataHandler.prepareCall(anyString())).thenReturn(callableStatement1);
             when(callableStatement1.getString(1)).thenReturn(userEmail);
 
-            controller.lockVehicle(parkId, vehicleDescription);
+            controller.lockVehicle(parkId, vehicleDescription, false);
 
             verify(dataHandler).prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
             verify(preparedStatement1).setString(1, parkId);
@@ -124,7 +124,7 @@ public class LockVehicleControllerTest {
             when(resultSet1.getInt("park_capacity")).thenReturn(10);
             when(resultSet1.getInt("amount_occupied")).thenReturn(2);
 
-            controller.lockVehicle(latitude, longitude, vehicleDescription);
+            controller.lockVehicle(latitude, longitude, vehicleDescription, false);
             // Ignore TripAPI.lockVehicle verifies since it is verified in the other test
 
             verify(preparedStatement1).setDouble(1, latitude);

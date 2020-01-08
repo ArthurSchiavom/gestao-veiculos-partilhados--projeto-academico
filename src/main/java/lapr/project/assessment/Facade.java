@@ -354,7 +354,7 @@ public class Facade implements Serviceable {
     public long lockBicycle(String s, double v, double v1, String s1) {
         prepare();
         try {
-            lockVehicleController.lockVehicle(v, v1, s);
+            lockVehicleController.lockVehicle(v, v1, s, true);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to lock bicycle: " + e.getMessage());
         } catch (Exception e) {
@@ -367,7 +367,7 @@ public class Facade implements Serviceable {
     public long lockBicycle(String s, String s1, String s2) {
         prepare();
         try {
-            lockVehicleController.lockVehicle(s1, s);
+            lockVehicleController.lockVehicle(s1, s, true);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to email the client: " + e.getMessage());
         }
@@ -378,7 +378,7 @@ public class Facade implements Serviceable {
     public long lockEscooter(String s, double v, double v1, String s1) {
         prepare();
         try {
-            lockVehicleController.lockVehicle(v, v1, s);
+            lockVehicleController.lockVehicle(v, v1, s, true);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to lock EScooter: " + e.getMessage());
         } catch (Exception e) {
@@ -391,7 +391,7 @@ public class Facade implements Serviceable {
     public long lockEscooter(String s, String s1, String s2) {
         prepare();
         try {
-            lockVehicleController.lockVehicle(s1, s);
+            lockVehicleController.lockVehicle(s1, s, true);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to lock EScooter: " + e.getMessage());
         } catch (Exception e) {
