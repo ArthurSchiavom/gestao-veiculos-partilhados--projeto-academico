@@ -504,7 +504,7 @@ class ShortestRouteBetweenParksControllerTest {
         }
     }
 
-    @TestShort
+    @Test
     void testShortestRouteBetweenTwoParksFetchByCoordinates1() {
         try {
             PreparedStatement stmFetchPOI = mock(PreparedStatement.class);
