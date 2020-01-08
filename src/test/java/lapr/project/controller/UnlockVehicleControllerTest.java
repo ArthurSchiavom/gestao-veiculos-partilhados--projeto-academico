@@ -138,18 +138,7 @@ public class UnlockVehicleControllerTest {
         ResultSet rs1 = mock(ResultSet.class);
         try {
             when(dataHandler.prepareStatement(
-                    "WITH parked_electric_scooters AS (\n" +
-                            "\tSELECT v.DESCRIPTION v_id\n" +
-                            "\tFROM vehicles v\n" +
-                            "\tINNER JOIN park_vehicle pv\n" +
-                            "\tON pv.VEHICLE_DESCRIPTION=v.DESCRIPTION AND pv.park_id=?\n" +
-                            "\tWHERE v.vehicle_type_name LIKE 'electric_scooter'\n" +
-                            ")\n" +
-                            "SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.engine_power\n" +
-                            "FROM electric_scooters es, parked_electric_scooters pes\n" +
-                            "WHERE pes.v_id=es.VEHICLE_DESCRIPTION\n" +
-                            "ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC\n" +
-                            "FETCH FIRST ROW ONLY;")).thenReturn(stm1);
+                    "SELECT es.VEHICLE_DESCRIPTION, es.electric_scooter_type_name, es.actual_battery_capacity, es.max_battery_capacity, es.engine_power FROM electric_scooters es, (SELECT v.DESCRIPTION v_id FROM vehicles v INNER JOIN park_vehicle pv ON pv.VEHICLE_DESCRIPTION=v.DESCRIPTION AND pv.park_id like ? WHERE v.vehicle_type_name LIKE 'electric_scooter') pes WHERE pes.v_id=es.VEHICLE_DESCRIPTION ORDER BY es.actual_battery_capacity*es.max_battery_capacity DESC")).thenReturn(stm1);
             when(dataHandler.executeQuery(stm1)).thenReturn(rs1);
             //Important to add these when making more tests
             when(rs1.next()).thenReturn(false).thenReturn(true).thenReturn(true);

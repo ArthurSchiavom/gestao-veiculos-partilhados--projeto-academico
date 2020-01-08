@@ -7,34 +7,36 @@ package lapr.project.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import lapr.project.data.registers.Company;
 import lapr.project.data.registers.TripAPI;
-import lapr.project.mapgraph.MapGraphAlgorithms;
-import lapr.project.model.point.of.interest.PointOfInterest;
-import lapr.project.model.point.of.interest.park.Park;
-import lapr.project.model.users.Client;
-import lapr.project.model.vehicles.Bicycle;
-import lapr.project.model.vehicles.Vehicle;
-import lapr.project.utils.InvalidFileDataException;
-import lapr.project.utils.Utils;
-import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 /**
- *
+ * Class that allows to interact with the calories burnt calculation method
  * 
  */
 public class CaloriesBurntBetweenTwoParksController {
        private final Company company;
        
-       
+       /**
+        * Instantiates the controller
+        * @param company 
+        */
        public CaloriesBurntBetweenTwoParksController(Company company) {
             this.company = company;
        }
        
-       
+       /**
+        * Predicts the calories burnt between two paths, considering the less energetical path
+        * @param username - the username of the client
+        * @param vehicleDescription - the description of the vehicle that will be used
+        * @param latA -  latitude of the starting point
+        * @param lonA - longitude of the starting point
+        * @param latB - latitude of the ending point
+        * @param lonB - longitude of the ending point
+        * @return
+        * @throws SQLException
+        * @throws IOException 
+        */
        public double predictCaloriesBurnt(String username, String vehicleDescription, double latA, double lonA, double latB, double lonB) throws SQLException, IOException {
 
 

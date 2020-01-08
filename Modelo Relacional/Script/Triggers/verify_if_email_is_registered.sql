@@ -1,29 +1,15 @@
+
 --Check if the email that is being inserted in the table is registered
 
 create or replace trigger verify_if_email_is_registered before insert or update
-of email
 on pending_registrations
 for each row
 declare
-    verification boolean;
-    registeredEmail registered_users.user_email%type;
-    cursor registered_Emails is
-         Select user_email 
-         from registered_users;    
+    v_count int;   
 begin
-    verification:=false;
-    open registered_Emails;
-    loop
-        fetch registered_Emails into registeredEmail;        
-        exit when registered_Emails%notfound;
-        if ltrim(:new.email)=ltrim(registeredEmail) then
-            verification:=true;
-        end if;
-    end loop;
-    close registered_Emails;
-    
-    if (not verification) then
-         Raise_application_error(-20310, 'Unregistered Email');
+    select count(*) into v_count from clients where user_email like :new.email;
+    if v_count = 1 then
+        RAISE_APPLICATION_ERROR(-20185, 'Email already exists.');
     end if;
 end;
 /

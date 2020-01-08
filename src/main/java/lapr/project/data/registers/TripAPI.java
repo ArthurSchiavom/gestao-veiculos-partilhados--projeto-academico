@@ -12,6 +12,8 @@ import lapr.project.model.users.Client;
 import lapr.project.model.users.User;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.utils.UnregisteredDataException;
+import lapr.project.utils.Utils;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import javax.mail.MessagingException;
 import java.sql.*;
@@ -470,6 +472,17 @@ public class TripAPI {
         }
     }
 
+    /**
+     * Calculates the amount of calories burnt between two parks
+     * @param username
+     * @param vehicleDescription
+     * @param latA
+     * @param lonA
+     * @param latB
+     * @param lonB
+     * @return
+     * @throws SQLException 
+     */
     public static double predictCalories(String username, String vehicleDescription, double latA, double lonA, double latB, double lonB) throws SQLException {
             Client client = Company.getInstance().getUserAPI().fetchClientByUsername(username);
             Bicycle bicycle = (Bicycle) Company.getInstance().getVehicleAPI().fetchVehicle(vehicleDescription);
@@ -478,8 +491,7 @@ public class TripAPI {
 
         LinkedList<PointOfInterest> prevision = new LinkedList<>();
         double energySpent = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, bicycle), poiA, poiB, prevision);
-
-        return energySpent;
+        return PhysicsMethods.convertJouleToCal(energySpent);
     }
 
     public List<Trip> fetchTripsForInvoice(Invoice invoice, boolean onlyUnpaid) throws SQLException {
