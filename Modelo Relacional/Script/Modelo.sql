@@ -122,7 +122,7 @@ CREATE TABLE invoices (
   penalisation_cost  number(9, 2) DEFAULT 0 CONSTRAINT nn_invoices_penalisation_cost NOT NULL,
   points_used        number(6), -- set no final
   previous_points    number(6)    constraint nn_invoices_previous_points NOT NULL,
-  earned_points      number(6), -- set no final
+  earned_points      number(6) DEFAULT 0 CONSTRAINT nn_invoices_earned_points NOT NULL, 
   CONSTRAINT pk_invoices_user_email_payment_start_date PRIMARY KEY (user_email, payment_start_date) 
 );
 

@@ -3,11 +3,9 @@ package lapr.project.assessment;
 import lapr.project.controller.*;
 import lapr.project.data.Bootstrap;
 import lapr.project.data.Shutdown;
-import lapr.project.data.registers.Company;
-import lapr.project.data.registers.ParkAPI;
-import lapr.project.data.registers.TripAPI;
-import lapr.project.data.registers.UserAPI;
+import lapr.project.data.registers.*;
 import lapr.project.model.Coordinates;
+import lapr.project.model.Invoice;
 import lapr.project.model.Trip;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
@@ -102,7 +100,7 @@ public class Facade implements Serviceable {
 
     private String formatInputCoordinate(double coordinate) {
         //BigDecimal.valueOf(coordinate).setScale(10, RoundingMode.FLOOR).stripTrailingZeros().toPlainString() - old method
-        return String.format(".6f", coordinate);
+        return String.format("%.6f", coordinate);
     }
 
     @Override
@@ -488,7 +486,7 @@ public class Facade implements Serviceable {
         double totalDebt = 0;
         try {
             ParkAPI parkAPI = company.getParkAPI();
-            List<Trip> tripsInDebt = company.getTripAPI().fetchUserTripsLastInvoice(s);
+            List<Trip> tripsInDebt = company.getTripAPI().fetchUserTripsLastInvoice(s, true);
             Collections.sort(tripsInDebt, new compareTripsByUnlockTime());
 
             List<String> fileLines = new ArrayList<>();
@@ -497,7 +495,7 @@ public class Facade implements Serviceable {
                 Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
                 Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
                 Coordinates startParkCoordinates = startPark.getCoordinates();
-                Coordinates endParkCoordinates = startPark.getCoordinates();
+                Coordinates endParkCoordinates = endPark.getCoordinates();
                 long unlockTimeMilli = trip.getStartTime().getTime();
                 long lockTimeMilli = trip.getEndTime().getTime();
                 int tripDuration = Math.toIntExact((lockTimeMilli - unlockTimeMilli) / 1000);
@@ -538,7 +536,7 @@ public class Facade implements Serviceable {
                 Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
                 Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
                 Coordinates startParkCoordinates = startPark.getCoordinates();
-                Coordinates endParkCoordinates = startPark.getCoordinates();
+                Coordinates endParkCoordinates = endPark.getCoordinates();
                 long unlockTimeMilli = trip.getStartTime().getTime();
                 long lockTimeMilli = trip.getEndTime().getTime();
                 int tripDuration = Math.toIntExact((lockTimeMilli - unlockTimeMilli) / 1000);
@@ -581,7 +579,7 @@ public class Facade implements Serviceable {
                 Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
                 Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
                 Coordinates startParkCoordinates = startPark.getCoordinates();
-                Coordinates endParkCoordinates = startPark.getCoordinates();
+                Coordinates endParkCoordinates = endPark.getCoordinates();
                 long unlockTimeMilli = trip.getStartTime().getTime();
                 long lockTimeMilli = trip.getEndTime().getTime();
                 fileLines.add(String.format("%s;%d;%d;%s;%s;%d;%s;%s;%d;%d;%d",
@@ -720,6 +718,65 @@ public class Facade implements Serviceable {
 
     @Override
     public double getInvoiceForMonth(int i, String s, String s1) {
-        return 0;
+        prepare();
+        double totalDebt = 0;
+        try {
+            ParkAPI parkAPI = company.getParkAPI();
+            InvoiceAPI invoiceAPI = company.getInvoiceAPI();
+            UserAPI userAPI = company.getUserAPI();
+            Client client = userAPI.fetchClientByUsername(s);
+            if (client == null) {
+                LOGGER.log(Level.WARNING, "Client " + s + " does not exist");
+                return 0;
+            }
+            Invoice invoice = invoiceAPI.issueInvoice(i, client.getEmail());
+            List<Trip> tripsInDebt = company.getTripAPI().fetchTripsForInvoice(invoice, true);
+            Collections.sort(tripsInDebt, new compareTripsByUnlockTime());
+
+            double valueToPay = BigDecimal.valueOf(invoice.getAmountLeftToPay()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            List<String> fileLines = new ArrayList<>();
+            fileLines.add(String.format("%s\n" +
+                            "Previous points:%d\n" +
+                            "Earned points:%d\n" +
+                            "Discounted points:%d\n" +
+                            "Actual points:%d\n" +
+                            "Charged Value:%.2f",
+                    s,
+                    invoice.getPreviousPoints(),
+                    invoice.getEarnedPoints(),
+                    invoice.getPointsUsed(),
+                    invoice.getPreviousPoints() + invoice.getEarnedPoints() - invoice.getPointsUsed(),
+                    valueToPay));
+            fileLines.add("vehicle description;vehicle unlock time;vehicle lock time;origin park latitude;origin park longitude;destination park latitude;destination park longitude;total time spent in seconds;charged value");
+            for (Trip trip : tripsInDebt) {
+                Park startPark = parkAPI.fetchParkById(trip.getStartParkId());
+                Park endPark = parkAPI.fetchParkById(trip.getEndParkId());
+                Coordinates startParkCoordinates = startPark.getCoordinates();
+                Coordinates endParkCoordinates = endPark.getCoordinates();
+                long unlockTimeMilli = trip.getStartTime().getTime();
+                long lockTimeMilli = trip.getEndTime().getTime();
+                int tripDuration = Math.toIntExact((lockTimeMilli - unlockTimeMilli) / 1000);
+                double tripCost = BigDecimal.valueOf(trip.calculateTripCost()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                fileLines.add(String.format("%s;%d;%d;%s;%s;%s;%s;%d;%.2f",
+                        trip.getVehicleDescription(),
+                        unlockTimeMilli,
+                        lockTimeMilli,
+                        formatInputCoordinate(startParkCoordinates.getLatitude()),
+                        formatInputCoordinate(startParkCoordinates.getLongitude()),
+                        formatInputCoordinate(endParkCoordinates.getLatitude()),
+                        formatInputCoordinate(endParkCoordinates.getLongitude()),
+                        tripDuration,
+                        tripCost));
+            }
+
+            Utils.writeToFile(fileLines, s1);
+            return valueToPay;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.log(Level.INFO, "Failed to get invoice for month: " + e.getMessage());
+            return 0;
+        } finally {
+            Shutdown.shutdown();
+        }
     }
 }

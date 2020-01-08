@@ -118,9 +118,9 @@ class CoordinatesTest {
         assertEquals(expResult, coords1.distance(coords2), 0.01);
 
         coords1 = new Coordinates(0.0, 0.0, 100);
-        coords2 = new Coordinates(0.0, 0.0001, 300);
-        expResult = 0.01;
-        assertEquals(expResult, coords1.distance(coords2), 0.01);
+        coords2 = new Coordinates(0.0, 0.0001, 150);
+        expResult = 0.0512;
+        assertEquals(expResult, coords1.distance(coords2), 0.0001);
 
     }
 

@@ -4,6 +4,7 @@ import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.SortByHeightDescending;
 import lapr.project.data.registers.Company;
 import lapr.project.mapgraph.MapGraphAlgorithms;
+import lapr.project.model.Invoice;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.users.Client;
@@ -174,5 +175,26 @@ public class Utils {
             previous = poi;
         }
         return Math.round(distance*1000); //km to meters
+    }
+
+    public static int howManyTimesBfitsIntoAPositive(double a, double b) {
+        if (a < 0 || b < 0)
+            throw new IllegalArgumentException("no value can be negative");
+        return howManyTimesBfitsIntoAPositive(a-b, b, 0);
+    }
+
+    private static int howManyTimesBfitsIntoAPositive(double a, double b, int count) {
+        if (a < 0)
+            return count;
+        count++;
+        return howManyTimesBfitsIntoAPositive(a-b, b, count);
+    }
+
+    public static int pointsToEuros(int points) {
+        return points / Invoice.HOW_MANY_POINTS_IS_1_EURO;
+    }
+
+    public static int eurosToPoints(double euros) {
+        return (int) euros * Invoice.HOW_MANY_POINTS_IS_1_EURO;
     }
 }

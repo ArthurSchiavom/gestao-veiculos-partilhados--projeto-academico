@@ -2,13 +2,14 @@ package lapr.project.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InvoiceTest {
 
-    private static final LocalDate LOCAL_DATE = LocalDate.now();
+    private static final Date LOCAL_DATE = new Date(123);
     private static final String EMAIL = "email@";
     private static final double AMOUNT_LEFT_TO_PAY = 15;
     private static final double USAGE_COST = 25;
@@ -23,7 +24,7 @@ class InvoiceTest {
         testConstructorExceptionCase(EMAIL, null, AMOUNT_LEFT_TO_PAY, USAGE_COST, PENALIZATION_COST, POINTS_USED, 10, 10, IllegalArgumentException.class);
     }
 
-    private <T extends Exception> void testConstructorExceptionCase(String clientEmail, LocalDate paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, int previousPoints, int earnedPoints, Class<T> exceptionClass) {
+    private <T extends Exception> void testConstructorExceptionCase(String clientEmail, Date paymentStartDate, double amountLeftToPay, double usageCost, double penalizationCost, int pointsUsed, int previousPoints, int earnedPoints, Class<T> exceptionClass) {
         try {
             new Invoice(clientEmail, paymentStartDate, amountLeftToPay, usageCost, penalizationCost, pointsUsed, 10, 10);
             fail();
@@ -48,22 +49,22 @@ class InvoiceTest {
 
     @Test
     void testEquals() {
-        LocalDate now1 = LocalDate.now();
-        LocalDate now2 = LocalDate.now();
-        LocalDate yesterday = now1.minusDays(1);
-        Object inv1 = new Invoice("a", now1, 10, 10, 10, 10, 10, 10);
+        Date date1 = new Date(1);
+        Date date2 = new Date(1);
+        Date dateDif = new Date(2);
+        Object inv1 = new Invoice("a", date1, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1, inv1);
 
-        Invoice inv2 = new Invoice("a", now2, 10, 10, 10, 10, 10, 10);
+        Invoice inv2 = new Invoice("a", date2, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1, inv2);
 
-        inv2 = new Invoice("a", now2, 15, 15, 15, 15, 10, 10);
+        inv2 = new Invoice("a", date2, 15, 15, 15, 15, 10, 10);
         assertEquals(inv1, inv2);
 
-        inv2 = new Invoice("b", now2, 10, 10, 10, 10, 10, 10);
+        inv2 = new Invoice("b", date2, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1, inv2);
 
-        inv2 = new Invoice("a", yesterday, 10, 10, 10, 10, 10, 10);
+        inv2 = new Invoice("a", dateDif, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1, inv2);
 
         inv2 = null;
@@ -74,22 +75,32 @@ class InvoiceTest {
 
     @Test
     void testHashCode() {
-        LocalDate now1 = LocalDate.now();
-        LocalDate now2 = LocalDate.now();
-        LocalDate yesterday = now1.minusDays(1);
-        Object inv1 = new Invoice("a", now1, 10, 10, 10, 10, 10, 10);
+        Date date1 = new Date(1);
+        Date date2 = new Date(1);
+        Date dateDif = new Date(2);
+        Object inv1 = new Invoice("a", date1, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1.hashCode(), inv1.hashCode());
 
-        Invoice inv2 = new Invoice("a", now2, 10, 10, 10, 10, 10, 10);
+        Invoice inv2 = new Invoice("a", date2, 10, 10, 10, 10, 10, 10);
         assertEquals(inv1.hashCode(), inv2.hashCode());
 
-        inv2 = new Invoice("a", now2, 15, 15, 15, 15, 10, 10);
+        inv2 = new Invoice("a", date2, 15, 15, 15, 15, 10, 10);
         assertEquals(inv1.hashCode(), inv2.hashCode());
 
-        inv2 = new Invoice("b", now2, 10, 10, 10, 10, 10, 10);
+        inv2 = new Invoice("b", date2, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1.hashCode(), inv2.hashCode());
 
-        inv2 = new Invoice("a", yesterday, 10, 10, 10, 10, 10, 10);
+        inv2 = new Invoice("a", dateDif, 10, 10, 10, 10, 10, 10);
         assertNotEquals(inv1.hashCode(), inv2.hashCode());
+    }
+
+    @Test
+    void calculatePointsToDiscountTest() {
+        Invoice inv1 = new Invoice("a", new Date(1), 10, 10, 10,
+                10, 10, 10);
+        assertEquals(200, inv1.calculatePointsToDiscount(200));
+        assertEquals(200, inv1.calculatePointsToDiscount(500));
+        assertEquals(100, inv1.calculatePointsToDiscount(100));
+        assertEquals(100, inv1.calculatePointsToDiscount(109));
     }
 }
