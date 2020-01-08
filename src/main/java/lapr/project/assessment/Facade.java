@@ -33,22 +33,22 @@ import java.util.logging.Logger;
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
 
-    private Company company;
-    private RegisterBicyclesController registerBicyclesController;
-    private RegisterElectricScootersController registerElectricScootersController;
-    private RegisterParksController registerParksController;
-    private RegisterUserController registerUserController;
-    private RegisterPOIController registerPOIController;
-    private RemoveParkController removeParkController;
-    private VisualizeFreeSlotsAtParkController visualizeFreeSlotsAtParkController;
-    private RegisterPathController registerPathController;
-    private VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
-    private FindParksNearbyController findParksNearbyController;
-    private UnlockVehicleController unlockVehicleController;
-    private LockVehicleController lockVehicleController;
-    private ShortestRouteBetweenParksController shortestRouteBetweenParksController;
-    private FilterScootersWithAutonomyController filterScootersWithAutonomyController;
-    private MostEnergyEfficientRouteController mostEnergyEfficientRouteController;
+    private final Company company;
+    private final RegisterBicyclesController registerBicyclesController;
+    private final RegisterElectricScootersController registerElectricScootersController;
+    private final RegisterParksController registerParksController;
+    private final RegisterUserController registerUserController;
+    private final RegisterPOIController registerPOIController;
+    private final RemoveParkController removeParkController;
+    private final VisualizeFreeSlotsAtParkController visualizeFreeSlotsAtParkController;
+    private final RegisterPathController registerPathController;
+    private final VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
+    private final FindParksNearbyController findParksNearbyController;
+    private final UnlockVehicleController unlockVehicleController;
+    private final LockVehicleController lockVehicleController;
+    private final ShortestRouteBetweenParksController shortestRouteBetweenParksController;
+    private final FilterScootersWithAutonomyController filterScootersWithAutonomyController;
+    private final MostEnergyEfficientRouteController mostEnergyEfficientRouteController;
 
     public Facade() {
         company = Company.getInstance();
@@ -415,15 +415,14 @@ public class Facade implements Serviceable {
      */
     @Override
     public int registerUser(String username, String email, String password, String visaCardNumber, int height, int weight, BigDecimal averageCyclingSpeed, String gender) {
-        return 0;
-//        prepare();
-////        try {
-////            registerUserController.registerClient(s, s1, s2, s3, i, i1, s4, 10f);
-////            return 1;
-////        } catch (SQLException e) {
-////            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
-////            return 0;
-////        }
+        prepare();
+        try {
+            registerUserController.registerClient(username, email, password, visaCardNumber, height, weight, gender, averageCyclingSpeed.floatValue());
+            return 1;
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
