@@ -37,10 +37,13 @@ public class ShortestRouteBetweenParksController {
      * @param originLongitudeInDegrees      lon of the origin park
      * @param destinationLatitudeInDegrees  lat of the end park
      * @param destinationLongitudeInDegrees lon of the end park
-     * @return distance in meters
+     * @return (1) distance in meters
+     * (2) 0 if no path
+     * (3) start and end are equal
      * @throws SQLException exception that might occur when accessing the sql oracle database
      */
-    public int shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees) throws SQLException {
+    public int shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees
+            , double destinationLatitudeInDegrees, double destinationLongitudeInDegrees) throws SQLException {
         PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees, originLongitudeInDegrees);
         PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees, destinationLongitudeInDegrees);
         LinkedList<PointOfInterest> path = new LinkedList<>();
@@ -58,7 +61,9 @@ public class ShortestRouteBetweenParksController {
      * @return distance in meters
      * @throws SQLException exception that might occur when accessing the sql oracle database
      */
-    public long shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, int numberOfPois, String outputFileName) throws SQLException, IOException {
+    public long shortestRouteBetweenTwoParksFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees
+            , double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, int numberOfPois, String outputFileName)
+            throws IOException {
         PointOfInterest origin = company.getPoiAPI().fetchPoi(originLatitudeInDegrees, originLongitudeInDegrees);
         PointOfInterest end = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees, destinationLongitudeInDegrees);
         List<String> output = new LinkedList<>();
@@ -67,33 +72,7 @@ public class ShortestRouteBetweenParksController {
             Utils.writeToFile(output, outputFileName);
             return 0;
         }
-        ArrayList<LinkedList<PointOfInterest>> paths = MapGraphAlgorithms.allPaths(company.getMapGraphDistance(), origin, end);
-        LinkedList<PointOfInterest> choosenPath = null;
-        for (LinkedList<PointOfInterest> path : paths) {
-            if ((path.size() - 2) == numberOfPois) {
-                choosenPath = path;
-                break;
-            }
-        }
-
-        if (choosenPath == null) {
-            output.add("Não existem caminhos com esse tamanho");
-            Utils.writeToFile(output, outputFileName);
-            return 0;
-        }
-        //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596", 5.3F, 3.4F,
-                500, true, ElectricScooterType.URBAN, 75,
-                1f, 1500);
-
-        Client dummyClient = new Client("1180852@isep.ipp.pt", "username", "password", 22, 180, 60, 'm', 22.3F,
-                true, new CreditCard("12341234123412"));
-        //------------------------------------------------------------------------
-        long distance = Utils.calculateDistanceInMeters(choosenPath);
-        double energy = PhysicsMethods.predictEnergySpent(dummyClient, MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(), choosenPath), dummyVehicle) / 3600000; //Joule to KwH
-        Utils.getOutputPath(choosenPath, output, distance, energy, origin.getCoordinates().getAltitude() - end.getCoordinates().getAltitude(), 1);
-        Utils.writeToFile(output, outputFileName);
-        return distance;
+        return calculatePathExportFile(origin, end, output, numberOfPois, outputFileName);
     }
 
     /**
@@ -108,46 +87,16 @@ public class ShortestRouteBetweenParksController {
      * @return distance in meters
      * @throws SQLException exception that might occur when accessing the sql oracle database
      */
-    public long shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, String inputPOIs, String outputFileName) throws SQLException, IOException, InvalidFileDataException {
+    public long shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(double originLatitudeInDegrees,
+                                                                           double originLongitudeInDegrees,
+                                                                           double destinationLatitudeInDegrees,
+                                                                           double destinationLongitudeInDegrees,
+                                                                           String inputPOIs, String outputFileName)
+            throws SQLException, IOException, InvalidFileDataException {
         PointOfInterest originPark = company.getPoiAPI().fetchPoi(originLatitudeInDegrees, originLongitudeInDegrees);
         PointOfInterest endPark = company.getPoiAPI().fetchPoi(destinationLatitudeInDegrees, destinationLongitudeInDegrees);
-        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(inputPOIs, LINE_SEPARATOR, COMMENT_TAG, HEADER);
-        String[] line;
-        List<Double> lat = new ArrayList<>();
-        List<Double> lon = new ArrayList<>();
-        int i = 0;
-        try {
-            for (i = 1; i < parsedData.size(); i++) {
-                line = parsedData.get(i);
-                lat.add(Double.parseDouble(line[POI_LAT]));
-                lon.add(Double.parseDouble(line[POI_LON]));
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + inputPOIs);
-        } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + inputPOIs);
-        }
-        Set<PointOfInterest> pois = new HashSet<>();
-        for (i = 0; i < lat.size(); i++) {
-            pois.add(company.getPoiAPI().fetchPoi(lat.get(i), lon.get(i)));
-        }
-        List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
-        long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(), originPark, endPark, pois, paths) * 1000); // km to meters
-        Utils.sort(paths);
 
-        if (paths.isEmpty()) {
-            return 0;
-        }
-        //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596", 5.3F, 3.4F,
-                500, true, ElectricScooterType.URBAN, 75,
-                1f, 1500);
-
-        Client dummyClient = new Client("1180852@isep.ipp.pt", "username", "password", 22, 180, 60, 'm', 22.3F,
-                true, new CreditCard("12341234123412"));
-        //------------------------------------------------------------------------
-        Utils.writeToFile(Utils.getOutputPaths(paths, distance, originPark.getCoordinates().getAltitude() - endPark.getCoordinates().getAltitude(), dummyClient, dummyVehicle), outputFileName);
-        return distance;
+        return calculateExportsLoadFile(inputPOIs, originPark, endPark, outputFileName);
     }
 
     /**
@@ -198,7 +147,8 @@ public class ShortestRouteBetweenParksController {
      */
     public long shortestRouteBetweenTwoParksAndGivenPoisFetchById(String originParkIdentification,
                                                                   String destinationParkIdentification,
-                                                                  String inputPOIs, String outputFileName) throws SQLException, IOException, InvalidFileDataException {
+                                                                  String inputPOIs, String outputFileName)
+            throws SQLException, IOException, InvalidFileDataException {
         Park originPark = company.getParkAPI().fetchParkById(originParkIdentification);
         Park endPark = company.getParkAPI().fetchParkById(destinationParkIdentification);
         if(originPark == null || endPark == null){
@@ -209,44 +159,7 @@ public class ShortestRouteBetweenParksController {
         }
         PointOfInterest origin = new PointOfInterest(originPark.getDescription(), originPark.getCoordinates());
         PointOfInterest end = new PointOfInterest(endPark.getDescription(), endPark.getCoordinates());
-        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(inputPOIs, LINE_SEPARATOR, COMMENT_TAG, HEADER);
-        String[] line;
-        List<Double> lat = new ArrayList<>();
-        List<Double> lon = new ArrayList<>();
-
-        int i = 0;
-        try {
-            for (i = 1; i < parsedData.size(); i++) {
-                line = parsedData.get(i);
-                lat.add(Double.parseDouble(line[POI_LAT]));
-                lon.add(Double.parseDouble(line[POI_LON]));
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + inputPOIs);
-        } catch (IndexOutOfBoundsException e) {
-            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + inputPOIs);
-        }
-        Set<PointOfInterest> pois = new HashSet<>();
-        for (i = 0; i < lat.size(); i++) {
-            pois.add(company.getPoiAPI().fetchPoi(lat.get(i), lon.get(i)));
-        }
-        List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
-        long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(), origin, end, pois, paths) * 1000); // km to meters
-        Utils.sort(paths);
-
-        if (paths.isEmpty()) {
-            return 0;
-        }
-        //dummy vehicle and client because they're not given----------------------
-        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596", 5.3F, 3.4F,
-                500, true, ElectricScooterType.URBAN, 75,
-                1f, 1500);
-
-        Client dummyClient = new Client("1180852@isep.ipp.pt", "username", "password", 22, 180, 60, 'm', 22.3F,
-                true, new CreditCard("12341234123412"));
-        //------------------------------------------------------------------------
-        Utils.writeToFile(Utils.getOutputPaths(paths, distance, originPark.getCoordinates().getAltitude() - endPark.getCoordinates().getAltitude(), dummyClient, dummyVehicle), outputFileName);
-        return distance;
+        return calculateExportsLoadFile(inputPOIs, origin, end, outputFileName);
     }
 
 /**
@@ -271,6 +184,20 @@ public class ShortestRouteBetweenParksController {
         PointOfInterest end = new PointOfInterest(endPark.getDescription(),endPark.getCoordinates());
         List<String> output = new LinkedList<>();
 
+        return calculatePathExportFile(origin, end, output, numberOfPOIs, outputFileName);
+    }
+
+    /**
+     * Handles the finding of the shortest path and exports the file
+     * @param origin the origin of the trip
+     * @param end the end of the trip
+     * @param output the output file name
+     * @param numberOfPOIs the number of pois in the middle
+     * @param outputFileName the name of the output
+     * @return the distance
+     * @throws IOException because itexports a file
+     */
+    private long calculatePathExportFile(PointOfInterest origin, PointOfInterest end, List<String> output, int numberOfPOIs, String outputFileName) throws IOException{
         ArrayList<LinkedList<PointOfInterest>> paths = MapGraphAlgorithms.allPaths(company.getMapGraphDistance(),origin,end);
         LinkedList<PointOfInterest> choosenPath = null;
         for (LinkedList<PointOfInterest> path : paths) {
@@ -297,6 +224,47 @@ public class ShortestRouteBetweenParksController {
         double energy = PhysicsMethods.predictEnergySpent(dummyClient, MapGraphAlgorithms.convertNodeListToEdgeList(company.getMapGraphDistance(), choosenPath), dummyVehicle) / 3600000; //Joule to KwH
         Utils.getOutputPath(choosenPath, output, distance, energy, origin.getCoordinates().getAltitude() - end.getCoordinates().getAltitude(), 1);
         Utils.writeToFile(output, outputFileName);
+        return distance;
+    }
+
+    private long calculateExportsLoadFile(String inputPOIs, PointOfInterest originPark, PointOfInterest endPark, String outputFileName)
+            throws IOException, InvalidFileDataException{
+        List<String[]> parsedData = Utils.parseDataFileAndValidateHeader(inputPOIs, LINE_SEPARATOR, COMMENT_TAG, HEADER);
+        String[] line;
+        List<Double> lat = new ArrayList<>();
+        List<Double> lon = new ArrayList<>();
+        int i = 0;
+        try {
+            for (i = 1; i < parsedData.size(); i++) {
+                line = parsedData.get(i);
+                lat.add(Double.parseDouble(line[POI_LAT]));
+                lon.add(Double.parseDouble(line[POI_LON]));
+            }
+        } catch (NumberFormatException e) {
+            throw new InvalidFileDataException("Invalid data at non-commented, non-empty line number " + i + " of the file " + inputPOIs);
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidFileDataException("Not all columns are present at non-commented, non-empty line " + i + " of the file " + inputPOIs);
+        }
+        Set<PointOfInterest> pois = new HashSet<>();
+        for (i = 0; i < lat.size(); i++) {
+            pois.add(company.getPoiAPI().fetchPoi(lat.get(i), lon.get(i)));
+        }
+        List<LinkedList<PointOfInterest>> paths = new LinkedList<>();
+        long distance = Math.round(MapGraphAlgorithms.shortestPathWithConstraints(company.getMapGraphDistance(), originPark, endPark, pois, paths) * 1000); // km to meters
+        Utils.sort(paths);
+
+        if (paths.isEmpty()) {
+            return 0;
+        }
+        //dummy vehicle and client because they're not given----------------------
+        ElectricScooter dummyVehicle = new ElectricScooter(12345, "PT596", 5.3F, 3.4F,
+                500, true, ElectricScooterType.URBAN, 75,
+                1f, 1500);
+
+        Client dummyClient = new Client("1180852@isep.ipp.pt", "username", "password", 22, 180, 60, 'm', 22.3F,
+                true, new CreditCard("12341234123412"));
+        //------------------------------------------------------------------------
+        Utils.writeToFile(Utils.getOutputPaths(paths, distance, originPark.getCoordinates().getAltitude() - endPark.getCoordinates().getAltitude(), dummyClient, dummyVehicle), outputFileName);
         return distance;
     }
 }
