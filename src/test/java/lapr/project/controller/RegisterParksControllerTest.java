@@ -59,7 +59,7 @@ public class RegisterParksControllerTest {
             // Check that all these methods have been called once
             // park #1
             Coordinates coordinates = new Coordinates(50d, 180d, 0);
-            verify(callableStatement).setString(1, "p1");
+            verify(callableStatement).setString(1, "doggo park");
             verify(callableStatement).setDouble(2, coordinates.getLatitude());
             verify(callableStatement).setDouble(3, coordinates.getLongitude());
             verify(callableStatement).setInt(4, coordinates.getAltitude());
@@ -71,7 +71,7 @@ public class RegisterParksControllerTest {
 
             // park #2
             coordinates = new Coordinates(90d, 150.56d, 30);
-            verify(callableStatement).setString(1, "p2");
+            verify(callableStatement).setString(1, "catto park");
             verify(callableStatement).setDouble(2, coordinates.getLatitude());
             verify(callableStatement).setDouble(3, coordinates.getLongitude());
             verify(callableStatement).setInt(4, coordinates.getAltitude());

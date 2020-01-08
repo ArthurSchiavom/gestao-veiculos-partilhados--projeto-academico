@@ -202,3 +202,4 @@ nbdist/
 .idea/
 test.csv
 test.txt
+testFiles/outputShortestPathByCoordinates.txt
