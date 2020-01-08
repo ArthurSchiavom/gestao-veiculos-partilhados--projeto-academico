@@ -595,10 +595,8 @@ public class ParkAPI {
             //Converts from calories to watts per hour
             energyRequired = PhysicsMethods.convertJoulesToWattHr(energyRequired);
             double scooterBattery = PhysicsMethods.calculateActualBatteryWattHrs((double) scooter.getMaxBatteryCapacity(), scooter.getActualBatteryCapacity()) *1.1;
-            System.out.println(String.format("%.2f %.2f", scooterBattery, energyRequired));
             if(scooterBattery>=energyRequired) {
                 filteredScooters.add(scooter);
-                System.out.println("My world is ending " + scooter.getDescription());
             }
         }
         return filteredScooters;

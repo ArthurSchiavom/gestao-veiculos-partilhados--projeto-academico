@@ -12,6 +12,8 @@ import lapr.project.model.users.Client;
 import lapr.project.model.users.User;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.utils.UnregisteredDataException;
+import lapr.project.utils.Utils;
+import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import javax.mail.MessagingException;
 import java.sql.*;
@@ -489,8 +491,7 @@ public class TripAPI {
 
         LinkedList<PointOfInterest> prevision = new LinkedList<>();
         double energySpent = MapGraphAlgorithms.shortestPath(Company.getInstance().initializeEnergyGraph(client, bicycle), poiA, poiB, prevision);
-
-        return energySpent;
+        return PhysicsMethods.convertJouleToCal(energySpent);
     }
 
     public List<Trip> fetchTripsForInvoice(Invoice invoice, boolean onlyUnpaid) throws SQLException {
