@@ -132,10 +132,6 @@ public class InvoiceAPI {
      */
     public Invoice issueInvoice(int month, String userEmail) throws SQLException, MessagingException {
         // using the invoice start date, which is in the month before the issue date
-        if (month == 1)
-            month = 12;
-        else
-            month--;
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
         try {
             PreparedStatement preparedStatement = dataHandler.prepareStatement("SELECT * FROM INVOICES WHERE USER_EMAIL = ? AND extract(month from PAYMENT_START_DATE) = ? order by PAYMENT_START_DATE desc");

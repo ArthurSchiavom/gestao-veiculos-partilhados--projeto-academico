@@ -31,25 +31,37 @@ import java.util.logging.Logger;
 public class Facade implements Serviceable {
     private static final Logger LOGGER = Logger.getLogger("FacadeLogger");
 
-    private final Company company;
-    private final RegisterBicyclesController registerBicyclesController;
-    private final RegisterElectricScootersController registerElectricScootersController;
-    private final RegisterParksController registerParksController;
-    private final RegisterUserController registerUserController;
-    private final RegisterPOIController registerPOIController;
-    private final RemoveParkController removeParkController;
-    private final VisualizeFreeSlotsAtParkController visualizeFreeSlotsAtParkController;
-    private final RegisterPathController registerPathController;
-    private final VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
-    private final FindParksNearbyController findParksNearbyController;
-    private final UnlockVehicleController unlockVehicleController;
-    private final LockVehicleController lockVehicleController;
-    private final ShortestRouteBetweenParksController shortestRouteBetweenParksController;
-    private final FilterScootersWithAutonomyController filterScootersWithAutonomyController;
-    private final MostEnergyEfficientRouteController mostEnergyEfficientRouteController;
-    private final ParkChargingReportController parkChargingReportController;
+    private Company company;
+    private RegisterBicyclesController registerBicyclesController;
+    private RegisterElectricScootersController registerElectricScootersController;
+    private RegisterParksController registerParksController;
+    private RegisterUserController registerUserController;
+    private RegisterPOIController registerPOIController;
+    private RemoveParkController removeParkController;
+    private VisualizeFreeSlotsAtParkController visualizeFreeSlotsAtParkController;
+    private RegisterPathController registerPathController;
+    private VisualizeVehiclesAtParkController visualizeVehiclesAtParkController;
+    private FindParksNearbyController findParksNearbyController;
+    private UnlockVehicleController unlockVehicleController;
+    private LockVehicleController lockVehicleController;
+    private ShortestRouteBetweenParksController shortestRouteBetweenParksController;
+    private FilterScootersWithAutonomyController filterScootersWithAutonomyController;
+    private MostEnergyEfficientRouteController mostEnergyEfficientRouteController;
+    private ParkChargingReportController parkChargingReportController;
 
-    public Facade() {
+    /**
+     * Prepares facade by booting up the application.
+     *
+     * @return if the boot-up was successful
+     */
+    private boolean prepare() {
+        try {
+            Bootstrap.boot();
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, "Failed to boot up: " + e.getMessage());
+            return false;
+        }
+
         company = Company.getInstance();
         registerBicyclesController = new RegisterBicyclesController(company);
         registerElectricScootersController = new RegisterElectricScootersController(company);
@@ -67,20 +79,6 @@ public class Facade implements Serviceable {
         filterScootersWithAutonomyController = new FilterScootersWithAutonomyController();
         mostEnergyEfficientRouteController = new MostEnergyEfficientRouteController(company);
         parkChargingReportController = new ParkChargingReportController();
-    }
-
-    /**
-     * Prepares facade by booting up the application.
-     *
-     * @return if the boot-up was successful
-     */
-    private boolean prepare() {
-        try {
-            Bootstrap.boot();
-        } catch (Exception e) {
-            LOGGER.log(Level.INFO, "Failed to boot up: " + e.getMessage());
-            return false;
-        }
 
         return true;
     }
@@ -94,7 +92,6 @@ public class Facade implements Serviceable {
             return null;
         }
 
-        Shutdown.shutdown();
         return parsedData;
     }
 
@@ -118,11 +115,14 @@ public class Facade implements Serviceable {
 
     @Override
     public int addEscooters(String s) {
+        prepare();
         try {
             return registerElectricScootersController.registerElectricScooters(s);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to execute the operation:\n" + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
@@ -131,58 +131,71 @@ public class Facade implements Serviceable {
         prepare();
         try {
             int result = registerParksController.registerParks(s);
-            Shutdown.shutdown();
             return result;
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "\nFailed to addParks:\n" + e.getMessage());
-            Shutdown.shutdown();
             return 0;
+        } finally {
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public int removePark(String s) {
+        prepare();
         try {
             removeParkController.removePark(s);
             return 1;
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, "Failed to remove park: \n" + e.getMessage());
+        } finally {
+            Shutdown.shutdown();
         }
         return 0;
     }
 
     @Override
     public int addPOIs(String s) {
+        prepare();
         try {
             return registerPOIController.registerPOIs(s);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public int addUsers(String s) {
+        prepare();
         try {
             return registerUserController.registerClients(s);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public int addPaths(String s) {
+        prepare();
         try {
             return registerPathController.registerPaths(s);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to execute the operation.\n" + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public int getNumberOfBicyclesAtPark(double v, double v1, String s) {
+        prepare();
         List<Bicycle> bicycles;
         int result = -1;
         try {
@@ -194,12 +207,15 @@ public class Facade implements Serviceable {
             return -1;
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Failed to write output file");
+        } finally {
+            Shutdown.shutdown();
         }
         return result;
     }
 
     @Override
     public int getNumberOfBicyclesAtPark(String s, String s1) {
+        prepare();
         List<Bicycle> bicycles;
         int result = -1;
         try {
@@ -211,12 +227,15 @@ public class Facade implements Serviceable {
             return -1;
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Failed to write output file");
+        } finally {
+            Shutdown.shutdown();
         }
         return result;
     }
 
     @Override
     public int getNumberOfEscootersAtPark(double v, double v1, String s) {
+        prepare();
         List<ElectricScooter> electricScooters;
         int result = -1;
         try {
@@ -228,12 +247,15 @@ public class Facade implements Serviceable {
             return -1;
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Failed to write output file");
+        } finally {
+            Shutdown.shutdown();
         }
         return result;
     }
 
     @Override
     public int getNumberOfEScootersAtPark(String s, String s1) {
+        prepare();
         List<ElectricScooter> electricScooters;
         int result = -1;
         try {
@@ -245,12 +267,15 @@ public class Facade implements Serviceable {
             return -1;
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Failed to write output file");
+        } finally {
+            Shutdown.shutdown();
         }
         return result;
     }
 
     @Override
     public void getNearestParks(double v, double v1, String s) {
+        prepare();
         getNearestParks(v, v1, s, 0);
         Shutdown.shutdown();
     }
@@ -280,21 +305,27 @@ public class Facade implements Serviceable {
 
     @Override
     public int getFreeBicycleSlotsAtPark(String s, String s1) {
+        prepare();
         try {
             return visualizeFreeSlotsAtParkController.fetchFreeSlotsAtParkByType(s, VehicleType.BICYCLE);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "failed to retrieve free slots at park: " + e.getMessage());
             return 0;
+        } finally {
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public int getFreeEscooterSlotsAtPark(String s, String s1) {
+        prepare();
         try {
             return visualizeFreeSlotsAtParkController.fetchFreeSlotsAtParkByType(s, VehicleType.ELECTRIC_SCOOTER);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "failed to retrieve free slots at park: " + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
@@ -307,6 +338,8 @@ public class Facade implements Serviceable {
             LOGGER.log(Level.INFO, String.format("Failed to get free slots at park (%s) for user's (%s) loaned vehicle", s1, s));
         } catch (UnregisteredDataException e) {
             LOGGER.log(Level.INFO, "Invalid information provided: " + e.getMessage());
+        } finally {
+            Shutdown.shutdown();
         }
         return -1;
     }
@@ -318,11 +351,14 @@ public class Facade implements Serviceable {
 
     @Override
     public int pathDistanceTo(double v, double v1, double v2, double v3) {
+        prepare();
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(v,v1,v2,v3);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "No path found:\n" + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
@@ -359,6 +395,8 @@ public class Facade implements Serviceable {
             LOGGER.log(Level.INFO, "Failed to lock bicycle: " + e.getMessage());
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to email the client: " + e.getMessage());
+        } finally{
+            Shutdown.shutdown();
         }
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -368,8 +406,12 @@ public class Facade implements Serviceable {
         prepare();
         try {
             lockVehicleController.lockVehicle(s1, s, true);
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, "Failed to lock bicycle: " + e.getMessage());
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to email the client: " + e.getMessage());
+        } finally{
+            Shutdown.shutdown();
         }
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -383,6 +425,8 @@ public class Facade implements Serviceable {
             LOGGER.log(Level.INFO, "Failed to lock EScooter: " + e.getMessage());
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to email the client: " + e.getMessage());
+        } finally {
+            Shutdown.shutdown();
         }
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -396,6 +440,8 @@ public class Facade implements Serviceable {
             LOGGER.log(Level.INFO, "Failed to lock EScooter: " + e.getMessage());
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Failed to email the client: " + e.getMessage());
+        } finally{
+            Shutdown.shutdown();
         }
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -422,6 +468,8 @@ public class Facade implements Serviceable {
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Failed to register user: " + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
@@ -471,11 +519,14 @@ public class Facade implements Serviceable {
 
     @Override
     public long mostEnergyEfficientRouteBetweenTwoParks(String s, String s1, String s2, String s3, String s4, String s5) {
+        prepare();
         try {
             return mostEnergyEfficientRouteController.mostEnergyEfficientRouteBetweenTwoParks(s,s1,s2,s3,s4,s5);
         } catch (SQLException |IOException e) {
             LOGGER.log(Level.INFO, "Couldn't find a route:\n" + e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
@@ -563,6 +614,7 @@ public class Facade implements Serviceable {
 
     @Override
     public double getUserCurrentPoints(String s, String s1) {
+        prepare();
         Client client = null;
         int totalPoints = 0;
         try {
@@ -606,6 +658,8 @@ public class Facade implements Serviceable {
             LOGGER.log(Level.SEVERE, "Failed to access the database");
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Failed to write to file (user points)");
+        } finally{
+            Shutdown.shutdown();
         }
         if (client != null)
             return totalPoints;
@@ -615,23 +669,29 @@ public class Facade implements Serviceable {
 
     @Override
     public double calculateElectricalEnergyToTravelFromOneLocationToAnother(double v, double v1, double v2, double v3, String s) {
+        prepare();
         try {
             return BigDecimal.valueOf(mostEnergyEfficientRouteController.calculateElectricalEnergyToTravelFromOneLocationToAnother(v,v1,v2,v3,s)).setScale(2, RoundingMode.HALF_UP).doubleValue();
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "No trip detacted: " + e.getMessage());
             return 0;
 
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public long forHowLongAVehicleIsUnlocked(String s) {
+        prepare();
         TripAPI tripAPI = company.getTripAPI();
         Trip trip = null;
         try {
             trip = tripAPI.fetchTripVehicleIsIn(s);
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, "Failed to fetch trip: " + e.getMessage());
+        } finally {
+            Shutdown.shutdown();
         }
         if (trip == null)
             return 0;
@@ -657,11 +717,14 @@ public class Facade implements Serviceable {
      */
     @Override
     public long shortestRouteBetweenTwoParks(double originLatitudeInDegrees, double originLongitudeInDegrees, double destinationLatitudeInDegrees, double destinationLongitudeInDegrees, int numberOfPOIs, String outputFileName) {
+        prepare();
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByCoordinates(originLatitudeInDegrees, originLongitudeInDegrees, destinationLatitudeInDegrees, destinationLongitudeInDegrees, numberOfPOIs, outputFileName);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
@@ -682,51 +745,66 @@ public class Facade implements Serviceable {
      */
     @Override
     public long shortestRouteBetweenTwoParks(String originParkIdentification, String destinationParkIdentification, int numberOfPOIs, String outputFileName) {
+        prepare();
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksFetchByID(originParkIdentification,destinationParkIdentification, numberOfPOIs, outputFileName);
         } catch (Exception e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public long shortestRouteBetweenTwoParksForGivenPOIs(String s, String s1, String s2, String s3) {
+        prepare();
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksAndGivenPoisFetchById(s, s1, s2, s3);
         } catch (SQLException | InvalidFileDataException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public long shortestRouteBetweenTwoParksForGivenPOIs(double v, double v1, double v2, double v3, String s, String s1) {
+        prepare();
         try {
             return shortestRouteBetweenParksController.shortestRouteBetweenTwoParksAndGivenPoisFetchByCoordinates(v, v1, v2, v3, s, s1);
         } catch (SQLException | InvalidFileDataException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0; // doesn't say what to return in the documentation
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public long getParkChargingReport(String s, String s1) {
+        prepare();
         try {
             return parkChargingReportController.retrieveParkChargingReport(s,s1);
         } catch (SQLException | IOException e) {
             LOGGER.log(Level.INFO, e.getMessage());
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
     @Override
     public int suggestRoutesBetweenTwoLocations(String s, String s1, String s2, String s3, String s4, int i, boolean b, String s5, String s6, String s7) {
+        prepare();
         try {
             return mostEnergyEfficientRouteController.suggestRoutesBetweenTwoLocations(s,s1,s2,s3,s4,i,b,s5,s6,s7);
         } catch (SQLException | IOException | InvalidFileDataException e) {
             e.printStackTrace();
             return 0;
+        } finally{
+            Shutdown.shutdown();
         }
     }
 
