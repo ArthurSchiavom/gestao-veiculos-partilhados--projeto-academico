@@ -155,8 +155,6 @@ public class TripAPI {
      * @param startTime
      * @return
      */
-
-
     public List<Trip> getListOfVehiclesNotAvailable(LocalDateTime startTime, LocalDateTime endTime) {
         List<Trip> dispVehicles = new ArrayList<>();
         AutoCloseableManager autoCloseableManager = new AutoCloseableManager();
@@ -378,6 +376,8 @@ public class TripAPI {
         String userEmail = user.getEmail();
         // FETCH LATEST INVOICES
         Invoice lastInvoice = invoiceAPI.fetchLastInvoiceFor(userEmail);
+        if (lastInvoice == null)
+            return allTripsLastInvoice;
         Date invoiceStartDate = lastInvoice.getPaymentStartDate();
         long startInvoicesDateEpochSeconds = invoiceStartDate.getTime();
         long endInvoicesDateEpochSeconds = invoiceStartDate.toLocalDate().plusMonths(1).toEpochDay() * 86400000;

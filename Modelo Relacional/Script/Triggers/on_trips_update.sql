@@ -89,6 +89,9 @@ declare
     v_usage_cost invoices.usage_cost%type;
 begin
     if :new.end_time is not null then
+        -- If no invoice exists for this month, create a new one
+        v_invoice_payment_date := get_latest_invoice_start_date(:new.user_email);
+        
         v_points := 0;
         -- adicionar 5 pontos ao utilizador caso a viagem tenha durado menos de 15min
         v_trip_duration_min := time_difference_minutes(:new.start_time, :new.end_time);
@@ -112,15 +115,12 @@ begin
             v_points := v_points + v_pontosAltitude;
         end if;
 
-        -- If no invoice exists for this month, create a new one
-        v_invoice_payment_date := get_latest_invoice_start_date(:new.user_email);
         
         -- Add amount to pay to invoice
         -- After the gratuitous period (1h), each following hour costs 1,5€.
-        if v_trip_duration_min > 60 then
-            v_usage_cost := calculateTripPrice(v_trip_duration_min);
-            update invoices set usage_cost = usage_cost + v_usage_cost, amount_left_to_pay = amount_left_to_pay + v_usage_cost, earned_points = earned_points + v_points where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
-        end if;
+        v_usage_cost := calculateTripPrice(v_trip_duration_min);
+        dbms_output.put_line(v_points);
+        update invoices set usage_cost = usage_cost + v_usage_cost, amount_left_to_pay = amount_left_to_pay + v_usage_cost, earned_points = earned_points + v_points where user_email = :new.user_email and payment_start_date = v_invoice_payment_date;
     end if;
 END;
 /

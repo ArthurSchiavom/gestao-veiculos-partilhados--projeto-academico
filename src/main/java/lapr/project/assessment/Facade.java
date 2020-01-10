@@ -822,6 +822,10 @@ public class Facade implements Serviceable {
                 return 0;
             }
             Invoice invoice = invoiceAPI.issueInvoice(i, client.getEmail());
+            if (invoice == null) {
+                LOGGER.log(Level.INFO, "No invoice for the given month (output generated either way)");
+                return 0;
+            }
             List<Trip> tripsInDebt = company.getTripAPI().fetchTripsForInvoice(invoice, true);
             Collections.sort(tripsInDebt, new compareTripsByUnlockTime());
             double valueToPay = BigDecimal.valueOf(invoice.getAmountLeftToPay()).setScale(2, RoundingMode.HALF_UP).doubleValue();

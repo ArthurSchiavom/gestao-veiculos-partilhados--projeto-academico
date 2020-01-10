@@ -1,123 +1,394 @@
-# README #
+# **Report for LAPR3** 
 
-This is the repository template used for student repositories in LAPR Projets.
+## Done By:
+Group 29, Class 2DF
+- Arthur Silva 1180842
+- Ivo Macieira 1170554
+- Francisco Andrade 1181477
+- Diogo Silva 1161752
+- José Magalhães 1180852
+- Kevin Sousa 1180853
 
-#Java source files
 
-Java source and test files are located in folder src.
+# 1. Introduction
 
-# Maven files #
+The following report, developed for the subject LAPR3, aims to explain our approach, work methodology and conclusion. 
 
-Pom.xml file controls the project build.
-## Observations
-In this file, DO NOT EDIT the following elements:
+The application's objective is supporting a ride-sharing businesses by 
+managing users, vehicles, parks, trips, invoices and receipts
 
-* groupID
-* artifactID
-* version
-* properties
+The development languages used were Java and Oracle SQL*Plus. SQL scripts can be found inside the folder "Modelo Relacional\Script".
 
-Also, students can only add dependencies to the specified section on this file.
+# 2. Resolution
 
-# Eclipse files #
+## 2.1. The application
+The application is a product that supports ride-sharing businesses, users can pickup vehicles from parks and drop them at a different park from the same company for a price. The manages users, bicycles, electric scooters, parks that belong to a company.
 
-The following files are solely used by Eclipse IDE:
+**Domain Model**
 
-* .classpath
-* .project
+![DOMAIN_MODEL.png](report/modeloDominio.png)
 
-# IntelliJ Idea IDE files #
+**Relational Model**
 
-The following folder is solely used by Intellij Idea IDE :
+![RELATIONAL_MODEL.png](report/modeloRelacional.png)
 
-* .idea
+## 2.2. Use Cases
 
-## How was the .gitignore file generated? ##
-.gitignore file was generated based on https://www.gitignore.io/ with the following keywords:
-  - Java
-  - Maven
-  - Eclipse
-  - NetBeans
-  - Intellij
+![USE_CASES.png](report/UseCaseDiagram1.png)
 
-## Who do I talk to? ##
-In case you have any problem, please email Nuno Bettencourt (nmb@isep.ipp.pt).
+### 2.2.1. Get the most efficient route between two parks (at least a certain number of interest points)
 
-## How do I use Maven? ##
+**Use case diagram**
 
-### How to run unit tests? ###
-Execute the "test" goals.
-`$ mvn test`
+![SSD.png](report/SDD_GetTheMostEnergiticallyEfficientRouteBetweenTwoPark.png)
 
-### How to generate the javadoc for source code? ###
-Execute the "javadoc:javadoc" goal.
+**Sequence Diagram**
 
-`$ mvn javadoc:javadoc`
+![SD.png](report/SD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks2.png))
 
-This generates the source code javadoc in folder "target/site/apidocs/index.html".
+**Class Diagram**	
 
-### How to generate the javadoc for test cases code? ###
-Execute the "javadoc:test-javadoc" goal.
+![CD.png](report/CD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks.png)
 
-`$ mvn javadoc:test-javadoc`
+**Description**
 
-This generates the test cases javadoc in folder "target/site/testapidocs/index.html".
+In this use case, the client is able to consult the most efficient route between two parks, passing by a certain number of points of interest. 
 
-### How to generate Jacoco's Code Coverage Report? ###
-Execute the "jacoco:report" goal.
+### 2.2.2. Fetch free slots at park by type
 
-`$ mvn test jacoco:report`
+**Use case diagram**
 
-This generates a jacoco code coverage report in folder "target/site/jacoco/index.html".
+![SSD.png](report/SSD_fetchFreeSlotsAtParkByType.png)
 
-### How to generate PIT Mutation Code Coverage? ###
-Execute the "org.pitest:pitest-maven:mutationCoverage" goal.
+**Sequence Diagram**
 
-`$ mvn test org.pitest:pitest-maven:mutationCoverage`
+![SD.png](report/SD_fetchFreeSlotsAtParkByType.png))
 
-This generates a PIT Mutation coverage report in folder "target/pit-reports/YYYYMMDDHHMI".
+**Class Diagram**	
 
-### How to combine different maven goals in one step? ###
-You can combine different maven goals in the same command. For example, to locally run your project just like on jenkins, use:
+![CD.png](report/CD_fetchFreeSlotsAtParkByType.png)
 
-`$ mvn clean test jacoco:report org.pitest:pitest-maven:mutationCoverage`
+**Description**
 
-### How to perform a faster pit mutation analysis ###
-Do not clean build => remove "clean"
+In this use case, the client is able to check if a park has free slots to a specified type of vehicle.
 
-Reuse the previous report => add "-Dsonar.pitest.mode=reuseReport"
+### 2.2.3. Get uncapable scooters
 
-Use more threads to perform the analysis. The number is dependent on each computer CPU => add "-Dthreads=4"
+**Use case diagram**
 
-Temporarily remove timestamps from reports.
+![SSD.png](report/SSD_GetUncapableScooters.png)
 
-Example:
+**Sequence Diagram**
 
-`mvn test jacoco:report org.pitest:pitest-maven:mutationCoverage -DhistoryInputFile=target/fasterPitMutationTesting-history.txt -DhistoryOutputFile=target/fasterPitMutationTesting-history.txt -Dsonar.pitest.mode=reuseReport -Dthreads=4 -DtimestampedReports=false`
+![SD.png](report/SD_getUncapableScooters.png))
 
-# Oracle repository
+**Class Diagram**	
 
-If you get the following error:
+![CD.png](report/CD_GetUncapableScooters.png)
 
-```
-[ERROR] Failed to execute goal on project 
-bike-sharing: Could not resolve dependencies for project 
-lapr3:bike-sharing:jar:1.0-SNAPSHOT: 
-Failed to collect dependencies at 
-com.oracle.jdbc:ojdbc7:jar:12.1.0.2: 
-Failed to read artifact descriptor for 
-com.oracle.jdbc:ojdbc7:jar:12.1.0.2: 
-Could not transfer artifact 
-com.oracle.jdbc:ojdbc7:pom:12.1.0.2 
-from/to maven.oracle.com (https://maven.oracle.com): 
-Not authorized , ReasonPhrase:Authorization Required. 
--> [Help 1]
-```
+**Description**
 
-Follow these steps:
+In this use case, the administrator is able to get a report stating which scooters, registered in the system, do not have enough autonomy to make a trip with a certain number of kilometers, defined by him.
 
-https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides
+### 2.2.4. Get the most energetically efficient Route between Two Parks
 
-You do not need to set a proxy.
+**Use case diagram**
 
-You can use existing dummy Oracle credentials available at http://bugmenot.com.
+![SSD.png](report/SDD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_GetTheMostEnergeticallyEfficientRouteBetweenTwoParks2.png)
+
+**Description**
+
+In this use case, the client is able to get the most energetically efficient route between two parks. To calculate the energy that will be spent, information about the client, the vehicle and the paths that he will pass are needed, since the physic calculation needs that information.
+
+### 2.2.5. Get the nearest park
+
+**Use case diagram**
+
+![SSD.png](report/SDD_NearestPark.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_NearestPark.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_NearestPark.png)
+
+**Description**
+
+In this use case, the client is able to get the nearest park to him. If not specified, it is given a nearest park inside the range of 1km.
+
+### 2.2.6. Update park
+
+**Use case diagram**
+
+![SSD.png](report/SSD_updatePark.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_updateParkId.png)
+
+![](report/updateParkCapacity.png)
+![](report/updateParkInputVoltage.png)
+![](report/updateParkInputCurrent.png)
+![](report/updateParkDescription.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_updatePark.png)
+
+**Description**
+
+In this use case, the administrator is able to update the information of a park.
+
+### 2.2.7. Add park
+
+**Use case diagram**
+
+![SSD.png](report/SSD_AddNewPark.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_AddNewPark.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_AddNewPark.png)
+
+**Description**
+
+In this use case, the administrator uses the application (Inserts a park) to register a park into the system.
+
+### 2.2.8. Distance of a park by id
+
+**Use case diagram**
+![SSD.png](report/SDD_DistanceOfParkById.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_DistanceOfParkById.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_DistanceOfParkById.png)
+
+**Description**
+
+In this use case, the client can obtain the distance to a given park.
+
+### 2.2.9. Remove a park by id
+
+**Use case diagram**
+
+![SSD.png](report/SSD_DeletePark.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_DeleteParkById.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_DeleteParkById.png)
+
+**Description**
+
+In this use case, the administrator can remove a park from the system, by providing the id.
+
+### 2.2.10. Load a point of interest
+
+**Use case diagram**
+![SSD.png](report/SDD_LoadPOI.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_LoadPOI.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_LoadPOI.png)
+
+**Description**
+
+In this use case, the administrator is able to load a point of interest into the system, by specifying his description, latitude, longitude and altitude.
+
+### 2.2.11. Predict burned calories
+
+**Use case diagram**
+![SSD.png](report/SSD_PredictBurntCalories.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_PredictCaloriesBurnt.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_PredictBurntCalories.png)
+
+**Description** 
+ 
+In this use case the client can predict the amount of calories burnt between two parks. This will only be possible if the data about the client, the bicycle in use and the start and end parks are specified, since information like the weight and average speed of the client, the frontal area of the bicycle, the kinetic coefficient of the path, etc. This calculation will be made in the class physics calculations, that has a method that calculates the energy spent in joules, and then converts it to calories.
+
+
+### 2.2.12. Return vehicle to park
+
+**Use case diagram**
+![SSD.png](report/SSD_ReturnVehicleToPark.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_ReturnVehicleToPark.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_ReturnVehicleToPark.png)
+
+**Description**
+
+In this use case, the client will be able to return a vehicle to a park, after making a trip. For this situation to succeed, information about the park and the vehicle description is needed. When the vehicle is successfully returned to the park, the client receives an email informing of the situation.
+
+### 2.2.13. Get the shortest route between two parks
+
+**Use case diagram**
+![SSD.png](report/SSD_ShortestRouteBeetwenTwoParks.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_ShortestRouteBetweenTwoParks.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_ShortestRouteBetweenTwoParks.png)
+
+**Description**
+
+In this use case, the client can get the shortest path between two parks. The starting and ending park must be specified for the success of this operation, along with the name of the file that will contain the information returned.
+
+### 2.2.14. Filter scooters with autonomy
+
+**Use case diagram**
+![SSD.png](report/SSD_filterScootersWithAutonomy.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_filterScootersWithAutonomy.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_filterScootersWithAutonomy.png)
+
+**Description**
+
+In this use case, the client will be able to know the scooters with enough autonomy to make a trip. The scooters must have autonomy to make the distance, plus 10% of the distance.
+
+### 2.2.15. Get List of vehicles not available
+
+**Use case diagram**
+![SSD.png](report/SSD_getListOfVehiclesNotAvailable.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_getListOfVehiclesNotAvailable.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_getListOfVehiclesNotAvailable.png)
+
+**Description**
+
+In this use case, the administrator is able to get a list of vehicles that are not available. To get this information, he must specifie a start time and an end time. The system will then verify the vehicles not available in that period of time.
+
+### 2.2.16. Unlock a vehicle
+
+**Use case diagram**
+![SSD.png](report/SSD_UnlockVehicle.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_UnlockVehicle.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_UnlockVehicle.png)
+
+**Description**
+
+In this use case, the client will be able to unlock a vehicle. The system requests his username and the vehicle description, so that the client and the vehicle are identified. Having this, if the vehicle is not already unlocked, the operation is a success. 
+
+### 2.2.17. Register a user
+
+**Use case diagram**
+![SSD.png](report/SSD_RegisterClient.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_RegisterUser.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_RegisterUser.png)
+
+**Description**
+
+In this use case, a non registered user can register on the system. He must provide information about him (name, email, gender, height, etc). If he does not insert invalid data, the operation is a success, and the person is now registered in the system.
+
+### 2.2.18. Register vehicles
+
+**Use case diagram**
+
+![SSD.png](report/SSD_RegisterVehicles.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_RegisterVehicles.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_RegisterVehicles.png)
+
+**Description**
+
+In this use case, an administrator can register a new vehicle in the system. This vehicles can be bicycles or electrical scooters. Some requested data will be different according to the vehicle type. If the operation is a success, a new vehicle is registered in the system.
+
+### 2.2.19. Vehicles Available at a given park
+
+**Use case diagram**
+
+![SSD.png](report/SSD_VehiclesAvailableAtAGivenPark.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_VehiclesAvailableAtAGivenPark.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_VehiclesAvailableAtAGivenPark.png)
+
+**Description**
+
+In this use case, a client can consult the vehicles available in a specified park. To inform which park he wants to consult, the client can insert the park id or the coordinates that is located.
+
+## 2.2.20. Retrieve park charging report
+
+**Use case diagram**
+
+![SSD.png](report/SSD_chargingVehicle.png)
+
+**Sequence Diagram**
+
+![SD.png](report/SD_chargingVehicle.png)
+
+**Class Diagram**	
+
+![CD.png](report/CD_chargingVehicle.png)
+
+**Description**
+
+In this use case, the administrator can obtain a report stating the charging status for each vehicle in a park and an estimate projection for how long it would take for each vehicle to reach 100% charge under the existing circumstances. 
