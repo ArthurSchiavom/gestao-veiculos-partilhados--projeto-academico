@@ -392,3 +392,18 @@ In this use case, a client can consult the vehicles available in a specified par
 **Description**
 
 In this use case, the administrator can obtain a report stating the charging status for each vehicle in a park and an estimate projection for how long it would take for each vehicle to reach 100% charge under the existing circumstances. 
+
+## 2.2.21. Retrieve invoice for month
+
+The invoices being issued are relative to the trips made during the given month.
+However, initially, we supposed that the invoices being issued were for the trips from the month prior to the one specified. 
+Example: The user requests an invoice to be issued for month 5. The application would issue the invoice relative to the trips that happened in month 4.
+Reasoning: Realistically, invoices issued on month 5 are relative to the trips that happened during month 4. In other words, in month 5 you pay for month 4.
+On the other hand, the last test scenario provided seemed to expect the trips that happened in the same month, since otherwise the invoice wouldn't be associated to any trip.
+It was decided that we would opt to have optimal results in the scenario.
+To achieve this, following piece of code was removed from InvoiceAPI.issueInvoice:
+
+    if (month == 1)
+        month = 12;
+    else
+        month--;

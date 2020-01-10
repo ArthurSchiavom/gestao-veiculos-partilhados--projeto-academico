@@ -72,7 +72,7 @@ public class LockVehicleControllerTest {
             when(dataHandler.prepareCall(anyString())).thenReturn(callableStatement1);
             when(callableStatement1.getString(1)).thenReturn(userEmail);
 
-            controller.lockVehicle(parkId, vehicleDescription, true);
+            controller.lockVehicle(parkId, vehicleDescription, false);
 
             verify(dataHandler).prepareStatement("Insert into park_vehicle(park_id, vehicle_description) values (?,?)");
             verify(preparedStatement1).setString(1, parkId);
