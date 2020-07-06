@@ -1,28 +1,27 @@
-# **Report for LAPR3** 
+# Ride-Sharing Management
 
-## Done By:
-Group 29, Class 2DF
-- Arthur Silva 1180842
-- Ivo Macieira 1170554
-- Francisco Andrade 1181477
-- Diogo Silva 1161752
-- José Magalhães 1180852
-- Kevin Sousa 1180853
+## Authors:
+* Arthur Silva - 1180842
+* Ivo Macieira - 1170554
+* Francisco Andrade - 1181477
+* Diogo Silva - 1161752
+* José Magalhães - 1180852
+* Kevin Sousa - 1180853
 
 
 # 1. Introduction
 
-The following report, developed for the subject LAPR3, aims to explain our approach, work methodology and conclusion. 
+This report aims to explain our approach, work methodology and conclusion. 
 
-The application's objective is supporting a ride-sharing businesses by 
-managing users, vehicles, parks, trips, invoices and receipts
+The application's objective is to support a ride-sharing business by managing users, vehicles, parks, trips, invoices and receipts. Users can pickup vehicles at designated parks and return them at a different parking locations.
 
 The development languages used were Java and Oracle SQL*Plus. SQL scripts can be found inside the folder "Modelo Relacional\Script".
+
+**[Descrição completa do projeto](report/LAPR3-descricao-projeto.pdf)**
 
 # 2. Resolution
 
 ## 2.1. The application
-The application is a product that supports ride-sharing businesses, users can pickup vehicles from parks and drop them at a different park from the same company for a price. The manages users, bicycles, electric scooters, parks that belong to a company.
 
 **Domain Model**
 
@@ -30,7 +29,7 @@ The application is a product that supports ride-sharing businesses, users can pi
 
 **Relational Model**
 
-![RELATIONAL_MODEL.png](report/modeloRelacional.png)
+![RELATIONAL_MODEL.png](report/ModeloRelacional.png)
 
 ## 2.2. Use Cases
 
@@ -196,7 +195,7 @@ In this use case, the client can obtain the distance to a given park.
 
 **Class Diagram**	
 
-![CD.png](report/CD_DeleteParkById.png)
+![CD.png](report/CD_deleteParkbyId.png)
 
 **Description**
 
@@ -213,7 +212,7 @@ In this use case, the administrator can remove a park from the system, by provid
 
 **Class Diagram**	
 
-![CD.png](report/CD_LoadPOI.png)
+![CD.png](report/CD_LoadPoi.png)
 
 **Description**
 
@@ -230,7 +229,7 @@ In this use case, the administrator is able to load a point of interest into the
 
 **Class Diagram**	
 
-![CD.png](report/CD_PredictBurntCalories.png)
+![CD.png](report/CD_predictBurntCalories.png)
 
 **Description** 
  
@@ -365,7 +364,7 @@ In this use case, an administrator can register a new vehicle in the system. Thi
 
 **Sequence Diagram**
 
-![SD.png](report/SD_VehiclesAvailableAtAGivenPark.png)
+![SD.png](report/SD_VehiclesAvailableAtAGivenPArk.png)
 
 **Class Diagram**	
 
