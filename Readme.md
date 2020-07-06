@@ -17,7 +17,7 @@ The application's objective is to support a ride-sharing business by managing us
 
 The development languages used were Java and Oracle SQL*Plus. SQL scripts can be found inside the folder "Modelo Relacional\Script".
 
-**Descrição completa do projeto:** [descricao-projeto.pdf](report\LAPR3-descricao-projeto.pdf)
+**[Descrição completa do projeto](report\LAPR3-descricao-projeto.pdf)**
 
 # 2. Resolution
 
