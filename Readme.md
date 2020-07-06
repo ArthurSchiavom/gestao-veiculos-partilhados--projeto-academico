@@ -13,14 +13,15 @@
 
 This report aims to explain our approach, work methodology and conclusion. 
 
-The application's objective is to support a ride-sharing businesses by managing users, vehicles, parks, trips, invoices and receipts
+The application's objective is to support a ride-sharing business by managing users, vehicles, parks, trips, invoices and receipts. Users can pickup vehicles at designated parks and return them at a different parking locations.
 
 The development languages used were Java and Oracle SQL*Plus. SQL scripts can be found inside the folder "Modelo Relacional\Script".
+
+**Descrição completa do projeto:** [descricao-projeto.pdf](report\LAPR3-descricao-projeto.pdf)
 
 # 2. Resolution
 
 ## 2.1. The application
-Users can pickup vehicles at designated parks and return them at a different parking locations. This application manages users, bicycles, electric scooters, parks and trips.
 
 **Domain Model**
 
