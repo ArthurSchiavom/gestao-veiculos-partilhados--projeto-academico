@@ -1,6 +1,7 @@
 package lapr.project.data;
 
 import lapr.project.model.point.of.interest.PointOfInterest;
+
 import java.util.Comparator;
 
 /**

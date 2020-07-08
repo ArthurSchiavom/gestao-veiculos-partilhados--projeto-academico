@@ -8,9 +8,6 @@ import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Represents a company
  */

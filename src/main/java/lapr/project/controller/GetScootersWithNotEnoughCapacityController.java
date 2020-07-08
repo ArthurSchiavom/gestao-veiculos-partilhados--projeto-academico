@@ -5,15 +5,16 @@
  */
 package lapr.project.controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import lapr.project.data.registers.Company;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
 import lapr.project.utils.Utils;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

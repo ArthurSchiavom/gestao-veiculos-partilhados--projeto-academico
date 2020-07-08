@@ -1,12 +1,8 @@
 package lapr.project.controller;
 
-import lapr.project.data.registers.Company;
 import lapr.project.data.registers.ParkAPI;
-import lapr.project.mapgraph.MapGraphAlgorithms;
 import lapr.project.model.Path;
 import lapr.project.model.Trip;
-import lapr.project.model.point.of.interest.park.Park;
-import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.utils.Utils;
 

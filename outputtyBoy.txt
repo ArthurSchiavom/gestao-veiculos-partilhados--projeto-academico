@@ -1,8 +1,0 @@
-Path 001
-total distance: 26670910
-total energy: 15437,97
-elevation: 10
-0.0;0.0
--20.222;122.12
-0.0;0.0
-

@@ -1,6 +1,5 @@
 package lapr.project.utils;
 
-import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.SortByHeightDescending;
 import lapr.project.data.registers.Company;
 import lapr.project.mapgraph.MapGraphAlgorithms;
@@ -8,7 +7,6 @@ import lapr.project.model.Invoice;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.users.Client;
-import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 

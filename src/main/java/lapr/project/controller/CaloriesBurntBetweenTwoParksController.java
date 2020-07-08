@@ -5,10 +5,11 @@
  */
 package lapr.project.controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import lapr.project.data.registers.Company;
 import lapr.project.data.registers.TripAPI;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Class that allows to interact with the calories burnt calculation method

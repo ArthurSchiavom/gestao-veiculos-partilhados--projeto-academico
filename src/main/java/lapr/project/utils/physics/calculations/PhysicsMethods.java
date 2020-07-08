@@ -5,18 +5,15 @@
  */
 package lapr.project.utils.physics.calculations;
 
-import java.util.List;
-
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;
-import lapr.project.model.vehicles.Bicycle;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.Vehicle;
 import lapr.project.model.vehicles.VehicleType;
 
-import static lapr.project.model.vehicles.VehicleType.BICYCLE;
+import java.util.List;
 
 /**
  * Class that has the methods to calculate the calories burnt between two points

@@ -1,8 +1,8 @@
 package lapr.project.controller;
 
 import lapr.project.data.registers.Company;
-import lapr.project.model.vehicles.ChargeTimeComparator;
 import lapr.project.model.point.of.interest.park.Park;
+import lapr.project.model.vehicles.ChargeTimeComparator;
 import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.model.vehicles.ScooterDescriptionComparator;
 import lapr.project.utils.Utils;

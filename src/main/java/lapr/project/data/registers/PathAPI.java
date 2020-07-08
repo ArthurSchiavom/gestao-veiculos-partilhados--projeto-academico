@@ -5,19 +5,19 @@
  */
 package lapr.project.data.registers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lapr.project.data.AutoCloseableManager;
 import lapr.project.data.DataHandler;
 import lapr.project.model.Coordinates;
 import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class that registers paths

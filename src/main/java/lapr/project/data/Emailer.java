@@ -1,6 +1,7 @@
 package lapr.project.data;
 
 import com.sun.mail.smtp.SMTPTransport;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;

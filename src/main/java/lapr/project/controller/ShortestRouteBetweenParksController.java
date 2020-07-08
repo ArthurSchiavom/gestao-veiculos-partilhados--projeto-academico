@@ -1,9 +1,7 @@
 package lapr.project.controller;
 
-import lapr.project.data.SortByHeightDescending;
 import lapr.project.data.registers.Company;
 import lapr.project.mapgraph.MapGraphAlgorithms;
-import lapr.project.model.Path;
 import lapr.project.model.point.of.interest.PointOfInterest;
 import lapr.project.model.point.of.interest.park.Park;
 import lapr.project.model.users.Client;

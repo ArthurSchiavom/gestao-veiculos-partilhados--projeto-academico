@@ -1,7 +1,6 @@
 package lapr.project.model.vehicles;
 
 import lapr.project.model.point.of.interest.park.Park;
-import lapr.project.model.vehicles.ElectricScooter;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import java.util.Comparator;

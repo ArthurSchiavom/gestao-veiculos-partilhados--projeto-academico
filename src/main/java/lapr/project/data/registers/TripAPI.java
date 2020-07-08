@@ -12,7 +12,6 @@ import lapr.project.model.users.Client;
 import lapr.project.model.users.User;
 import lapr.project.model.vehicles.Bicycle;
 import lapr.project.utils.UnregisteredDataException;
-import lapr.project.utils.Utils;
 import lapr.project.utils.physics.calculations.PhysicsMethods;
 
 import javax.mail.MessagingException;

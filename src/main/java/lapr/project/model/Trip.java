@@ -5,17 +5,13 @@
  */
 package lapr.project.model;
 
-import lapr.project.data.registers.Company;
-import lapr.project.mapgraph.MapGraphAlgorithms;
-import lapr.project.model.point.of.interest.PointOfInterest;
-import lapr.project.model.point.of.interest.park.Park;
-import lapr.project.model.users.Client;
 import lapr.project.model.vehicles.ElectricScooter;
-import lapr.project.utils.physics.calculations.PhysicsMethods;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Class that represents a trip
