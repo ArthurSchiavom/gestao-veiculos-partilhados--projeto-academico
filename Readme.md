@@ -1,13 +1,28 @@
 # Ride-Sharing Management
 
-## Authors:
+# Descrição
+
+Este projeto tem o objetivo de apoiar um serviço de veículos partilhados, ao gerir os utilizadores, veículos, parques, viagens, invoices e recibos. Cenário de utilização mais relevante: Utilizadores podem recolher um veículo num parque especificado e retorná-lo também num parque.
+
+# Tecnologias/Frameworks/Ferramentas
+
+A aplicação foi desenvolvida em Java, utilizando uma base de dados relacional Oracle e JDBC para se conectar à mesma. Queries e scripts para manipular a base de dados utilizam SQL&ast;Plus.
+Para a implementação de testes unitários foi utilizado JUnit, mockito e ReflectionUtils (da framework Spring).
+
+Para controlo de versões, integração contínua e validação da qualidade de código foram utilizados o Git, o Jenkins e SonarQube.
+
+Como ferramenta de colaboração de trabalho em equipa foi utilizado o Jira.
+
+A gestão de dependências foi efetuada através do Maven.
+
+### **Relatório abaixo**
+# Authors:
 * Arthur Silva - 1180842
 * Ivo Macieira - 1170554
 * Francisco Andrade - 1181477
 * Diogo Silva - 1161752
 * José Magalhães - 1180852
 * Kevin Sousa - 1180853
-
 
 # 1. Introduction
 
