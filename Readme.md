@@ -7,7 +7,7 @@ Este projeto tem o objetivo de apoiar um serviço de veículos partilhados, ao g
 # Tecnologias/Frameworks/Ferramentas
 
 A aplicação foi desenvolvida em Java, utilizando uma base de dados relacional Oracle e JDBC para se conectar à mesma. Queries e scripts para manipular a base de dados utilizam SQL&ast;Plus.
-Para a implementação de testes unitários foi utilizado JUnit, mockito e ReflectionUtils (da framework Spring).
+Para a implementação de testes unitários foi utilizado JUnit e mockito.
 
 Para controlo de versões, integração contínua e validação da qualidade de código foram utilizados o Git, o Jenkins e SonarQube.
 
